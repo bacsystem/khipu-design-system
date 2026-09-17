@@ -8,6 +8,7 @@ import { Kpi } from "@/components/datos/kpi";
 import { ListaDatos } from "@/components/datos/lista-datos";
 import { Timeline } from "@/components/datos/timeline";
 import { Alerta } from "@/components/feedback/alerta";
+import { Banner } from "@/components/feedback/banner";
 import { EstadoVacio } from "@/components/feedback/estado-vacio";
 import { ProgresoCircular, ProgresoLineal } from "@/components/feedback/progreso";
 import { Skeleton, SkeletonMetricas } from "@/components/feedback/skeleton";
@@ -19,6 +20,7 @@ import { Buscador } from "@/components/formularios/buscador";
 import { Casilla, Interruptor } from "@/components/formularios/casilla";
 import { Combobox } from "@/components/formularios/combobox";
 import { Contrasena } from "@/components/formularios/contrasena";
+import { Deslizador } from "@/components/formularios/deslizador";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
 import { EntradaMonto } from "@/components/formularios/entrada-monto";
 import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/entrada-rango-fechas";
@@ -37,8 +39,10 @@ import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { GrupoBotones } from "@/components/ui/grupo-botones";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Kbd } from "@/components/ui/kbd";
 import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
@@ -93,6 +97,9 @@ export function Galeria() {
   const [docsSeleccionados, setDocsSeleccionados] = useState<string[]>([]);
   const [clave, setClave] = useState("");
   const [vista, setVista] = useState<"lista" | "tarjetas">("lista");
+  const [bannerVisible, setBannerVisible] = useState(true);
+  const [descuento, setDescuento] = useState(15);
+  const [rangoMonto, setRangoMonto] = useState<[number, number]>([200, 1500]);
 
   function simularEnvio() {
     setEnviando(true);
@@ -103,7 +110,14 @@ export function Galeria() {
     <>
       {/* ── Feedback ─────────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío · progreso · spinner" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío · progreso · spinner · banner" conBorde={false} className="px-0 py-0" />
+        {bannerVisible ? (
+          <div className="-mx-5 -mt-4 overflow-hidden rounded-t-xl">
+            <Banner tono="aviso" onCerrar={() => setBannerVisible(false)}>
+              El certificado digital vence en 21 días — renuévalo antes de que se venza el plan actual.
+            </Banner>
+          </div>
+        ) : null}
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
@@ -167,7 +181,7 @@ export function Galeria() {
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
           <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo, h-10)">
@@ -211,6 +225,12 @@ export function Galeria() {
           <Campo id="g-rango" etiqueta="Rango de emisión">
             <EntradaRangoFechas valor={rango} onCambio={setRango} />
           </Campo>
+          <Campo id="g-descuento" etiqueta="Descuento" ayuda="Aplica sobre el subtotal">
+            <Deslizador valor={descuento} onCambio={(v) => setDescuento(v as number)} min={0} max={50} formato={(v) => `${v}%`} />
+          </Campo>
+          <Campo id="g-montos" etiqueta="Rango de montos" ayuda="Filtra la tabla por total">
+            <Deslizador valor={rangoMonto} onCambio={(v) => setRangoMonto(v as [number, number])} min={0} max={3000} paso={50} formato={(v) => formatearMonto("PEN", v)} />
+          </Campo>
           <div className="grid gap-3">
             <Casilla id="g-auto" etiqueta="Enviar automáticamente a SUNAT" descripcion="Si no, queda firmado hasta que lo envíes" defaultChecked />
             <Interruptor id="g-notif" etiqueta="Notificar por correo" descripcion="Cuando llegue el CDR" defaultChecked />
@@ -235,10 +255,26 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · grupo de botones" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
-            <Avatar nombre="Ana Torres" tamano="sm" />
+            <HoverCard>
+              <HoverCardTrigger>
+                <span className="cursor-default">
+                  <Avatar nombre="Ana Torres" tamano="sm" />
+                </span>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                <div className="flex items-center gap-2.5">
+                  <Avatar nombre="Ana Torres" tono="primary" />
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-medium text-foreground">Ana Torres</p>
+                    <p className="font-mono text-[11px] text-muted-foreground">ana@acme.pe</p>
+                  </div>
+                </div>
+                <p className="mt-2 text-[12px] text-muted-foreground">Administradora · 12 documentos emitidos este mes.</p>
+              </HoverCardContent>
+            </HoverCard>
             <Avatar nombre="Miguel Valencia" tamano="default" tono="primary" />
             <Avatar nombre="cliente@correo-muy-largo.pe" tamano="default" tono="accent" />
           </div>
@@ -265,6 +301,15 @@ export function Galeria() {
             </PopoverContent>
           </Popover>
         </div>
+        <ScrollArea alto="140px" className="rounded-lg border border-border/60 bg-muted/40">
+          <div className="grid gap-0.5 p-2">
+            {["F001-00000136 · Aceptado", "F001-00000135 · Con observaciones", "F001-00000134 · Rechazado", "F001-00000133 · Aceptado", "F001-00000132 · Aceptado", "F001-00000131 · Enviado", "F001-00000130 · Aceptado"].map((linea) => (
+              <div key={linea} className="rounded-md px-2 py-1.5 font-mono text-[12px] text-muted-foreground hover:bg-secondary">
+                {linea}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
         <Pasos actual={1} pasos={[{ titulo: "Empresa", descripcion: "RUC y razón social" }, { titulo: "Certificado", descripcion: "Archivo .p12" }, { titulo: "Credenciales SOL" }]} />
         <Tabs
           items={[
