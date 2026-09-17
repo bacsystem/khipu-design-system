@@ -27,7 +27,7 @@ export function Buscador({
   className?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "placeholder" | "className" | "type">) {
   return (
-    <div className="relative">
+    <div className="relative flex items-center">
       <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
       <input
         type="search"
