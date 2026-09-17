@@ -10,6 +10,7 @@ const PULGAR = "block size-4 rounded-full border-2 border-primary bg-card shadow
  * (`valor` como tupla). Para un rango de fechas usa `EntradaRangoFechas`, no esto.
  */
 export function Deslizador({
+  etiqueta,
   valor,
   onCambio,
   min = 0,
@@ -19,6 +20,10 @@ export function Deslizador({
   disabled,
   className,
 }: {
+  /** Nombre accesible del control (o de cada manija, como "Monto" → "Monto mínimo"/"Monto máximo" en un rango);
+   * el `<input type="range">` interno no tiene texto visible propio, así que esto es obligatorio para lectores
+   * de pantalla — omítelo solo si ya envuelves el deslizador en un `<label>` que lo describe. */
+  etiqueta: string;
   valor: number | readonly [number, number];
   onCambio: (v: number | [number, number]) => void;
   min?: number;
@@ -31,6 +36,7 @@ export function Deslizador({
 }) {
   const rango = Array.isArray(valor);
   const f = formato ?? ((v: number) => String(v));
+  const etiquetaManija = (i: number) => (rango ? `${etiqueta} ${i === 0 ? "mínimo" : "máximo"}` : etiqueta);
 
   return (
     <SliderPrimitive.Root
@@ -48,8 +54,8 @@ export function Deslizador({
       <SliderPrimitive.Control className="flex w-full items-center py-2">
         <SliderPrimitive.Track className="relative h-1.5 w-full rounded-full bg-secondary">
           <SliderPrimitive.Indicator className="absolute h-full rounded-full bg-primary" />
-          <SliderPrimitive.Thumb className={PULGAR} />
-          {rango ? <SliderPrimitive.Thumb className={PULGAR} /> : null}
+          <SliderPrimitive.Thumb className={PULGAR} getAriaLabel={etiquetaManija} />
+          {rango ? <SliderPrimitive.Thumb className={PULGAR} getAriaLabel={etiquetaManija} /> : null}
         </SliderPrimitive.Track>
       </SliderPrimitive.Control>
     </SliderPrimitive.Root>

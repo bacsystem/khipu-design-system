@@ -24,6 +24,9 @@ export function GrupoBotones<T extends string>({
   valor,
   defaultValor,
   onCambio,
+  /** Nombre accesible del grupo (base-ui ya le da `role="group"`, pero sin etiqueta un lector de pantalla no
+   * sabe qué controla). Pásala salvo que un `<label>` visible ya describa el control (p. ej. dentro de `Campo`). */
+  etiqueta,
   tamano = "default",
   className,
 }: {
@@ -31,12 +34,14 @@ export function GrupoBotones<T extends string>({
   valor?: T;
   defaultValor?: T;
   onCambio?: (v: T) => void;
+  etiqueta?: string;
   tamano?: keyof typeof TAMANOS;
   className?: string;
 }) {
   const t = TAMANOS[tamano];
   return (
     <ToggleGroupPrimitive
+      aria-label={etiqueta}
       value={valor != null ? [valor] : undefined}
       defaultValue={defaultValor != null ? [defaultValor] : undefined}
       onValueChange={(v) => {

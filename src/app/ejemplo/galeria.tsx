@@ -226,10 +226,10 @@ export function Galeria() {
             <EntradaRangoFechas valor={rango} onCambio={setRango} />
           </Campo>
           <Campo id="g-descuento" etiqueta="Descuento" ayuda="Aplica sobre el subtotal">
-            <Deslizador valor={descuento} onCambio={(v) => setDescuento(v as number)} min={0} max={50} formato={(v) => `${v}%`} />
+            <Deslizador etiqueta="Descuento" valor={descuento} onCambio={(v) => setDescuento(v as number)} min={0} max={50} formato={(v) => `${v}%`} />
           </Campo>
           <Campo id="g-montos" etiqueta="Rango de montos" ayuda="Filtra la tabla por total">
-            <Deslizador valor={rangoMonto} onCambio={(v) => setRangoMonto(v as [number, number])} min={0} max={3000} paso={50} formato={(v) => formatearMonto("PEN", v)} />
+            <Deslizador etiqueta="Monto" valor={rangoMonto} onCambio={(v) => setRangoMonto(v as [number, number])} min={0} max={3000} paso={50} formato={(v) => formatearMonto("PEN", v)} />
           </Campo>
           <div className="grid gap-3">
             <Casilla id="g-auto" etiqueta="Enviar automáticamente a SUNAT" descripcion="Si no, queda firmado hasta que lo envíes" defaultChecked />
@@ -281,6 +281,7 @@ export function Galeria() {
           <AvatarGroup nombres={["Ana Torres", "Miguel Valencia", "Rosa Quispe", "Luis Pérez", "Wari Comercial"]} max={3} />
           <Separator orientacion="vertical" className="h-6" />
           <GrupoBotones
+            etiqueta="Vista de la lista de documentos"
             valor={vista}
             onCambio={setVista}
             opciones={[

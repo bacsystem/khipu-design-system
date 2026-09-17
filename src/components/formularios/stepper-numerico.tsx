@@ -40,6 +40,7 @@ export function StepperNumerico({
     <NumberField.Root id={id} value={valor} onValueChange={onCambio} min={min} max={max} step={paso} disabled={disabled}>
       <NumberField.Group className={cn("inline-flex w-fit items-stretch overflow-hidden rounded-lg border border-border bg-card shadow-2xs", t.grupo, className)}>
         <NumberField.Decrement
+          aria-label="Disminuir"
           className={cn(
             "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:bg-muted disabled:pointer-events-none disabled:opacity-40",
             t.boton,
@@ -51,6 +52,7 @@ export function StepperNumerico({
           className="w-14 border-x border-border bg-transparent text-center font-mono text-[13px] text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
         <NumberField.Increment
+          aria-label="Aumentar"
           className={cn(
             "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:bg-muted disabled:pointer-events-none disabled:opacity-40",
             t.boton,
