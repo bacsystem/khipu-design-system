@@ -15,6 +15,7 @@ import { Spinner } from "@/components/feedback/spinner";
 import { useToast } from "@/components/feedback/toast";
 import { Tooltip } from "@/components/feedback/tooltip";
 import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
+import { Buscador } from "@/components/formularios/buscador";
 import { Casilla, Interruptor } from "@/components/formularios/casilla";
 import { Combobox } from "@/components/formularios/combobox";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
@@ -31,6 +32,8 @@ import { Tabs } from "@/components/navegacion/tabs";
 import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
+import { Avatar, AvatarGroup } from "@/components/ui/avatar";
+import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/components/ui/popover";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -77,6 +80,8 @@ export function Galeria() {
   const [cliente, setCliente] = useState<string | null>("20554198211");
   const [tipo, setTipo] = useState<"01" | "03">("01");
   const [enviando, setEnviando] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [busquedaCampo, setBusquedaCampo] = useState("");
 
   function simularEnvio() {
     setEnviando(true);
@@ -151,7 +156,13 @@ export function Galeria() {
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador" conBorde={false} className="px-0 py-0" />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Buscador valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
+          <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo, h-10)">
+            <Buscador id="g-buscador-campo" variante="campo" valor={busquedaCampo} onCambio={setBusquedaCampo} placeholder="RUC o razón social…" />
+          </Campo>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Campo id="g-serie" etiqueta="Serie" ayuda="4 caracteres alfanuméricos">
             <Entrada id="g-serie" mono placeholder="F001" maxLength={4} />
@@ -204,7 +215,24 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover" conBorde={false} className="px-0 py-0" />
+        <div className="flex flex-wrap items-center gap-5">
+          <div className="flex items-center gap-2">
+            <Avatar nombre="Ana Torres" tamano="sm" />
+            <Avatar nombre="Miguel Valencia" tamano="default" tono="primary" />
+            <Avatar nombre="cliente@correo-muy-largo.pe" tamano="default" tono="accent" />
+          </div>
+          <AvatarGroup nombres={["Ana Torres", "Miguel Valencia", "Rosa Quispe", "Luis Pérez", "Wari Comercial"]} max={3} />
+          <Popover>
+            <PopoverTrigger className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>Filtros avanzados</PopoverTrigger>
+            <PopoverContent>
+              <PopoverHeader titulo="Filtros avanzados" descripcion="Se aplican solo a esta vista" />
+              <div className="grid gap-2 text-[12px] text-muted-foreground">
+                <p>Rango de fechas, moneda y estado SUNAT — cualquier contenido rico que no cabe en un tooltip.</p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
         <Pasos actual={1} pasos={[{ titulo: "Empresa", descripcion: "RUC y razón social" }, { titulo: "Certificado", descripcion: "Archivo .p12" }, { titulo: "Credenciales SOL" }]} />
         <Tabs
           items={[

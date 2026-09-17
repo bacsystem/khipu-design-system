@@ -350,7 +350,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 | Carpeta | Componentes |
 |---|---|
-| `components/ui` | `badge`, `button`, `card`, `dialog`, `input`, `label`, `menu`, `pagination`, `select`, `selector-por-pagina`, `sheet`, `table` |
+| `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `input`, `label`, `menu`, `pagination`, `popover`, `select`, `selector-por-pagina`, `sheet`, `table` |
 | `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
@@ -367,11 +367,13 @@ Todo lo anterior está empaquetado en `design-kit/` (raíz del repo) para copiar
 | Grupo | Componentes |
 |---|---|
 | `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
-| `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `EntradaFecha`, `EntradaMonto`, `ZonaArchivos` |
+| `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `EntradaFecha`, `EntradaMonto`, `ZonaArchivos`, `Buscador` |
 | `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯), `DialogoConfirmacion`, `Paleta` (⌘K) |
 | `datos/` | `TablaDatos<T>`, `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
 Los gráficos usan `--chart-1..5`; en oscuro los pasos son `#7b72f0 #27a070 #bf8a26 #dc4a68 #3a88c6` (validados para daltonismo y contraste sobre `#111827`). Ver `design-kit/README.md`.
+
+`components/ui` sumó `Avatar` + `AvatarGroup` (sobre `base-ui/avatar`; `rounded-full`, ver §4) y `Popover` + `PopoverHeader` (sobre `base-ui/popover`, misma familia visual que `SelectContent` — úsalo para contenido rico que no cabe en un `Tooltip`, como filtros avanzados o una ficha de usuario).
 
 ### Pendientes
 
