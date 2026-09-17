@@ -20,3 +20,8 @@ export const BOTON_SECUNDARIO =
 // Antes se copiaba este mismo string en cada archivo; un ajuste de timing/lado obligaba a tocarlos todos.
 export const ANIMACION_POPUP =
   "origin-(--transform-origin) duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95";
+
+// Panel de sugerencias/opciones de un combobox de búsqueda (Combobox, Autocomplete). Antes se copiaba este
+// mismo string en cada archivo; un ajuste de radio/sombra/tamaño máximo obligaba a tocarlos todos.
+export const POPUP_LISTA =
+  "max-h-72 w-(--anchor-width) min-w-56 overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none";

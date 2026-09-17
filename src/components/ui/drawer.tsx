@@ -45,7 +45,7 @@ function DrawerContent({ className, children, ...props }: DrawerPrimitive.Popup.
         <DrawerPrimitive.Popup
           data-slot="drawer-content"
           className={cn(
-            "flex max-h-[85vh] w-full flex-col gap-4 rounded-t-xl border-t border-border bg-popover bg-clip-padding pb-[env(safe-area-inset-bottom)] text-sm text-popover-foreground shadow-lg transition-transform duration-200 ease-in-out data-ending-style:translate-y-full data-starting-style:translate-y-full sm:max-w-sm",
+            "flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-xl border-t border-border bg-popover bg-clip-padding pb-[env(safe-area-inset-bottom)] text-sm text-popover-foreground shadow-lg transition-transform duration-200 ease-in-out data-ending-style:translate-y-full data-starting-style:translate-y-full sm:max-w-sm",
             className,
           )}
           {...props}
@@ -59,11 +59,11 @@ function DrawerContent({ className, children, ...props }: DrawerPrimitive.Popup.
 }
 
 function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="drawer-header" className={cn("flex flex-col gap-0.5 px-4", className)} {...props} />;
+  return <div data-slot="drawer-header" className={cn("flex shrink-0 flex-col gap-0.5 px-4", className)} {...props} />;
 }
 
 function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="drawer-footer" className={cn("mt-auto flex flex-col gap-2 px-4 pb-4", className)} {...props} />;
+  return <div data-slot="drawer-footer" className={cn("mt-auto flex shrink-0 flex-col gap-2 px-4 pb-4", className)} {...props} />;
 }
 
 function DrawerTitle({ className, ...props }: DrawerPrimitive.Title.Props) {

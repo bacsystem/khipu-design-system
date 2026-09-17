@@ -2,7 +2,7 @@
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { SearchIcon, XIcon } from "lucide-react";
-import { CAMPO } from "@/lib/estilos";
+import { CAMPO, POPUP_LISTA } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 /**
@@ -40,7 +40,7 @@ export function Autocomplete({
       </div>
       <AutocompletePrimitive.Portal>
         <AutocompletePrimitive.Positioner sideOffset={6} className="isolate z-50">
-          <AutocompletePrimitive.Popup className="max-h-72 w-(--anchor-width) min-w-56 overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none">
+          <AutocompletePrimitive.Popup className={POPUP_LISTA}>
             <AutocompletePrimitive.Empty className="px-2 py-2 text-[12px] text-muted-foreground empty:hidden">{vacio}</AutocompletePrimitive.Empty>
             <AutocompletePrimitive.List>
               {(item: string) => (

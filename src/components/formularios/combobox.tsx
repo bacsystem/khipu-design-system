@@ -2,7 +2,7 @@
 
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import { CAMPO } from "@/lib/estilos";
+import { CAMPO, POPUP_LISTA } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 export type ItemCombobox = { value: string; label: string; detalle?: string };
@@ -46,7 +46,7 @@ export function Combobox({
       </div>
       <ComboboxPrimitive.Portal>
         <ComboboxPrimitive.Positioner sideOffset={6} className="isolate z-50">
-          <ComboboxPrimitive.Popup className="max-h-72 w-(--anchor-width) min-w-56 overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none">
+          <ComboboxPrimitive.Popup className={POPUP_LISTA}>
             <ComboboxPrimitive.Empty className="px-2 py-2 text-[12px] text-muted-foreground empty:hidden">{vacio}</ComboboxPrimitive.Empty>
             <ComboboxPrimitive.List>
               {(item: ItemCombobox) => (
