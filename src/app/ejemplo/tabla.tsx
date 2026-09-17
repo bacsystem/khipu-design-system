@@ -51,7 +51,7 @@ export function TablaEjemplo() {
               ))}
             </SelectContent>
           </Select>
-          <button type="button" title="Refrescar" className={cn(CONTROL_FILTRO, "inline-flex size-9 items-center justify-center text-muted-foreground hover:text-foreground")}>
+          <button type="button" title="Refrescar" className={cn(CONTROL_FILTRO, "inline-flex size-8 items-center justify-center text-muted-foreground hover:text-foreground")}>
             <RefreshCwIcon className="size-4" />
           </button>
         </div>

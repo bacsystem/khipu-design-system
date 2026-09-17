@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, PencilIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
+import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ListOrderedIcon, PackageIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -8,16 +8,24 @@ import { Kpi } from "@/components/datos/kpi";
 import { ListaDatos } from "@/components/datos/lista-datos";
 import { Timeline } from "@/components/datos/timeline";
 import { Alerta } from "@/components/feedback/alerta";
+import { Banner } from "@/components/feedback/banner";
 import { EstadoVacio } from "@/components/feedback/estado-vacio";
+import { ProgresoCircular, ProgresoLineal } from "@/components/feedback/progreso";
 import { Skeleton, SkeletonMetricas } from "@/components/feedback/skeleton";
+import { Spinner } from "@/components/feedback/spinner";
 import { useToast } from "@/components/feedback/toast";
 import { Tooltip } from "@/components/feedback/tooltip";
 import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
+import { Buscador } from "@/components/formularios/buscador";
 import { Casilla, Interruptor } from "@/components/formularios/casilla";
 import { Combobox } from "@/components/formularios/combobox";
+import { Contrasena } from "@/components/formularios/contrasena";
+import { Deslizador } from "@/components/formularios/deslizador";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
 import { EntradaMonto } from "@/components/formularios/entrada-monto";
+import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/entrada-rango-fechas";
 import { GrupoOpciones } from "@/components/formularios/opciones";
+import { StepperNumerico } from "@/components/formularios/stepper-numerico";
 import { ZonaArchivos } from "@/components/formularios/zona-archivos";
 import { Acordeon } from "@/components/navegacion/acordeon";
 import { DialogoConfirmacion } from "@/components/navegacion/dialogo-confirmacion";
@@ -26,8 +34,16 @@ import { Paleta } from "@/components/navegacion/paleta";
 import { PanelLateral } from "@/components/navegacion/panel-lateral";
 import { Pasos, TarjetaPaso } from "@/components/navegacion/pasos";
 import { Tabs } from "@/components/navegacion/tabs";
+import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
+import { Avatar, AvatarGroup } from "@/components/ui/avatar";
+import { GrupoBotones } from "@/components/ui/grupo-botones";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Kbd } from "@/components/ui/kbd";
+import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -73,31 +89,74 @@ export function Galeria() {
   const [archivo, setArchivo] = useState<File | null>(null);
   const [cliente, setCliente] = useState<string | null>("20554198211");
   const [tipo, setTipo] = useState<"01" | "03">("01");
+  const [enviando, setEnviando] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [busquedaCampo, setBusquedaCampo] = useState("");
+  const [cantidad, setCantidad] = useState<number | null>(3);
+  const [rango, setRango] = useState<RangoFechas>({ desde: "2026-09-01", hasta: "2026-09-15" });
+  const [docsSeleccionados, setDocsSeleccionados] = useState<string[]>([]);
+  const [clave, setClave] = useState("");
+  const [vista, setVista] = useState<"lista" | "tarjetas">("lista");
+  const [bannerVisible, setBannerVisible] = useState(true);
+  const [descuento, setDescuento] = useState(15);
+  const [rangoMonto, setRangoMonto] = useState<[number, number]>([200, 1500]);
+
+  function simularEnvio() {
+    setEnviando(true);
+    setTimeout(() => setEnviando(false), 1800);
+  }
 
   return (
     <>
       {/* ── Feedback ─────────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío · progreso · spinner · banner" conBorde={false} className="px-0 py-0" />
+        {bannerVisible ? (
+          <div className="-mx-5 -mt-4 overflow-hidden rounded-t-xl">
+            <Banner tono="aviso" onCerrar={() => setBannerVisible(false)}>
+              El certificado digital vence en 21 días — renuévalo antes de que se venza el plan actual.
+            </Banner>
+          </div>
+        ) : null}
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
             Toast error con acción
           </button>
           <button
             type="button"
-            className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}
+            className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}
             onClick={() => toast.promise(new Promise((r) => setTimeout(r, 1500)), { cargando: "Enviando a SUNAT…", ok: "Aceptado con CDR", error: "Rechazado" })}
           >
             Toast promise
           </button>
           <Tooltip texto="Exportar reporte: próximamente">
-            <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>
+            <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>
               Con tooltip
             </button>
           </Tooltip>
+          <BotonAsync pendiente={enviando} icon={<SendIcon className="size-4" />} textoPendiente="Enviando…" className={cn(BOTON_PRIMARIO, "h-8 text-[12px]")} onClick={simularEnvio}>
+            Enviar a SUNAT
+          </BotonAsync>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ProgresoLineal etiqueta="Subiendo certificado.p12…" valor={64} />
+          <ProgresoLineal etiqueta="Enviando lote a SUNAT…" tono="warning" />
+        </div>
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex items-center gap-3 text-muted-foreground">
+            <Spinner tamano="xs" />
+            <Spinner tamano="sm" />
+            <Spinner tamano="default" />
+            <Spinner tamano="lg" className="text-primary" />
+          </div>
+          <div className="flex items-center gap-4">
+            <ProgresoCircular valor={72} tamano="sm" />
+            <ProgresoCircular valor={40} tono="destructive" />
+            <ProgresoCircular tamano="lg" contenido={null} />
+          </div>
         </div>
         <div className="grid gap-2">
           <Alerta tono="info" titulo="Entorno de pruebas">Los documentos emitidos aquí no tienen validez tributaria.</Alerta>
@@ -115,14 +174,20 @@ export function Galeria() {
             </div>
           </div>
         </div>
-        <EstadoVacio icon={InboxIcon} titulo="Sin documentos todavía" accion={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Nuevo documento</button>}>
+        <EstadoVacio icon={InboxIcon} titulo="Sin documentos todavía" accion={<button type="button" className={BOTON_PRIMARIO}>Nuevo documento</button>}>
           Cuando emitas el primero aparecerá aquí con su estado en SUNAT.
         </EstadoVacio>
       </section>
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Buscador etiqueta="Buscar documentos" valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
+          <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo, h-10)">
+            <Buscador id="g-buscador-campo" variante="campo" valor={busquedaCampo} onCambio={setBusquedaCampo} placeholder="RUC o razón social…" />
+          </Campo>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Campo id="g-serie" etiqueta="Serie" ayuda="4 caracteres alfanuméricos">
             <Entrada id="g-serie" mono placeholder="F001" maxLength={4} />
@@ -151,6 +216,21 @@ export function Galeria() {
           <Campo id="g-obs" etiqueta="Observaciones" opcional>
             <AreaTexto id="g-obs" placeholder="Notas internas…" />
           </Campo>
+          <Campo id="g-cantidad" etiqueta="Cantidad" ayuda="Ítems de la línea">
+            <StepperNumerico id="g-cantidad" valor={cantidad} onCambio={setCantidad} min={1} max={99} />
+          </Campo>
+          <Campo id="g-clave" etiqueta="Contraseña" ayuda="Para el registro, no para el login">
+            <Contrasena id="g-clave" valor={clave} onCambio={setClave} conFuerza autoComplete="new-password" />
+          </Campo>
+          <Campo id="g-rango" etiqueta="Rango de emisión">
+            <EntradaRangoFechas valor={rango} onCambio={setRango} />
+          </Campo>
+          <Campo id="g-descuento" etiqueta="Descuento" ayuda="Aplica sobre el subtotal">
+            <Deslizador etiqueta="Descuento" valor={descuento} onCambio={(v) => setDescuento(v as number)} min={0} max={50} formato={(v) => `${v}%`} />
+          </Campo>
+          <Campo id="g-montos" etiqueta="Rango de montos" ayuda="Filtra la tabla por total">
+            <Deslizador etiqueta="Monto" valor={rangoMonto} onCambio={(v) => setRangoMonto(v as [number, number])} min={0} max={3000} paso={50} formato={(v) => formatearMonto("PEN", v)} />
+          </Campo>
           <div className="grid gap-3">
             <Casilla id="g-auto" etiqueta="Enviar automáticamente a SUNAT" descripcion="Si no, queda firmado hasta que lo envíes" defaultChecked />
             <Interruptor id="g-notif" etiqueta="Notificar por correo" descripcion="Cuando llegue el CDR" defaultChecked />
@@ -175,7 +255,62 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
+        <div className="flex flex-wrap items-center gap-5">
+          <div className="flex items-center gap-2">
+            <HoverCard>
+              <HoverCardTrigger>
+                <span className="cursor-default">
+                  <Avatar nombre="Ana Torres" tamano="sm" />
+                </span>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                <div className="flex items-center gap-2.5">
+                  <Avatar nombre="Ana Torres" tono="primary" />
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-medium text-foreground">Ana Torres</p>
+                    <p className="font-mono text-[11px] text-muted-foreground">ana@acme.pe</p>
+                  </div>
+                </div>
+                <p className="mt-2 text-[12px] text-muted-foreground">Administradora · 12 documentos emitidos este mes.</p>
+              </HoverCardContent>
+            </HoverCard>
+            <Avatar nombre="Miguel Valencia" tamano="default" tono="primary" />
+            <Avatar nombre="cliente@correo-muy-largo.pe" tamano="default" tono="accent" />
+          </div>
+          <AvatarGroup nombres={["Ana Torres", "Miguel Valencia", "Rosa Quispe", "Luis Pérez", "Wari Comercial"]} max={3} />
+          <Separator orientacion="vertical" className="h-6" />
+          <GrupoBotones
+            etiqueta="Vista de la lista de documentos"
+            valor={vista}
+            onCambio={setVista}
+            opciones={[
+              { valor: "lista", etiqueta: "Lista", icon: <ListOrderedIcon className="size-3.5" /> },
+              { valor: "tarjetas", etiqueta: "Tarjetas", icon: <PackageIcon className="size-3.5" /> },
+            ]}
+          />
+          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+            Paleta <Kbd>⌘K</Kbd>
+          </span>
+          <Popover>
+            <PopoverTrigger className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>Filtros avanzados</PopoverTrigger>
+            <PopoverContent>
+              <PopoverHeader titulo="Filtros avanzados" descripcion="Se aplican solo a esta vista" />
+              <div className="grid gap-2 text-[12px] text-muted-foreground">
+                <p>Rango de fechas, moneda y estado SUNAT — cualquier contenido rico que no cabe en un tooltip.</p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <ScrollArea alto="140px" className="rounded-lg border border-border/60 bg-muted/40">
+          <div className="grid gap-0.5 p-2">
+            {["F001-00000136 · Aceptado", "F001-00000135 · Con observaciones", "F001-00000134 · Rechazado", "F001-00000133 · Aceptado", "F001-00000132 · Aceptado", "F001-00000131 · Enviado", "F001-00000130 · Aceptado"].map((linea) => (
+              <div key={linea} className="rounded-md px-2 py-1.5 font-mono text-[12px] text-muted-foreground hover:bg-secondary">
+                {linea}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
         <Pasos actual={1} pasos={[{ titulo: "Empresa", descripcion: "RUC y razón social" }, { titulo: "Certificado", descripcion: "Archivo .p12" }, { titulo: "Credenciales SOL" }]} />
         <Tabs
           items={[
@@ -218,13 +353,13 @@ export function Galeria() {
           ]}
         />
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setPanel(true)}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPanel(true)}>
             Abrir panel lateral
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setConfirmar(true)}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setConfirmar(true)}>
             Diálogo de confirmación
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setPaleta(true)}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPaleta(true)}>
             Paleta ⌘K
           </button>
           <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>Atrás</button><button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Continuar</button></>}>
@@ -250,7 +385,7 @@ export function Galeria() {
 
       {/* ── Datos y dashboard ───────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos · selección múltiple" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 md:grid-cols-3">
           <Kpi etiqueta="Facturado (mes)" valor="S/ 128,430" variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
           <Kpi etiqueta="Documentos emitidos" valor="1,236" variacion={-3.1} serie={[120, 110, 130, 125, 118, 121, 116]} />
@@ -260,7 +395,27 @@ export function Galeria() {
           <GraficoBarras titulo="Documentos por mes" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] }, { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] }]} />
           <GraficoLineas titulo="Facturado (S/ miles)" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "PEN", valores: [82, 95, 91, 110, 121, 128] }]} formato={(v) => `${v}k`} />
         </div>
-        <TablaDatos columnas={COLUMNAS} filas={DOCS} clave={(d) => d.id} unidad="documentos" ordenInicial={{ id: "numero", dir: "desc" }} />
+        <TablaDatos
+          columnas={COLUMNAS}
+          filas={DOCS}
+          clave={(d) => d.id}
+          unidad="documentos"
+          ordenInicial={{ id: "numero", dir: "desc" }}
+          seleccion={{
+            seleccionados: docsSeleccionados,
+            onCambio: setDocsSeleccionados,
+            acciones: (
+              <>
+                <button type="button" className="text-[12px] font-medium text-accent-foreground hover:underline" onClick={() => toast.ok("Reenviados", `${docsSeleccionados.length} documento(s) en cola.`)}>
+                  Reenviar
+                </button>
+                <button type="button" className="text-[12px] font-medium text-destructive hover:underline" onClick={() => toast.error("No se pudo anular", "Requiere confirmación adicional.")}>
+                  Anular
+                </button>
+              </>
+            ),
+          }}
+        />
       </section>
     </>
   );

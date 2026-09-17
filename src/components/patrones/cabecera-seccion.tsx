@@ -28,7 +28,7 @@ export function CabeceraSeccion({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-2.5 gap-y-2 px-4 py-3", conBorde && "border-b border-border/60", className)}>
+    <div className={cn("flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-2 px-4 py-3", conBorde && "border-b border-border/60", className)}>
       <IconoSeccion icon={icon} />
       <div className="flex min-w-0 flex-1 basis-48 flex-col">
         <h2 className="text-[13px] font-semibold text-foreground">{titulo}</h2>

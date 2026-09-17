@@ -15,6 +15,20 @@ export function formatearMonto(moneda: string, valor: number): string {
   return `${simbolo} ${formatearNumero(valor)}`;
 }
 
+/** Hoy en hora local, ISO `YYYY-MM-DD` (valor de `<input type="date">` y presets de `EntradaRangoFechas`). */
+export function isoHoy(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+/** Suma (o resta, con negativos) días a una fecha ISO `YYYY-MM-DD`, en hora local. */
+export function sumarDias(iso: string, dias: number): string {
+  const [anio, mes, dia] = iso.split("-").map(Number);
+  const d = new Date(anio ?? 1970, (mes ?? 1) - 1, dia ?? 1);
+  d.setDate(d.getDate() + dias);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function formatearFecha(iso: string): string {
   const [anio, mes, dia] = iso.split("-").map(Number);
   if (!anio || !mes || !dia) return iso;

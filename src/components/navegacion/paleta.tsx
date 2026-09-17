@@ -4,6 +4,7 @@ import { SearchIcon, type LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Kbd } from "@/components/ui/kbd";
 import { cn } from "@/lib/utils";
 
 export type ComandoPaleta = {
@@ -103,7 +104,7 @@ export function Paleta({
             aria-label={placeholder}
             className="h-11 w-full bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground/70"
           />
-          <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/70">Esc</kbd>
+          <Kbd className="bg-muted shadow-none">Esc</Kbd>
         </div>
         <div ref={lista} role="listbox" className="max-h-80 overflow-y-auto p-1">
           {filtrados.length === 0 ? <p className="px-3 py-6 text-center text-[12px] text-muted-foreground">Sin resultados para «{q}»</p> : null}

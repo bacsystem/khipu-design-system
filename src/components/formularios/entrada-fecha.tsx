@@ -16,6 +16,7 @@ export function EntradaFecha({
   min,
   max,
   disabled,
+  conVistaPrevia = true,
   className,
 }: {
   id: string;
@@ -24,6 +25,10 @@ export function EntradaFecha({
   min?: string;
   max?: string;
   disabled?: boolean;
+  /** La vista "15 Set 2026" a la derecha necesita su propio espacio; en una caja angosta (como las dos de
+   * `EntradaRangoFechas`, a `w-40`) no cabe junto al valor nativo del input y ambos textos quedan superpuestos.
+   * Desactívala con `false` en esos casos. */
+  conVistaPrevia?: boolean;
   className?: string;
 }) {
   return (
@@ -39,7 +44,7 @@ export function EntradaFecha({
         onChange={(e) => onCambio?.(e.target.value)}
         className={cn(CAMPO, "pl-9 font-mono text-[13px] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
       />
-      {valor ? <span className="pointer-events-none absolute right-10 hidden text-[11px] text-muted-foreground sm:block">{formatearFecha(valor)}</span> : null}
+      {conVistaPrevia && valor ? <span className="pointer-events-none absolute right-10 hidden text-[11px] text-muted-foreground sm:block">{formatearFecha(valor)}</span> : null}
     </div>
   );
 }

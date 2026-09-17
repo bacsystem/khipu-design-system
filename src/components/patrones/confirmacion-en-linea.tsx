@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 
 const ACCION =
-  "inline-flex h-7 items-center gap-1 rounded-md px-2 text-[12px] font-medium whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-7 items-center gap-1 rounded-md px-2 text-[12px] font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
 
 /**
  * Acción irreversible confirmada en línea (sin diálogo): "Revocar" → "¿Revocar de forma permanente? [Sí, revocar] [Cancelar]".

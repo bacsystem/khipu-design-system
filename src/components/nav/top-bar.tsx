@@ -3,6 +3,7 @@
 import { SearchIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { Kbd } from "@/components/ui/kbd";
 import { cn } from "@/lib/utils";
 
 /** Miga por prefijo de ruta: la primera que coincida con `pathname.startsWith(prefijo)` gana. */
@@ -13,9 +14,9 @@ export type PillEntorno = { texto: string; tono: "ok" | "aviso" | "neutro" | "os
 
 // Recetas de acción de la top bar (h-8, 12px). La principal es negra (foreground) para no competir con los colores de estado.
 export const ACCION_PRINCIPAL =
-  "inline-flex h-8 items-center gap-1.5 rounded-lg bg-foreground px-3 text-[12px] font-medium whitespace-nowrap text-background shadow-xs transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-8 items-center gap-1.5 rounded-lg bg-foreground px-3 text-[12px] font-medium whitespace-nowrap text-background shadow-xs transition-colors hover:bg-foreground/90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
 export const ACCION_SECUNDARIA =
-  "inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium whitespace-nowrap text-foreground/80 shadow-2xs transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium whitespace-nowrap text-foreground/80 shadow-2xs transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
 
 function Pill({ pill }: { pill: PillEntorno }) {
   const tonos = {
@@ -29,7 +30,7 @@ function Pill({ pill }: { pill: PillEntorno }) {
     <span
       title={pill.title}
       className={cn(
-        "hidden items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap sm:inline-flex",
+        "hidden shrink-0 items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap lg:inline-flex",
         tonos[pill.tono],
         pill.deshabilitado && "opacity-60",
       )}
@@ -74,7 +75,7 @@ export function TopBar({
           </nav>
         ) : null}
 
-        {pills.length > 0 ? <div className="hidden h-4 w-px bg-border sm:block" /> : null}
+        {pills.length > 0 ? <div className="hidden h-4 w-px shrink-0 bg-border lg:block" /> : null}
         {pills.map((p) => (
           <Pill key={p.texto} pill={p} />
         ))}
@@ -92,14 +93,20 @@ export function TopBar({
               className="h-8 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-[12px] text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
             />
             {buscador.atajo ? (
-              <kbd className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/70 shadow-2xs">
-                {buscador.atajo}
-              </kbd>
+              <Kbd className="absolute top-1/2 right-2 -translate-y-1/2">{buscador.atajo}</Kbd>
             ) : null}
           </div>
         ) : null}
         {buscador && acciones ? <div className="hidden h-4 w-px bg-border lg:block" /> : null}
-        {acciones}
+        {/*
+          `contents` (no un `{acciones}` suelto) a propósito: si `acciones` es un elemento de un componente
+          cliente creado por un Server Component padre (el caso de la demo, ver ejemplo/layout.tsx) y queda
+          como uno más de los hijos estáticos de este div, React 19 en dev tira "Each child in a list should
+          have a unique key prop" apuntando a TopBar/el layout, aunque nada de la lista tenga de verdad más de
+          un elemento. Aislarlo como único hijo de su propio contenedor lo evita; `display:contents` no añade
+          caja, así que el `gap-2.5` del padre se comporta igual que si `acciones` estuviera suelto aquí.
+        */}
+        <div className="contents">{acciones}</div>
       </div>
     </header>
   );

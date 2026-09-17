@@ -61,6 +61,18 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* Barrido de la barra de progreso indeterminada (`ProgresoLineal` sin `valor`). */
+  --animate-progreso-indeterminado: progreso-indeterminado 1.4s ease-in-out infinite;
+}
+
+@keyframes progreso-indeterminado {
+  0% {
+    transform: translateX(-100%);
+  }
+  60%,
+  100% {
+    transform: translateX(250%);
+  }
 }
 
 :root {
