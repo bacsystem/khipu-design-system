@@ -39,9 +39,9 @@ export function EntradaRangoFechas({
   return (
     <div className={cn("grid gap-2", className)}>
       <div className="flex flex-wrap items-center gap-2">
-        <EntradaFecha id={`${baseId}-desde`} valor={valor.desde} max={valor.hasta} disabled={disabled} onCambio={(iso) => onCambio({ ...valor, desde: iso })} className="w-40" />
+        <EntradaFecha id={`${baseId}-desde`} valor={valor.desde} max={valor.hasta} disabled={disabled} conVistaPrevia={false} onCambio={(iso) => onCambio({ ...valor, desde: iso })} className="w-40" />
         <span className="text-[12px] text-muted-foreground">–</span>
-        <EntradaFecha id={`${baseId}-hasta`} valor={valor.hasta} min={valor.desde} disabled={disabled} onCambio={(iso) => onCambio({ ...valor, hasta: iso })} className="w-40" />
+        <EntradaFecha id={`${baseId}-hasta`} valor={valor.hasta} min={valor.desde} disabled={disabled} conVistaPrevia={false} onCambio={(iso) => onCambio({ ...valor, hasta: iso })} className="w-40" />
       </div>
       <div className="flex flex-wrap gap-1.5">
         {PRESETS.map((p) => (
