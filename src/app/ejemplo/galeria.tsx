@@ -86,6 +86,7 @@ export function Galeria() {
   const [busquedaCampo, setBusquedaCampo] = useState("");
   const [cantidad, setCantidad] = useState<number | null>(3);
   const [rango, setRango] = useState<RangoFechas>({ desde: "2026-09-01", hasta: "2026-09-15" });
+  const [docsSeleccionados, setDocsSeleccionados] = useState<string[]>([]);
 
   function simularEnvio() {
     setEnviando(true);
@@ -317,7 +318,7 @@ export function Galeria() {
 
       {/* ── Datos y dashboard ───────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos · selección múltiple" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 md:grid-cols-3">
           <Kpi etiqueta="Facturado (mes)" valor="S/ 128,430" variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
           <Kpi etiqueta="Documentos emitidos" valor="1,236" variacion={-3.1} serie={[120, 110, 130, 125, 118, 121, 116]} />
@@ -327,7 +328,27 @@ export function Galeria() {
           <GraficoBarras titulo="Documentos por mes" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] }, { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] }]} />
           <GraficoLineas titulo="Facturado (S/ miles)" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "PEN", valores: [82, 95, 91, 110, 121, 128] }]} formato={(v) => `${v}k`} />
         </div>
-        <TablaDatos columnas={COLUMNAS} filas={DOCS} clave={(d) => d.id} unidad="documentos" ordenInicial={{ id: "numero", dir: "desc" }} />
+        <TablaDatos
+          columnas={COLUMNAS}
+          filas={DOCS}
+          clave={(d) => d.id}
+          unidad="documentos"
+          ordenInicial={{ id: "numero", dir: "desc" }}
+          seleccion={{
+            seleccionados: docsSeleccionados,
+            onCambio: setDocsSeleccionados,
+            acciones: (
+              <>
+                <button type="button" className="text-[12px] font-medium text-accent-foreground hover:underline" onClick={() => toast.ok("Reenviados", `${docsSeleccionados.length} documento(s) en cola.`)}>
+                  Reenviar
+                </button>
+                <button type="button" className="text-[12px] font-medium text-destructive hover:underline" onClick={() => toast.error("No se pudo anular", "Requiere confirmación adicional.")}>
+                  Anular
+                </button>
+              </>
+            ),
+          }}
+        />
       </section>
     </>
   );
