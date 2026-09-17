@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
 import { isoHoy, sumarDias } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -16,24 +17,31 @@ const PRESETS: { etiqueta: string; rango: () => RangoFechas }[] = [
 /**
  * Rango de fechas para filtros de listados: dos `EntradaFecha` (desde/hasta, cada una acota a la otra con
  * `min`/`max`) más atajos comunes (Hoy, 7/30 días, este mes). `onCambio` recibe el rango completo en cada cambio.
+ * `id` es opcional: sin él se genera uno propio con `useId()`, así que dos instancias en la misma página nunca
+ * chocan (antes los dos `EntradaFecha` internos usaban ids fijos — "rango-desde"/"rango-hasta" — que se
+ * duplicaban en el DOM apenas se renderizaba un segundo `EntradaRangoFechas`).
  */
 export function EntradaRangoFechas({
+  id,
   valor,
   onCambio,
   disabled,
   className,
 }: {
+  id?: string;
   valor: RangoFechas;
   onCambio: (v: RangoFechas) => void;
   disabled?: boolean;
   className?: string;
 }) {
+  const autoId = useId();
+  const baseId = id ?? autoId;
   return (
     <div className={cn("grid gap-2", className)}>
       <div className="flex flex-wrap items-center gap-2">
-        <EntradaFecha id="rango-desde" valor={valor.desde} max={valor.hasta} disabled={disabled} onCambio={(iso) => onCambio({ ...valor, desde: iso })} className="w-40" />
+        <EntradaFecha id={`${baseId}-desde`} valor={valor.desde} max={valor.hasta} disabled={disabled} onCambio={(iso) => onCambio({ ...valor, desde: iso })} className="w-40" />
         <span className="text-[12px] text-muted-foreground">–</span>
-        <EntradaFecha id="rango-hasta" valor={valor.hasta} min={valor.desde} disabled={disabled} onCambio={(iso) => onCambio({ ...valor, hasta: iso })} className="w-40" />
+        <EntradaFecha id={`${baseId}-hasta`} valor={valor.hasta} min={valor.desde} disabled={disabled} onCambio={(iso) => onCambio({ ...valor, hasta: iso })} className="w-40" />
       </div>
       <div className="flex flex-wrap gap-1.5">
         {PRESETS.map((p) => (

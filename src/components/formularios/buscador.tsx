@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
  * `variante="filtro"` (por defecto, `h-8` como el resto de la barra) o `"campo"` (`h-10`, dentro de un `Formulario`).
  */
 export function Buscador({
+  id,
+  etiqueta,
   valor,
   onCambio,
   placeholder = "Buscar…",
@@ -20,17 +22,25 @@ export function Buscador({
   className,
   ...props
 }: {
+  id?: string;
+  /** Nombre accesible del campo. Obligatorio en la práctica salvo que lo envuelvas en un `Campo` (que ya pone
+   * su propio `<label htmlFor>`, detectado aquí por la presencia de `id`): un `placeholder` no forma parte del
+   * cálculo de nombre accesible de la spec ARIA y no todos los lectores de pantalla lo exponen. Sin `etiqueta`
+   * y sin `id`, cae al `placeholder` para no quedar completamente mudo, pero no depende de eso a propósito. */
+  etiqueta?: string;
   valor: string;
   onCambio: (v: string) => void;
   placeholder?: string;
   variante?: "filtro" | "campo";
   className?: string;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "placeholder" | "className" | "type">) {
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "value" | "onChange" | "placeholder" | "className" | "type">) {
   return (
     <div className="relative flex items-center">
       <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
       <input
+        id={id}
         type="search"
+        aria-label={etiqueta ?? (id ? undefined : placeholder)}
         value={valor}
         onChange={(e) => onCambio(e.target.value)}
         placeholder={placeholder}
