@@ -20,7 +20,9 @@ import { Casilla, Interruptor } from "@/components/formularios/casilla";
 import { Combobox } from "@/components/formularios/combobox";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
 import { EntradaMonto } from "@/components/formularios/entrada-monto";
+import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/entrada-rango-fechas";
 import { GrupoOpciones } from "@/components/formularios/opciones";
+import { StepperNumerico } from "@/components/formularios/stepper-numerico";
 import { ZonaArchivos } from "@/components/formularios/zona-archivos";
 import { Acordeon } from "@/components/navegacion/acordeon";
 import { DialogoConfirmacion } from "@/components/navegacion/dialogo-confirmacion";
@@ -82,6 +84,8 @@ export function Galeria() {
   const [enviando, setEnviando] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const [busquedaCampo, setBusquedaCampo] = useState("");
+  const [cantidad, setCantidad] = useState<number | null>(3);
+  const [rango, setRango] = useState<RangoFechas>({ desde: "2026-09-01", hasta: "2026-09-15" });
 
   function simularEnvio() {
     setEnviando(true);
@@ -156,7 +160,7 @@ export function Galeria() {
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
           <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo, h-10)">
@@ -190,6 +194,12 @@ export function Galeria() {
           </Campo>
           <Campo id="g-obs" etiqueta="Observaciones" opcional>
             <AreaTexto id="g-obs" placeholder="Notas internas…" />
+          </Campo>
+          <Campo id="g-cantidad" etiqueta="Cantidad" ayuda="Ítems de la línea">
+            <StepperNumerico id="g-cantidad" valor={cantidad} onCambio={setCantidad} min={1} max={99} />
+          </Campo>
+          <Campo id="g-rango" etiqueta="Rango de emisión">
+            <EntradaRangoFechas valor={rango} onCambio={setRango} />
           </Campo>
           <div className="grid gap-3">
             <Casilla id="g-auto" etiqueta="Enviar automáticamente a SUNAT" descripcion="Si no, queda firmado hasta que lo envíes" defaultChecked />
