@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, PencilIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
+import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -9,7 +9,9 @@ import { ListaDatos } from "@/components/datos/lista-datos";
 import { Timeline } from "@/components/datos/timeline";
 import { Alerta } from "@/components/feedback/alerta";
 import { EstadoVacio } from "@/components/feedback/estado-vacio";
+import { ProgresoCircular, ProgresoLineal } from "@/components/feedback/progreso";
 import { Skeleton, SkeletonMetricas } from "@/components/feedback/skeleton";
+import { Spinner } from "@/components/feedback/spinner";
 import { useToast } from "@/components/feedback/toast";
 import { Tooltip } from "@/components/feedback/tooltip";
 import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
@@ -26,6 +28,7 @@ import { Paleta } from "@/components/navegacion/paleta";
 import { PanelLateral } from "@/components/navegacion/panel-lateral";
 import { Pasos, TarjetaPaso } from "@/components/navegacion/pasos";
 import { Tabs } from "@/components/navegacion/tabs";
+import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
@@ -73,12 +76,18 @@ export function Galeria() {
   const [archivo, setArchivo] = useState<File | null>(null);
   const [cliente, setCliente] = useState<string | null>("20554198211");
   const [tipo, setTipo] = useState<"01" | "03">("01");
+  const [enviando, setEnviando] = useState(false);
+
+  function simularEnvio() {
+    setEnviando(true);
+    setTimeout(() => setEnviando(false), 1800);
+  }
 
   return (
     <>
       {/* ── Feedback ─────────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío · progreso · spinner" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
@@ -98,6 +107,26 @@ export function Galeria() {
               Con tooltip
             </button>
           </Tooltip>
+          <BotonAsync pendiente={enviando} icon={<SendIcon className="size-4" />} textoPendiente="Enviando…" className={cn(BOTON_PRIMARIO, "h-8 text-[12px]")} onClick={simularEnvio}>
+            Enviar a SUNAT
+          </BotonAsync>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ProgresoLineal etiqueta="Subiendo certificado.p12…" valor={64} />
+          <ProgresoLineal etiqueta="Enviando lote a SUNAT…" tono="warning" />
+        </div>
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex items-center gap-3 text-muted-foreground">
+            <Spinner tamano="xs" />
+            <Spinner tamano="sm" />
+            <Spinner tamano="default" />
+            <Spinner tamano="lg" className="text-primary" />
+          </div>
+          <div className="flex items-center gap-4">
+            <ProgresoCircular valor={72} tamano="sm" />
+            <ProgresoCircular valor={40} tono="destructive" />
+            <ProgresoCircular tamano="lg" contenido={null} />
+          </div>
         </div>
         <div className="grid gap-2">
           <Alerta tono="info" titulo="Entorno de pruebas">Los documentos emitidos aquí no tienen validez tributaria.</Alerta>

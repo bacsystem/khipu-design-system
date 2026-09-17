@@ -42,7 +42,7 @@ export function Tabs<T extends string>({
             disabled={t.disabled}
             className={cn(
               // h-10/h-6 fijos (no padding vertical) para que el contador no altere la altura de la fila.
-              "inline-flex items-center gap-1.5 text-[12px] font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50",
+              "inline-flex items-center gap-1.5 text-[12px] font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
               estilo === "linea"
                 ? "-mb-px h-10 border-b-2 border-transparent px-1 text-muted-foreground hover:text-foreground data-active:border-primary data-active:text-foreground"
                 : "h-6 rounded-md px-3 text-muted-foreground hover:text-foreground data-active:bg-card data-active:text-foreground data-active:shadow-2xs",

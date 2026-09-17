@@ -229,6 +229,12 @@ Tamaños: `xs` (h-6), `sm` (h-7), `default` (h-8), `lg` (h-10, misma altura que 
 ### Botón copiar (`comprobantes/boton-copiar.tsx`)
 Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg-secondary`; en filas aparece con `opacity-0 group-hover:opacity-100`.
 
+### Botón deshabilitado + hover (regla obligatoria)
+Toda receta que combine un `hover:` con `disabled:opacity-*` **debe** incluir también `disabled:pointer-events-none` (como ya hace `ui/button.tsx`). Sin eso, si el mouse queda sobre el botón cuando pasa a deshabilitado (el caso típico: usuario hace click y el botón se deshabilita bajo el cursor), el `:hover` y el `:disabled` empatan en especificidad y cuál gana depende del orden de generación del CSS — a veces el botón se ve casi sin atenuar aunque esté deshabilitado. `pointer-events-none` corta el `:hover` de raíz. Ya aplicado en `BOTON_PRIMARIO`/`BOTON_SECUNDARIO`, `ACCION_PRINCIPAL`/`ACCION_SECUNDARIA`, tabs, `ConfirmacionEnLinea`, `DialogoConfirmacion` y `SelectorContexto`.
+
+### `BotonAsync` (`patrones/boton-async.tsx`)
+Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendiente` cambia el icono por `Spinner`, cambia el texto a `textoPendiente` y deshabilita. Agnóstico de receta — la clase (`BOTON_PRIMARIO`, `ACCION_PRINCIPAL`…) se pasa igual que a un botón normal.
+
 ---
 
 ## 10. Formularios
@@ -360,7 +366,7 @@ Todo lo anterior está empaquetado en `design-kit/` (raíz del repo) para copiar
 
 | Grupo | Componentes |
 |---|---|
-| `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Skeleton*`, `EstadoVacio` |
+| `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
 | `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `EntradaFecha`, `EntradaMonto`, `ZonaArchivos` |
 | `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯), `DialogoConfirmacion`, `Paleta` (⌘K) |
 | `datos/` | `TablaDatos<T>`, `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |

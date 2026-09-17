@@ -69,7 +69,7 @@ export function DialogoConfirmacion({
             disabled={pendiente}
             onClick={confirmar}
             className={cn(
-              "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-3.5 text-[13px] font-semibold shadow-xs transition-all active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60",
+              "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-3.5 text-[13px] font-semibold shadow-xs transition-all active:scale-[0.99] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60",
               destructiva ? "bg-destructive text-white hover:bg-destructive/90" : "bg-primary text-primary-foreground hover:opacity-95",
             )}
           >

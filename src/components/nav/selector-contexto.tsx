@@ -62,7 +62,7 @@ export function SelectorContexto({
         disabled={cambiando}
         className={cn(
           "flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 overflow-hidden rounded-lg border border-border/60 bg-muted/80 p-2 text-left transition-colors outline-none select-none",
-          "hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50 data-[popup-open]:bg-secondary disabled:opacity-60",
+          "hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50 data-[popup-open]:bg-secondary disabled:pointer-events-none disabled:opacity-60",
         )}
       >
         <div className="flex min-w-0 items-center gap-2.5">
