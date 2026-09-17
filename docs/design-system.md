@@ -128,8 +128,8 @@ Toda pieza interactiva de una fila (input, botón, disparador, control de tabla)
 | Altura | Uso | Ejemplos |
 |---|---|---|
 | **`h-7`** (28 px) | Denso: paginación, filas de tabla, controles secundarios pequeños | `PieTabla` (Anterior/Siguiente/números), `SelectorPorPagina`, `MenuAcciones`, `Select` `size="sm"` |
-| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, tabs `estilo="segmentado"` |
-| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `EntradaFecha`, `EntradaMonto`), `BOTON_PRIMARIO/SECUNDARIO`, `Button` `size="lg"` |
+| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, tabs `estilo="segmentado"`, `Toolbar` |
+| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto`), `BOTON_PRIMARIO/SECUNDARIO`, `Button` `size="lg"` |
 
 **Excepción documentada:** el **pie de diálogo, de `PanelLateral` y de `TarjetaPaso`** — el footer con `border-t border-border/60 px-5 py-3` que comparten los tres — usa `h-9` (36 px) con texto `text-[13px]`, una densidad intermedia reservada a ese contexto aislado (nunca aparece junto a controles de `h-8`/`h-10` en la misma fila). Un botón o disparador que **no** vive dentro de ese footer (un CTA de estado vacío, un botón suelto en una tarjeta de galería) usa `h-8` si es una acción secundaria/compacta o `h-10` si es la acción principal de un formulario — nunca `h-9` fuera de esos tres footers. Fuera de esa excepción, si dos controles conviven en una misma fila deben compartir la misma altura de la tabla de arriba; nunca mezclar `h-8` con `h-9`/`h-10` en una barra de filtros o toolbar.
 
@@ -350,7 +350,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 | Carpeta | Componentes |
 |---|---|
-| `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table` |
+| `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
 | `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
@@ -367,7 +367,7 @@ Todo lo anterior está empaquetado en `design-kit/` (raíz del repo) para copiar
 | Grupo | Componentes |
 |---|---|
 | `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Banner`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
-| `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `Contrasena`, `Deslizador`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
+| `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `Autocomplete`, `Contrasena`, `Deslizador`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
 | `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯), `DialogoConfirmacion`, `Paleta` (⌘K) |
 | `datos/` | `TablaDatos<T>`, `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
@@ -382,6 +382,8 @@ Quinto lote: `Separator` (sobre `base-ui/separator`; en vertical necesita una al
 `datos/TablaDatos<T>` ya no tiene la selección múltiple "próximamente" que describe §12 para el portal de origen: acepta una prop `seleccion` (`{ seleccionados, onCambio, acciones }`) que activa la columna de checkboxes, el estado indeterminado de "seleccionar todo" (solo la página visible) y una barra de acciones masivas sobre la tabla. Nótese además que `ListaDatos` **es** el patrón "lista de definición" (`dt`/`dd` etiqueta/valor) — no hace falta un componente aparte para eso.
 
 Sexto lote: `HoverCard` (sobre `base-ui/preview-card`; su disparador es un `<a>` por defecto — pensado para previsualizar un enlace —, pero con `render` toma la forma de lo que le pases, igual que `Tooltip`; solo con hover/foco, sin clic, para fichas de vista previa que no necesitan la acción inmediata de un `Popover`), `ScrollArea` (sobre `base-ui/scroll-area`; scrollbar propio del kit en vez del nativo, `alto` obligatorio), `Deslizador` (en `formularios/`, sobre `base-ui/slider`; un valor o un rango de dos manijas con `valor` como tupla) y `Banner` (en `feedback/`; aviso de ancho completo para el `Shell`, sobre `TopBar` y no dentro de `main` — a diferencia de `Alerta`, que es una banda con esquinas dentro de una página).
+
+Séptimo lote: `Autocomplete` (en `formularios/`, sobre `base-ui/autocomplete`; a diferencia de `Combobox`, no fuerza a elegir un valor de la lista — `value`/`onValueChange` son el texto libre, y clic en una sugerencia solo lo rellena), `Toolbar` (sobre `base-ui/toolbar`; barra de controles agrupados con foco por flechas entre ellos — contenedor `h-8`/`p-1` con botones internos `size-6`, el mismo patrón de `GrupoBotones` y `Tabs estilo="segmentado"`) y `Drawer` (sobre `base-ui/drawer`; hoja inferior para móvil con arrastre nativo para cerrar, a diferencia de `Sheet` que solo anima entrada/salida sin gesto de arrastre).
 
 ### Pendientes
 

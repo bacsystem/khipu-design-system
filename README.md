@@ -42,11 +42,11 @@ src/
 ├── app/layout.tsx           Inter + JetBrains Mono, Providers
 ├── app/ejemplo/             demo: shell completo + galería de componentes
 ├── components/providers.tsx ThemeProvider + ToastProvider + TooltipProvider
-├── components/ui/           avatar · badge · button · card · dialog · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table
+├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
 ├── components/nav/          shell · sidebar · sidebar-nav · logo · selector-contexto · menu-usuario · theme-toggle · top-bar · mobile-nav
 ├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async
 ├── components/feedback/     toast (useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
-├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
+├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
 └── lib/                     utils (cn) · estilos (recetas) · formato (fechas/montos, zona America/Lima) · paginacion

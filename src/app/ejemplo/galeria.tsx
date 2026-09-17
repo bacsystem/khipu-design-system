@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ListOrderedIcon, PackageIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
+import { BellIcon, BoldIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ItalicIcon, ListOrderedIcon, PackageIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon, UnderlineIcon } from "lucide-react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -16,6 +16,7 @@ import { Spinner } from "@/components/feedback/spinner";
 import { useToast } from "@/components/feedback/toast";
 import { Tooltip } from "@/components/feedback/tooltip";
 import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
+import { Autocomplete } from "@/components/formularios/autocomplete";
 import { Buscador } from "@/components/formularios/buscador";
 import { Casilla, Interruptor } from "@/components/formularios/casilla";
 import { Combobox } from "@/components/formularios/combobox";
@@ -38,12 +39,14 @@ import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { GrupoBotones } from "@/components/ui/grupo-botones";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Kbd } from "@/components/ui/kbd";
 import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -100,6 +103,11 @@ export function Galeria() {
   const [bannerVisible, setBannerVisible] = useState(true);
   const [descuento, setDescuento] = useState(15);
   const [rangoMonto, setRangoMonto] = useState<[number, number]>([200, 1500]);
+  const [producto, setProducto] = useState("");
+  const [drawer, setDrawer] = useState(false);
+  const [negrita, setNegrita] = useState(false);
+  const [cursiva, setCursiva] = useState(false);
+  const [subrayado, setSubrayado] = useState(false);
 
   function simularEnvio() {
     setEnviando(true);
@@ -181,7 +189,7 @@ export function Galeria() {
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador etiqueta="Buscar documentos" valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
           <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo, h-10)">
@@ -205,6 +213,15 @@ export function Galeria() {
                 { value: "20123456789", label: "Inversiones Andinas S.A.C.", detalle: "RUC 20123456789" },
                 { value: "44781209", label: "Miguel Ángel Valencia Ramos", detalle: "DNI 44781209" },
               ]}
+            />
+          </Campo>
+          <Campo id="g-producto" etiqueta="Producto" ayuda="Sugiere del catálogo, pero acepta texto libre">
+            <Autocomplete
+              id="g-producto"
+              valor={producto}
+              onCambio={setProducto}
+              placeholder="Escribe o elige uno…"
+              items={["Servicio de consultoría", "Licencia de software anual", "Papel bond A4 (millar)", "Tóner para impresora", "Servicio de mantenimiento"]}
             />
           </Campo>
           <Campo id="g-fecha" etiqueta="Fecha de emisión">
@@ -255,7 +272,7 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · drawer · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · toolbar · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
             <HoverCard>
@@ -301,6 +318,23 @@ export function Galeria() {
               </div>
             </PopoverContent>
           </Popover>
+          <Toolbar aria-label="Formato de texto">
+            <ToolbarGroup aria-label="Estilo de fuente">
+              <ToolbarButton aria-label="Negrita" aria-pressed={negrita} onClick={() => setNegrita((v) => !v)}>
+                <BoldIcon />
+              </ToolbarButton>
+              <ToolbarButton aria-label="Cursiva" aria-pressed={cursiva} onClick={() => setCursiva((v) => !v)}>
+                <ItalicIcon />
+              </ToolbarButton>
+              <ToolbarButton aria-label="Subrayado" aria-pressed={subrayado} onClick={() => setSubrayado((v) => !v)}>
+                <UnderlineIcon />
+              </ToolbarButton>
+            </ToolbarGroup>
+            <ToolbarSeparator />
+            <ToolbarButton className="w-auto px-2" onClick={() => toast.info("Insertar enlace")}>
+              Enlace
+            </ToolbarButton>
+          </Toolbar>
         </div>
         <ScrollArea alto="140px" className="rounded-lg border border-border/60 bg-muted/40">
           <div className="grid gap-0.5 p-2">
@@ -356,6 +390,9 @@ export function Galeria() {
           <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPanel(true)}>
             Abrir panel lateral
           </button>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setDrawer(true)}>
+            Abrir drawer (móvil)
+          </button>
           <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setConfirmar(true)}>
             Diálogo de confirmación
           </button>
@@ -369,6 +406,20 @@ export function Galeria() {
         <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")} onClick={() => setPanel(false)}>Cerrar</button>}>
           <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
         </PanelLateral>
+        <Drawer open={drawer} onOpenChange={setDrawer}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>F001-00000136</DrawerTitle>
+              <DrawerDescription>Factura electrónica · Aceptada</DrawerDescription>
+            </DrawerHeader>
+            <div className="px-4">
+              <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
+            </div>
+            <DrawerFooter>
+              <DrawerClose render={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")} />}>Cerrar</DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
         <DialogoConfirmacion open={confirmar} onOpenChange={setConfirmar} titulo="Anular 3 documentos" descripcion="Se enviará una comunicación de baja a SUNAT" textoConfirmar="Sí, anular" onConfirmar={async () => { toast.ok("Comunicación de baja enviada"); }}>
           Los documentos anulados no se pueden recuperar.
         </DialogoConfirmacion>
