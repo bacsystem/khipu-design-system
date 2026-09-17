@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>khipu Design System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --background: #fafafc; --foreground: #0f172a;
+    --card: #ffffff; --muted: #f8fafc; --muted-foreground: #64748b;
+    --secondary: #f1f5f9; --border: #e2e8f0;
+    --primary: #4f46e5; --primary-light: #6366f1; --primary-foreground: #ffffff;
+    --accent: #eef2ff; --accent-foreground: #4338ca; --accent-border: rgba(199,210,254,.7);
+    --success: #ecfdf5; --success-foreground: #047857; --success-border: rgba(167,243,208,.7); --success-solid: #10b981;
+    --warning: #fffbeb; --warning-foreground: #b45309; --warning-border: rgba(253,230,138,.7); --warning-solid: #f59e0b;
+    --destructive: #e11d48; --destructive-soft: rgba(225,29,72,.1); --destructive-border: rgba(254,205,211,.7);
+    --overlay: rgba(15,23,42,.2); --ring: #4f46e5;
+    --sidebar: #ffffff; --sidebar-foreground: #334155; --sidebar-primary: #eef2ff; --sidebar-primary-foreground: #4338ca; --sidebar-accent: #f8fafc;
+    --code-bg: oklch(0.18 0.02 265); --code-fg: oklch(0.9 0.01 265);
+    --shadow-2xs: 0 1px 0 rgba(15,23,42,.04); --shadow-xs: 0 1px 2px rgba(15,23,42,.06); --shadow-md: 0 4px 6px -1px rgba(15,23,42,.08), 0 2px 4px -2px rgba(15,23,42,.04);
+    --radius: 8px;
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --background: #0a0e1a; --foreground: #e2e8f0;
+      --card: #111827; --muted: #161f30; --muted-foreground: #94a3b8;
+      --secondary: #1e293b; --border: rgba(226,232,240,.12);
+      --primary: #8b83ff; --primary-light: #a29dff; --primary-foreground: #0a0e1a;
+      --accent: #23294d; --accent-foreground: #c3c0ff; --accent-border: rgba(195,192,255,.3);
+      --success: #0f2e24; --success-foreground: #5fd0a5; --success-border: rgba(95,208,165,.3); --success-solid: #34d399;
+      --warning: #33270c; --warning-foreground: #f0c05a; --warning-border: rgba(240,192,90,.3); --warning-solid: #fbbf24;
+      --destructive: #fb7185; --destructive-soft: rgba(251,113,133,.12); --destructive-border: rgba(251,113,133,.35);
+      --overlay: rgba(0,0,0,.5); --ring: #8b83ff;
+      --sidebar: #0d1424; --sidebar-foreground: #c7d2e0; --sidebar-primary: #23294d; --sidebar-primary-foreground: #c3c0ff; --sidebar-accent: #1e293b;
+      --shadow-2xs: 0 1px 0 rgba(0,0,0,.3); --shadow-xs: 0 1px 2px rgba(0,0,0,.4); --shadow-md: 0 4px 6px -1px rgba(0,0,0,.5), 0 2px 4px -2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --background: #0a0e1a; --foreground: #e2e8f0;
+    --card: #111827; --muted: #161f30; --muted-foreground: #94a3b8;
+    --secondary: #1e293b; --border: rgba(226,232,240,.12);
+    --primary: #8b83ff; --primary-light: #a29dff; --primary-foreground: #0a0e1a;
+    --accent: #23294d; --accent-foreground: #c3c0ff; --accent-border: rgba(195,192,255,.3);
+    --success: #0f2e24; --success-foreground: #5fd0a5; --success-border: rgba(95,208,165,.3); --success-solid: #34d399;
+    --warning: #33270c; --warning-foreground: #f0c05a; --warning-border: rgba(240,192,90,.3); --warning-solid: #fbbf24;
+    --destructive: #fb7185; --destructive-soft: rgba(251,113,133,.12); --destructive-border: rgba(251,113,133,.35);
+    --overlay: rgba(0,0,0,.5); --ring: #8b83ff;
+    --sidebar: #0d1424; --sidebar-foreground: #c7d2e0; --sidebar-primary: #23294d; --sidebar-primary-foreground: #c3c0ff; --sidebar-accent: #1e293b;
+    --shadow-2xs: 0 1px 0 rgba(0,0,0,.3); --shadow-xs: 0 1px 2px rgba(0,0,0,.4); --shadow-md: 0 4px 6px -1px rgba(0,0,0,.5), 0 2px 4px -2px rgba(0,0,0,.4);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-block: 40px 80px; padding-inline: 24px; }
+  a { color: var(--primary); }
+  h1, h2, h3, h4 { text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+  h1 { font-size: 28px; line-height: 36px; font-weight: 600; }
+  h2 { font-size: 16px; font-weight: 600; }
+  h3 { font-size: 13px; font-weight: 600; }
+  h4 { font-size: 12px; font-weight: 600; }
+  p { margin: 0; max-width: 64ch; }
+  .lead { color: var(--muted-foreground); font-size: 14px; margin-top: 6px; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  code { font-family: var(--font-mono); font-size: 11px; background: var(--secondary); color: var(--accent-foreground); padding: 1px 6px; border-radius: 4px; }
+  .src { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+
+  header.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: grid; place-items: center; color: var(--primary-foreground); box-shadow: var(--shadow-xs); flex-shrink: 0; }
+  .brand-name { display: flex; align-items: baseline; gap: 2px; }
+  .brand-name b { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand-name span { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--primary); }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 10px; border-radius: 999px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; border: 1px solid var(--border); background: var(--secondary); color: var(--muted-foreground); white-space: nowrap; }
+  .pill i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .5; display: inline-block; }
+  .pill.ok { background: var(--success); color: var(--success-foreground); border-color: var(--success-border); }
+  .pill.ok i { background: var(--success-solid); opacity: 1; }
+  .pill.warn { background: var(--warning); color: var(--warning-foreground); border-color: var(--warning-border); }
+  .pill.warn i { background: var(--warning-solid); opacity: 1; }
+  .pill.bad { background: var(--destructive-soft); color: var(--destructive); border-color: var(--destructive-border); }
+  .pill.bad i { background: var(--destructive); opacity: 1; }
+  .pill.brand { background: var(--accent); color: var(--accent-foreground); border-color: var(--accent-border); }
+  .pill.dark { background: var(--foreground); color: var(--background); border-color: transparent; font-family: var(--font-sans); border-radius: 4px; }
+  .pill.dark i { background: var(--success-solid); opacity: 1; }
+  .pill.beta { background: var(--warning); color: var(--warning-foreground); border-color: var(--warning-border); font-family: var(--font-sans); border-radius: 4px; }
+  .pill.beta i { background: var(--warning-solid); opacity: 1; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-family: var(--font-mono); font-size: 11px; white-space: nowrap; }
+  .chip.tipo { width: 28px; height: 28px; padding: 0; justify-content: center; border: 0; background: var(--accent); color: var(--primary); font-weight: 600; }
+  .chip.serie { border: 0; background: var(--secondary); color: var(--primary); font-weight: 600; font-size: 13px; }
+  .chip.serie.off { background: var(--muted); color: var(--muted-foreground); text-decoration: line-through; }
+  .chip.pronto { border: 0; background: var(--secondary); font-family: var(--font-sans); font-size: 9px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; padding: 2px 4px; }
+
+  section { margin-top: 44px; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .section-head p { color: var(--muted-foreground); font-size: 13px; }
+  .grid { display: grid; gap: 12px; }
+  .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  @media (max-width: 860px) { .cols-6 { grid-template-columns: repeat(3, minmax(0,1fr)); } .cols-4 { grid-template-columns: repeat(2, minmax(0,1fr)); } .cols-3 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 520px) { .cols-6, .cols-4, .cols-3, .cols-2 { grid-template-columns: 1fr; } }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-2xs); }
+  .pad { padding: 16px 20px; }
+  .stack { display: grid; gap: 16px; }
+
+  /* swatches */
+  .swatch { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+  .swatch .chipc { height: 56px; border-bottom: 1px solid var(--border); }
+  .swatch .info { padding: 8px 10px; display: grid; gap: 2px; }
+  .swatch .name { font-size: 12px; font-weight: 600; }
+  .swatch .val { font-family: var(--font-mono); font-size: 10.5px; color: var(--muted-foreground); }
+  .swatch .val + .val { opacity: .75; }
+
+  /* type specimens */
+  .spec { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .spec:last-child { border-bottom: 0; }
+  .spec .k { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  @media (max-width: 520px) { .spec { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* controls */
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 500; border: 1px solid transparent; cursor: pointer; white-space: nowrap; color: var(--foreground); background: transparent; }
+  .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .btn.primary { background: var(--foreground); color: var(--background); box-shadow: var(--shadow-xs); }
+  .btn.brand { background: var(--primary); color: var(--primary-foreground); font-weight: 600; box-shadow: var(--shadow-xs); }
+  .btn.outline { background: var(--card); border-color: var(--border); color: var(--foreground); box-shadow: var(--shadow-2xs); }
+  .btn.ghost { color: var(--muted-foreground); }
+  .btn.ghost:hover { color: var(--foreground); background: var(--muted); }
+  .btn.danger { color: var(--destructive); }
+  .btn.danger:hover { background: var(--destructive-soft); }
+  .btn.danger-solid { background: var(--destructive); color: var(--primary-foreground); box-shadow: var(--shadow-xs); }
+  .btn[disabled] { opacity: .6; cursor: not-allowed; }
+  .btn.sm { height: 28px; padding: 0 10px; font-size: 11px; border-radius: 6px; }
+  .btn.h10 { height: 40px; padding: 0 14px; font-size: 14px; }
+  .btn.h9 { height: 36px; padding: 0 14px; font-size: 13px; }
+  .btn.xs { height: 24px; padding: 0 6px; font-size: 11px; border-radius: 6px; }
+  .btn.icon { width: 32px; padding: 0; justify-content: center; }
+  .btn.icon.sm { width: 28px; }
+  .segment { display: inline-flex; height: 36px; padding: 4px; gap: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--secondary); }
+  .segment span { display: inline-flex; align-items: center; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
+  .segment span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
+  .segment.sm { height: 30px; padding: 2px; gap: 2px; }
+  .segment.sm span { padding: 0 10px; font-size: 11px; }
+  .select { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); font-size: 12px; font-weight: 500; box-shadow: var(--shadow-2xs); }
+  .select.off { color: var(--muted-foreground); opacity: .7; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 500; }
+  .field input { height: 40px; width: 100%; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); padding: 0 12px; font: inherit; font-size: 14px; }
+  .field input:focus { outline: none; border-color: var(--ring); background: var(--card); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent); }
+  .field input.err { border-color: var(--destructive); }
+  .field .help { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .field .error { font-size: 13px; color: var(--destructive); }
+  .dato { display: grid; gap: 4px; }
+  .dato .l { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
+  .dato .v { height: 36px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+  .dato .v.pend { color: var(--muted-foreground); opacity: .6; cursor: not-allowed; border-style: dashed; }
+  .tt { display: inline-flex; height: 32px; padding: 2px; gap: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); }
+  .tt span { width: 28px; height: 26px; display: grid; place-items: center; border-radius: 6px; color: var(--muted-foreground); font-size: 12px; }
+  .tt span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
+  .tt.wide { width: 100%; }
+  .tt.wide span { flex: 1 1 0; width: auto; display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-weight: 500; }
+  .sep { color: var(--border); }
+  .copy { width: 20px; height: 20px; display: inline-grid; place-items: center; border-radius: 4px; color: var(--muted-foreground); font-size: 11px; }
+
+  /* table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--muted); border-bottom: 1px solid var(--border); }
+  th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:hover { background: var(--muted); }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr.off { opacity: .8; }
+  .num { font-family: var(--font-mono); font-weight: 600; letter-spacing: -0.01em; }
+  .sub { font-size: 11px; color: var(--muted-foreground); font-family: var(--font-mono); }
+  .right { text-align: right; }
+  .tfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 16px; background: var(--muted); border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); }
+  .pager { display: inline-flex; align-items: center; gap: 4px; }
+  .pager span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; }
+  .pager span.on { background: var(--foreground); color: var(--background); }
+  .seg-sm { display: inline-flex; height: 28px; padding: 2px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+  .seg-sm span { min-width: 28px; padding: 0 6px; height: 24px; display: grid; place-items: center; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .seg-sm span.on { background: var(--foreground); color: var(--background); }
+  .empty { padding: 44px 16px; text-align: center; color: var(--muted-foreground); font-size: 13px; display: grid; gap: 6px; justify-items: center; }
+  .thead-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 0 0 12px; }
+  .sec-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .sec-ic { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: var(--primary); display: grid; place-items: center; flex-shrink: 0; }
+  .sec-head h3 { font-size: 13px; }
+  .sec-head .sub { display: block; }
+
+  /* metrics */
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; padding: 12px 20px; }
+  .metrics > div + div { border-left: 1px solid var(--border); padding-left: 20px; }
+  .metrics .v { font-family: var(--font-mono); font-size: 18px; font-weight: 600; letter-spacing: -0.02em; margin: 2px 0; }
+  .metrics .v small { font-family: var(--font-sans); font-size: 12px; font-weight: 400; color: var(--muted-foreground); margin-left: 4px; }
+  .metrics .h { font-size: 11px; color: var(--muted-foreground); display: flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  @media (max-width: 860px) { .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); } .metrics > div:nth-child(3) { border-left: 0; padding-left: 0; } }
+  @media (max-width: 520px) { .metrics { grid-template-columns: 1fr; } .metrics > div + div { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 10px; } }
+
+  /* shell / top bar */
+  .shell { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--background); }
+  .topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px; background: color-mix(in srgb, var(--card) 85%, transparent); border-bottom: 1px solid var(--border); }
+  .topbar .l { display: flex; align-items: center; gap: 12px; min-width: 0; overflow: hidden; }
+  .topbar .r { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .crumb { display: flex; align-items: center; gap: 6px; font-size: 13px; white-space: nowrap; overflow: hidden; }
+  .crumb .s { color: var(--muted-foreground); }
+  .crumb .sl { color: var(--border); }
+  .crumb b { font-weight: 600; }
+  .vsep { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+  .search { display: inline-flex; align-items: center; gap: 8px; height: 32px; width: 220px; padding: 0 8px 0 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: 12px; opacity: .8; }
+  .search kbd { margin-left: auto; font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); background: var(--card); }
+  .topbar-note { display: grid; gap: 4px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); background: var(--card); }
+  .shellbody { display: grid; grid-template-columns: 240px minmax(0,1fr); }
+  @media (max-width: 860px) { .shellbody { grid-template-columns: 1fr; } .shell .side { width: 100%; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; } }
+
+  /* sidebar */
+  .side { background: var(--sidebar); color: var(--sidebar-foreground); border-right: 1px solid var(--border); width: 240px; max-width: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+  .side .hd { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid var(--border); }
+  .side .grp { padding: 10px 10px 4px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .side .it { display: flex; align-items: center; gap: 10px; margin: 2px 8px; padding: 6px 10px; border-radius: 6px; font-size: 13px; }
+  .side .it svg { flex-shrink: 0; color: var(--muted-foreground); opacity: .8; }
+  .side .it.on { background: var(--sidebar-primary); color: var(--sidebar-primary-foreground); font-weight: 500; }
+  .side .it.on svg { color: var(--primary); opacity: 1; }
+  .side .it.on::after { content: ""; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+  .side .it.off { color: var(--muted-foreground); opacity: .55; cursor: not-allowed; }
+  .side .it.off .chip { margin-left: auto; }
+  .ubl { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+  .trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 12px 8px; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 80%, transparent); }
+  .trigger .av { width: 24px; height: 24px; border-radius: 6px; background: var(--primary); color: var(--primary-foreground); font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+  .trigger .tx { min-width: 0; display: grid; }
+  .trigger .tx b { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--foreground); }
+  .trigger .tx span { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .trigger .cv { margin-left: auto; color: var(--muted-foreground); font-size: 11px; flex-shrink: 0; }
+  .side .ft { border-top: 1px solid var(--border); padding: 12px 0 4px; }
+  .plan { margin: 0 12px 10px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 90%, transparent); opacity: .6; cursor: not-allowed; display: grid; gap: 6px; }
+  .plan .t { display: flex; justify-content: space-between; font-size: 11px; }
+  .plan .t span { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .plan .bar { height: 4px; border-radius: 999px; background: var(--border); }
+
+  /* popup / menu */
+  .popup { width: 216px; max-width: 100%; border-radius: 8px; background: var(--card); box-shadow: var(--shadow-md); border: 1px solid var(--border); padding: 4px; }
+  .popup .lab { padding: 6px 8px 4px; font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .popup .acct { display: flex; align-items: flex-start; gap: 10px; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 70%, transparent); color: var(--accent-foreground); }
+  .popup .acct .av { width: 24px; height: 24px; border-radius: 6px; background: var(--primary); color: var(--primary-foreground); font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+  .popup .acct .tx { min-width: 0; display: grid; gap: 2px; }
+  .popup .acct b { font-size: 12px; font-weight: 500; }
+  .popup .acct .em { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); word-break: break-all; }
+  .popup .acct .rl { font-size: 10px; color: var(--muted-foreground); }
+  .popup .acct svg { margin-left: auto; color: var(--primary); flex-shrink: 0; }
+  .popup hr { border: 0; height: 1px; background: var(--border); margin: 4px -4px; }
+  .popup .mi { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+  .popup .mi svg { color: var(--muted-foreground); }
+  .popup .mi.hl { background: color-mix(in srgb, var(--accent) 70%, transparent); color: var(--accent-foreground); }
+  .popup .mi.hl svg { color: var(--accent-foreground); }
+  .popup .mi.danger { color: var(--destructive); }
+  .popup .mi.danger svg { color: var(--destructive); }
+  .popup .mi .ck { margin-left: auto; color: var(--primary); }
+  .popup .sel { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 6px; }
+  .popup .sel.on { background: color-mix(in srgb, var(--accent) 70%, transparent); }
+  .popup .sel .av { width: 24px; height: 24px; border-radius: 6px; background: var(--primary); color: var(--primary-foreground); font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+  .popup .sel .av.off { background: var(--secondary); color: var(--foreground); }
+  .popup .sel .tx { display: grid; min-width: 0; }
+  .popup .sel b { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .popup .sel span { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .popup .sel .ck { margin-left: auto; color: var(--primary); }
+
+  /* modal */
+  .modal-sample { border: 1px solid var(--border); border-radius: 12px; background: var(--card); box-shadow: 0 20px 40px -20px rgba(0,0,0,.35); overflow: hidden; }
+  .modal-sample .mh { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+  .modal-sample .ic { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: var(--primary); display: grid; place-items: center; flex-shrink: 0; }
+  .modal-sample .mb { padding: 16px 20px; display: grid; gap: 14px; }
+  .modal-sample .mb.muted { background: color-mix(in srgb, var(--muted) 40%, transparent); }
+  .modal-sample .mf { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .modal-sample .mf.between { justify-content: space-between; }
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+  @media (max-width: 520px) { .two { grid-template-columns: 1fr; } }
+  .secret { display: flex; gap: 8px; align-items: center; }
+  .secret code { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .callout { display: flex; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+  .callout.warn { background: var(--warning); color: var(--warning-foreground); border: 1px solid var(--warning-border); }
+  .callout.ok { background: var(--success); color: var(--success-foreground); border: 1px solid var(--success-border); }
+  .callout svg { flex-shrink: 0; margin-top: 2px; }
+  .ref { border: 1px solid var(--border); border-radius: 12px; background: var(--card); overflow: hidden; }
+  .ref .rh { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .ref table td, .ref table th { padding: 6px 12px; }
+  .ref .rf { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 14px; border-top: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 60%, transparent); font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .rule { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 40%, transparent); }
+  .rule .ic { width: 32px; height: 32px; border-radius: 6px; background: var(--accent); color: var(--primary); display: grid; place-items: center; flex-shrink: 0; }
+  .rule .tx { display: grid; min-width: 0; flex: 1; }
+  .rule b { font-size: 13px; font-weight: 500; }
+  .rule span { font-size: 11px; color: var(--muted-foreground); }
+  .rule code { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); font-size: 12px; font-weight: 600; }
+
+  /* code */
+  .codebar { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--muted); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .method { font-family: var(--font-mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: var(--primary); color: var(--primary-foreground); }
+  .url { font-family: var(--font-mono); font-size: 12px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  pre { margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; overflow: auto; }
+  pre.dark { background: var(--code-bg); color: var(--code-fg); padding: 16px; }
+  pre.light { background: color-mix(in srgb, var(--muted) 40%, transparent); color: var(--foreground); padding: 16px; font-size: 11.5px; }
+  .codefoot { padding: 8px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted-foreground); }
+
+  .rad { display: grid; place-items: center; height: 64px; background: var(--card); border: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .rules li { margin: 6px 0; }
+  .rules { padding-left: 18px; color: var(--foreground); font-size: 13px; max-width: 72ch; }
+  .kv { display: grid; grid-template-columns: 180px minmax(0,1fr); gap: 8px 16px; font-size: 13px; }
+  .kv dt { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .kv dd { margin: 0; }
+  @media (max-width: 520px) { .kv { grid-template-columns: 1fr; } }
+  .inv { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 6px 16px; font-size: 12px; }
+  .inv dt { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .inv dd { margin: 0; font-family: var(--font-mono); font-size: 11px; }
+  @media (max-width: 520px) { .inv { grid-template-columns: 1fr; } }
+  .inline-confirm { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted-foreground); flex-wrap: wrap; }
+  svg { display: block; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 6H20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M8 6V19M12 6V19M16 6V19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="8" cy="12" r="1.9" fill="var(--primary-foreground)" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="12" cy="15.5" r="1.9" fill="var(--primary-foreground)" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="16" cy="11" r="1.9" fill="var(--primary-foreground)" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+        </div>
+        <div class="brand-name"><b>khipu</b><span>.pe</span></div>
+      </div>
+      <h1 style="margin-top:14px">Design system del portal</h1>
+      <p class="lead">Tokens y componentes tal como viven en <code>portal/src/app/globals.css</code>, <code>lib/estilos.ts</code>, <code>components/ui</code> y <code>components/nav</code>. Cambia el tema del visor para ver la variante oscura. Versión 2026-09-16: shell completo, sidebar, top bar, menús, formularios, tablas, diálogos y código.</p>
+    </div>
+    <div class="meta">
+      <span class="pill ok"><i></i>UBL 2.1</span>
+      <span class="pill beta"><i></i>BETA Sunat</span>
+      <span class="pill">Tailwind v4 · base-ui · lucide</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head"><h2>Color · superficies y texto</h2><p>Neutros slate con un ligero sesgo frío; el fondo de página no es blanco puro.</p></div>
+    <div class="grid cols-6">
+      <div class="swatch"><div class="chipc" style="background:var(--background)"></div><div class="info"><span class="name">background</span><span class="val">#fafafc</span><span class="val">dark #0a0e1a</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--card)"></div><div class="info"><span class="name">card / popover</span><span class="val">#ffffff</span><span class="val">dark #111827</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--muted)"></div><div class="info"><span class="name">muted</span><span class="val">#f8fafc</span><span class="val">dark #161f30</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--secondary)"></div><div class="info"><span class="name">secondary</span><span class="val">#f1f5f9</span><span class="val">dark #1e293b</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--border)"></div><div class="info"><span class="name">border / input</span><span class="val">#e2e8f0</span><span class="val">dark rgba(226,232,240,.12)</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--foreground)"></div><div class="info"><span class="name">foreground</span><span class="val">#0f172a</span><span class="val">dark #e2e8f0</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Color · marca y semánticos</h2><p>El índigo es el único acento. Verde, ámbar y rosa son estado, no decoración.</p></div>
+    <div class="grid cols-6">
+      <div class="swatch"><div class="chipc" style="background:var(--primary)"></div><div class="info"><span class="name">primary / ring</span><span class="val">#4f46e5</span><span class="val">dark #8b83ff</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:linear-gradient(135deg,var(--primary),var(--primary-light))"></div><div class="info"><span class="name">primary → primary-light</span><span class="val">#4f46e5 → #6366f1</span><span class="val">logo</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--accent);border-bottom-color:var(--accent-border)"></div><div class="info"><span class="name">accent / accent-fg</span><span class="val">#eef2ff · #4338ca</span><span class="val">nav activa, fila activa, icono de sección</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--success);display:grid;place-items:center"><span class="pill ok"><i></i>Aceptado</span></div><div class="info"><span class="name">success</span><span class="val">#ecfdf5 · #047857</span><span class="val">solid #10b981</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--warning);display:grid;place-items:center"><span class="pill warn"><i></i>Con obs.</span></div><div class="info"><span class="name">warning</span><span class="val">#fffbeb · #b45309</span><span class="val">solid #f59e0b</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--destructive-soft);display:grid;place-items:center"><span class="pill bad"><i></i>Rechazado</span></div><div class="info"><span class="name">destructive</span><span class="val">#e11d48 · fondo /10</span><span class="val">dark #fb7185</span></div></div>
+    </div>
+    <div class="grid cols-4" style="margin-top:12px">
+      <div class="swatch"><div class="chipc" style="background:var(--sidebar);display:grid;place-items:center;color:var(--sidebar-foreground);font-size:12px">sidebar</div><div class="info"><span class="name">sidebar / -foreground</span><span class="val">#ffffff · #334155</span><span class="val">dark #0d1424 · #c7d2e0</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--sidebar-primary);display:grid;place-items:center;color:var(--sidebar-primary-foreground);font-size:12px">ítem activo</div><div class="info"><span class="name">sidebar-primary</span><span class="val">#eef2ff · #4338ca</span><span class="val">dark #23294d · #c3c0ff</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--code-bg);display:grid;place-items:center;color:var(--code-fg);font-family:var(--font-mono);font-size:11px">"serie": "F001"</div><div class="info"><span class="name">code (fijo)</span><span class="val">oklch(.18 .02 265)</span><span class="val">igual en ambos temas</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--overlay);display:grid;place-items:center;font-size:12px">overlay</div><div class="info"><span class="name">overlay</span><span class="val">rgba(15,23,42,.2) + blur</span><span class="val">dark rgba(0,0,0,.5)</span></div></div>
+    </div>
+    <p class="lead" style="margin-top:10px">Cada semántico tiene fondo (<code>--success</code>), texto (<code>--success-foreground</code>), borde (<code>--success-border</code>) y sólido para puntos (<code>--success-solid</code>). Nada usa la paleta de Tailwind directamente.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Tipografía</h2><p>Inter para interfaz, JetBrains Mono para todo dato: series, montos, fechas, ids, hashes, código.</p></div>
+    <div class="card pad">
+      <div class="spec"><span class="k">headline · 28/36 · 600</span><span style="font-size:28px;line-height:36px;font-weight:600;letter-spacing:-.02em">Series de facturación</span></div>
+      <div class="spec"><span class="k">dialog title · 16/24 · 600</span><span style="font-size:16px;font-weight:600;letter-spacing:-.01em">Nueva serie o contingencia</span></div>
+      <div class="spec"><span class="k">page (miga) · 13 · 600</span><span style="font-size:13px"><span style="color:var(--muted-foreground)">Configuración</span> <span style="color:var(--border)">/</span> <b>API keys &amp; integración</b></span></div>
+      <div class="spec"><span class="k">section · 13/11 mono</span><span><b style="font-size:13px">Llaves de acceso</b><br><span class="sub">Solo se guarda el hash · el secreto se muestra una vez, al crearla</span></span></div>
+      <div class="spec"><span class="k">body · 14/21 · 400</span><span>Administración de prefijos alfanuméricos autorizados y control secuencial de correlativos tributarios.</span></div>
+      <div class="spec"><span class="k">table · 13 · 400/600</span><span style="font-size:13px">Inversiones Andinas S.A.C. <span class="num">F001-00000136</span></span></div>
+      <div class="spec"><span class="k">menu / control · 12 · 500</span><span style="font-size:12px;font-weight:500">Cambiar contraseña · Estado SUNAT: Todos · Serie: Todas</span></div>
+      <div class="spec"><span class="k">label · 10–11 · caps</span><span class="eyebrow">Tu cuenta · Emisión &amp; SUNAT · Cliente / Receptor</span></div>
+      <div class="spec"><span class="k">metric · 18 mono · 600</span><span class="mono" style="font-size:18px;font-weight:600;letter-spacing:-.02em"><span style="color:var(--primary)">F001</span> #00000136 <span style="font-family:var(--font-sans);font-size:12px;font-weight:400;color:var(--muted-foreground)">/ 5 creadas</span></span></div>
+      <div class="spec"><span class="k">mono data · 13/11</span><span class="mono"><b>S/ 2,000.01</b> &nbsp; 15 Set 2026, 10:32 &nbsp; <span class="sub">RUC 20123456789 · id: 193f4b35</span></span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Radio, elevación y capas</h2><p>Un radio base de 8px; las tarjetas 12px; pills redondas. Sombras casi planas: el borde hace el trabajo.</p></div>
+    <div class="grid cols-4">
+      <div class="rad" style="border-radius:4px">4px · chips, código</div>
+      <div class="rad" style="border-radius:6px">6px · ítems de menú, celdas</div>
+      <div class="rad" style="border-radius:8px">8px · botones, inputs, disparadores</div>
+      <div class="rad" style="border-radius:12px">12px · tarjetas, modales, tablas</div>
+    </div>
+    <div class="grid cols-4" style="margin-top:12px">
+      <div class="card pad" style="box-shadow:var(--shadow-2xs)"><h3>shadow-2xs</h3><p class="sub">tarjetas, controles, tablas</p></div>
+      <div class="card pad" style="box-shadow:var(--shadow-xs)"><h3>shadow-xs</h3><p class="sub">botón primario, avatar, métricas</p></div>
+      <div class="card pad" style="box-shadow:var(--shadow-md)"><h3>shadow-md + ring</h3><p class="sub">popups: menú, selector</p></div>
+      <div class="card pad" style="box-shadow:0 20px 40px -20px rgba(0,0,0,.35)"><h3>overlay + blur</h3><p class="sub">modales y sheets</p></div>
+    </div>
+    <p class="lead" style="margin-top:10px">Capas: <code>z-10</code> contenido pegajoso · <code>z-20</code> TopBar · <code>z-30</code> cajón móvil · <code>z-50</code> popups, sheets y modales. Base de 4px; bloques de página separados por <code>gap-4</code>; ancho máximo <code>1520px</code>.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Shell: sidebar + top bar</h2><p>Sidebar fijo de 240px (blanco / #0d1424), top bar de 56px pegajosa con blur. En móvil el sidebar vive en un Sheet lateral.</p></div>
+    <div class="shell">
+      <div class="shellbody">
+        <div class="side">
+          <div>
+            <div class="hd"><div class="brand"><div class="brand-mark" style="width:28px;height:28px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6H20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M8 6V19M12 6V19M16 6V19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="brand-name"><b>khipu</b><span>.pe</span></div></div><span class="ubl">UBL 2.1</span></div>
+            <div class="trigger"><div class="av">B</div><div class="tx"><b>BACSYSTEM SOLUTIONS</b><span>RUC 20614798093</span></div><span class="cv">⇅</span></div>
+            <div class="grp">Emisión &amp; SUNAT</div>
+            <div class="it on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 10h8M8 14h8"/></svg>Comprobantes</div>
+            <div class="it off"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>Emitir comprobante <span class="chip pronto">Pronto</span></div>
+            <div class="it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 6h11M10 12h11M10 18h11M4 6h1v4M4 10h2M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Series correlativas</div>
+            <div class="it off"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5V8ZM3 8l9 5 9-5M12 13v8"/></svg>Catálogo <span class="chip pronto">Pronto</span></div>
+            <div class="grp">Configuración</div>
+            <div class="it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>Fiscal &amp; certificado</div>
+            <div class="it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></svg>API keys</div>
+          </div>
+          <div class="ft">
+            <div class="plan"><div class="t">Plan y consumo <span>— / —</span></div><div class="bar"></div></div>
+            <div class="trigger" style="margin-top:0"><div class="av">CB</div><div class="tx"><b>cbaciliodc</b><span>cbaciliodc@gmail.com</span></div><span class="cv">⇅</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="topbar">
+            <div class="l">
+              <div class="crumb"><span class="s">Configuración</span><span class="sl">/</span><b>API keys &amp; integración</b></div>
+              <div class="vsep"></div>
+              <span class="pill" style="opacity:.6" title="Monitoreo OSE: próximamente"><i></i>OSE · sin monitoreo</span>
+              <span class="pill beta"><i></i>BETA Sunat</span>
+            </div>
+            <div class="r">
+              <div class="search">⌕ Buscar por serie, RUC o cliente… <kbd>⌘K</kbd></div>
+              <div class="vsep"></div>
+              <button class="btn outline" disabled title="Exportar reporte: próximamente">⭳ Exportar</button>
+              <button class="btn outline">▤ Referencia técnica</button>
+              <button class="btn outline">▣ Prueba de emisión</button>
+              <button class="btn primary">＋ Crear API key</button>
+            </div>
+          </div>
+          <div style="padding:16px;display:grid;gap:12px;background:var(--background)">
+            <div class="card metrics">
+              <div><div class="eyebrow">Llaves activas</div><div class="v">5<small>/ 5 creadas</small></div><div class="h" style="color:var(--success-foreground)"><i class="dot" style="background:var(--success-solid)"></i>Listas para emitir por API</div></div>
+              <div><div class="eyebrow">Última llave creada</div><div class="v">fk_4R84-fP</div><div class="h">15 Set 2026, 15:00</div></div>
+              <div><div class="eyebrow">Llaves revocadas</div><div class="v" style="color:var(--muted-foreground)">0</div><div class="h">Ninguna revocada hasta ahora</div></div>
+              <div><div class="eyebrow">Autenticación</div><div class="v" style="color:var(--primary)">X-Api-Key</div><div class="h">Header HTTP · una llave por integración · <span style="color:var(--primary)">SHA-256</span></div></div>
+            </div>
+            <div class="card" style="height:120px;display:grid;place-items:center;color:var(--muted-foreground);font-size:12px;border-style:dashed">tabla (ver "Tabla estándar")</div>
+          </div>
+          <div class="topbar-note">
+            <span><b style="color:var(--foreground)">Izquierda</b> (<code>min-w-0</code>, nunca se desborda): hamburguesa en móvil → miga <i>Sección / Página</i> (el <code>h1</code> de la página) → pill OSE → pill de entorno (<span class="pill beta" style="height:18px"><i></i>BETA Sunat</span> ámbar o <span class="pill dark" style="height:18px"><i></i>Producción</span> negro).</span>
+            <span><b style="color:var(--foreground)">Derecha</b> (<code>shrink-0</code>): buscador (lg+) → Exportar (sm+) → acciones contextuales por ruta: <b style="color:var(--foreground)">máximo dos secundarias + una principal</b>; lo que no cabe va dentro de un diálogo. Comprobantes: <i>Nueva factura</i> (deshab.) · Series: <i>Referencia técnica</i>, <i>Nueva serie</i> · Empresa: <i>Referencia técnica</i>, <i>Probar conexión SUNAT</i> (deshab.), <i>Nueva empresa</i> · API keys: <i>Referencia técnica</i>, <i>Prueba de emisión</i>, <i>Crear API key</i>. El selector de tema no está aquí: vive en el menú de usuario.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Popups del sidebar: selector de empresa y menú de usuario</h2><p>Ambos con el ancho exacto de su disparador (216px), etiqueta de sección y fila activa en accent. <span class="src">nav/empresa-selector.tsx · nav/perfil-usuario.tsx · ui/menu.tsx</span></p></div>
+    <div class="grid cols-3" style="align-items:start">
+      <div>
+        <div class="trigger" style="margin:0 0 6px"><div class="av">B</div><div class="tx"><b>BACSYSTEM SOLUTIONS</b><span>RUC 20614798093</span></div><span class="cv">⇅</span></div>
+        <div class="popup">
+          <div class="lab">Cambiar de empresa</div>
+          <div class="sel on"><div class="av">B</div><div class="tx"><b>BACSYSTEM SOLUTIONS</b><span>RUC 20614798093 · Beta</span></div><span class="ck">✓</span></div>
+          <div class="sel"><div class="av off">C</div><div class="tx"><b>Comercial Wari E.I.R.L.</b><span>RUC 20456789123 · Producción</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="popup" style="margin-bottom:6px">
+          <div class="lab">Tu cuenta</div>
+          <div class="acct"><div class="av">CB</div><div class="tx"><b>cbaciliodc</b><span class="em">cbaciliodc@gmail.com</span><span class="rl">Administrador</span></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <hr>
+          <div class="lab">Tema</div>
+          <div style="padding:0 2px 6px"><div class="tt wide"><span class="on">☀ Claro</span><span>☾ Oscuro</span><span>▭ Sistema</span></div></div>
+          <hr>
+          <div class="mi"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg>Cambiar contraseña</div>
+          <div class="mi hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Documentación API</div>
+          <hr>
+          <div class="mi danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Cerrar sesión</div>
+        </div>
+        <div class="trigger" style="margin:0"><div class="av">CB</div><div class="tx"><b>cbaciliodc</b><span>cbaciliodc@gmail.com</span></div><span class="cv">⇅</span></div>
+      </div>
+      <div class="card pad" style="display:grid;gap:8px;font-size:12px;color:var(--muted-foreground)">
+        <h3 style="color:var(--foreground)">Anatomía de <code>ui/menu</code></h3>
+        <dl class="kv" style="grid-template-columns:110px minmax(0,1fr)">
+          <dt>MenuContent</dt><dd>rounded-lg · bg-popover · p-1 · shadow-md · ring-1 · scale/opacity 150 ms</dd>
+          <dt>MenuItem</dt><dd>rounded-md · px-2 py-1.5 · 12px/500 · icono 14px muted · highlight accent/70</dd>
+          <dt>variant</dt><dd><code>destructive</code>: rojo, hover destructive/10</dd>
+          <dt>MenuRadioItem</dt><dd>check a la derecha (primary)</dd>
+          <dt>MenuGroupLabel</dt><dd>uppercase 10px · tracking-wider</dd>
+          <dt>MenuSeparator</dt><dd>-mx-1 my-1 · h-px · border/70</dd>
+        </dl>
+        <p>Es el menú a reutilizar para "⋯ más acciones" de las filas de tablas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Botones y recetas</h2><p>La acción principal de la top bar es negra (foreground). El índigo confirma dentro de formularios. <span class="src">ui/button.tsx · lib/estilos.ts · nav/top-bar.tsx</span></p></div>
+    <div class="card pad stack">
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Top bar · h-8 · 12px</div>
+        <div class="row">
+          <button class="btn primary">＋ Crear API key</button>
+          <button class="btn outline">▤ Referencia técnica</button>
+          <button class="btn outline">▣ Prueba de emisión</button>
+          <button class="btn primary" disabled title="Los comprobantes se emiten por API">＋ Nueva factura</button>
+          <button class="btn outline" disabled title="Próximamente">⭳ Exportar</button>
+          <span class="src">ACCION_PRINCIPAL · ACCION_SECUNDARIA</span>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Formularios y diálogos · h-10 / h-9</div>
+        <div class="row">
+          <button class="btn brand h10">Guardar serie</button>
+          <button class="btn outline h10">Cancelar</button>
+          <button class="btn brand h9">Generar llave</button>
+          <button class="btn outline h9">Cancelar</button>
+          <button class="btn primary h9">Entendido</button>
+          <button class="btn brand h10" disabled>Guardando…</button>
+          <span class="src">BOTON_PRIMARIO · BOTON_SECUNDARIO · cierre informativo</span>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">ui/button · variantes cva</div>
+        <div class="row">
+          <button class="btn brand">default</button>
+          <button class="btn outline">outline</button>
+          <button class="btn" style="background:var(--secondary)">secondary</button>
+          <button class="btn ghost">ghost</button>
+          <button class="btn danger" style="background:var(--destructive-soft)">destructive</button>
+          <button class="btn" style="color:var(--primary);text-decoration:underline;text-underline-offset:4px">link</button>
+          <span class="sep">|</span>
+          <button class="btn outline xs">xs</button>
+          <button class="btn outline sm">sm</button>
+          <button class="btn outline">default</button>
+          <button class="btn outline icon">⟳</button>
+          <button class="btn outline icon sm">≡</button>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Acciones de fila · h-7 · 12px · separadas por |</div>
+        <div class="row">
+          <button class="btn ghost sm" disabled title="Regenerar: próximamente">⟳ Regenerar</button><span class="sep">|</span><button class="btn danger sm">⊘ Revocar</button>
+          <span class="sep">·</span>
+          <span class="inline-confirm">¿Revocar de forma permanente? <button class="btn danger-solid sm">⊘ Sí, revocar</button> <button class="btn outline sm">Cancelar</button></span>
+          <span class="sep">·</span>
+          <button class="btn outline xs">XML</button><button class="btn outline xs" disabled title="PDF: próximamente">PDF</button><button class="btn ghost xs" disabled title="Más acciones: próximamente">⋯</button>
+          <span class="sep">·</span>
+          <span class="chip serie">F001</span><span class="copy" title="Copiar">⧉</span>
+        </div>
+        <p class="lead" style="font-size:12px;margin-top:6px">Las confirmaciones irreversibles se hacen <b>en línea</b> dentro de la fila, no con un diálogo. El botón copiar (<code>boton-copiar.tsx</code>) cambia a ✓ durante 1,5 s y en filas aparece al pasar el cursor.</p>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Controles de filtro · h-9</div>
+        <div class="row">
+          <div class="segment"><span class="on">Todos</span><span>Facturas</span><span>Boletas</span><span>Notas de crédito</span></div>
+          <div class="select">Estado SUNAT: Todos <span style="color:var(--muted-foreground)">▾</span></div>
+          <div class="select off" title="Filtro por serie: próximamente">Serie: Todas ▾</div>
+          <div class="select off" title="Filtro por período: próximamente">Período: Todos ▾</div>
+          <div class="select" style="width:36px;justify-content:center;padding:0" title="Refrescar lista">⟳</div>
+          <div class="segment sm"><span class="on">cURL</span><span>Node.js / TS</span><span>Python</span></div>
+          <div class="tt"><span class="on">☀</span><span>☾</span><span>▭</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Formularios</h2><p>Campo sobre muted que pasa a card al enfocar; ayuda en mono; dato de solo lectura con caja. <span class="src">lib/estilos.ts (CAMPO, ETIQUETA_CAMPO, AYUDA_CAMPO, ETIQUETA_DATO)</span></p></div>
+    <div class="card pad">
+      <div class="grid cols-3">
+        <div class="field"><label for="ds-serie">Código de serie</label><input id="ds-serie" class="mono" placeholder="Ej. F002" maxlength="4"><span class="help">4 caracteres alfanuméricos · F### para facturas</span></div>
+        <div class="field"><label for="ds-usuario">Usuario SOL</label><input id="ds-usuario" class="mono err" value="MODDATO"><span class="error">El usuario SOL debe tener 8 caracteres.</span></div>
+        <div class="field"><label for="ds-clave">Clave SOL</label><input id="ds-clave" type="password" value="••••••••" disabled><span class="help">Se guarda cifrada con MASTER_KEY; nunca vuelve a mostrarse</span></div>
+        <div class="dato"><span class="l">RUC</span><span class="v">20614798093</span></div>
+        <div class="dato"><span class="l">Vigencia del certificado</span><span class="v" style="color:var(--success-foreground)">12 Mar 2027</span></div>
+        <div class="dato"><span class="l">Código de establecimiento</span><span class="v pend" title="No expuesto todavía por la API">—</span></div>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <label style="display:inline-flex;align-items:center;gap:8px;font-size:12px"><input type="checkbox" id="ds-chk" disabled title="Selección múltiple: próximamente"> Selección múltiple (deshabilitada)</label>
+        <span class="src">Filas por página</span> <span class="seg-sm"><span class="on">10</span><span>20</span><span>50</span></span>
+        <span class="src">Validación: zod + react-hook-form · errores desde <code>lib/messages.ts</code></span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Pills, chips y estados</h2><p>Pill: borde + fondo tenue + punto sólido + mono 11px. Verde = aceptado/activo, ámbar = provisional, rojo = error, neutro = en proceso o revocado.</p></div>
+    <div class="card pad stack">
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Estados SUNAT del comprobante</div>
+        <div class="row">
+          <span class="pill"><i></i>Recibido</span>
+          <span class="pill"><i></i>Firmado</span>
+          <span class="pill"><i></i>Enviado</span>
+          <span class="pill"><i></i>Pendiente de agrupación</span>
+          <span class="pill ok"><i></i>Aceptado</span>
+          <span class="pill ok"><i></i>Aceptado con CDR</span>
+          <span class="pill warn"><i></i>Aceptado con obs.</span>
+          <span class="pill bad"><i></i>Rechazado</span>
+          <span class="pill bad"><i></i>Inválido</span>
+          <span class="pill bad"><i></i>Error de envío</span>
+          <span class="pill"><i></i>Anulado</span>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Entidades y entorno</div>
+        <div class="row">
+          <span class="pill ok"><i></i>Activa</span>
+          <span class="pill"><i></i>Inactiva</span>
+          <span class="pill"><i></i>Revocada</span>
+          <span class="pill ok"><i></i>Credenciales SOL cargadas</span>
+          <span class="pill warn"><i></i>Certificado vence en 21 días</span>
+          <span class="pill bad"><i></i>Certificado vencido</span>
+          <span class="pill beta"><i></i>BETA Sunat</span>
+          <span class="pill dark"><i></i>Producción</span>
+          <span class="pill" style="opacity:.6"><i></i>OSE · sin monitoreo</span>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Chips</div>
+        <div class="row">
+          <span class="chip tipo">01</span><span class="chip tipo">03</span><span class="chip tipo">07</span><span class="chip tipo">08</span>
+          <span class="chip serie">F001</span><span class="chip serie off">fk_demo000</span>
+          <span class="chip">5 activas · 5 en total</span><span class="chip">id: 193f4b35</span><span class="chip">201 Created</span>
+          <span class="chip pronto">Pronto</span><span class="chip pronto">Próximamente</span><span class="ubl">UBL 2.1</span>
+          <span class="chip" style="background:var(--secondary);color:var(--primary);border:0">varchar(10)</span>
+          <span class="pill brand"><i style="opacity:1;background:var(--accent-foreground)"></i>Administrador</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Franja de métricas</h2><p>Una sola tarjeta dividida en columnas, encima de cada tabla. Valor en mono; ayuda en 11px con punto de estado.</p></div>
+    <div class="card metrics">
+      <div><div class="eyebrow">Series habilitadas</div><div class="v">3<small>/ 3 configuradas</small></div><div class="h" style="color:var(--success-foreground)"><i class="dot" style="background:var(--success-solid)"></i>100% operativas</div></div>
+      <div><div class="eyebrow">Último correlativo emitido</div><div class="v"><span style="color:var(--primary)">F001</span> #00000136</div><div class="h">Factura electrónica · <span class="mono">14 Set 2026</span></div></div>
+      <div><div class="eyebrow">Cobertura de comprobantes</div><div class="v">1<small>/ 4 tipos</small></div><div class="h">01 FAC · <span style="color:var(--primary)">UBL 2.1</span></div></div>
+      <div><div class="eyebrow">Tipos sin serie</div><div class="v" style="color:var(--destructive)">3</div><div class="h" style="color:var(--destructive)"><i class="dot" style="background:var(--destructive)"></i>03 BOL, 07 NC, 08 ND</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Tabla estándar</h2><p>Barra de filtros → contenedor → cabecera muted → filas de 46px → vacío → pie con rango, filas por página y paginación. Mismo esqueleto en comprobantes, series y API keys.</p></div>
+    <div class="thead-bar">
+      <div class="sec-head"><div class="sec-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg></div><div><h3>Llaves de acceso</h3><span class="sub">Solo se guarda el hash · el secreto se muestra una vez, al crearla</span></div></div>
+      <div class="row"><div class="select">Estado: Todas ▾</div><div class="select" style="width:36px;justify-content:center;padding:0">⟳</div></div>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Llave</th><th>Creada</th><th>Revocada</th><th>Estado</th><th class="right">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip serie">fk_4R84-fP</span> <span class="sub" style="letter-spacing:.2em">••••••••</span><div class="sub">id: 193f4b35</div></td><td class="mono" style="font-size:12px">15 Set 2026, 15:00</td><td class="mono" style="font-size:12px;color:var(--muted-foreground)">—</td><td><span class="pill ok"><i></i>Activa</span></td><td class="right"><button class="btn ghost sm" disabled>⟳ Regenerar</button> <span class="sep">|</span> <button class="btn danger sm">⊘ Revocar</button></td></tr>
+          <tr class="off"><td><span class="chip serie off">fk_demo000</span> <span class="sub" style="letter-spacing:.2em">••••••••</span><div class="sub">id: k-revoca</div></td><td class="mono" style="font-size:12px">1 Ago 2026, 10:00</td><td class="mono" style="font-size:12px;color:var(--muted-foreground)">20 Ago 2026, 07:00</td><td><span class="pill"><i></i>Revocada</span></td><td class="right"><span class="sub">—</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="tfoot">
+        <div class="row" style="gap:8px">Mostrando <b class="mono" style="color:var(--foreground)">1–2</b> de <b class="mono" style="color:var(--foreground)">2</b> llaves · Filas <span class="seg-sm"><span class="on">10</span><span>20</span><span>50</span></span> · <span class="src">Revocar es irreversible: la llave deja de autenticar al instante</span></div>
+        <div class="pager"><button class="btn outline sm" disabled>‹ Anterior</button><span class="on">1</span><button class="btn outline sm" disabled>Siguiente ›</button></div>
+      </div>
+    </div>
+    <div class="grid cols-2" style="margin-top:12px;align-items:start">
+      <div class="card" style="overflow:hidden">
+        <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th style="width:32px"></th><th>Comprobante</th><th>Cliente / Receptor</th><th class="right">Importe total</th><th>Estado SUNAT</th></tr></thead>
+          <tbody>
+            <tr><td><input type="checkbox" disabled aria-label="Seleccionar"></td><td><div class="num">F001-00000136</div><div class="sub">Factura electrónica</div></td><td><div style="font-weight:500">Inversiones Andinas S.A.C.</div><div class="sub">RUC 20123456789</div></td><td class="right"><div class="num">S/ 2,000.01</div><div class="sub">IGV S/ 305.09</div></td><td><span class="pill ok"><i></i>Aceptado con CDR</span></td></tr>
+            <tr><td><input type="checkbox" disabled aria-label="Seleccionar"></td><td><div class="num">F001-00000134</div><div class="sub">Factura electrónica</div></td><td><div style="font-weight:500">Comercial Wari E.I.R.L.</div><div class="sub">RUC 20456789123</div></td><td class="right"><div class="num">$ 120.00</div><div class="sub">IGV $ 18.31</div></td><td><span class="pill bad"><i></i>Rechazado (2324)</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="tfoot"><span>Mostrando <b class="mono" style="color:var(--foreground)">1–2</b> de <b class="mono" style="color:var(--foreground)">136</b></span><div class="pager"><span class="on">1</span><span>2</span><span>…</span><span>14</span></div></div>
+      </div>
+      <div class="card" style="overflow:hidden">
+        <table><thead><tr><th>Tipo de comprobante</th><th>Código serie</th><th class="right">Último número</th><th>Estado</th></tr></thead></table>
+        <div class="empty"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>Todavía no tienes series. Crea la primera con «Nueva serie».</div>
+        <div class="tfoot"><span>Mostrando <b class="mono" style="color:var(--foreground)">0–0</b> de <b class="mono" style="color:var(--foreground)">0</b> series</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Diálogos: tres familias</h2><p>Estructura fija: cabecera con icono en accent, cuerpo, pie. Formulario · secreto de un solo uso · referencia técnica. <span class="src">ui/dialog.tsx</span></p></div>
+    <div class="grid cols-2" style="align-items:start">
+      <div class="modal-sample">
+        <div class="mh"><div class="ic">＋</div><div><h3>Nueva serie o contingencia</h3><p class="sub" style="font-family:var(--font-sans);font-size:13px">Alta de serie conforme al catálogo SUNAT N.º 01</p></div></div>
+        <div class="mb">
+          <div class="field"><label for="ds-tipo">Tipo de comprobante</label><input id="ds-tipo" value="01 · Factura electrónica (F###)" readonly><span class="help">Catálogo SUNAT N.º 01</span></div>
+          <div class="two">
+            <div class="field"><label for="ds-serie2">Código de serie</label><input id="ds-serie2" class="mono" placeholder="Ej. F002"></div>
+            <div class="field"><label for="ds-num2">Último número</label><input id="ds-num2" class="mono" value="0"></div>
+          </div>
+        </div>
+        <div class="mf"><button class="btn outline h9">Cancelar</button><button class="btn brand h9">Guardar serie</button></div>
+      </div>
+      <div class="modal-sample">
+        <div class="mh"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg></div><div><h3>Nueva API key</h3><p class="sub" style="font-family:var(--font-sans);font-size:13px">Credencial para autenticar tu integración con el header X-Api-Key</p></div></div>
+        <div class="mb">
+          <div class="dato"><span class="l">Tu API key</span><div class="secret"><code>fk_4R84-fP9k2m4p1q7r3s5t8uZxWvYbNcMaLk</code><button class="btn outline h9" style="border-color:var(--success-border);background:var(--success);color:var(--success-foreground)">✓ Copiada</button></div></div>
+          <div class="callout warn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/></svg><p>Guárdala ahora en un lugar seguro: <b>no volverá a mostrarse</b>. Solo se conserva un hash; si la pierdes tendrás que revocarla y crear otra.</p></div>
+        </div>
+        <div class="mf"><button class="btn brand h9">Listo, la guardé</button></div>
+      </div>
+    </div>
+    <div class="modal-sample" style="margin-top:12px">
+      <div class="mh"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div><h3>Referencia técnica de API keys</h3><p class="sub" style="font-family:var(--font-sans);font-size:13px">Modelo de datos de la entidad 'api_key' y reglas de autenticación</p></div></div>
+      <div class="mb muted">
+        <div class="two">
+          <div class="ref">
+            <div class="rh"><div class="sec-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg></div><div><h4>Entidad 'api_key'</h4><span class="sub">tabla api_key · varias llaves por empresa</span></div></div>
+            <table>
+              <thead><tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr></thead>
+              <tbody>
+                <tr><td class="mono" style="font-weight:600">id <span style="color:var(--warning-solid)">⚿</span></td><td><span class="chip" style="background:var(--secondary);color:var(--primary);border:0">uuid</span></td><td style="color:var(--muted-foreground)">Identificador de la llave</td></tr>
+                <tr><td class="mono" style="font-weight:600">key_hash</td><td><span class="chip" style="background:var(--secondary);color:var(--primary);border:0">varchar(64)</span></td><td style="color:var(--muted-foreground)">SHA-256 + pepper; nunca sale por la API</td></tr>
+                <tr><td class="mono" style="font-weight:600">prefijo</td><td><span class="chip" style="background:var(--secondary);color:var(--primary);border:0">varchar(10)</span></td><td style="color:var(--muted-foreground)">Primeros 10 caracteres</td></tr>
+              </tbody>
+            </table>
+            <div class="rf"><span>🔒 key_hash único · la llave en claro no se almacena</span></div>
+          </div>
+          <div class="ref">
+            <div class="rh"><div class="sec-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><h4>Reglas de autenticación</h4><span class="sub">rutas /v1/facturas, /v1/series y /v1/empresa</span></div></div>
+            <div style="display:grid;gap:8px;padding:12px">
+              <div class="rule"><div class="ic">⌁</div><div class="tx"><b>Header de autenticación</b><span>Una llave por request, sin esquema Bearer</span></div><code>X-Api-Key</code></div>
+              <div class="rule"><div class="ic">⌁</div><div class="tx"><b>Revocación</b><span>Irreversible: deja de autenticar al instante</span></div><code>DELETE</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mf between"><a href="#" style="font-size:12px;font-weight:500">▤ Documentación completa de la API</a><button class="btn primary h9">Entendido</button></div>
+    </div>
+    <p class="lead" style="margin-top:10px;font-size:12px">Ancho de referencia: <code>min(1200px, 100vw − 3rem)</code>, columnas por <code>@container</code>. Las confirmaciones irreversibles no abren diálogo: se confirman en línea en la fila.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Código y datos técnicos</h2><p>Barra de endpoint con método, URL y pestañas de lenguaje; bloque de código siempre oscuro; respuesta sobre muted. <span class="src">api-keys/ejemplo-integracion.tsx · comprobantes/vista-previa.tsx</span></p></div>
+    <div class="grid cols-2" style="align-items:start">
+      <div class="card" style="overflow:hidden">
+        <div class="codebar"><span class="method">POST</span><span class="url">http://localhost:8080/v1/facturas</span><div class="segment sm"><span class="on">cURL</span><span>Node.js / TS</span><span>Python</span></div><span class="copy">⧉</span></div>
+<pre class="dark">curl -X POST http://localhost:8080/v1/facturas \
+  -H "X-Api-Key: fk_TU_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "serie": "F001",
+    "fecha_emision": "2026-09-15",
+    "moneda": "PEN",
+    "cliente": { "tipo_doc": "6", "num_doc": "20554198211", … },
+    "items": [ { "descripcion": "Desarrollo e integración web",
+                 "cantidad": 1, "precio_unitario": 2000, … } ],
+    "enviar_automatico": true
+  }'</pre>
+        <div class="codefoot">Reemplaza <code>fk_TU_API_KEY</code> por una llave activa. Si omites <code>correlativo</code>, el número lo asigna la serie.</div>
+      </div>
+      <div class="card" style="overflow:hidden">
+        <div class="codebar"><h4 style="flex:1">Respuesta</h4><span class="pill ok" style="border-radius:4px">201 Created</span></div>
+<pre class="light">{
+  "estado": "exito",
+  "datos": {
+    "serie": "F001",
+    "numero": 126,
+    "estado_documento": "ACEPTADO",
+    "hash": "y4M8+jW8Xp278K1aM02q19KjvO3k=",
+    "cdr": { "codigo": "0", "descripcion": "La Factura numero F001-126, ha sido aceptada" },
+    "totales": { "gravado": 2000.00, "igv": 360.00, "total": 2360.00 }
+  }
+}</pre>
+        <div class="codefoot"><code>estado_documento</code> queda en <code>ENVIADO</code> si SUNAT demora; el CDR llega por reintentos y se ve en Comprobantes.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Patrón "próximamente"</h2><p>Lo que Stitch muestra y el backend aún no soporta se deja presente pero deshabilitado, para que el layout ya sea el definitivo.</p></div>
+    <div class="card pad">
+      <div class="row">
+        <button class="btn outline" disabled title="Exportar reporte: próximamente">⭳ Exportar</button>
+        <div class="select off" title="Filtro por período: próximamente">Período: Todos ▾</div>
+        <span class="pill" style="opacity:.6"><i></i>OSE · sin monitoreo</span>
+        <div class="plan" style="margin:0;width:200px"><div class="t">Plan y consumo <span>— / —</span></div><div class="bar"></div></div>
+        <span class="chip pronto">Próximamente</span>
+        <button class="btn ghost sm" disabled title="Regenerar: próximamente">⟳ Regenerar</button>
+        <button class="btn outline xs" disabled title="Representación impresa (PDF): próximamente">PDF</button>
+      </div>
+      <ul class="rules" style="margin-top:12px">
+        <li><code>disabled</code> + <code>title="&lt;Función&gt;: próximamente"</code> (y la razón, si aplica: "requiere filtro por serie en la API").</li>
+        <li>Estilo: <code>text-muted-foreground</code>, <code>opacity-60</code>, <code>cursor-not-allowed</code>. Nunca se oculta ni se simula.</li>
+        <li>Hoy: búsqueda ⌘K, Exportar, monitoreo OSE, pestañas por tipo, filtros de período/serie, selección múltiple, PDF, Regenerar llave, webhooks, plan y consumo, emisión manual, catálogo.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Formato de datos, iconos y tema</h2></div>
+    <div class="grid cols-2">
+      <div class="card pad">
+        <dl class="kv">
+          <dt>fecha</dt><dd class="mono">15 Set 2026 <span class="sub">formatearFecha</span></dd>
+          <dt>fecha y hora</dt><dd class="mono">15 Set 2026, 10:32 <span class="sub">zona America/Lima</span></dd>
+          <dt>monto</dt><dd class="mono">S/ 2,000.01 · $ 850.00 · EUR 1.00</dd>
+          <dt>correlativo</dt><dd class="mono">F001-00000126 <span class="sub">8 dígitos</span></dd>
+          <dt>RUC / DNI</dt><dd class="mono">20614798093 · 45678912</dd>
+          <dt>id / hash</dt><dd class="mono">193f4b35 <span class="sub">8 chars, title completo</span></dd>
+        </dl>
+      </div>
+      <div class="card pad">
+        <dl class="kv">
+          <dt>iconos</dt><dd>lucide-react · 18px sidebar · 16px botones y secciones · 14px filas y menús · 12px pies</dd>
+          <dt>color de icono</dt><dd><code>muted-foreground</code>; primary solo en activo o icono de sección</dd>
+          <dt>tema</dt><dd>next-themes por clase; Claro / Oscuro / Sistema en el menú de usuario</dd>
+          <dt>accesibilidad</dt><dd><code>aria-label</code> en disparadores · <code>radiogroup</code> en segmentados · foco con <code>ring-ring</code></dd>
+          <dt>móvil</dt><dd>sidebar en Sheet · métricas a 2 columnas · tablas con scroll propio</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Inventario de componentes</h2><p>Dónde vive cada cosa en <code>portal/src</code>.</p></div>
+    <div class="card pad">
+      <dl class="inv">
+        <dt>components/ui</dt><dd>badge · button · card · dialog · input · label · menu · pagination · select · selector-por-pagina · sheet · table</dd>
+        <dt>components/nav</dt><dd>logo · sidebar-content · sidebar-nav · empresa-selector · perfil-usuario · theme-toggle · top-bar · mobile-nav</dd>
+        <dt>components/comprobantes</dt><dd>comprobantes-table · estado-badge · boton-copiar · vista-previa · reenviar-button</dd>
+        <dt>components/series</dt><dd>series-table · nueva-serie-dialog · nueva-serie-form · referencia-series</dd>
+        <dt>components/empresa</dt><dd>certificado-form · credenciales-sol-form · nueva-empresa-dialog · nueva-empresa-form · referencia-empresa</dd>
+        <dt>components/api-keys</dt><dd>api-keys-table · nueva-api-key-dialog · referencia-api-keys · ejemplo-integracion</dd>
+        <dt>components/auth</dt><dd>auth-shell · login-form · registro-form · recuperar-form · restablecer-form</dd>
+        <dt>lib</dt><dd>estilos.ts · formato.ts · paginacion.ts · messages.ts</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Reglas de uso</h2></div>
+    <ul class="rules">
+      <li><b>Solo datos reales.</b> Lo que Stitch muestra y el backend no soporta se renderiza deshabilitado con <code>title</code> explicativo, nunca se oculta ni se simula.</li>
+      <li><b>Color por token.</b> Nada de <code>emerald-500</code> ni hex en componentes; los semánticos tienen fondo, texto, borde y sólido, con variante dark.</li>
+      <li><b>Mono para datos.</b> Series, correlativos, montos, fechas, RUC, hashes y códigos SUNAT van en JetBrains Mono con <code>tabular-nums</code>.</li>
+      <li><b>Sin desbordes.</b> Contenedores flex/grid llevan <code>min-w-0</code>; columnas <code>minmax(0,1fr)</code>; tablas dentro de <code>overflow-x-auto</code>; textos que crecen envuelven, no se recortan. La miga de la top bar lleva <code>overflow-hidden</code> para no pisar los pills.</li>
+      <li><b>El TopBar es el h1.</b> Las páginas no repiten título; el breadcrumb y la acción principal contextual viven en el header. Máximo dos secundarias + una principal; el resto va en diálogos.</li>
+      <li><b>Popups al ancho del disparador.</b> Selector de empresa y menú de usuario miden lo que su tarjeta (<code>w-(--anchor-width)</code>, <code>min-w-0</code>) y no invaden el contenido principal.</li>
+      <li><b>Un solo display por contenedor.</b> No mezclar <code>inline-flex</code> y <code>grid</code> en el mismo elemento: según el orden del CSS generado gana uno u otro y el layout se apila.</li>
+      <li><b>Modales centrados con flex</b>, anchura por <code>min(1200px, 100vw − 3rem)</code> y columnas por <code>@container</code>; confirmaciones irreversibles en línea, no en modal.</li>
+      <li><b>Pendientes del sistema.</b> Tooltip real (hoy <code>title</code>), Toast global, menú ⋯ de filas con <code>ui/menu</code>, gráficos del dashboard, rail colapsado para tablet.</li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>

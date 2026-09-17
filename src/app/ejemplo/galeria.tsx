@@ -1,0 +1,267 @@
+"use client";
+
+import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, PencilIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
+import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
+import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
+import { Kpi } from "@/components/datos/kpi";
+import { ListaDatos } from "@/components/datos/lista-datos";
+import { Timeline } from "@/components/datos/timeline";
+import { Alerta } from "@/components/feedback/alerta";
+import { EstadoVacio } from "@/components/feedback/estado-vacio";
+import { Skeleton, SkeletonMetricas } from "@/components/feedback/skeleton";
+import { useToast } from "@/components/feedback/toast";
+import { Tooltip } from "@/components/feedback/tooltip";
+import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
+import { Casilla, Interruptor } from "@/components/formularios/casilla";
+import { Combobox } from "@/components/formularios/combobox";
+import { EntradaFecha } from "@/components/formularios/entrada-fecha";
+import { EntradaMonto } from "@/components/formularios/entrada-monto";
+import { GrupoOpciones } from "@/components/formularios/opciones";
+import { ZonaArchivos } from "@/components/formularios/zona-archivos";
+import { Acordeon } from "@/components/navegacion/acordeon";
+import { DialogoConfirmacion } from "@/components/navegacion/dialogo-confirmacion";
+import { MenuAcciones } from "@/components/navegacion/menu-acciones";
+import { Paleta } from "@/components/navegacion/paleta";
+import { PanelLateral } from "@/components/navegacion/panel-lateral";
+import { Pasos, TarjetaPaso } from "@/components/navegacion/pasos";
+import { Tabs } from "@/components/navegacion/tabs";
+import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
+import { PillEstado } from "@/components/patrones/pill-estado";
+import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
+import { formatearMonto } from "@/lib/formato";
+import { cn } from "@/lib/utils";
+
+type Doc = { id: string; numero: string; cliente: string; total: number; estado: "ok" | "aviso" | "error" };
+const DOCS: Doc[] = [
+  { id: "1", numero: "F001-00000136", cliente: "Inversiones Andinas S.A.C.", total: 2000.01, estado: "ok" },
+  { id: "2", numero: "F001-00000135", cliente: "María Quispe Huamán", total: 850, estado: "aviso" },
+  { id: "3", numero: "F001-00000134", cliente: "Comercial Wari E.I.R.L.", total: 120, estado: "error" },
+];
+const COLUMNAS: Columna<Doc>[] = [
+  { id: "numero", titulo: "Documento", ordenable: true, className: "font-mono font-semibold" },
+  { id: "cliente", titulo: "Cliente", ordenable: true },
+  { id: "total", titulo: "Total", ordenable: true, alinear: "derecha", className: "font-mono", render: (d) => formatearMonto("PEN", d.total) },
+  { id: "estado", titulo: "Estado", render: (d) => <PillEstado tono={d.estado}>{{ ok: "Aceptado", aviso: "Con obs.", error: "Rechazado" }[d.estado]}</PillEstado> },
+  {
+    id: "acciones",
+    titulo: "",
+    alinear: "derecha",
+    render: () => (
+      <MenuAcciones
+        acciones={[
+          { label: "Ver detalle", icon: EyeIcon, onClick: () => {} },
+          { label: "Descargar XML", icon: DownloadIcon, onClick: () => {} },
+          { label: "Editar", icon: PencilIcon, disabled: true, title: "Edición: próximamente" },
+          { label: "Eliminar", icon: Trash2Icon, destructiva: true, separador: true, onClick: () => {} },
+        ]}
+      />
+    ),
+  },
+];
+
+const SECCION = cn(TARJETA, "grid gap-4 px-5 py-4");
+
+export function Galeria() {
+  const toast = useToast();
+  const [confirmar, setConfirmar] = useState(false);
+  const [panel, setPanel] = useState(false);
+  const [paleta, setPaleta] = useState(false);
+  const [monto, setMonto] = useState<number | null>(2360);
+  const [moneda, setMoneda] = useState("PEN");
+  const [fecha, setFecha] = useState("2026-09-15");
+  const [archivo, setArchivo] = useState<File | null>(null);
+  const [cliente, setCliente] = useState<string | null>("20554198211");
+  const [tipo, setTipo] = useState<"01" | "03">("01");
+
+  return (
+    <>
+      {/* ── Feedback ─────────────────────────────────────────────── */}
+      <section className={SECCION}>
+        <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío" conBorde={false} className="px-0 py-0" />
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
+            Toast ok
+          </button>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
+            Toast error con acción
+          </button>
+          <button
+            type="button"
+            className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}
+            onClick={() => toast.promise(new Promise((r) => setTimeout(r, 1500)), { cargando: "Enviando a SUNAT…", ok: "Aceptado con CDR", error: "Rechazado" })}
+          >
+            Toast promise
+          </button>
+          <Tooltip texto="Exportar reporte: próximamente">
+            <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>
+              Con tooltip
+            </button>
+          </Tooltip>
+        </div>
+        <div className="grid gap-2">
+          <Alerta tono="info" titulo="Entorno de pruebas">Los documentos emitidos aquí no tienen validez tributaria.</Alerta>
+          <Alerta tono="aviso" accion={<button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>Renovar</button>}>El certificado vence en 21 días.</Alerta>
+          <Alerta tono="error" titulo="Envío rechazado">Código 2324: el RUC del receptor no existe.</Alerta>
+          <Alerta tono="ok">Credenciales SOL verificadas correctamente.</Alerta>
+        </div>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <SkeletonMetricas columnas={2} />
+          <div className="flex items-center gap-3">
+            <Skeleton className="size-9 rounded-full" />
+            <div className="grid flex-1 gap-1.5">
+              <Skeleton className="h-3 w-1/2" />
+              <Skeleton className="h-2.5 w-3/4" />
+            </div>
+          </div>
+        </div>
+        <EstadoVacio icon={InboxIcon} titulo="Sin documentos todavía" accion={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Nuevo documento</button>}>
+          Cuando emitas el primero aparecerá aquí con su estado en SUNAT.
+        </EstadoVacio>
+      </section>
+
+      {/* ── Formularios ─────────────────────────────────────────── */}
+      <section className={SECCION}>
+        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · fecha · monto · casilla · interruptor · opciones · archivos" conBorde={false} className="px-0 py-0" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <Campo id="g-serie" etiqueta="Serie" ayuda="4 caracteres alfanuméricos">
+            <Entrada id="g-serie" mono placeholder="F001" maxLength={4} />
+          </Campo>
+          <Campo id="g-ruc" etiqueta="RUC" error="Debe tener 11 dígitos.">
+            <Entrada id="g-ruc" mono defaultValue="2061479809" invalido />
+          </Campo>
+          <Campo id="g-cliente" etiqueta="Cliente" ayuda="Escribe para buscar por razón social o RUC">
+            <Combobox
+              id="g-cliente"
+              valor={cliente}
+              onCambio={setCliente}
+              items={[
+                { value: "20554198211", label: "Corporación Gráfica Andina S.A.C.", detalle: "RUC 20554198211" },
+                { value: "20123456789", label: "Inversiones Andinas S.A.C.", detalle: "RUC 20123456789" },
+                { value: "44781209", label: "Miguel Ángel Valencia Ramos", detalle: "DNI 44781209" },
+              ]}
+            />
+          </Campo>
+          <Campo id="g-fecha" etiqueta="Fecha de emisión">
+            <EntradaFecha id="g-fecha" valor={fecha} onCambio={setFecha} />
+          </Campo>
+          <Campo id="g-monto" etiqueta="Importe total" ayuda="Se formatea al salir del campo">
+            <EntradaMonto id="g-monto" valor={monto} onCambio={setMonto} moneda={moneda} onMoneda={setMoneda} />
+          </Campo>
+          <Campo id="g-obs" etiqueta="Observaciones" opcional>
+            <AreaTexto id="g-obs" placeholder="Notas internas…" />
+          </Campo>
+          <div className="grid gap-3">
+            <Casilla id="g-auto" etiqueta="Enviar automáticamente a SUNAT" descripcion="Si no, queda firmado hasta que lo envíes" defaultChecked />
+            <Interruptor id="g-notif" etiqueta="Notificar por correo" descripcion="Cuando llegue el CDR" defaultChecked />
+          </div>
+          <GrupoOpciones
+            nombre="tipo"
+            estilo="tarjetas"
+            valor={tipo}
+            onCambio={setTipo}
+            opciones={[
+              { valor: "01", etiqueta: "Factura", descripcion: "Para RUC · F###" },
+              { valor: "03", etiqueta: "Boleta", descripcion: "Para DNI · B###" },
+            ]}
+          />
+          <div className="md:col-span-2">
+            <Campo id="g-cert" etiqueta="Certificado digital" ayuda=".p12 o .pfx · el RUC debe figurar en el OU">
+              <ZonaArchivos id="g-cert" archivo={archivo} onCambio={setArchivo} accept=".p12,.pfx" ayuda="PKCS#12 · máx. 1 MB" />
+            </Campo>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Navegación y estructura ─────────────────────────────── */}
+      <section className={SECCION}>
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K" conBorde={false} className="px-0 py-0" />
+        <Pasos actual={1} pasos={[{ titulo: "Empresa", descripcion: "RUC y razón social" }, { titulo: "Certificado", descripcion: "Archivo .p12" }, { titulo: "Credenciales SOL" }]} />
+        <Tabs
+          items={[
+            { id: "resumen", etiqueta: "Resumen" },
+            { id: "items", etiqueta: "Ítems", contador: 3 },
+            { id: "historial", etiqueta: "Historial", contador: 2 },
+            { id: "pdf", etiqueta: "PDF", disabled: true },
+          ]}
+          defaultValor="historial"
+        >
+          {(id) =>
+            id === "historial" ? (
+              <Timeline
+                eventos={[
+                  { id: "a", titulo: "Aceptado por SUNAT", detalle: "CDR 0 · La Factura numero F001-136, ha sido aceptada", fecha: "15 Set 2026, 10:32", tono: "ok", actual: true },
+                  { id: "b", titulo: "Reintento de envío", detalle: "Timeout del servicio (intento 2 de 3)", fecha: "15 Set 2026, 10:20", tono: "aviso" },
+                  { id: "c", titulo: "Firmado", detalle: "XML-DSig con certificado vigente", fecha: "15 Set 2026, 10:18", tono: "neutro" },
+                ]}
+              />
+            ) : id === "resumen" ? (
+              <ListaDatos
+                columnas={2}
+                datos={[
+                  { etiqueta: "Documento", valor: "F001-00000136", mono: true },
+                  { etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." },
+                  { etiqueta: "Total", valor: "S/ 2,000.01", mono: true },
+                  { etiqueta: "Hash", valor: "y4M8+jW8Xp278K1aM02q19KjvO3k=", mono: true },
+                ]}
+              />
+            ) : (
+              <p className="text-[13px] text-muted-foreground">Contenido de «{id}».</p>
+            )
+          }
+        </Tabs>
+        <Acordeon
+          defaultAbiertos={["a"]}
+          items={[
+            { id: "a", titulo: "¿Qué pasa si SUNAT no responde?", detalle: "reintentos automáticos", contenido: "El documento queda en ENVIADO y se reintenta con backoff exponencial hasta 3 veces." },
+            { id: "b", titulo: "¿Puedo anular un documento aceptado?", contenido: "Sí, con una comunicación de baja dentro de los 7 días." },
+          ]}
+        />
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setPanel(true)}>
+            Abrir panel lateral
+          </button>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setConfirmar(true)}>
+            Diálogo de confirmación
+          </button>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setPaleta(true)}>
+            Paleta ⌘K
+          </button>
+          <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>Atrás</button><button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Continuar</button></>}>
+            <p className="text-[13px] text-muted-foreground">Contenido del paso (formulario del certificado).</p>
+          </TarjetaPaso>
+        </div>
+        <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")} onClick={() => setPanel(false)}>Cerrar</button>}>
+          <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
+        </PanelLateral>
+        <DialogoConfirmacion open={confirmar} onOpenChange={setConfirmar} titulo="Anular 3 documentos" descripcion="Se enviará una comunicación de baja a SUNAT" textoConfirmar="Sí, anular" onConfirmar={async () => { toast.ok("Comunicación de baja enviada"); }}>
+          Los documentos anulados no se pueden recuperar.
+        </DialogoConfirmacion>
+        <Paleta
+          open={paleta}
+          onOpenChange={setPaleta}
+          comandos={[
+            { id: "docs", label: "Documentos", detalle: "/ejemplo", grupo: "Ir a", icon: FileTextIcon, href: "/ejemplo" },
+            { id: "keys", label: "API keys", detalle: "/ejemplo/api-keys", grupo: "Ir a", href: "/ejemplo/api-keys" },
+            { id: "nuevo", label: "Nuevo documento", grupo: "Acciones", icon: PencilIcon, onSelect: () => toast.info("Nuevo documento") },
+          ]}
+        />
+      </section>
+
+      {/* ── Datos y dashboard ───────────────────────────────────── */}
+      <section className={SECCION}>
+        <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos" conBorde={false} className="px-0 py-0" />
+        <div className="grid gap-3 md:grid-cols-3">
+          <Kpi etiqueta="Facturado (mes)" valor="S/ 128,430" variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
+          <Kpi etiqueta="Documentos emitidos" valor="1,236" variacion={-3.1} serie={[120, 110, 130, 125, 118, 121, 116]} />
+          <Kpi etiqueta="Rechazados" valor="4" variacion={-40} invertir serie={[9, 7, 8, 6, 5, 6, 4]} />
+        </div>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <GraficoBarras titulo="Documentos por mes" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] }, { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] }]} />
+          <GraficoLineas titulo="Facturado (S/ miles)" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "PEN", valores: [82, 95, 91, 110, 121, 128] }]} formato={(v) => `${v}k`} />
+        </div>
+        <TablaDatos columnas={COLUMNAS} filas={DOCS} clave={(d) => d.id} unidad="documentos" ordenInicial={{ id: "numero", dir: "desc" }} />
+      </section>
+    </>
+  );
+}
