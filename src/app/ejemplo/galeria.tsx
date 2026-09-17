@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
+import { BellIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ListOrderedIcon, PackageIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -18,6 +18,7 @@ import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
 import { Buscador } from "@/components/formularios/buscador";
 import { Casilla, Interruptor } from "@/components/formularios/casilla";
 import { Combobox } from "@/components/formularios/combobox";
+import { Contrasena } from "@/components/formularios/contrasena";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
 import { EntradaMonto } from "@/components/formularios/entrada-monto";
 import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/entrada-rango-fechas";
@@ -35,7 +36,10 @@ import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
+import { GrupoBotones } from "@/components/ui/grupo-botones";
+import { Kbd } from "@/components/ui/kbd";
 import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -87,6 +91,8 @@ export function Galeria() {
   const [cantidad, setCantidad] = useState<number | null>(3);
   const [rango, setRango] = useState<RangoFechas>({ desde: "2026-09-01", hasta: "2026-09-15" });
   const [docsSeleccionados, setDocsSeleccionados] = useState<string[]>([]);
+  const [clave, setClave] = useState("");
+  const [vista, setVista] = useState<"lista" | "tarjetas">("lista");
 
   function simularEnvio() {
     setEnviando(true);
@@ -199,6 +205,9 @@ export function Galeria() {
           <Campo id="g-cantidad" etiqueta="Cantidad" ayuda="Ítems de la línea">
             <StepperNumerico id="g-cantidad" valor={cantidad} onCambio={setCantidad} min={1} max={99} />
           </Campo>
+          <Campo id="g-clave" etiqueta="Contraseña" ayuda="Para el registro, no para el login">
+            <Contrasena id="g-clave" valor={clave} onCambio={setClave} conFuerza autoComplete="new-password" />
+          </Campo>
           <Campo id="g-rango" etiqueta="Rango de emisión">
             <EntradaRangoFechas valor={rango} onCambio={setRango} />
           </Campo>
@@ -226,7 +235,7 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · grupo de botones" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
             <Avatar nombre="Ana Torres" tamano="sm" />
@@ -234,6 +243,18 @@ export function Galeria() {
             <Avatar nombre="cliente@correo-muy-largo.pe" tamano="default" tono="accent" />
           </div>
           <AvatarGroup nombres={["Ana Torres", "Miguel Valencia", "Rosa Quispe", "Luis Pérez", "Wari Comercial"]} max={3} />
+          <Separator orientacion="vertical" className="h-6" />
+          <GrupoBotones
+            valor={vista}
+            onCambio={setVista}
+            opciones={[
+              { valor: "lista", etiqueta: "Lista", icon: <ListOrderedIcon className="size-3.5" /> },
+              { valor: "tarjetas", etiqueta: "Tarjetas", icon: <PackageIcon className="size-3.5" /> },
+            ]}
+          />
+          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+            Paleta <Kbd>⌘K</Kbd>
+          </span>
           <Popover>
             <PopoverTrigger className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>Filtros avanzados</PopoverTrigger>
             <PopoverContent>

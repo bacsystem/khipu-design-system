@@ -350,7 +350,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 | Carpeta | Componentes |
 |---|---|
-| `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `input`, `label`, `menu`, `pagination`, `popover`, `select`, `selector-por-pagina`, `sheet`, `table` |
+| `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `grupo-botones`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table` |
 | `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
@@ -367,13 +367,15 @@ Todo lo anterior está empaquetado en `design-kit/` (raíz del repo) para copiar
 | Grupo | Componentes |
 |---|---|
 | `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
-| `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
+| `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `Combobox`, `Contrasena`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
 | `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯), `DialogoConfirmacion`, `Paleta` (⌘K) |
 | `datos/` | `TablaDatos<T>`, `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
 Los gráficos usan `--chart-1..5`; en oscuro los pasos son `#7b72f0 #27a070 #bf8a26 #dc4a68 #3a88c6` (validados para daltonismo y contraste sobre `#111827`). Ver `design-kit/README.md`.
 
 `components/ui` sumó `Avatar` + `AvatarGroup` (sobre `base-ui/avatar`; `rounded-full`, ver §4) y `Popover` + `PopoverHeader` (sobre `base-ui/popover`, misma familia visual que `SelectContent` — úsalo para contenido rico que no cabe en un `Tooltip`, como filtros avanzados o una ficha de usuario).
+
+Quinto lote: `Separator` (sobre `base-ui/separator`; en vertical necesita una altura explícita en `className`, no tiene tamaño propio en ese eje — reemplaza el `<div className="h-4 w-px bg-border">` que se armaba a mano en `TopBar`), `Kbd` (extraído del mismo patrón ad hoc que ya usaban `TopBar` y `Paleta`), `GrupoBotones` (sobre `base-ui/toggle-group` + `toggle`; la versión con teclado — flechas entre opciones — del control segmentado que hoy se repite a mano en `SelectorPorPagina`, `ThemeToggle` y `Tabs estilo="segmentado"`; úsalo controlado para que no se pueda "apagar" la única opción activa) y `Contrasena` (en `formularios/`: mostrar/ocultar + medidor de fuerza opcional sobre `base-ui/meter`, heurística de longitud/variedad de caracteres — no reemplaza validación real de backend).
 
 `formularios/` sumó también `StepperNumerico` (sobre `base-ui/number-field`) y `EntradaRangoFechas` (dos `EntradaFecha` con atajos Hoy/7 días/30 días/Este mes).
 

@@ -3,6 +3,7 @@
 import { SearchIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { Kbd } from "@/components/ui/kbd";
 import { cn } from "@/lib/utils";
 
 /** Miga por prefijo de ruta: la primera que coincida con `pathname.startsWith(prefijo)` gana. */
@@ -92,9 +93,7 @@ export function TopBar({
               className="h-8 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-[12px] text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
             />
             {buscador.atajo ? (
-              <kbd className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/70 shadow-2xs">
-                {buscador.atajo}
-              </kbd>
+              <Kbd className="absolute top-1/2 right-2 -translate-y-1/2">{buscador.atajo}</Kbd>
             ) : null}
           </div>
         ) : null}
