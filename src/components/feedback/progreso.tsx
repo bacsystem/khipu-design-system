@@ -13,6 +13,15 @@ const TONOS: Record<TonoProgreso, string> = {
   destructive: "bg-destructive",
 };
 
+// var(--*) inline, no clases stroke-*, por la misma razón que `datos/grafico.tsx`: colores de trazo SVG fiables
+// en cualquier build de Tailwind. Usado por `ProgresoCircular`.
+const COLOR_TRAZO: Record<TonoProgreso, string> = {
+  primary: "var(--primary)",
+  success: "var(--success-solid)",
+  warning: "var(--warning-solid)",
+  destructive: "var(--destructive)",
+};
+
 /**
  * Barra de progreso lineal. `valor` en `0–100`; omítelo (o pásalo `null`) para el estado indeterminado
  * (subida de certificado, envío por lotes) — un tramo que barre el track en vez de un ancho fijo.
@@ -84,13 +93,6 @@ export function ProgresoCircular({
   const circunferencia = 2 * Math.PI * radio;
   const indeterminado = valor == null;
   const pct = indeterminado ? 0.25 : Math.min(100, Math.max(0, valor)) / 100;
-  // var(--*) inline, no clases stroke-*, por la misma razón que `datos/grafico.tsx`: colores de trazo SVG fiables en cualquier build de Tailwind.
-  const COLOR_TRAZO: Record<TonoProgreso, string> = {
-    primary: "var(--primary)",
-    success: "var(--success-solid)",
-    warning: "var(--warning-solid)",
-    destructive: "var(--destructive)",
-  };
 
   return (
     <div
