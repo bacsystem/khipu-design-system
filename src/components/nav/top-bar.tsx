@@ -99,7 +99,15 @@ export function TopBar({
           </div>
         ) : null}
         {buscador && acciones ? <div className="hidden h-4 w-px bg-border lg:block" /> : null}
-        {acciones}
+        {/*
+          `contents` (no un `{acciones}` suelto) a propósito: si `acciones` es un elemento de un componente
+          cliente creado por un Server Component padre (el caso de la demo, ver ejemplo/layout.tsx) y queda
+          como uno más de los hijos estáticos de este div, React 19 en dev tira "Each child in a list should
+          have a unique key prop" apuntando a TopBar/el layout, aunque nada de la lista tenga de verdad más de
+          un elemento. Aislarlo como único hijo de su propio contenedor lo evita; `display:contents` no añade
+          caja, así que el `gap-2.5` del padre se comporta igual que si `acciones` estuviera suelto aquí.
+        */}
+        <div className="contents">{acciones}</div>
       </div>
     </header>
   );
