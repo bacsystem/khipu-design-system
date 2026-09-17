@@ -32,7 +32,7 @@ export function Tabs<T extends string>({
       <TabsPrimitive.List
         className={cn(
           "relative flex items-center",
-          estilo === "linea" ? "gap-4 border-b border-border/80" : "h-9 w-fit gap-1 rounded-lg border border-border/60 bg-secondary/80 p-1",
+          estilo === "linea" ? "gap-4 border-b border-border/80" : "h-8 w-fit gap-1 rounded-lg border border-border/60 bg-secondary/80 p-1",
         )}
       >
         {items.map((t) => (
@@ -41,10 +41,11 @@ export function Tabs<T extends string>({
             value={t.id}
             disabled={t.disabled}
             className={cn(
+              // h-10/h-6 fijos (no padding vertical) para que el contador no altere la altura de la fila.
               "inline-flex items-center gap-1.5 text-[12px] font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50",
               estilo === "linea"
-                ? "-mb-px border-b-2 border-transparent px-1 py-2.5 text-muted-foreground hover:text-foreground data-active:border-primary data-active:text-foreground"
-                : "h-7 rounded-md px-3 text-muted-foreground hover:text-foreground data-active:bg-card data-active:text-foreground data-active:shadow-2xs",
+                ? "-mb-px h-10 border-b-2 border-transparent px-1 text-muted-foreground hover:text-foreground data-active:border-primary data-active:text-foreground"
+                : "h-6 rounded-md px-3 text-muted-foreground hover:text-foreground data-active:bg-card data-active:text-foreground data-active:shadow-2xs",
             )}
           >
             {t.etiqueta}

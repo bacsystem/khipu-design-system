@@ -121,6 +121,18 @@ Tracking negativo (`tracking-tight`) solo en títulos y valores grandes; `tracki
 - **Elevación:** `shadow-2xs` en tarjetas y controles; `shadow-xs` en botón primario y avatar; `shadow-md` + `ring-1 ring-foreground/10` en popups; diálogos sobre `bg-overlay` con `backdrop-blur`. Nada más alto que eso.
 - **Bordes:** `border-border`; suavizados con `/60`–`/90` para separadores internos (`border-b border-border/60`).
 
+### Escala de alturas
+
+Toda pieza interactiva de una fila (input, botón, disparador, control de tabla) usa una de estas tres alturas — nunca un valor suelto:
+
+| Altura | Uso | Ejemplos |
+|---|---|---|
+| **`h-7`** (28 px) | Denso: paginación, filas de tabla, controles secundarios pequeños | `PieTabla` (Anterior/Siguiente/números), `SelectorPorPagina`, `MenuAcciones`, `Select` `size="sm"` |
+| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, tabs `estilo="segmentado"` |
+| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `EntradaFecha`, `EntradaMonto`), `BOTON_PRIMARIO/SECUNDARIO`, `Button` `size="lg"` |
+
+**Excepción documentada:** el **pie de diálogo, de `PanelLateral` y de `TarjetaPaso`** — el footer con `border-t border-border/60 px-5 py-3` que comparten los tres — usa `h-9` (36 px) con texto `text-[13px]`, una densidad intermedia reservada a ese contexto aislado (nunca aparece junto a controles de `h-8`/`h-10` en la misma fila). Un botón o disparador que **no** vive dentro de ese footer (un CTA de estado vacío, un botón suelto en una tarjeta de galería) usa `h-8` si es una acción secundaria/compacta o `h-10` si es la acción principal de un formulario — nunca `h-9` fuera de esos tres footers. Fuera de esa excepción, si dos controles conviven en una misma fila deben compartir la misma altura de la tabla de arriba; nunca mezclar `h-8` con `h-9`/`h-10` en una barra de filtros o toolbar.
+
 ---
 
 ## 5. Layout (shell privado)
@@ -180,7 +192,7 @@ De arriba abajo:
 | `/empresa` | `Referencia técnica`, `Probar conexión SUNAT` (deshab.) | `Nueva empresa` |
 | `/api-keys` | `Referencia técnica`, `Prueba de emisión` | `Crear API key` |
 
-Regla de espacio: máximo **dos secundarias + una principal**; lo que no cabe va dentro de un diálogo (p. ej. "Documentación API" vive en el pie de los diálogos de API keys). Breakpoints de ocultación: `hidden sm:inline-flex` / `md:` según prioridad.
+Regla de espacio: máximo **dos secundarias + una principal**; lo que no cabe va dentro de un diálogo (p. ej. "Documentación API" vive en el pie de los diálogos de API keys). Breakpoints de ocultación: `hidden lg:inline-flex` según prioridad (no `sm`/`md`: el sidebar fijo de 240 px aparece en `md`, así que entre 768–1023 px el ancho real disponible es angosto y cualquier cosa que se revele antes de `lg` compite con la miga y puede solaparse con las acciones).
 
 Recetas (en `top-bar.tsx`):
 - `ACCION_PRINCIPAL`: `h-8 rounded-lg bg-foreground text-background px-3 text-[12px] font-medium shadow-xs hover:bg-foreground/90` (negro/blanco según tema; **no** primary, para no competir con los estados).
@@ -204,7 +216,7 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 | `destructive` | `bg-destructive/10 text-destructive hover:bg-destructive/20` | Acciones irreversibles |
 | `link` | `text-primary hover:underline` | Enlaces inline |
 
-Tamaños: `xs` (h-6), `sm` (h-7), `default` (h-8), `lg`; iconos `icon-xs` (24), `icon-sm` (28), `icon` (32), `icon-lg` (36).
+Tamaños: `xs` (h-6), `sm` (h-7), `default` (h-8), `lg` (h-10, misma altura que `BOTON_PRIMARIO`); iconos `icon-xs` (24), `icon-sm` (28), `icon` (32), `icon-lg` (40).
 
 ### Recetas de `lib/estilos.ts` (formularios y diálogos)
 - `BOTON_PRIMARIO`: `h-10 rounded-lg bg-primary text-primary-foreground px-3.5 text-sm font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`. En diálogos se usa `h-9 text-[13px]`.
@@ -224,7 +236,7 @@ Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg
 - **Campo** (`CAMPO`): `h-10 rounded-lg border border-border bg-muted px-3 text-sm`; foco `border-ring bg-card ring-3 ring-ring/30`; deshabilitado `opacity-60 cursor-not-allowed`.
 - **Etiqueta** (`ETIQUETA_CAMPO`): `text-[12px] font-medium`. **Ayuda** (`AYUDA_CAMPO`): `font-mono text-[11px] text-muted-foreground`. Error: `text-sm text-destructive` bajo el campo.
 - **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta uppercase (`ETIQUETA_DATO`) + caja `h-9 rounded-lg border bg-muted px-3 font-mono text-[13px]`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
-- **Select** (`ui/select.tsx`, base-ui): disparador `h-9 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` con `ChevronDown`; popup alineado al disparador, ítems con check.
+- **Select** (`ui/select.tsx`, base-ui): disparador `h-8 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` (`size="sm"` → `h-7`) con `ChevronDown`; popup alineado al disparador, ítems con check.
 - **Selector de filas** (`ui/selector-por-pagina.tsx`): grupo `h-7 rounded-md border bg-card p-0.5` con `10 · 20 · 50`, activo `bg-foreground text-background`.
 - Validación con zod + react-hook-form; mensajes de error desde `lib/messages.ts` (`mensajeError(codigo)`).
 - **Archivo (.p12/.pfx)** en `/empresa`: input de archivo + clave, feedback con vigencia del certificado (pill verde/ámbar/rojo según días restantes).
@@ -245,7 +257,7 @@ Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg
 
 Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 
-1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`h-9 rounded-lg border-border/60 bg-secondary/80 p-1`, activa `bg-card shadow-2xs`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL`: `h-9 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-9`, icono gira mientras `useTransition` está pendiente).
+1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`h-8 rounded-lg border-border/60 bg-secondary/80 p-1`, activa `bg-card shadow-2xs`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-8 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-8`, icono gira mientras `useTransition` está pendiente) — todo a `h-8` para alinear con el `Select` de la misma barra.
 2. **Contenedor**: `overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs`; `opacity-60` mientras refresca.
 3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground/80`; primera columna checkbox deshabilitado (selección múltiple próximamente).
 4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-[13px]`; celda principal con dos líneas (valor fuerte + subtítulo mono 11 px); identificadores en chip `rounded bg-secondary px-2 py-0.5 font-mono font-semibold text-primary` (inactivos: `bg-muted text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.

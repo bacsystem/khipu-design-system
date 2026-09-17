@@ -29,7 +29,7 @@ function Pill({ pill }: { pill: PillEntorno }) {
     <span
       title={pill.title}
       className={cn(
-        "hidden items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap sm:inline-flex",
+        "hidden shrink-0 items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap lg:inline-flex",
         tonos[pill.tono],
         pill.deshabilitado && "opacity-60",
       )}
@@ -74,7 +74,7 @@ export function TopBar({
           </nav>
         ) : null}
 
-        {pills.length > 0 ? <div className="hidden h-4 w-px bg-border sm:block" /> : null}
+        {pills.length > 0 ? <div className="hidden h-4 w-px shrink-0 bg-border lg:block" /> : null}
         {pills.map((p) => (
           <Pill key={p.texto} pill={p} />
         ))}

@@ -101,4 +101,4 @@ export function TablaVacia({ icon, children }: { icon: ReactNode; children: Reac
 /** Estilos compartidos de la tabla estándar. */
 export const CABECERA_TABLA = "h-auto px-3 py-2 text-[11px] font-semibold tracking-wider text-muted-foreground/80 uppercase";
 export const CONTENEDOR_TABLA = "min-w-0 overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs transition-opacity";
-export const CONTROL_FILTRO = "h-9 rounded-lg border border-border bg-card text-[12px] font-medium text-foreground shadow-2xs";
+export const CONTROL_FILTRO = "h-8 rounded-lg border border-border bg-card text-[12px] font-medium text-foreground shadow-2xs";

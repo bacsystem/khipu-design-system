@@ -80,21 +80,21 @@ export function Galeria() {
       <section className={SECCION}>
         <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
             Toast error con acción
           </button>
           <button
             type="button"
-            className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}
+            className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}
             onClick={() => toast.promise(new Promise((r) => setTimeout(r, 1500)), { cargando: "Enviando a SUNAT…", ok: "Aceptado con CDR", error: "Rechazado" })}
           >
             Toast promise
           </button>
           <Tooltip texto="Exportar reporte: próximamente">
-            <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>
+            <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>
               Con tooltip
             </button>
           </Tooltip>
@@ -115,7 +115,7 @@ export function Galeria() {
             </div>
           </div>
         </div>
-        <EstadoVacio icon={InboxIcon} titulo="Sin documentos todavía" accion={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Nuevo documento</button>}>
+        <EstadoVacio icon={InboxIcon} titulo="Sin documentos todavía" accion={<button type="button" className={BOTON_PRIMARIO}>Nuevo documento</button>}>
           Cuando emitas el primero aparecerá aquí con su estado en SUNAT.
         </EstadoVacio>
       </section>
@@ -218,13 +218,13 @@ export function Galeria() {
           ]}
         />
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setPanel(true)}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPanel(true)}>
             Abrir panel lateral
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setConfirmar(true)}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setConfirmar(true)}>
             Diálogo de confirmación
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")} onClick={() => setPaleta(true)}>
+          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPaleta(true)}>
             Paleta ⌘K
           </button>
           <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>Atrás</button><button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Continuar</button></>}>

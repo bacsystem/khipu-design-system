@@ -12,7 +12,7 @@ export function AccionesEjemplo({ principal, secundaria }: { principal: string; 
   const [abierto, setAbierto] = useState(false);
   return (
     <>
-      <button type="button" className={cn(secundaria, "hidden sm:inline-flex")}>
+      <button type="button" className={cn(secundaria, "hidden lg:inline-flex")}>
         <BookOpenIcon className="size-4" />
         Referencia técnica
       </button>
