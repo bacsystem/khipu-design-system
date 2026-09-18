@@ -360,9 +360,9 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 | `components/developers` | `developers-view`, `api-reference` |
 | `lib` | `estilos.ts` (recetas), `formato.ts`, `paginacion.ts`, `messages.ts` |
 
-## 20. Kit reutilizable (`design-kit/`)
+## 20. Kit reutilizable
 
-Todo lo anterior está empaquetado en `design-kit/` (raíz del repo) para copiarlo a otro proyecto Next.js 15 + Tailwind v4, sin rutas ni textos de khipu, y ampliado con cuatro grupos que el portal todavía no usa pero que cualquier app necesita:
+Todo lo anterior es este mismo repo (`khipu-design-system`), pensado para copiarse a otro proyecto Next.js 15 + Tailwind v4, sin rutas ni textos de khipu, y ampliado con cuatro grupos que el portal de origen todavía no usa pero que cualquier app necesita. Se instala componente por componente con la CLI (`cli/khipu.mjs list` / `add`, ver README §Usarlo en tu proyecto) en vez de copiar la carpeta entera a mano:
 
 | Grupo | Componentes |
 |---|---|
@@ -371,7 +371,7 @@ Todo lo anterior está empaquetado en `design-kit/` (raíz del repo) para copiar
 | `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯), `DialogoConfirmacion`, `Paleta` (⌘K) |
 | `datos/` | `TablaDatos<T>`, `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
-Los gráficos usan `--chart-1..5`; en oscuro los pasos son `#7b72f0 #27a070 #bf8a26 #dc4a68 #3a88c6` (validados para daltonismo y contraste sobre `#111827`). Ver `design-kit/README.md`.
+Los gráficos usan `--chart-1..5`; en oscuro los pasos son `#7b72f0 #27a070 #bf8a26 #dc4a68 #3a88c6` (validados para daltonismo y contraste sobre `#111827`).
 
 `components/ui` sumó `Avatar` + `AvatarGroup` (sobre `base-ui/avatar`; `rounded-full`, ver §4) y `Popover` + `PopoverHeader` (sobre `base-ui/popover`, misma familia visual que `SelectContent` — úsalo para contenido rico que no cabe en un `Tooltip`, como filtros avanzados o una ficha de usuario).
 

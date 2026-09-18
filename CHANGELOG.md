@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-09-18
+
+### Added
+- CLI (`cli/khipu.mjs`, `khipu-ds add`/`list`) to copy a single component and its transitive dependencies (other components + `lib/`) into a consumer project, shadcn/ui-style, without publishing this design system as an npm package. Runnable via `npx github:bacsystem/khipu-design-system add <component>` or locally.
+- Auto-generated component registry (`registry/registry.json`, built by `scripts/build-registry.mjs` from each component's actual imports) that the CLI resolves against — regenerated from source, never hand-maintained.
+
 ## [0.1.2] - 2026-09-17
 
 ### Added
