@@ -22,17 +22,27 @@ npm run build
 
 **Proyecto nuevo:** clona este repo y borra `src/app/ejemplo/` cuando tengas tu propio shell.
 
-**Proyecto existente (Next.js + Tailwind v4):**
+**Proyecto existente (Next.js + Tailwind v4) — un componente a la vez, con su CLI:**
+
+No hace falta copiar todo `src/components/` a mano ni instalarlo como paquete npm. La CLI (`cli/khipu.mjs`) copia un componente puntual **y sus dependencias** (otros componentes + `lib/`) directo a tu proyecto, y te dice qué paquetes de npm instalar — el mismo modelo que la CLI de shadcn/ui, pero apuntando a este repo en vez de a un registry publicado.
 
 ```bash
-npm i @base-ui/react lucide-react class-variance-authority cn next-themes
-npm i -D tw-animate-css shadcn
+# Desde la raíz de TU proyecto (no de este repo):
+npx github:bacsystem/khipu-design-system list             # ver todos los componentes disponibles
+npx github:bacsystem/khipu-design-system add panel-lateral # copia panel-lateral + sheet + button + cabecera-seccion + lib/utils
 ```
 
-1. Copia `src/components/` y `src/lib/` a tu `src/`.
-2. Pega en tu `globals.css` los bloques `@import`, `@custom-variant dark`, `@theme inline`, `:root`, `.dark` y `@layer base` de [`src/app/globals.css`](src/app/globals.css). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
-3. Envuelve la app con [`Providers`](src/components/providers.tsx) (tema + toasts + tooltips) y carga las fuentes como en [`src/app/layout.tsx`](src/app/layout.tsx).
-4. Asegura el alias `"@/*": ["./src/*"]` en `tsconfig.json`.
+`npx github:...` clona este repo en un caché temporal e instala sus dependencias antes de correr la CLI (tarda más que un paquete publicado en npm, es la contrapartida de no publicar nada). Si ya tienes el repo clonado localmente, es más rápido correr `node cli/khipu.mjs add <componente>` directamente desde ahí, apuntando tu proyecto como `cwd`.
+
+Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force` si quieres reemplazarlos). Después de copiar los componentes que necesites, una sola vez por proyecto:
+
+1. Pega en tu `globals.css` los bloques `@import`, `@custom-variant dark`, `@theme inline`, `:root`, `.dark` y `@layer base` de [`src/app/globals.css`](src/app/globals.css). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
+2. Envuelve la app con [`Providers`](src/components/providers.tsx) (tema + toasts + tooltips) y carga las fuentes como en [`src/app/layout.tsx`](src/app/layout.tsx).
+3. Asegura el alias `"@/*": ["./src/*"]` en `tsconfig.json`.
+
+**Alternativa manual (todo de una vez):** copia `src/components/` y `src/lib/` completos a tu `src/`, e instala tú mismo `@base-ui/react lucide-react class-variance-authority cn next-themes` (+ `tw-animate-css` como dev dependency).
+
+El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
 
 ## Estructura
 
@@ -50,6 +60,9 @@ src/
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
 └── lib/                     utils (cn) · estilos (recetas) · formato (fechas/montos, zona America/Lima) · paginacion
+
+cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
+registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
 ```
 
 ## Cómo armar el shell

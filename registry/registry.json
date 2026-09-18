@@ -1,0 +1,1081 @@
+{
+  "generatedAt": "2026-09-18",
+  "items": {
+    "components/datos/grafico": {
+      "name": "grafico",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/grafico.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/datos/kpi": {
+      "name": "kpi",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/kpi.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/datos/lista-datos": {
+      "name": "lista-datos",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/lista-datos.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/datos/tabla-datos": {
+      "name": "tabla-datos",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/tabla-datos.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/feedback/skeleton",
+        "components/patrones/pie-tabla",
+        "components/ui/table",
+        "lib/paginacion",
+        "lib/utils"
+      ]
+    },
+    "components/datos/timeline": {
+      "name": "timeline",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/timeline.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/patrones/metricas",
+        "lib/utils"
+      ]
+    },
+    "components/feedback/alerta": {
+      "name": "alerta",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/alerta.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/banner": {
+      "name": "banner",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/banner.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/estado-vacio": {
+      "name": "estado-vacio",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/estado-vacio.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/progreso": {
+      "name": "progreso",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/progreso.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/skeleton": {
+      "name": "skeleton",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/skeleton.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/spinner": {
+      "name": "spinner",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/spinner.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/toast": {
+      "name": "toast",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/toast.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/feedback/tooltip": {
+      "name": "tooltip",
+      "type": "component",
+      "category": "feedback",
+      "files": [
+        "src/components/feedback/tooltip.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/formularios/autocomplete": {
+      "name": "autocomplete",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/autocomplete.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/buscador": {
+      "name": "buscador",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/buscador.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/patrones/pie-tabla",
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/campo": {
+      "name": "campo",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/campo.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/casilla": {
+      "name": "casilla",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/casilla.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/formularios/combobox": {
+      "name": "combobox",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/combobox.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/contrasena": {
+      "name": "contrasena",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/contrasena.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/deslizador": {
+      "name": "deslizador",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/deslizador.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/formularios/entrada-fecha": {
+      "name": "entrada-fecha",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/entrada-fecha.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/formato",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/entrada-monto": {
+      "name": "entrada-monto",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/entrada-monto.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/formato",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/entrada-rango-fechas": {
+      "name": "entrada-rango-fechas",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/entrada-rango-fechas.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/formularios/entrada-fecha",
+        "lib/formato",
+        "lib/utils"
+      ]
+    },
+    "components/formularios/opciones": {
+      "name": "opciones",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/opciones.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/formularios/stepper-numerico": {
+      "name": "stepper-numerico",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/stepper-numerico.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/formularios/zona-archivos": {
+      "name": "zona-archivos",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/zona-archivos.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/nav/logo": {
+      "name": "logo",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/logo.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "components/nav/menu-usuario": {
+      "name": "menu-usuario",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/menu-usuario.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/nav/theme-toggle",
+        "components/ui/menu",
+        "lib/utils"
+      ]
+    },
+    "components/nav/mobile-nav": {
+      "name": "mobile-nav",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/mobile-nav.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/button",
+        "components/ui/sheet"
+      ]
+    },
+    "components/nav/selector-contexto": {
+      "name": "selector-contexto",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/selector-contexto.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/select",
+        "lib/utils"
+      ]
+    },
+    "components/nav/shell": {
+      "name": "shell",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/shell.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "components/nav/sidebar-nav": {
+      "name": "sidebar-nav",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/sidebar-nav.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/nav/sidebar": {
+      "name": "sidebar",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/sidebar.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "components/nav/theme-toggle": {
+      "name": "theme-toggle",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/theme-toggle.tsx"
+      ],
+      "dependencies": [
+        "lucide-react",
+        "next-themes"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/nav/top-bar": {
+      "name": "top-bar",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/top-bar.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/kbd",
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/acordeon": {
+      "name": "acordeon",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/acordeon.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/dialogo-confirmacion": {
+      "name": "dialogo-confirmacion",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/dialogo-confirmacion.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/patrones/cabecera-dialogo",
+        "components/ui/dialog",
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/menu-acciones": {
+      "name": "menu-acciones",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/menu-acciones.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/menu",
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/paleta": {
+      "name": "paleta",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/paleta.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/dialog",
+        "components/ui/kbd",
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/panel-lateral": {
+      "name": "panel-lateral",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/panel-lateral.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/patrones/cabecera-seccion",
+        "components/ui/sheet",
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/pasos": {
+      "name": "pasos",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/pasos.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/tabs": {
+      "name": "tabs",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/tabs.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/patrones/bloque-codigo": {
+      "name": "bloque-codigo",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/bloque-codigo.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/patrones/boton-async": {
+      "name": "boton-async",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/boton-async.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/feedback/spinner"
+      ]
+    },
+    "components/patrones/boton-copiar": {
+      "name": "boton-copiar",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/boton-copiar.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/patrones/cabecera-dialogo": {
+      "name": "cabecera-dialogo",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/cabecera-dialogo.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/dialog",
+        "lib/utils"
+      ]
+    },
+    "components/patrones/cabecera-seccion": {
+      "name": "cabecera-seccion",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/cabecera-seccion.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/patrones/confirmacion-en-linea": {
+      "name": "confirmacion-en-linea",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/confirmacion-en-linea.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/patrones/metricas": {
+      "name": "metricas",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/metricas.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/patrones/pie-tabla": {
+      "name": "pie-tabla",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/pie-tabla.tsx"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/selector-por-pagina",
+        "lib/paginacion"
+      ]
+    },
+    "components/patrones/pill-estado": {
+      "name": "pill-estado",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/pill-estado.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/providers": {
+      "name": "providers",
+      "type": "component",
+      "category": "providers",
+      "files": [
+        "src/components/providers.tsx"
+      ],
+      "dependencies": [
+        "next-themes"
+      ],
+      "registryDependencies": [
+        "components/feedback/toast",
+        "components/feedback/tooltip"
+      ]
+    },
+    "components/ui/avatar": {
+      "name": "avatar",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/avatar.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/badge": {
+      "name": "badge",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/badge.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "components/ui/button": {
+      "name": "button",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/button.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "components/ui/card": {
+      "name": "card",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/card.tsx"
+      ],
+      "dependencies": [
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "components/ui/dialog": {
+      "name": "dialog",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/dialog.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/button"
+      ]
+    },
+    "components/ui/drawer": {
+      "name": "drawer",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/drawer.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/grupo-botones": {
+      "name": "grupo-botones",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/grupo-botones.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/hover-card": {
+      "name": "hover-card",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/hover-card.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/ui/input": {
+      "name": "input",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/input.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "components/ui/kbd": {
+      "name": "kbd",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/kbd.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/label": {
+      "name": "label",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/label.tsx"
+      ],
+      "dependencies": [
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "components/ui/menu": {
+      "name": "menu",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/menu.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/pagination": {
+      "name": "pagination",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/pagination.tsx"
+      ],
+      "dependencies": [
+        "cn",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/button"
+      ]
+    },
+    "components/ui/popover": {
+      "name": "popover",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/popover.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
+    "components/ui/scroll-area": {
+      "name": "scroll-area",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/scroll-area.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/select": {
+      "name": "select",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/select.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "lib/estilos"
+      ]
+    },
+    "components/ui/selector-por-pagina": {
+      "name": "selector-por-pagina",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/selector-por-pagina.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/paginacion",
+        "lib/utils"
+      ]
+    },
+    "components/ui/separator": {
+      "name": "separator",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/separator.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/ui/sheet": {
+      "name": "sheet",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/sheet.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "components/ui/button"
+      ]
+    },
+    "components/ui/table": {
+      "name": "table",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/table.tsx"
+      ],
+      "dependencies": [
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "components/ui/toolbar": {
+      "name": "toolbar",
+      "type": "component",
+      "category": "ui",
+      "files": [
+        "src/components/ui/toolbar.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "lib/estilos": {
+      "name": "estilos",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/estilos.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/utils": {
+      "name": "utils",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/utils.ts"
+      ],
+      "dependencies": [
+        "cn"
+      ],
+      "registryDependencies": []
+    },
+    "lib/formato": {
+      "name": "formato",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/formato.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/paginacion": {
+      "name": "paginacion",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/paginacion.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    }
+  }
+}
