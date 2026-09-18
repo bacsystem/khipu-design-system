@@ -16,7 +16,11 @@ const SRC = join(ROOT, "src");
 // pedirle al usuario que los instale de nuevo.
 const PAQUETES_IMPLICITOS = new Set(["react", "react-dom", "next"]);
 
-const IMPORT_RE = /import\s+(?:[^'";]*?\s+from\s+)?["']([^"']+)["']/g;
+// También hay que capturar `export { x } from "paquete"` (re-exports), no solo `import`: p. ej.
+// lib/utils.ts es `export { cn } from "cn"` — si solo miráramos `import`, el registro diría que
+// lib/utils no depende de nada, y la CLI nunca pediría instalar "cn" aunque cualquier componente
+// que copie lib/utils lo necesite en runtime.
+const IMPORT_RE = /(?:import|export)\s+(?:[^'";]*?\s+from\s+)?["']([^"']+)["']/g;
 
 function listarArchivos(dir) {
   const resultado = [];
@@ -74,7 +78,6 @@ function construirRegistro() {
 }
 
 const registro = {
-  $schema: "./schema.json",
   generatedAt: new Date().toISOString().slice(0, 10),
   items: construirRegistro(),
 };
