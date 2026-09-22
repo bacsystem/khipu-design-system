@@ -16,6 +16,7 @@ export function EntradaMonto({
   valor,
   onCambio,
   moneda = "PEN",
+  variante = "campo",
   monedas = ["PEN", "USD"],
   onMoneda,
   disabled,
@@ -27,6 +28,8 @@ export function EntradaMonto({
   moneda?: string;
   monedas?: string[];
   onMoneda?: (m: string) => void;
+  /** `campo` (h-10, formularios) o `filtro` (h-8, barras de filtros y formularios densos). Igual que StepperNumerico. */
+  variante?: "filtro" | "campo";
   disabled?: boolean;
   className?: string;
 }) {
@@ -53,7 +56,7 @@ export function EntradaMonto({
           onCambio(Number.isFinite(n) ? Math.round(n * 100) / 100 : null);
         }}
         onBlur={() => setEditando(false)}
-        className={cn(CAMPO, "pl-9 pr-20 text-right font-mono text-[13px] tabular-nums")}
+        className={cn(CAMPO, variante === "filtro" && "h-8", "pl-9 pr-20 text-right font-mono text-[13px] tabular-nums")}
       />
       {monedas.length > 1 && onMoneda ? (
         <select

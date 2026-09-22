@@ -1,6 +1,6 @@
 {
   "name": "khipu-design-system",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Design system khipu: tokens, componentes y patrones para apps Next.js 15 + Tailwind v4 (React 19, base-ui, lucide).",
   "bin": {

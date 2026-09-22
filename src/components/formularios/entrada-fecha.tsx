@@ -17,6 +17,7 @@ export function EntradaFecha({
   max,
   disabled,
   conVistaPrevia = true,
+  variante = "campo",
   className,
 }: {
   id: string;
@@ -29,6 +30,8 @@ export function EntradaFecha({
    * `EntradaRangoFechas`, a `w-40`) no cabe junto al valor nativo del input y ambos textos quedan superpuestos.
    * Desactívala con `false` en esos casos. */
   conVistaPrevia?: boolean;
+  /** `campo` (h-10, formularios) o `filtro` (h-8, barras de filtros y formularios densos). Igual que StepperNumerico. */
+  variante?: "filtro" | "campo";
   className?: string;
 }) {
   return (
@@ -42,7 +45,7 @@ export function EntradaFecha({
         max={max}
         disabled={disabled}
         onChange={(e) => onCambio?.(e.target.value)}
-        className={cn(CAMPO, "pl-9 font-mono text-[13px] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
+        className={cn(CAMPO, variante === "filtro" && "h-8", "pl-9 font-mono text-[13px] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
       />
       {conVistaPrevia && valor ? <span className="pointer-events-none absolute right-10 hidden text-[11px] text-muted-foreground sm:block">{formatearFecha(valor)}</span> : null}
     </div>
