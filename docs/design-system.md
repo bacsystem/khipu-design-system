@@ -128,8 +128,10 @@ Toda pieza interactiva de una fila (input, botón, disparador, control de tabla)
 | Altura | Uso | Ejemplos |
 |---|---|---|
 | **`h-7`** (28 px) | Denso: paginación, filas de tabla, controles secundarios pequeños | `PieTabla` (Anterior/Siguiente/números), `SelectorPorPagina`, `MenuAcciones`, `Select` `size="sm"` |
-| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, tabs `estilo="segmentado"`, `Toolbar` |
-| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto`), `BOTON_PRIMARIO/SECUNDARIO`, `Button` `size="lg"` |
+| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, tabs `estilo="segmentado"`, `Toolbar`, y `StepperNumerico`/`EntradaFecha`/`EntradaMonto` con `variante="filtro"` |
+| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto` y `StepperNumerico` con su `variante="campo"` por defecto), `BOTON_PRIMARIO/SECUNDARIO`, `Button` `size="lg"` |
+
+**Formularios densos:** `StepperNumerico`, `EntradaFecha` y `EntradaMonto` aceptan `variante="filtro"` para bajar de `h-10` a `h-8`. Es para un formulario que convive con mucho contenido en una sola vista —un diálogo de emisión con cliente, tabla de ítems y totales— donde 8 px por control deciden cuántas filas entran sin scroll. La regla de no mezclar alturas sigue valiendo: si se usa la variante, se usa en **todos** los controles de ese formulario, no solo en algunos.
 
 **Excepción documentada:** el **pie de diálogo, de `PanelLateral` y de `TarjetaPaso`** — el footer con `border-t border-border/60 px-5 py-3` que comparten los tres — usa `h-9` (36 px) con texto `text-[13px]`, una densidad intermedia reservada a ese contexto aislado (nunca aparece junto a controles de `h-8`/`h-10` en la misma fila). Un botón o disparador que **no** vive dentro de ese footer (un CTA de estado vacío, un botón suelto en una tarjeta de galería) usa `h-8` si es una acción secundaria/compacta o `h-10` si es la acción principal de un formulario — nunca `h-9` fuera de esos tres footers. Fuera de esa excepción, si dos controles conviven en una misma fila deben compartir la misma altura de la tabla de arriba; nunca mezclar `h-8` con `h-9`/`h-10` en una barra de filtros o toolbar.
 
