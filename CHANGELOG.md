@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2026-10-08
+
+### Changed
+- `Pasos` centers each step: every step takes the same width, with its circle and text centered in its column, and the connector runs from circle center to circle center (primary up to the current step). Before, steps were left-aligned and the line hung off the right of each circle, so the indicator looked pushed to the left inside a dialog. It stays horizontal on mobile and hides the descriptions there so the titles fit in one row.
+
 ## [0.1.6] - 2026-10-08
 
 ### Added
