@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] - 2026-10-08
+
+### Changed
+- `Dialog` no longer closes on an outside click (`disablePointerDismissal` defaults to `true`). A stray click lost what was typed in a form or a one-time value such as an API key. It still closes with the X, Escape or its own buttons, and `disablePointerDismissal={false}` restores the old behavior where it is wanted. `DialogoConfirmacion` and `Paleta` inherit it; side panels (`Sheet`, `PanelLateral`, `Drawer`) are unchanged.
+
 ## [0.1.7] - 2026-10-08
 
 ### Changed
