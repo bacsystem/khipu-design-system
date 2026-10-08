@@ -96,6 +96,7 @@ export function Galeria() {
   const [busqueda, setBusqueda] = useState("");
   const [busquedaCampo, setBusquedaCampo] = useState("");
   const [cantidad, setCantidad] = useState<number | null>(3);
+  const [peso, setPeso] = useState<number | null>(2.5);
   const [rango, setRango] = useState<RangoFechas>({ desde: "2026-09-01", hasta: "2026-09-15" });
   const [docsSeleccionados, setDocsSeleccionados] = useState<string[]>([]);
   const [clave, setClave] = useState("");
@@ -235,6 +236,9 @@ export function Galeria() {
           </Campo>
           <Campo id="g-cantidad" etiqueta="Cantidad" ayuda="Ítems de la línea">
             <StepperNumerico id="g-cantidad" valor={cantidad} onCambio={setCantidad} min={1} max={99} />
+          </Campo>
+          <Campo id="g-peso" etiqueta="Peso (kg)" ayuda='Con decimales: paso="any"'>
+            <StepperNumerico id="g-peso" valor={peso} onCambio={setPeso} min={0} paso="any" />
           </Campo>
           <Campo id="g-clave" etiqueta="Contraseña" ayuda="Para el registro, no para el login">
             <Contrasena id="g-clave" valor={clave} onCambio={setClave} conFuerza autoComplete="new-password" />
