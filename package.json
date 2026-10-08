@@ -1,6 +1,6 @@
 {
   "name": "khipu-design-system",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "Design system khipu: tokens, componentes y patrones para apps Next.js 15 + Tailwind v4 (React 19, base-ui, lucide).",
   "bin": {
@@ -10,7 +10,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint && npm run check:alturas",
+    "check:alturas": "node scripts/verificar-alturas.mjs",
     "typecheck": "tsc --noEmit",
     "registry:build": "node scripts/build-registry.mjs"
   },

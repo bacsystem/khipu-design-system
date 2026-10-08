@@ -12,11 +12,9 @@ export type Miga = { prefijo: string; seccion: string; pagina: string };
 /** Pill de estado del entorno/servicio para la zona izquierda. */
 export type PillEntorno = { texto: string; tono: "ok" | "aviso" | "neutro" | "oscuro"; title?: string; deshabilitado?: boolean };
 
-// Recetas de acción de la top bar (h-8, 12px). La principal es negra (foreground) para no competir con los colores de estado.
-export const ACCION_PRINCIPAL =
-  "inline-flex h-8 items-center gap-1.5 rounded-lg bg-foreground px-3 text-[12px] font-medium whitespace-nowrap text-background shadow-xs transition-colors hover:bg-foreground/90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
-export const ACCION_SECUNDARIA =
-  "inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium whitespace-nowrap text-foreground/80 shadow-2xs transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+// Las recetas de acción viven en lib/estilos.ts (también se usan fuera de la top bar); se re-exportan aquí para no romper
+// a quien ya las importa desde este archivo.
+export { ACCION_PRINCIPAL, ACCION_SECUNDARIA } from "@/lib/estilos";
 
 function Pill({ pill }: { pill: PillEntorno }) {
   const tonos = {

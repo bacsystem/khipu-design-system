@@ -47,7 +47,7 @@ import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/compon
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar";
-import { BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
+import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_PRIMARIO_PIE, BOTON_SECUNDARIO_PIE, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
 
@@ -127,25 +127,25 @@ export function Galeria() {
           </div>
         ) : null}
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
             Toast error con acción
           </button>
           <button
             type="button"
-            className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}
+            className={ACCION_SECUNDARIA}
             onClick={() => toast.promise(new Promise((r) => setTimeout(r, 1500)), { cargando: "Enviando a SUNAT…", ok: "Aceptado con CDR", error: "Rechazado" })}
           >
             Toast promise
           </button>
           <Tooltip texto="Exportar reporte: próximamente">
-            <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>
+            <button type="button" className={ACCION_SECUNDARIA}>
               Con tooltip
             </button>
           </Tooltip>
-          <BotonAsync pendiente={enviando} icon={<SendIcon className="size-4" />} textoPendiente="Enviando…" className={cn(BOTON_PRIMARIO, "h-8 text-[12px]")} onClick={simularEnvio}>
+          <BotonAsync pendiente={enviando} icon={<SendIcon className="size-4" />} textoPendiente="Enviando…" className={ACCION_PRINCIPAL} onClick={simularEnvio}>
             Enviar a SUNAT
           </BotonAsync>
         </div>
@@ -168,7 +168,7 @@ export function Galeria() {
         </div>
         <div className="grid gap-2">
           <Alerta tono="info" titulo="Entorno de pruebas">Los documentos emitidos aquí no tienen validez tributaria.</Alerta>
-          <Alerta tono="aviso" accion={<button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>Renovar</button>}>El certificado vence en 21 días.</Alerta>
+          <Alerta tono="aviso" accion={<button type="button" className={ACCION_SECUNDARIA}>Renovar</button>}>El certificado vence en 21 días.</Alerta>
           <Alerta tono="error" titulo="Envío rechazado">Código 2324: el RUC del receptor no existe.</Alerta>
           <Alerta tono="ok">Credenciales SOL verificadas correctamente.</Alerta>
         </div>
@@ -310,7 +310,7 @@ export function Galeria() {
             Paleta <Kbd>⌘K</Kbd>
           </span>
           <Popover>
-            <PopoverTrigger className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")}>Filtros avanzados</PopoverTrigger>
+            <PopoverTrigger className={ACCION_SECUNDARIA}>Filtros avanzados</PopoverTrigger>
             <PopoverContent>
               <PopoverHeader titulo="Filtros avanzados" descripcion="Se aplican solo a esta vista" />
               <div className="grid gap-2 text-[12px] text-muted-foreground">
@@ -387,23 +387,23 @@ export function Galeria() {
           ]}
         />
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPanel(true)}>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={() => setPanel(true)}>
             Abrir panel lateral
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setDrawer(true)}>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={() => setDrawer(true)}>
             Abrir drawer (móvil)
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setConfirmar(true)}>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={() => setConfirmar(true)}>
             Diálogo de confirmación
           </button>
-          <button type="button" className={cn(BOTON_SECUNDARIO, "h-8 text-[12px]")} onClick={() => setPaleta(true)}>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={() => setPaleta(true)}>
             Paleta ⌘K
           </button>
-          <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={cn(BOTON_SECUNDARIO, "h-9 text-[13px]")}>Atrás</button><button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")}>Continuar</button></>}>
+          <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={BOTON_SECUNDARIO_PIE}>Atrás</button><button type="button" className={BOTON_PRIMARIO_PIE}>Continuar</button></>}>
             <p className="text-[13px] text-muted-foreground">Contenido del paso (formulario del certificado).</p>
           </TarjetaPaso>
         </div>
-        <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")} onClick={() => setPanel(false)}>Cerrar</button>}>
+        <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={BOTON_PRIMARIO_PIE} onClick={() => setPanel(false)}>Cerrar</button>}>
           <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
         </PanelLateral>
         <Drawer open={drawer} onOpenChange={setDrawer}>
@@ -416,7 +416,7 @@ export function Galeria() {
               <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
             </div>
             <DrawerFooter>
-              <DrawerClose render={<button type="button" className={cn(BOTON_PRIMARIO, "h-9 text-[13px]")} />}>Cerrar</DrawerClose>
+              <DrawerClose render={<button type="button" className={BOTON_PRIMARIO_PIE} />}>Cerrar</DrawerClose>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

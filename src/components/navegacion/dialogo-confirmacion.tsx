@@ -4,8 +4,7 @@ import { TriangleAlertIcon, type LucideIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CabeceraDialogo, PieDialogo } from "@/components/patrones/cabecera-dialogo";
-import { BOTON_SECUNDARIO } from "@/lib/estilos";
-import { cn } from "@/lib/utils";
+import { BOTON_DESTRUCTIVO_PIE, BOTON_PRIMARIO_PIE, BOTON_SECUNDARIO_PIE } from "@/lib/estilos";
 
 /**
  * Confirmación modal para acciones irreversibles que NO caben en línea (afectan a varios registros o necesitan explicación).
@@ -61,18 +60,10 @@ export function DialogoConfirmacion({
           </div>
         ) : null}
         <PieDialogo>
-          <button type="button" disabled={pendiente} onClick={() => onOpenChange(false)} className={cn(BOTON_SECUNDARIO, "h-9 px-3.5 text-[13px]")}>
+          <button type="button" disabled={pendiente} onClick={() => onOpenChange(false)} className={BOTON_SECUNDARIO_PIE}>
             Cancelar
           </button>
-          <button
-            type="button"
-            disabled={pendiente}
-            onClick={confirmar}
-            className={cn(
-              "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-3.5 text-[13px] font-semibold shadow-xs transition-all active:scale-[0.99] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60",
-              destructiva ? "bg-destructive text-white hover:bg-destructive/90" : "bg-primary text-primary-foreground hover:opacity-95",
-            )}
-          >
+          <button type="button" disabled={pendiente} onClick={confirmar} className={destructiva ? BOTON_DESTRUCTIVO_PIE : BOTON_PRIMARIO_PIE}>
             {pendiente ? "Procesando…" : textoConfirmar}
           </button>
         </PieDialogo>

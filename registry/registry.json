@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-22",
+  "generatedAt": "2026-10-08",
   "items": {
     "components/datos/grafico": {
       "name": "grafico",
@@ -209,7 +209,6 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "components/patrones/pie-tabla",
         "lib/estilos",
         "lib/utils"
       ]
@@ -493,6 +492,7 @@
       ],
       "registryDependencies": [
         "components/ui/kbd",
+        "lib/estilos",
         "lib/utils"
       ]
     },
@@ -524,8 +524,7 @@
       "registryDependencies": [
         "components/patrones/cabecera-dialogo",
         "components/ui/dialog",
-        "lib/estilos",
-        "lib/utils"
+        "lib/estilos"
       ]
     },
     "components/navegacion/menu-acciones": {
@@ -710,6 +709,7 @@
       ],
       "registryDependencies": [
         "components/ui/selector-por-pagina",
+        "lib/estilos",
         "lib/paginacion"
       ]
     },

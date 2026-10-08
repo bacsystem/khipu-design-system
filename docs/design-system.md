@@ -128,12 +128,14 @@ Toda pieza interactiva de una fila (input, botón, disparador, control de tabla)
 | Altura | Uso | Ejemplos |
 |---|---|---|
 | **`h-7`** (28 px) | Denso: paginación, filas de tabla, controles secundarios pequeños | `PieTabla` (Anterior/Siguiente/números), `SelectorPorPagina`, `MenuAcciones`, `Select` `size="sm"` |
-| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, tabs `estilo="segmentado"`, `Toolbar`, y `StepperNumerico`/`EntradaFecha`/`EntradaMonto` con `variante="filtro"` |
-| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto` y `StepperNumerico` con su `variante="campo"` por defecto), `BOTON_PRIMARIO/SECUNDARIO`, `Button` `size="lg"` |
+| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto, acciones sueltas en tarjetas, alertas y toasts | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO_FILTRO`, tabs `estilo="segmentado"`, `Toolbar`, y `StepperNumerico`/`EntradaFecha`/`EntradaMonto` con `variante="filtro"` |
+| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto` y `StepperNumerico` con su `variante="campo"` por defecto; también un `<select>` nativo de formulario), `SelectTrigger` `size="campo"`, `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` `size="lg"` |
+
+**Cada altura tiene su receta, todas en `lib/estilos.ts`; nunca se sobrescribe la altura de una receta con `cn(RECETA, "h-N")`.** Si un botón secundario va en una barra de `h-8`, es `ACCION_SECUNDARIA`, no `cn(BOTON_SECUNDARIO, "h-8")`; si va en un pie de diálogo, es `BOTON_SECUNDARIO_PIE`. `npm run lint` lo verifica (`scripts/verificar-alturas.mjs`) y falla con el archivo y la línea. La única sobrescritura permitida es `h-auto` (el textarea de `Entrada`, que crece con su contenido).
 
 **Formularios densos:** `StepperNumerico`, `EntradaFecha` y `EntradaMonto` aceptan `variante="filtro"` para bajar de `h-10` a `h-8`. Es para un formulario que convive con mucho contenido en una sola vista —un diálogo de emisión con cliente, tabla de ítems y totales— donde 8 px por control deciden cuántas filas entran sin scroll. La regla de no mezclar alturas sigue valiendo: si se usa la variante, se usa en **todos** los controles de ese formulario, no solo en algunos.
 
-**Excepción documentada:** el **pie de diálogo, de `PanelLateral` y de `TarjetaPaso`** — el footer con `border-t border-border/60 px-5 py-3` que comparten los tres — usa `h-9` (36 px) con texto `text-[13px]`, una densidad intermedia reservada a ese contexto aislado (nunca aparece junto a controles de `h-8`/`h-10` en la misma fila). Un botón o disparador que **no** vive dentro de ese footer (un CTA de estado vacío, un botón suelto en una tarjeta de galería) usa `h-8` si es una acción secundaria/compacta o `h-10` si es la acción principal de un formulario — nunca `h-9` fuera de esos tres footers. Fuera de esa excepción, si dos controles conviven en una misma fila deben compartir la misma altura de la tabla de arriba; nunca mezclar `h-8` con `h-9`/`h-10` en una barra de filtros o toolbar.
+**Excepción documentada:** el **pie de diálogo, de `PanelLateral` y de `TarjetaPaso`** — el footer con `border-t border-border/60 px-5 py-3` que comparten los tres — usa `h-9` (36 px) con texto `text-[13px]` (`BOTON_PRIMARIO_PIE`, `BOTON_SECUNDARIO_PIE`, `BOTON_DESTRUCTIVO_PIE`), una densidad intermedia reservada a ese contexto aislado (nunca aparece junto a controles de `h-8`/`h-10` en la misma fila). Un botón o disparador que **no** vive dentro de ese footer (un CTA de estado vacío, un botón suelto en una tarjeta de galería) usa `h-8` si es una acción secundaria/compacta o `h-10` si es la acción principal de un formulario — nunca `h-9` fuera de esos tres footers. Fuera de esa excepción, si dos controles conviven en una misma fila deben compartir la misma altura de la tabla de arriba; nunca mezclar `h-8` con `h-9`/`h-10` en una barra de filtros o toolbar.
 
 ---
 
@@ -196,7 +198,7 @@ De arriba abajo:
 
 Regla de espacio: máximo **dos secundarias + una principal**; lo que no cabe va dentro de un diálogo (p. ej. "Documentación API" vive en el pie de los diálogos de API keys). Breakpoints de ocultación: `hidden lg:inline-flex` según prioridad (no `sm`/`md`: el sidebar fijo de 240 px aparece en `md`, así que entre 768–1023 px el ancho real disponible es angosto y cualquier cosa que se revele antes de `lg` compite con la miga y puede solaparse con las acciones).
 
-Recetas (en `top-bar.tsx`):
+Recetas (en `lib/estilos.ts`, re-exportadas desde `top-bar.tsx`; también son las de cualquier acción suelta de `h-8` fuera de la top bar):
 - `ACCION_PRINCIPAL`: `h-8 rounded-lg bg-foreground text-background px-3 text-[12px] font-medium shadow-xs hover:bg-foreground/90` (negro/blanco según tema; **no** primary, para no competir con los estados).
 - `ACCION_SECUNDARIA`: `h-8 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-foreground/80 shadow-2xs hover:bg-muted hover:text-foreground`.
 
@@ -221,8 +223,10 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 Tamaños: `xs` (h-6), `sm` (h-7), `default` (h-8), `lg` (h-10, misma altura que `BOTON_PRIMARIO`); iconos `icon-xs` (24), `icon-sm` (28), `icon` (32), `icon-lg` (40).
 
 ### Recetas de `lib/estilos.ts` (formularios y diálogos)
-- `BOTON_PRIMARIO`: `h-10 rounded-lg bg-primary text-primary-foreground px-3.5 text-sm font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`. En diálogos se usa `h-9 text-[13px]`.
+- `BOTON_PRIMARIO`: `h-10 rounded-lg bg-primary text-primary-foreground px-3.5 text-sm font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`.
 - `BOTON_SECUNDARIO`: `h-10 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground/80 shadow-2xs hover:bg-muted`.
+- `BOTON_DESTRUCTIVO`: `h-10 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-sm font-semibold shadow-xs hover:bg-destructive/90` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
+- Pie de diálogo, `PanelLateral`, `TarjetaPaso` y `Drawer`: `BOTON_PRIMARIO_PIE`, `BOTON_SECUNDARIO_PIE` y `BOTON_DESTRUCTIVO_PIE` — las mismas a `h-9 text-[13px]` (§4).
 - Cierre de diálogos informativos: botón `bg-foreground text-background` ("Entendido").
 
 ### Acciones dentro de tablas
@@ -244,7 +248,7 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 - **Campo** (`CAMPO`): `h-10 rounded-lg border border-border bg-muted px-3 text-sm`; foco `border-ring bg-card ring-3 ring-ring/30`; deshabilitado `opacity-60 cursor-not-allowed`.
 - **Etiqueta** (`ETIQUETA_CAMPO`): `text-[12px] font-medium`. **Ayuda** (`AYUDA_CAMPO`): `font-mono text-[11px] text-muted-foreground`. Error: `text-sm text-destructive` bajo el campo.
 - **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta uppercase (`ETIQUETA_DATO`) + caja `h-9 rounded-lg border bg-muted px-3 font-mono text-[13px]`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
-- **Select** (`ui/select.tsx`, base-ui): disparador `h-8 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` (`size="sm"` → `h-7`) con `ChevronDown`; popup alineado al disparador, ítems con check.
+- **Select** (`ui/select.tsx`, base-ui): disparador `h-8 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` (`size="sm"` → `h-7`; `size="campo"` → `h-10`, para un formulario donde convive con `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
 - **Selector de filas** (`ui/selector-por-pagina.tsx`): grupo `h-7 rounded-md border bg-card p-0.5` con `10 · 20 · 50`, activo `bg-foreground text-background`.
 - Validación con zod + react-hook-form; mensajes de error desde `lib/messages.ts` (`mensajeError(codigo)`).
 - **Archivo (.p12/.pfx)** en `/empresa`: input de archivo + clave, feedback con vigencia del certificado (pill verde/ámbar/rojo según días restantes).
