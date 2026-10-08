@@ -83,7 +83,7 @@ export function Segmentado<T extends string>({ opciones, valor, onCambio, classN
           type="button"
           onClick={() => onCambio(o.id)}
           className={cn(
-            "h-7 rounded-md px-2.5 text-[12px] font-medium transition-colors",
+            "h-6 rounded-md px-2.5 text-[12px] font-medium transition-colors",
             valor === o.id ? "bg-card text-foreground shadow-2xs" : "text-muted-foreground hover:text-foreground",
           )}
         >

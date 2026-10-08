@@ -17,6 +17,12 @@ export const CONTROL_FILTRO = "h-8 rounded-lg border border-border bg-card text-
 // El aspecto de CAMPO a h-8: `variante="filtro"` de EntradaFecha/EntradaMonto (barras de filtros y formularios densos).
 export const CAMPO_FILTRO =
   "h-8 w-full rounded-lg border border-border bg-muted px-3 text-sm text-foreground transition-colors outline-none placeholder:text-muted-foreground/70 focus:border-ring focus:bg-card focus:ring-3 focus:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-60";
+// Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, o vistas que son enlaces): caja de h-8 con segmentos de h-6.
+// `min-h-8` y no `h-8`: con muchas opciones la caja se parte en filas en vez de desbordarse, y con una sola fila mide igual.
+// El segmento activo se marca con `data-active` (Tabs de base-ui) o con `aria-current="page"` (un enlace a la vista actual).
+export const SEGMENTADO = "inline-flex min-h-8 w-fit flex-wrap items-center gap-1 rounded-lg border border-border/60 bg-secondary/80 p-0.5";
+export const SEGMENTO =
+  "inline-flex h-6 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium whitespace-nowrap text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:bg-card data-active:text-foreground data-active:shadow-2xs aria-[current=page]:bg-card aria-[current=page]:text-foreground aria-[current=page]:shadow-2xs";
 
 // ── h-10 · formularios: el campo y su CTA ──
 export const CAMPO =

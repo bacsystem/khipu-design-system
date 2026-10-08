@@ -128,7 +128,7 @@ Toda pieza interactiva de una fila (input, botón, disparador, control de tabla)
 | Altura | Uso | Ejemplos |
 |---|---|---|
 | **`h-7`** (28 px) | Denso: paginación, filas de tabla, controles secundarios pequeños | `PieTabla` (Anterior/Siguiente/números), `SelectorPorPagina`, `MenuAcciones`, `Select` `size="sm"` |
-| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto, acciones sueltas en tarjetas, alertas y toasts | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO_FILTRO`, tabs `estilo="segmentado"`, `Toolbar`, y `StepperNumerico`/`EntradaFecha`/`EntradaMonto` con `variante="filtro"` |
+| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto, acciones sueltas en tarjetas, alertas y toasts | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO_FILTRO`, `SEGMENTADO` (tabs `estilo="segmentado"` o vistas que son enlaces), `Toolbar`, y `StepperNumerico`/`EntradaFecha`/`EntradaMonto` con `variante="filtro"` |
 | **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto` y `StepperNumerico` con su `variante="campo"` por defecto; también un `<select>` nativo de formulario), `SelectTrigger` `size="campo"`, `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` `size="lg"` |
 
 **Cada altura tiene su receta, todas en `lib/estilos.ts`; nunca se sobrescribe la altura de una receta con `cn(RECETA, "h-N")`.** Si un botón secundario va en una barra de `h-8`, es `ACCION_SECUNDARIA`, no `cn(BOTON_SECUNDARIO, "h-8")`; si va en un pie de diálogo, es `BOTON_SECUNDARIO_PIE`. `npm run lint` lo verifica (`scripts/verificar-alturas.mjs`) y falla con el archivo y la línea. La única sobrescritura permitida es `h-auto` (el textarea de `Entrada`, que crece con su contenido).
@@ -269,7 +269,7 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 
 Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 
-1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`h-8 rounded-lg border-border/60 bg-secondary/80 p-1`, activa `bg-card shadow-2xs`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-8 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-8`, icono gira mientras `useTransition` está pendiente) — todo a `h-8` para alinear con el `Select` de la misma barra.
+1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`SEGMENTADO` + `SEGMENTO`: caja `min-h-8 p-0.5`, segmentos `h-6`, activo `bg-card shadow-2xs` por `data-active` o `aria-current="page"`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-8 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-8`, icono gira mientras `useTransition` está pendiente) — todo a `h-8` para alinear con el `Select` de la misma barra.
 2. **Contenedor**: `overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs`; `opacity-60` mientras refresca.
 3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground/80`; primera columna checkbox deshabilitado (selección múltiple próximamente).
 4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-[13px]`; celda principal con dos líneas (valor fuerte + subtítulo mono 11 px); identificadores en chip `rounded bg-secondary px-2 py-0.5 font-mono font-semibold text-primary` (inactivos: `bg-muted text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
@@ -327,7 +327,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 ## 16. Código y datos técnicos
 
-- **Barra de endpoint**: `bg-muted border-b px-4 py-2` con chip de método (`rounded bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-primary-foreground`), URL mono 12 px truncada, pestañas de lenguaje (`cURL · Node.js / TS · Python`, control segmentado `h-7`) y botón copiar.
+- **Barra de endpoint**: `bg-muted border-b px-4 py-2` con chip de método (`rounded bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-primary-foreground`), URL mono 12 px truncada, pestañas de lenguaje (`cURL · Node.js / TS · Python`, control segmentado `h-8` con segmentos `h-6`) y botón copiar.
 - **Bloque de código**: `pre` con `bg-[oklch(0.18_0.02_265)] text-[oklch(0.9_0.01_265)] p-4 font-mono text-[12px] leading-relaxed max-h-[52vh] overflow-auto` (siempre oscuro, en ambos temas). Respuestas JSON: `bg-muted/40 text-foreground`.
 - **Vista previa XML/CDR** (`comprobantes/vista-previa.tsx`): pestañas XML/CDR, `formatearXml()`, botón "Descargar XML/ZIP".
 - **Hash / UUID**: mono, `truncate` con `title` completo; ids acortados a 8 caracteres en listados.

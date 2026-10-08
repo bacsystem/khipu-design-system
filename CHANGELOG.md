@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-10-08
+
+### Added
+- `SEGMENTADO` / `SEGMENTO` recipes for the segmented control of a filter bar. `Tabs estilo="segmentado"` uses them, and so can a row of links to filtered views, because the active segment is marked by either `data-active` (base-ui Tabs) or `aria-current="page"` (a link). Before, the style lived only inside `Tabs`, so the khipu portal had hand-built two versions at three different heights.
+
+### Fixed
+- The segmented `Tabs`, `Toolbar` and `BloqueCodigo` language selector declared an `h-8` box but did not fit their own items: with the border and `p-1`/`p-0.5` there were 22–26 px left for 24–28 px items, which overflowed the box. Padding goes to `p-0.5` and the code-block segments to `h-6`, measured at 32 px in the browser. `SEGMENTADO` uses `min-h-8`, so a long list wraps instead of overflowing.
+
 ## [0.1.5] - 2026-10-08
 
 ### Added
