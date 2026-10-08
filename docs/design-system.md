@@ -311,6 +311,8 @@ Toda función visible en el diseño de Stitch que el backend aún no soporta se 
 
 ## 15. Diálogos (`ui/dialog.tsx`, base-ui)
 
+**Un clic fuera no cierra un diálogo** (`Dialog` trae `disablePointerDismissal` por defecto): un clic perdido no debe tirar lo escrito ni lo que se muestra una sola vez. Se cierra con la X, Escape o los botones del pie. Vale para todo lo que se arma sobre `Dialog` (`DialogoConfirmacion`, `Paleta`); los paneles laterales (`Sheet`, `PanelLateral`, `Drawer`) sí se cierran con un clic fuera.
+
 Estructura fija: `DialogContent className="gap-0 p-0"` →
 - **Cabecera** `border-b border-border/60 px-5 py-4 pr-14`: icono en caja `size-8 rounded-lg bg-accent text-primary` + `DialogTitle` (16 px semibold) + `DialogDescription` (13 px).
 - **Cuerpo** `px-5 py-4` (formularios: `grid gap-4`; referencias: `@container bg-muted/40` con `grid @3xl:grid-cols-2`).
