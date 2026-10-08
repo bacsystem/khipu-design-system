@@ -2,8 +2,7 @@
 
 import { SearchIcon, XIcon } from "lucide-react";
 import type { InputHTMLAttributes } from "react";
-import { CONTROL_FILTRO } from "@/components/patrones/pie-tabla";
-import { CAMPO } from "@/lib/estilos";
+import { CAMPO, CONTROL_FILTRO } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 /**

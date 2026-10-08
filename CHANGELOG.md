@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-10-08
+
+### Added
+- A recipe for every height in the scale, so no consumer has to override one with `cn(RECIPE, "h-N")`: `BOTON_DESTRUCTIVO` (`h-10`), `BOTON_PRIMARIO_PIE` / `BOTON_SECUNDARIO_PIE` / `BOTON_DESTRUCTIVO_PIE` for the documented `h-9` dialog/panel/step footer, and `CAMPO_FILTRO` (`CAMPO` at `h-8`). An audit of the khipu portal found 80 such overrides, the design system itself had 20 (gallery, demo dialog, `DialogoConfirmacion`, `EntradaFecha`, `EntradaMonto`), and that is how controls in the same row ended up at different heights.
+- `SelectTrigger` `size="campo"` (`h-10`): a select can now sit next to a `CAMPO` in a form at the same height. Before, the only sizes were `h-7` and `h-8`.
+- `npm run lint` now runs `scripts/verificar-alturas.mjs`, which fails on any height override applied to a control recipe and names the file and line.
+
+### Changed
+- `ACCION_PRINCIPAL`, `ACCION_SECUNDARIA` and `CONTROL_FILTRO` moved to `lib/estilos.ts` with the rest of the scale. `nav/top-bar.tsx` and `patrones/pie-tabla.tsx` re-export them, so existing imports keep working.
+- `DialogoConfirmacion` uses the footer recipes. Its destructive button now takes `text-destructive-foreground` instead of `text-white`: in dark mode the red is light, and white text on it was hard to read.
+- `EntradaFecha` and `EntradaMonto` use `CAMPO_FILTRO` for `variante="filtro"` instead of overriding `CAMPO`'s height.
+
 ## [0.1.4] - 2026-09-22
 
 ### Changed
