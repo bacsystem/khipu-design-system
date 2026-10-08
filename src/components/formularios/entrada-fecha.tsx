@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarIcon } from "lucide-react";
-import { CAMPO, CAMPO_FILTRO } from "@/lib/estilos";
+import { CAMPO } from "@/lib/estilos";
 import { formatearFecha } from "@/lib/formato";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,6 @@ export function EntradaFecha({
   max,
   disabled,
   conVistaPrevia = true,
-  variante = "campo",
   className,
 }: {
   id: string;
@@ -45,7 +44,7 @@ export function EntradaFecha({
         max={max}
         disabled={disabled}
         onChange={(e) => onCambio?.(e.target.value)}
-        className={cn(variante === "filtro" ? CAMPO_FILTRO : CAMPO, "pl-9 font-mono text-[13px] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
+        className={cn(CAMPO, "pl-9 font-mono text-[13px] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
       />
       {conVistaPrevia && valor ? <span className="pointer-events-none absolute right-10 hidden text-[11px] text-muted-foreground sm:block">{formatearFecha(valor)}</span> : null}
     </div>

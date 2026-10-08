@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CAMPO, CAMPO_FILTRO } from "@/lib/estilos";
+import { CAMPO } from "@/lib/estilos";
 import { formatearNumero } from "@/lib/formato";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +16,6 @@ export function EntradaMonto({
   valor,
   onCambio,
   moneda = "PEN",
-  variante = "campo",
   monedas = ["PEN", "USD"],
   onMoneda,
   disabled,
@@ -56,7 +55,7 @@ export function EntradaMonto({
           onCambio(Number.isFinite(n) ? Math.round(n * 100) / 100 : null);
         }}
         onBlur={() => setEditando(false)}
-        className={cn(variante === "filtro" ? CAMPO_FILTRO : CAMPO, "pl-9 pr-20 text-right font-mono text-[13px] tabular-nums")}
+        className={cn(CAMPO, "pl-9 pr-20 text-right font-mono text-[13px] tabular-nums")}
       />
       {monedas.length > 1 && onMoneda ? (
         <select
