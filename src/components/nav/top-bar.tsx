@@ -88,7 +88,7 @@ export function TopBar({
               disabled={!buscador.onClick}
               onClick={buscador.onClick}
               placeholder={buscador.placeholder}
-              className="h-8 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-[12px] text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
+              className="h-9 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-[12px] text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
             />
             {buscador.atajo ? (
               <Kbd className="absolute top-1/2 right-2 -translate-y-1/2">{buscador.atajo}</Kbd>

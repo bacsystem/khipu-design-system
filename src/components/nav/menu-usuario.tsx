@@ -100,7 +100,7 @@ export function MenuUsuario({
             <MenuSeparator />
             <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Tema</div>
             <div className="px-0.5 pb-1.5">
-              <ThemeToggle conTexto className="h-8" />
+              <ThemeToggle conTexto />
             </div>
           </>
         ) : null}

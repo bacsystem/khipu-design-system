@@ -4,7 +4,7 @@ import { BookOpenIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CabeceraDialogo, PieDialogo } from "@/components/patrones/cabecera-dialogo";
-import { BOTON_PRIMARIO_PIE, BOTON_SECUNDARIO_PIE, CAMPO, ETIQUETA_CAMPO, AYUDA_CAMPO } from "@/lib/estilos";
+import { BOTON_PRIMARIO, BOTON_SECUNDARIO, CAMPO, ETIQUETA_CAMPO, AYUDA_CAMPO } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 /** Acciones contextuales de la top bar: máximo dos secundarias + una principal. */
@@ -33,10 +33,10 @@ export function AccionesEjemplo({ principal, secundaria }: { principal: string; 
             </div>
           </div>
           <PieDialogo>
-            <button type="button" onClick={() => setAbierto(false)} className={BOTON_SECUNDARIO_PIE}>
+            <button type="button" onClick={() => setAbierto(false)} className={BOTON_SECUNDARIO}>
               Cancelar
             </button>
-            <button type="button" onClick={() => setAbierto(false)} className={BOTON_PRIMARIO_PIE}>
+            <button type="button" onClick={() => setAbierto(false)} className={BOTON_PRIMARIO}>
               Guardar
             </button>
           </PieDialogo>

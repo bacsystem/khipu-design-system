@@ -30,7 +30,7 @@ export function EntradaFecha({
    * `EntradaRangoFechas`, a `w-40`) no cabe junto al valor nativo del input y ambos textos quedan superpuestos.
    * Desactívala con `false` en esos casos. */
   conVistaPrevia?: boolean;
-  /** `campo` (h-10, formularios) o `filtro` (h-8, barras de filtros y formularios densos). Igual que StepperNumerico. */
+  /** Las dos variantes miden h-9 (altura única de control); se conserva por compatibilidad. Igual que StepperNumerico. */
   variante?: "filtro" | "campo";
   className?: string;
 }) {

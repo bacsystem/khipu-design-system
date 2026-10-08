@@ -47,7 +47,7 @@ import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/compon
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar";
-import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_PRIMARIO_PIE, BOTON_SECUNDARIO_PIE, TARJETA } from "@/lib/estilos";
+import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
 
@@ -193,7 +193,7 @@ export function Galeria() {
         <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador etiqueta="Buscar documentos" valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
-          <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo, h-10)">
+          <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo)">
             <Buscador id="g-buscador-campo" variante="campo" valor={busquedaCampo} onCambio={setBusquedaCampo} placeholder="RUC o razón social…" />
           </Campo>
         </div>
@@ -403,11 +403,11 @@ export function Galeria() {
           <button type="button" className={ACCION_SECUNDARIA} onClick={() => setPaleta(true)}>
             Paleta ⌘K
           </button>
-          <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={BOTON_SECUNDARIO_PIE}>Atrás</button><button type="button" className={BOTON_PRIMARIO_PIE}>Continuar</button></>}>
+          <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={BOTON_SECUNDARIO}>Atrás</button><button type="button" className={BOTON_PRIMARIO}>Continuar</button></>}>
             <p className="text-[13px] text-muted-foreground">Contenido del paso (formulario del certificado).</p>
           </TarjetaPaso>
         </div>
-        <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={BOTON_PRIMARIO_PIE} onClick={() => setPanel(false)}>Cerrar</button>}>
+        <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={BOTON_PRIMARIO} onClick={() => setPanel(false)}>Cerrar</button>}>
           <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
         </PanelLateral>
         <Drawer open={drawer} onOpenChange={setDrawer}>
@@ -420,7 +420,7 @@ export function Galeria() {
               <ListaDatos datos={[{ etiqueta: "Cliente", valor: "Inversiones Andinas S.A.C." }, { etiqueta: "Total", valor: "S/ 2,000.01", mono: true }]} />
             </div>
             <DrawerFooter>
-              <DrawerClose render={<button type="button" className={BOTON_PRIMARIO_PIE} />}>Cerrar</DrawerClose>
+              <DrawerClose render={<button type="button" className={BOTON_PRIMARIO} />}>Cerrar</DrawerClose>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

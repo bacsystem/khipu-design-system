@@ -38,7 +38,7 @@ function Lista() {
                 <ToastPrimitive.Title className="text-[13px] leading-tight font-semibold" />
                 <ToastPrimitive.Description className="mt-0.5 text-[12px] leading-snug text-muted-foreground" />
                 {t.actionProps ? (
-                  <ToastPrimitive.Action className="mt-2 inline-flex h-7 items-center rounded-md border border-border bg-card px-2.5 text-[12px] font-medium text-foreground shadow-2xs hover:bg-muted" />
+                  <ToastPrimitive.Action className="mt-2 inline-flex h-9 items-center rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-foreground shadow-2xs hover:bg-muted" />
                 ) : null}
               </ToastPrimitive.Content>
               <ToastPrimitive.Close aria-label="Cerrar" className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">

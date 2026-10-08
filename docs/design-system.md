@@ -123,19 +123,19 @@ Tracking negativo (`tracking-tight`) solo en títulos y valores grandes; `tracki
 
 ### Escala de alturas
 
-Toda pieza interactiva de una fila (input, botón, disparador, control de tabla) usa una de estas tres alturas — nunca un valor suelto:
+**Altura única de control: `h-9` (36 px).** Todo control interactivo —botón, input, select, buscador, filtro, control segmentado, stepper, acción de fila de tabla, paginación, pie de diálogo, menú «⋯» de fila— mide `h-9` (o `size-9` si es solo un icono). Así cualquier par de controles puesto lado a lado queda alineado, en una barra, en un formulario o en una fila de tabla, sin elegir entre escalas.
 
-| Altura | Uso | Ejemplos |
+| Pieza | Altura | Recetas / componentes |
 |---|---|---|
-| **`h-7`** (28 px) | Denso: paginación, filas de tabla, controles secundarios pequeños | `PieTabla` (Anterior/Siguiente/números), `SelectorPorPagina`, `MenuAcciones`, `Select` `size="sm"` |
-| **`h-8`** (32 px) | Chrome de página: barra de filtros, top bar, botón por defecto, acciones sueltas en tarjetas, alertas y toasts | `Button` `default`, `ui/Input`, `SelectTrigger` `default`, `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO_FILTRO`, `SEGMENTADO` (tabs `estilo="segmentado"` o vistas que son enlaces), `Toolbar`, y `StepperNumerico`/`EntradaFecha`/`EntradaMonto` con `variante="filtro"` |
-| **`h-10`** (40 px) | Campos de formulario y su CTA | `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto` y `StepperNumerico` con su `variante="campo"` por defecto; también un `<select>` nativo de formulario), `SelectTrigger` `size="campo"`, `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` `size="lg"` |
+| Control | **`h-9`** (36 px) | `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto`, `<select>` nativo), `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` (todos los tamaños salvo `xs`), `ui/Input`, `SelectTrigger` (todos los `size`), `StepperNumerico`, `PieTabla`, `SelectorPorPagina`, `ConfirmacionEnLinea`, `MenuAcciones`, `Toolbar`, `ThemeToggle`, `GrupoBotones` |
+| Contenedor segmentado | caja `h-9`/`min-h-9` con ítems `h-7` | `SEGMENTADO`/`SEGMENTO`, `Toolbar`, `GrupoBotones`, `SelectorPorPagina`, `ThemeToggle`, `Segmentado` de `BloqueCodigo`: por fuera miden lo mismo que cualquier control |
+| Dentro de otro control | `h-6`/`h-7` | `Button` `size="xs"`/`"icon-xs"` y el selector de moneda de `EntradaMonto`: solo van dentro de un control de `h-9`, nunca sueltos en una fila |
 
-**Cada altura tiene su receta, todas en `lib/estilos.ts`; nunca se sobrescribe la altura de una receta con `cn(RECETA, "h-N")`.** Si un botón secundario va en una barra de `h-8`, es `ACCION_SECUNDARIA`, no `cn(BOTON_SECUNDARIO, "h-8")`; si va en un pie de diálogo, es `BOTON_SECUNDARIO_PIE`. `npm run lint` lo verifica (`scripts/verificar-alturas.mjs`) y falla con el archivo y la línea. La única sobrescritura permitida es `h-auto` (el textarea de `Entrada`, que crece con su contenido).
+**Nunca se sobrescribe la altura de una receta con `cn(RECETA, "h-N")`**, y toda receta de control de `lib/estilos.ts` mide `h-9`. `npm run lint` lo verifica (`scripts/verificar-alturas.mjs`) y falla con el archivo y la línea. La única sobrescritura permitida es `h-auto` (el textarea de `Entrada`, que crece con su contenido).
 
-**Formularios densos:** `StepperNumerico`, `EntradaFecha` y `EntradaMonto` aceptan `variante="filtro"` para bajar de `h-10` a `h-8`. Es para un formulario que convive con mucho contenido en una sola vista —un diálogo de emisión con cliente, tabla de ítems y totales— donde 8 px por control deciden cuántas filas entran sin scroll. La regla de no mezclar alturas sigue valiendo: si se usa la variante, se usa en **todos** los controles de ese formulario, no solo en algunos.
+**Compatibilidad (0.2.0):** las variantes de altura anteriores se conservan para no romper imports, pero ya no cambian la altura: `CAMPO_FILTRO` es `CAMPO`, `BOTON_*_PIE` son `BOTON_*`, `variante="filtro"`/`"campo"` de `StepperNumerico`/`EntradaFecha`/`EntradaMonto` y `size="sm"`/`"lg"` de `Button`/`SelectTrigger` miden `h-9`. En código nuevo usa las recetas sin sufijo.
 
-**Excepción documentada:** el **pie de diálogo, de `PanelLateral` y de `TarjetaPaso`** — el footer con `border-t border-border/60 px-5 py-3` que comparten los tres — usa `h-9` (36 px) con texto `text-[13px]` (`BOTON_PRIMARIO_PIE`, `BOTON_SECUNDARIO_PIE`, `BOTON_DESTRUCTIVO_PIE`), una densidad intermedia reservada a ese contexto aislado (nunca aparece junto a controles de `h-8`/`h-10` en la misma fila). Un botón o disparador que **no** vive dentro de ese footer (un CTA de estado vacío, un botón suelto en una tarjeta de galería) usa `h-8` si es una acción secundaria/compacta o `h-10` si es la acción principal de un formulario — nunca `h-9` fuera de esos tres footers. Fuera de esa excepción, si dos controles conviven en una misma fila deben compartir la misma altura de la tabla de arriba; nunca mezclar `h-8` con `h-9`/`h-10` en una barra de filtros o toolbar.
+No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-10`, una franja de navegación), la cabecera de `Table` (`h-10`), la entrada de la `Paleta` (`h-11`) y las piezas decorativas (avatares, iconos de sección, logo).
 
 ---
 
@@ -198,9 +198,9 @@ De arriba abajo:
 
 Regla de espacio: máximo **dos secundarias + una principal**; lo que no cabe va dentro de un diálogo (p. ej. "Documentación API" vive en el pie de los diálogos de API keys). Breakpoints de ocultación: `hidden lg:inline-flex` según prioridad (no `sm`/`md`: el sidebar fijo de 240 px aparece en `md`, así que entre 768–1023 px el ancho real disponible es angosto y cualquier cosa que se revele antes de `lg` compite con la miga y puede solaparse con las acciones).
 
-Recetas (en `lib/estilos.ts`, re-exportadas desde `top-bar.tsx`; también son las de cualquier acción suelta de `h-8` fuera de la top bar):
-- `ACCION_PRINCIPAL`: `h-8 rounded-lg bg-foreground text-background px-3 text-[12px] font-medium shadow-xs hover:bg-foreground/90` (negro/blanco según tema; **no** primary, para no competir con los estados).
-- `ACCION_SECUNDARIA`: `h-8 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-foreground/80 shadow-2xs hover:bg-muted hover:text-foreground`.
+Recetas (en `lib/estilos.ts`, re-exportadas desde `top-bar.tsx`; también son las de cualquier acción suelta fuera de la top bar):
+- `ACCION_PRINCIPAL`: `h-9 rounded-lg bg-foreground text-background px-3 text-[12px] font-medium shadow-xs hover:bg-foreground/90` (negro/blanco según tema; **no** primary, para no competir con los estados).
+- `ACCION_SECUNDARIA`: `h-9 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-foreground/80 shadow-2xs hover:bg-muted hover:text-foreground`.
 
 El selector de tema **no** está en la top bar: vive en el menú de usuario.
 
@@ -220,17 +220,17 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 | `destructive` | `bg-destructive/10 text-destructive hover:bg-destructive/20` | Acciones irreversibles |
 | `link` | `text-primary hover:underline` | Enlaces inline |
 
-Tamaños: `xs` (h-6), `sm` (h-7), `default` (h-8), `lg` (h-10, misma altura que `BOTON_PRIMARIO`); iconos `icon-xs` (24), `icon-sm` (28), `icon` (32), `icon-lg` (40).
+Tamaños: `default`, `sm` y `lg` miden `h-9` (cambian padding y texto); iconos `icon`, `icon-sm` e `icon-lg` miden `size-9`. `xs` (h-6) e `icon-xs` (24) solo van dentro de otro control (§4).
 
 ### Recetas de `lib/estilos.ts` (formularios y diálogos)
-- `BOTON_PRIMARIO`: `h-10 rounded-lg bg-primary text-primary-foreground px-3.5 text-sm font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`.
-- `BOTON_SECUNDARIO`: `h-10 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground/80 shadow-2xs hover:bg-muted`.
-- `BOTON_DESTRUCTIVO`: `h-10 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-sm font-semibold shadow-xs hover:bg-destructive/90` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
-- Pie de diálogo, `PanelLateral`, `TarjetaPaso` y `Drawer`: `BOTON_PRIMARIO_PIE`, `BOTON_SECUNDARIO_PIE` y `BOTON_DESTRUCTIVO_PIE` — las mismas a `h-9 text-[13px]` (§4).
+- `BOTON_PRIMARIO`: `h-9 rounded-lg bg-primary text-primary-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`.
+- `BOTON_SECUNDARIO`: `h-9 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-foreground/80 shadow-2xs hover:bg-muted`.
+- `BOTON_DESTRUCTIVO`: `h-9 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:bg-destructive/90` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
+- Pie de diálogo, `PanelLateral`, `TarjetaPaso` y `Drawer` usan las mismas; `BOTON_*_PIE` quedan como alias obsoletos (§4).
 - Cierre de diálogos informativos: botón `bg-foreground text-background` ("Entendido").
 
 ### Acciones dentro de tablas
-`inline-flex h-7 rounded-md px-2 text-[12px] font-medium` + icono 14 px: neutras en `text-muted-foreground`, destructivas en `text-destructive hover:bg-destructive/10`, separadas por `|` (`text-border`). Iconos-botón de fila: `size-6` (`ACCION` en series/comprobantes), visibles al 80 % y al 100 % en hover de la fila (`group-hover`).
+`inline-flex h-9 rounded-lg px-2.5 text-[12px] font-medium` + icono 14 px: neutras en `text-muted-foreground`, destructivas en `text-destructive hover:bg-destructive/10`, separadas por `|` (`text-border`). Iconos-botón de fila y menú «⋯»: `size-9`, visibles al 80 % y al 100 % en hover de la fila (`group-hover`). La fila crece hasta la altura del control: una acción de fila mide lo mismo que el botón o el filtro de arriba de la tabla.
 
 ### Botón copiar (`comprobantes/boton-copiar.tsx`)
 Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg-secondary`; en filas aparece con `opacity-0 group-hover:opacity-100`.
@@ -245,11 +245,11 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 
 ## 10. Formularios
 
-- **Campo** (`CAMPO`): `h-10 rounded-lg border border-border bg-muted px-3 text-sm`; foco `border-ring bg-card ring-3 ring-ring/30`; deshabilitado `opacity-60 cursor-not-allowed`.
+- **Campo** (`CAMPO`): `h-9 rounded-lg border border-border bg-muted px-3 text-sm`; foco `border-ring bg-card ring-3 ring-ring/30`; deshabilitado `opacity-60 cursor-not-allowed`.
 - **Etiqueta** (`ETIQUETA_CAMPO`): `text-[12px] font-medium`. **Ayuda** (`AYUDA_CAMPO`): `font-mono text-[11px] text-muted-foreground`. Error: `text-sm text-destructive` bajo el campo.
 - **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta uppercase (`ETIQUETA_DATO`) + caja `h-9 rounded-lg border bg-muted px-3 font-mono text-[13px]`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
-- **Select** (`ui/select.tsx`, base-ui): disparador `h-8 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` (`size="sm"` → `h-7`; `size="campo"` → `h-10`, para un formulario donde convive con `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
-- **Selector de filas** (`ui/selector-por-pagina.tsx`): grupo `h-7 rounded-md border bg-card p-0.5` con `10 · 20 · 50`, activo `bg-foreground text-background`.
+- **Select** (`ui/select.tsx`, base-ui): disparador `h-9 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` (todos los `size` miden `h-9`; `size="campo"` solo agrega el padding de `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
+- **Selector de filas** (`ui/selector-por-pagina.tsx`): grupo `h-9 rounded-lg border bg-card p-0.5` con `10 · 20 · 50`, activo `bg-foreground text-background`.
 - Validación con zod + react-hook-form; mensajes de error desde `lib/messages.ts` (`mensajeError(codigo)`).
 - **Archivo (.p12/.pfx)** en `/empresa`: input de archivo + clave, feedback con vigencia del certificado (pill verde/ámbar/rojo según días restantes).
 
@@ -269,7 +269,7 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 
 Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 
-1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`SEGMENTADO` + `SEGMENTO`: caja `min-h-8 p-0.5`, segmentos `h-6`, activo `bg-card shadow-2xs` por `data-active` o `aria-current="page"`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-8 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-8`, icono gira mientras `useTransition` está pendiente) — todo a `h-8` para alinear con el `Select` de la misma barra.
+1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`SEGMENTADO` + `SEGMENTO`: caja `min-h-9 p-0.5`, segmentos `h-7`, activo `bg-card shadow-2xs` por `data-active` o `aria-current="page"`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-9 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-9`, icono gira mientras `useTransition` está pendiente) — todo a `h-9` para alinear con el `Select` de la misma barra.
 2. **Contenedor**: `overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs`; `opacity-60` mientras refresca.
 3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground/80`; primera columna checkbox deshabilitado (selección múltiple próximamente).
 4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-[13px]`; celda principal con dos líneas (valor fuerte + subtítulo mono 11 px); identificadores en chip `rounded bg-secondary px-2 py-0.5 font-mono font-semibold text-primary` (inactivos: `bg-muted text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
@@ -329,7 +329,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 ## 16. Código y datos técnicos
 
-- **Barra de endpoint**: `bg-muted border-b px-4 py-2` con chip de método (`rounded bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-primary-foreground`), URL mono 12 px truncada, pestañas de lenguaje (`cURL · Node.js / TS · Python`, control segmentado `h-8` con segmentos `h-6`) y botón copiar.
+- **Barra de endpoint**: `bg-muted border-b px-4 py-2` con chip de método (`rounded bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-primary-foreground`), URL mono 12 px truncada, pestañas de lenguaje (`cURL · Node.js / TS · Python`, control segmentado `h-9` con segmentos `h-7`) y botón copiar.
 - **Bloque de código**: `pre` con `bg-[oklch(0.18_0.02_265)] text-[oklch(0.9_0.01_265)] p-4 font-mono text-[12px] leading-relaxed max-h-[52vh] overflow-auto` (siempre oscuro, en ambos temas). Respuestas JSON: `bg-muted/40 text-foreground`.
 - **Vista previa XML/CDR** (`comprobantes/vista-previa.tsx`): pestañas XML/CDR, `formatearXml()`, botón "Descargar XML/ZIP".
 - **Hash / UUID**: mono, `truncate` con `title` completo; ids acortados a 8 caracteres en listados.
@@ -391,7 +391,7 @@ Quinto lote: `Separator` (sobre `base-ui/separator`; en vertical necesita una al
 
 Sexto lote: `HoverCard` (sobre `base-ui/preview-card`; su disparador es un `<a>` por defecto — pensado para previsualizar un enlace —, pero con `render` toma la forma de lo que le pases, igual que `Tooltip`; solo con hover/foco, sin clic, para fichas de vista previa que no necesitan la acción inmediata de un `Popover`), `ScrollArea` (sobre `base-ui/scroll-area`; scrollbar propio del kit en vez del nativo, `alto` obligatorio), `Deslizador` (en `formularios/`, sobre `base-ui/slider`; un valor o un rango de dos manijas con `valor` como tupla) y `Banner` (en `feedback/`; aviso de ancho completo para el `Shell`, sobre `TopBar` y no dentro de `main` — a diferencia de `Alerta`, que es una banda con esquinas dentro de una página).
 
-Séptimo lote: `Autocomplete` (en `formularios/`, sobre `base-ui/autocomplete`; a diferencia de `Combobox`, no fuerza a elegir un valor de la lista — `value`/`onValueChange` son el texto libre, y clic en una sugerencia solo lo rellena), `Toolbar` (sobre `base-ui/toolbar`; barra de controles agrupados con foco por flechas entre ellos — contenedor `h-8`/`p-1` con botones internos `size-6`, el mismo patrón de `GrupoBotones` y `Tabs estilo="segmentado"`) y `Drawer` (sobre `base-ui/drawer`; hoja inferior para móvil con arrastre nativo para cerrar, a diferencia de `Sheet` que solo anima entrada/salida sin gesto de arrastre).
+Séptimo lote: `Autocomplete` (en `formularios/`, sobre `base-ui/autocomplete`; a diferencia de `Combobox`, no fuerza a elegir un valor de la lista — `value`/`onValueChange` son el texto libre, y clic en una sugerencia solo lo rellena), `Toolbar` (sobre `base-ui/toolbar`; barra de controles agrupados con foco por flechas entre ellos — contenedor `h-9`/`p-0.5` con botones internos `size-7`, el mismo patrón de `GrupoBotones` y `Tabs estilo="segmentado"`) y `Drawer` (sobre `base-ui/drawer`; hoja inferior para móvil con arrastre nativo para cerrar, a diferencia de `Sheet` que solo anima entrada/salida sin gesto de arrastre).
 
 ### Pendientes
 

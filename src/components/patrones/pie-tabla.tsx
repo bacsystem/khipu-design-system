@@ -6,7 +6,7 @@ import { SelectorPorPagina } from "@/components/ui/selector-por-pagina";
 import { paginasVisibles } from "@/lib/paginacion";
 
 const BOTON =
-  "inline-flex h-7 items-center gap-1 rounded-md border border-border bg-card px-2.5 text-[11px] font-medium text-foreground/80 shadow-2xs transition-colors hover:bg-muted disabled:pointer-events-none disabled:text-muted-foreground/60";
+  "inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-foreground/80 shadow-2xs transition-colors hover:bg-muted disabled:pointer-events-none disabled:text-muted-foreground/60";
 
 /**
  * Pie de tabla estándar: "Mostrando x–y de N <unidad>", selector de filas, nota opcional y paginación numerada.
@@ -65,7 +65,7 @@ export function PieTabla({
                 …
               </span>
             ) : p === pagina ? (
-              <span key={p} aria-current="page" className="flex size-7 items-center justify-center rounded-md bg-foreground font-mono text-[11px] font-medium text-background shadow-2xs">
+              <span key={p} aria-current="page" className="flex size-9 items-center justify-center rounded-lg bg-foreground font-mono text-[11px] font-medium text-background shadow-2xs">
                 {p}
               </span>
             ) : (
@@ -73,7 +73,7 @@ export function PieTabla({
                 key={p}
                 type="button"
                 onClick={() => onPagina(p)}
-                className="flex size-7 items-center justify-center rounded-md font-mono text-[11px] text-foreground/80 transition-colors hover:bg-secondary"
+                className="flex size-9 items-center justify-center rounded-lg font-mono text-[11px] text-foreground/80 transition-colors hover:bg-secondary"
               >
                 {p}
               </button>
