@@ -9,7 +9,8 @@ export type TabItem<T extends string> = { id: T; etiqueta: ReactNode; contador?:
 
 /**
  * Pestañas de página. `estilo="segmentado"` es el control en caja de las barras de filtro; `"linea"` es la pestaña subrayada para secciones de detalle.
- * Los paneles se pasan como `render(id)` para no montar todos a la vez.
+ * Los paneles se pasan como `render(id)` (`children`) o, desde un Server Component —que no puede pasarle una función a un componente de cliente—, ya
+ * armados en `paneles`, uno por id. En los dos casos solo se monta el panel activo.
  */
 export function Tabs<T extends string>({
   items,
@@ -18,6 +19,7 @@ export function Tabs<T extends string>({
   onCambio,
   estilo = "linea",
   children,
+  paneles,
   className,
 }: {
   items: TabItem<T>[];
@@ -25,7 +27,8 @@ export function Tabs<T extends string>({
   defaultValor?: T;
   onCambio?: (v: T) => void;
   estilo?: "linea" | "segmentado";
-  children: (id: T) => ReactNode;
+  children?: (id: T) => ReactNode;
+  paneles?: Partial<Record<T, ReactNode>>;
   className?: string;
 }) {
   return (
@@ -52,7 +55,7 @@ export function Tabs<T extends string>({
       </TabsPrimitive.List>
       {items.map((t) => (
         <TabsPrimitive.Panel key={t.id} value={t.id} className="pt-4 outline-none">
-          {children(t.id)}
+          {children ? children(t.id) : paneles?.[t.id]}
         </TabsPrimitive.Panel>
       ))}
     </TabsPrimitive.Root>
