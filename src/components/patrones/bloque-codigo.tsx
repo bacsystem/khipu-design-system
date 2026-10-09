@@ -19,7 +19,7 @@ function BotonCopiarBloque({ texto }: { texto: string }) {
           // el navegador puede denegar el portapapeles; el bloque sigue seleccionable
         }
       }}
-      className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+      className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
     >
       {copiado ? <CheckIcon className="size-3.5" /> : <CopyIcon className="size-3.5" />}
     </button>
@@ -76,14 +76,14 @@ export function BloqueCodigo({
 /** Control segmentado pequeño (pestañas de lenguaje, filtros por tipo). */
 export function Segmentado<T extends string>({ opciones, valor, onCambio, className }: { opciones: Array<{ id: T; etiqueta: string }>; valor: T; onCambio: (v: T) => void; className?: string }) {
   return (
-    <div className={cn("inline-flex h-8 shrink-0 items-center gap-0.5 rounded-lg border border-border/60 bg-secondary/80 p-0.5", className)}>
+    <div className={cn("inline-flex h-9 shrink-0 items-center gap-0.5 rounded-lg border border-border/60 bg-secondary/80 p-0.5", className)}>
       {opciones.map((o) => (
         <button
           key={o.id}
           type="button"
           onClick={() => onCambio(o.id)}
           className={cn(
-            "h-6 rounded-md px-2.5 text-[12px] font-medium transition-colors",
+            "h-7 rounded-md px-2.5 text-[12px] font-medium transition-colors",
             valor === o.id ? "bg-card text-foreground shadow-2xs" : "text-muted-foreground hover:text-foreground",
           )}
         >

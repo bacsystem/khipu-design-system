@@ -14,8 +14,8 @@ function Toolbar({ className, orientation = "horizontal", ...props }: ToolbarPri
       data-slot="toolbar"
       orientation={orientation}
       className={cn(
-        "flex h-8 items-center gap-1 rounded-lg border border-border/60 bg-secondary/80 p-0.5",
-        orientation === "vertical" && "h-fit w-8 flex-col",
+        "flex h-9 items-center gap-1 rounded-lg border border-border/60 bg-secondary/80 p-0.5",
+        orientation === "vertical" && "h-fit w-9 flex-col",
         className,
       )}
       {...props}
@@ -32,7 +32,7 @@ function ToolbarButton({ className, ...props }: ToolbarPrimitive.Button.Props) {
     <ToolbarPrimitive.Button
       data-slot="toolbar-button"
       className={cn(
-        "inline-flex size-6 items-center justify-center gap-1.5 rounded-md text-muted-foreground outline-none transition-colors hover:bg-card hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-2xs [&_svg]:size-3.5 [&_svg]:shrink-0",
+        "inline-flex size-7 items-center justify-center gap-1.5 rounded-md text-muted-foreground outline-none transition-colors hover:bg-card hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-2xs [&_svg]:size-3.5 [&_svg]:shrink-0",
         className,
       )}
       {...props}
@@ -44,7 +44,7 @@ function ToolbarLink({ className, ...props }: ToolbarPrimitive.Link.Props) {
   return (
     <ToolbarPrimitive.Link
       data-slot="toolbar-link"
-      className={cn("inline-flex h-6 items-center rounded-md px-2 text-[12px] font-medium text-muted-foreground outline-none hover:bg-card hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40", className)}
+      className={cn("inline-flex h-7 items-center rounded-md px-2 text-[12px] font-medium text-muted-foreground outline-none hover:bg-card hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40", className)}
       {...props}
     />
   );
@@ -58,7 +58,7 @@ function ToolbarInput({ className, ...props }: ToolbarPrimitive.Input.Props) {
   return (
     <ToolbarPrimitive.Input
       data-slot="toolbar-input"
-      className={cn("h-6 w-24 rounded-md border-0 bg-card px-2 text-[12px] text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-ring/40", className)}
+      className={cn("h-7 w-24 rounded-md border-0 bg-card px-2 text-[12px] text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-ring/40", className)}
       {...props}
     />
   );

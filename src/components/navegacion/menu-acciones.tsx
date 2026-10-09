@@ -24,7 +24,7 @@ export function MenuAcciones({ acciones, etiqueta = "Más acciones", className }
         aria-label={etiqueta}
         title={etiqueta}
         className={cn(
-          "flex size-7 items-center justify-center rounded-md text-muted-foreground/70 transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 data-popup-open:bg-secondary data-popup-open:text-foreground",
+          "flex size-9 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 data-popup-open:bg-secondary data-popup-open:text-foreground",
           className,
         )}
       >

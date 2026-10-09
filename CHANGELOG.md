@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-10-08
+
+### Changed
+- **One control height: `h-9` (36 px).** Every interactive control now has the same height: buttons, inputs, selects, the search box, filters, segmented controls, steppers, table-row actions, pagination, dialog footers and the row "⋯" menu. Before, the scale had four heights (28 px for table rows and pagination, 32 px for page chrome and filters, 36 px for dialog footers, 40 px for forms), so a button and an input next to each other on the same page did not match. Segmented boxes (`SEGMENTADO`, `Toolbar`, `GrupoBotones`, `SelectorPorPagina`, `ThemeToggle`) are `h-9` outside with `h-7` items inside.
+- `npm run lint` (`scripts/verificar-alturas.mjs`) now also fails if any control recipe in `lib/estilos.ts` stops being `h-9`.
+
+### Added
+- `Tabs` accepts its panels already built in `paneles` (one per id), as an alternative to the `children` render function. A Next.js Server Component cannot pass a function to a client component, so a detail page rendered on the server could not use `Tabs` at all. Only the active panel is mounted in both cases.
+
+### Deprecated
+- `CAMPO_FILTRO` (now equal to `CAMPO`) and `BOTON_PRIMARIO_PIE` / `BOTON_SECUNDARIO_PIE` / `BOTON_DESTRUCTIVO_PIE` (now equal to `BOTON_*`). They stay exported so existing imports keep working. `variante="filtro"`/`"campo"` and `size="sm"`/`"lg"` on `Button`, `SelectTrigger`, `StepperNumerico`, `EntradaFecha` and `EntradaMonto` are accepted but no longer change the height.
+
 ## [0.1.9] - 2026-10-08
 
 ### Fixed

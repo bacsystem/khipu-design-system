@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * Input de búsqueda con icono y botón de limpiar, para filtrar listas/tablas dentro de la página (barra de
  * filtros, `PanelLateral`…). El buscador de la `TopBar` es otra cosa: un disparador deshabilitado que abre
  * `Paleta` (⌘K), no un campo que filtra en el sitio.
- * `variante="filtro"` (por defecto, `h-8` como el resto de la barra) o `"campo"` (`h-10`, dentro de un `Formulario`).
+ * `variante="filtro"` (por defecto, en una barra) o `"campo"` (dentro de un `Formulario`): las dos miden h-9, como todo control.
  */
 export function Buscador({
   id,

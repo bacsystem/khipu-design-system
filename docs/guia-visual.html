@@ -125,7 +125,7 @@
 
   /* controls */
   .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 500; border: 1px solid transparent; cursor: pointer; white-space: nowrap; color: var(--foreground); background: transparent; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 500; border: 1px solid transparent; cursor: pointer; white-space: nowrap; color: var(--foreground); background: transparent; }
   .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
   .btn.primary { background: var(--foreground); color: var(--background); box-shadow: var(--shadow-xs); }
   .btn.brand { background: var(--primary); color: var(--primary-foreground); font-weight: 600; box-shadow: var(--shadow-xs); }
@@ -136,22 +136,22 @@
   .btn.danger:hover { background: var(--destructive-soft); }
   .btn.danger-solid { background: var(--destructive); color: var(--primary-foreground); box-shadow: var(--shadow-xs); }
   .btn[disabled] { opacity: .6; cursor: not-allowed; }
-  .btn.sm { height: 28px; padding: 0 10px; font-size: 11px; border-radius: 6px; }
-  .btn.h10 { height: 40px; padding: 0 14px; font-size: 14px; }
+  .btn.sm { height: 36px; padding: 0 10px; font-size: 11px; border-radius: 8px; }
+  .btn.h10 { height: 36px; padding: 0 14px; font-size: 13px; }
   .btn.h9 { height: 36px; padding: 0 14px; font-size: 13px; }
   .btn.xs { height: 24px; padding: 0 6px; font-size: 11px; border-radius: 6px; }
-  .btn.icon { width: 32px; padding: 0; justify-content: center; }
-  .btn.icon.sm { width: 28px; }
+  .btn.icon { width: 36px; padding: 0; justify-content: center; }
+  .btn.icon.sm { width: 36px; }
   .segment { display: inline-flex; height: 36px; padding: 4px; gap: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--secondary); }
   .segment span { display: inline-flex; align-items: center; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .segment span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
-  .segment.sm { height: 30px; padding: 2px; gap: 2px; }
+  .segment.sm { height: 36px; padding: 2px; gap: 2px; }
   .segment.sm span { padding: 0 10px; font-size: 11px; }
   .select { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); font-size: 12px; font-weight: 500; box-shadow: var(--shadow-2xs); }
   .select.off { color: var(--muted-foreground); opacity: .7; }
   .field { display: grid; gap: 6px; }
   .field label { font-size: 12px; font-weight: 500; }
-  .field input { height: 40px; width: 100%; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); padding: 0 12px; font: inherit; font-size: 14px; }
+  .field input { height: 36px; width: 100%; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); padding: 0 12px; font: inherit; font-size: 14px; }
   .field input:focus { outline: none; border-color: var(--ring); background: var(--card); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent); }
   .field input.err { border-color: var(--destructive); }
   .field .help { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
@@ -160,8 +160,8 @@
   .dato .l { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
   .dato .v { height: 36px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
   .dato .v.pend { color: var(--muted-foreground); opacity: .6; cursor: not-allowed; border-style: dashed; }
-  .tt { display: inline-flex; height: 32px; padding: 2px; gap: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); }
-  .tt span { width: 28px; height: 26px; display: grid; place-items: center; border-radius: 6px; color: var(--muted-foreground); font-size: 12px; }
+  .tt { display: inline-flex; height: 36px; padding: 2px; gap: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); }
+  .tt span { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; color: var(--muted-foreground); font-size: 12px; }
   .tt span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
   .tt.wide { width: 100%; }
   .tt.wide span { flex: 1 1 0; width: auto; display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-weight: 500; }
@@ -181,10 +181,10 @@
   .right { text-align: right; }
   .tfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 16px; background: var(--muted); border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); }
   .pager { display: inline-flex; align-items: center; gap: 4px; }
-  .pager span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; }
+  .pager span { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; font-family: var(--font-mono); font-size: 11px; }
   .pager span.on { background: var(--foreground); color: var(--background); }
-  .seg-sm { display: inline-flex; height: 28px; padding: 2px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
-  .seg-sm span { min-width: 28px; padding: 0 6px; height: 24px; display: grid; place-items: center; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+  .seg-sm { display: inline-flex; height: 36px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+  .seg-sm span { min-width: 32px; padding: 0 6px; height: 30px; display: grid; place-items: center; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
   .seg-sm span.on { background: var(--foreground); color: var(--background); }
   .empty { padding: 44px 16px; text-align: center; color: var(--muted-foreground); font-size: 13px; display: grid; gap: 6px; justify-items: center; }
   .thead-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 0 0 12px; }
@@ -213,7 +213,7 @@
   .crumb .sl { color: var(--border); }
   .crumb b { font-weight: 600; }
   .vsep { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
-  .search { display: inline-flex; align-items: center; gap: 8px; height: 32px; width: 220px; padding: 0 8px 0 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: 12px; opacity: .8; }
+  .search { display: inline-flex; align-items: center; gap: 8px; height: 36px; width: 220px; padding: 0 8px 0 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: 12px; opacity: .8; }
   .search kbd { margin-left: auto; font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); background: var(--card); }
   .topbar-note { display: grid; gap: 4px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); background: var(--card); }
   .shellbody { display: grid; grid-template-columns: 240px minmax(0,1fr); }
@@ -515,7 +515,7 @@
     <div class="section-head"><h2>Botones y recetas</h2><p>La acción principal de la top bar es negra (foreground). El índigo confirma dentro de formularios. <span class="src">ui/button.tsx · lib/estilos.ts · nav/top-bar.tsx</span></p></div>
     <div class="card pad stack">
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Top bar · h-8 · 12px</div>
+        <div class="eyebrow" style="margin-bottom:8px">Top bar · h-9 · 12px</div>
         <div class="row">
           <button class="btn primary">＋ Crear API key</button>
           <button class="btn outline">▤ Referencia técnica</button>
@@ -526,7 +526,7 @@
         </div>
       </div>
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Formularios y diálogos · h-10 / h-9</div>
+        <div class="eyebrow" style="margin-bottom:8px">Formularios y diálogos · h-9</div>
         <div class="row">
           <button class="btn brand h10">Guardar serie</button>
           <button class="btn outline h10">Cancelar</button>
@@ -555,7 +555,7 @@
         </div>
       </div>
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Acciones de fila · h-7 · 12px · separadas por |</div>
+        <div class="eyebrow" style="margin-bottom:8px">Acciones de fila · h-9 · 12px · separadas por |</div>
         <div class="row">
           <button class="btn ghost sm" disabled title="Regenerar: próximamente">⟳ Regenerar</button><span class="sep">|</span><button class="btn danger sm">⊘ Revocar</button>
           <span class="sep">·</span>
