@@ -9,7 +9,7 @@ Estado del portal al escribir esto: `develop` de khipu, último cambio a `portal
 ## 0. Antes de tocar el portal
 
 1. **Publicar el tag** en este repo: merge de la rama a `main`, tag `v0.3.0` y push del tag. Sin el tag no hay qué instalar.
-2. **Subir al DS lo que el portal tiene de más** (§1, filas «subir al DS»), en una 0.3.x, y taggear. La regla del proyecto es corregir primero en el DS y después traerlo; con el paquete, «traerlo» pasa a ser subir la versión.
+2. ~~Subir al DS lo que el portal tiene de más~~ **Hecho en 0.3.1**: `etiqueta` de `BotonCopiar`, `hrefPagina` de `PieTabla` (con `lib/navegacion` / `esClickSimple`), `SELECT_NATIVO` y `CABECERA_TABLA` en `lib/estilos`, copiados del portal (`feat/24-dashboard`, `4cfc1fe9`) con sus textos y clases. Falta taggear `v0.3.1` (igual que el punto 1). La regla del proyecto es corregir primero en el DS y después traerlo; con el paquete, «traerlo» pasa a ser subir la versión.
 3. Hacerlo **sobre la pila final de ramas del portal**, cuando no haya otras ramas tocando `portal/src/components/ui`: el cambio de imports toca 88 archivos (medido en `develop`, incluidas las copias que se borran) y choca con cualquiera.
 
 ## 1. Divergencias portal ↔ DS (riesgo de regresión visual)
@@ -27,9 +27,9 @@ Comparación de los archivos homónimos (`diff --strip-trailing-cr`):
 | `lib/utils` (`cn`), `lib/paginacion` | idénticos | `khipu-design-system/utils`, `khipu-design-system/lib/paginacion` (o dejar el `lib/utils` local, es una línea) |
 | `ui/sheet` | `sr-only` del cerrar en inglés («Close»); el DS dice «Cerrar» | adoptar el del DS. Ningún e2e ni test busca «Close» (verificado con grep) |
 | `ui/pagination` | textos en inglés; **nadie lo importa** | borrarlo |
-| `ui/boton-copiar` | el portal tiene la prop `etiqueta` («Copiar»/«Copiado» con texto, check en `text-success-foreground`); el DS solo el icono | **subir `etiqueta` al DS** (`patrones/boton-copiar`), luego reemplazar (8 imports) |
-| `ui/pie-tabla` | el portal tiene `hrefPagina` (páginas como `<Link>` con estado en la URL y ⌘-clic, usa `esClickSimple` de `lib/navegacion`); el DS solo botones, y además exporta `TablaVacia`, `CABECERA_TABLA`, `CONTENEDOR_TABLA` | **subir `hrefPagina` al DS** (`patrones/pie-tabla`; `esClickSimple` va con él). Ojo: el DS pasaría a importar `next/link` en `patrones/`, igual que `navegacion/paleta` ya usa el router. Luego reemplazar (8 imports) |
-| `lib/estilos` | mismas cadenas en todas las recetas comunes. El portal añade `SELECT_NATIVO` y `CABECERA_TABLA`; no trae los alias obsoletos `CAMPO_FILTRO`, `BOTON_*_PIE` ni `POPUP_LISTA` | **subir `SELECT_NATIVO`** al DS (y mover `CABECERA_TABLA` de `patrones/pie-tabla` a `lib/estilos`). Mientras tanto, ver §3.4 |
+| `ui/boton-copiar` | el DS ya tiene la prop `etiqueta` desde 0.3.1 (mismo componente que el del portal; sin `etiqueta` las clases son las mismas, en otro orden) | reemplazar por `khipu-design-system/patrones/boton-copiar` (8 imports) |
+| `ui/pie-tabla` | el DS ya tiene `hrefPagina` desde 0.3.1 (mismo `Salto` con `<Link>`, `aria-disabled` y ⌘-clic; `esClickSimple` está en `khipu-design-system/lib/navegacion`). Además exporta `TablaVacia`, `CONTENEDOR_TABLA` y re-exporta `CABECERA_TABLA`, que el portal no usa desde aquí. Único cambio a propósito: `nota` acepta `ReactNode` (el portal: `string`, que sigue valiendo) | reemplazar por `khipu-design-system/patrones/pie-tabla` (8 imports). `@/lib/navegacion` del portal puede quedarse o reexportar el del DS (lo usa también `comprobantes-table`) |
+| `lib/estilos` | mismas cadenas en todas las recetas comunes. Desde 0.3.1 el DS también tiene `SELECT_NATIVO` y `CABECERA_TABLA` (mismas cadenas que el portal); el portal no trae los alias obsoletos `CAMPO_FILTRO`, `BOTON_*_PIE` ni `POPUP_LISTA` | nada que subir. Fachada de §3.4 |
 | `lib/formato` | divergió a propósito (EUR, `hoyLima`, `diasEntre`, ciclos de plan, `sumarDias` en UTC…) | **se queda en el portal**. Los componentes del DS usan su propio `lib/formato` interno, igual que hoy |
 | `ui/metrica` | componente propio (`Metrica`), distinto de `patrones/metricas` del DS | se queda en el portal (o se sube como variante; decisión de diseño aparte) |
 | `ui/referencia-tecnica`, `forms/form-field` | propios del portal (form-field depende de react-hook-form) | se quedan; moverlos fuera de `components/ui` (p. ej. `components/developers/`, `components/forms/`) para que `ui/` quede vacía |
@@ -43,7 +43,7 @@ Lo que **no** diverge: la escala de alturas (todo control `h-9`, segmentos `h-7`
 
 ```jsonc
 "dependencies": {
-  "khipu-design-system": "github:bacsystem/khipu-design-system#v0.3.0",
+  "khipu-design-system": "github:bacsystem/khipu-design-system#v0.3.1",
   // se quedan: @base-ui/react, lucide-react, next, next-themes, react, react-dom (peers del paquete), cn (lo usa el código propio)
   // se pueden quitar cuando ya nadie los importe: class-variance-authority (solo lo usaban ui/badge y ui/button),
   // shadcn (solo se usaba por `shadcn/tailwind.css`, que ahora trae el paquete), tw-animate-css (lo trae el paquete)
@@ -114,7 +114,7 @@ grep -rlE '@/components/(ui|feedback|formularios|navegacion|patrones)/' portal/s
     -e 's#"@/lib/paginacion"#"khipu-design-system/lib/paginacion"#'
 ```
 
-Las dos líneas de `boton-copiar` y `pie-tabla` solo cuando el DS ya tenga `etiqueta` y `hrefPagina` (§1). Imports a cambiar medidos en `develop` (`grep -rhoE 'from "@/…"' | sort | uniq -c`): `ui/button` 24, `ui/dialog` 18, `ui/table` 17, `lib/paginacion` 12, `ui/pie-tabla` 8, `ui/boton-copiar` 8, `feedback/alerta` 8, y 1–4 cada uno del resto. `@/lib/utils` (90) y `@/lib/estilos` (73) no hace falta tocarlos (§3.4).
+Las dos líneas de `boton-copiar` y `pie-tabla` ya aplican: el DS tiene `etiqueta` y `hrefPagina` desde 0.3.1 (§1). Imports a cambiar medidos en `develop` (`grep -rhoE 'from "@/…"' | sort | uniq -c`): `ui/button` 24, `ui/dialog` 18, `ui/table` 17, `lib/paginacion` 12, `ui/pie-tabla` 8, `ui/boton-copiar` 8, `feedback/alerta` 8, y 1–4 cada uno del resto. `@/lib/utils` (90) y `@/lib/estilos` (73) no hace falta tocarlos (§3.4).
 
 Después: borrar los archivos que ya nadie importa (`git rm` de las copias idénticas y de `ui/pagination.tsx`), mover `ui/metrica`, `ui/referencia-tecnica` y `forms/form-field` a carpetas del portal, y comprobar con `grep -rn '@/components/ui/' portal/src` que no queda nada. `components/ui` debe quedar vacía.
 
@@ -125,9 +125,7 @@ Para no tocar 163 imports, los dos archivos quedan como fachada:
 ```ts
 // portal/src/lib/estilos.ts
 export * from "khipu-design-system/lib/estilos";
-// Solo lo que el DS aún no tiene (borrar cuando suba): SELECT_NATIVO, CABECERA_TABLA
-export const SELECT_NATIVO = "…";
-export const CABECERA_TABLA = "…";
+// SELECT_NATIVO y CABECERA_TABLA ya vienen del DS (0.3.1): no hace falta definir nada más aquí.
 ```
 
 ```ts
@@ -138,7 +136,7 @@ La fachada también expone los alias obsoletos del DS (`CAMPO_FILTRO`, `BOTON_*_
 
 ### 3.5 Tests del portal que leen archivos
 
-- `src/lib/alturas.test.ts` lee el **texto** de `lib/estilos.ts` con una regex (`export const (CAMPO|BOTON_…) = "…"`). Con la fachada, el texto ya no tiene las recetas y la regex encuentra solo `SELECT_NATIVO`: el test pasaría sin vigilar nada. Cambiarlo a importar el módulo (`import * as estilos from "@/lib/estilos"`) y comprobar `h-9` sobre los valores. Su lista de excepciones (`components/ui/selector-por-pagina.tsx`) queda obsoleta: borrar la entrada.
+- `src/lib/alturas.test.ts` lee el **texto** de `lib/estilos.ts` con una regex (`export const (CAMPO|BOTON_…) = "…"`). Con la fachada, el texto ya no tiene las recetas y la regex no encuentra ninguna: el test pasaría sin vigilar nada. Cambiarlo a importar el módulo (`import * as estilos from "@/lib/estilos"`) y comprobar `h-9` sobre los valores. Su lista de excepciones (`components/ui/selector-por-pagina.tsx`) queda obsoleta: borrar la entrada.
 - `src/lib/tokens-de-color.test.ts` recorre los componentes del portal: deja de ver los del DS (que ya vigila `npm run lint` del DS). Correcto, pero conviene saberlo.
 - `src/lib/paginacion.test.ts` y `src/lib/utils.test.ts`: si se borran los archivos locales, apuntar los tests al paquete o moverlos al DS (el DS no tiene suite de tests propia; sería el momento de crearla).
 - Vitest corre los módulos del paquete en Node: `npm run verify:paquete` del DS ya importa los 77 módulos en Node sin error. Si Vitest se quejara de `"use client"` o de ESM, `test.server.deps.inline: ["khipu-design-system"]` en `vitest.config.mts`.
@@ -177,4 +175,4 @@ for (const tema of ["light", "dark"] as const) {
 3. Además, en la consola del navegador: medir con `getBoundingClientRect` que botones, inputs y selects siguen en 36 px (la memoria del proyecto: medir, no suponer).
 4. `npm run typecheck`, `npm run lint`, `npm run test` y `npm run e2e` completos en verde, y `docker build` del portal (§2, riesgo del Dockerfile).
 
-Diferencias **esperadas** y aceptables tras la migración: el texto `sr-only` del cerrar del `Sheet` («Cerrar» en vez de «Close»; invisible) y, si se subió `etiqueta`/`hrefPagina` al DS con algún ajuste, lo que ese ajuste cambie a propósito.
+Diferencias **esperadas** y aceptables tras la migración: el texto `sr-only` del cerrar del `Sheet` («Cerrar» en vez de «Close»; invisible). `etiqueta`/`hrefPagina` se subieron sin ajustes: con `hrefPagina` el `PieTabla` del DS genera el mismo HTML que el del portal; sin él, los botones numéricos no llevan las variantes `disabled:` (nunca se deshabilitan) y el `BotonCopiar` sin `etiqueta` ordena distinto las mismas clases. Ninguna de las dos cambia un píxel.
