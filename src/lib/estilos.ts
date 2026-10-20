@@ -28,6 +28,9 @@ export const CAMPO =
 export const CAMPO_FILTRO = CAMPO;
 export const ETIQUETA_CAMPO = "text-[12px] font-medium text-foreground";
 export const AYUDA_CAMPO = "font-mono text-[11px] text-muted-foreground";
+/** `<select>` nativo con el aspecto de `ui/Input`: para formularios que no usan `ui/select` (p. ej. hechos con react-hook-form). */
+export const SELECT_NATIVO =
+  "h-9 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50";
 
 // disabled:pointer-events-none (igual que ui/button.tsx) es lo que de verdad evita que el :hover del mouse
 // que se quedó sobre el botón le gane a disabled:opacity-60 en la cascada; cursor-not-allowed solo no basta.
@@ -45,6 +48,10 @@ export const BOTON_PRIMARIO_PIE = BOTON_PRIMARIO;
 export const BOTON_SECUNDARIO_PIE = BOTON_SECUNDARIO;
 /** @deprecated Desde 0.2.0 es igual a `BOTON_DESTRUCTIVO`. Se conserva para no romper imports. */
 export const BOTON_DESTRUCTIVO_PIE = BOTON_DESTRUCTIVO;
+
+// ── Tablas ──
+// Celda de cabecera de la tabla estándar (`TableHead`). `patrones/pie-tabla` la re-exporta para no romper a quien la importa desde allí.
+export const CABECERA_TABLA = "h-auto px-3 py-2 text-[11px] font-semibold tracking-wider text-muted-foreground/80 uppercase";
 
 // ── Tarjetas y secciones ──
 export const TARJETA = "rounded-xl border border-border bg-card shadow-2xs";

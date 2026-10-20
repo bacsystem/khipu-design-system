@@ -49,7 +49,7 @@ El registro que usa la CLI (`registry/registry.json`) se genera con `npm run reg
 La alternativa a copiar archivos: depender del design system y recibir sus cambios subiendo de versión. No está publicado en npm (`"private": true`, a propósito: publicar lo decide el dueño del repo), así que se instala **desde GitHub, fijado a un tag**:
 
 ```bash
-npm install github:bacsystem/khipu-design-system#v0.3.0
+npm install github:bacsystem/khipu-design-system#v0.3.1
 ```
 
 npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+, React 19, Tailwind v4** y los peers `@base-ui/react`, `lucide-react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos). No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
@@ -105,7 +105,7 @@ src/
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
-└── lib/                     utils (cn) · estilos (recetas) · formato (fechas/montos, zona America/Lima) · paginacion
+└── lib/                     utils (cn) · estilos (recetas) · formato (fechas/montos, zona America/Lima) · paginacion · navegacion (esClickSimple)
 
 cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
