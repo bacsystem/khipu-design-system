@@ -36,7 +36,7 @@ npx github:bacsystem/khipu-design-system add panel-lateral # copia panel-lateral
 
 Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force` si quieres reemplazarlos). Después de copiar los componentes que necesites, una sola vez por proyecto:
 
-1. Pega en tu `globals.css` los bloques `@import`, `@custom-variant dark`, `@theme inline`, `:root`, `.dark` y `@layer base` de [`src/app/globals.css`](src/app/globals.css). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
+1. Pega en tu `globals.css` los `@import` de [`src/app/globals.css`](src/app/globals.css) y, debajo, el contenido de [`src/styles/tokens.css`](src/styles/tokens.css) (`:root` y `.dark`) y de [`src/styles/theme.css`](src/styles/theme.css) (`@custom-variant dark`, `@theme inline` y `@layer base`). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
 2. Envuelve la app con [`Providers`](src/components/providers.tsx) (tema + toasts + tooltips) y carga las fuentes como en [`src/app/layout.tsx`](src/app/layout.tsx).
 3. Asegura el alias `"@/*": ["./src/*"]` en `tsconfig.json`.
 
@@ -48,7 +48,9 @@ El registro que usa la CLI (`registry/registry.json`) se genera con `npm run reg
 
 ```
 src/
-├── app/globals.css          tokens + @theme
+├── app/globals.css          importa Tailwind + styles/
+├── styles/tokens.css        tokens claro/oscuro (:root, .dark), CSS plano
+├── styles/theme.css         @custom-variant dark + @theme inline + @layer base (Tailwind v4)
 ├── app/layout.tsx           Inter + JetBrains Mono, Providers
 ├── app/ejemplo/             demo: shell completo + galería de componentes
 ├── components/providers.tsx ThemeProvider + ToastProvider + TooltipProvider
