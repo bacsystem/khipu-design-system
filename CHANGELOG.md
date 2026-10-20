@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-10-20
+
+### Added
+- **Installable package.** `npm install github:bacsystem/khipu-design-system#v0.3.0` builds the design system (`prepare`) into ESM + `.d.ts`, with one subpath per component (`khipu-design-system/ui/button`, `/feedback/alerta`, `/formularios/*`, `/navegacion/*`, `/datos/*`, `/patrones/*`, `/lib/*`, `/utils`, `/providers`) and the CSS in `khipu-design-system/styles.css` (also `tokens.css` and `theme.css`). Every `"use client"` directive is kept, so Server Components can render the components that do not need one. The router-bound shell components are a separate `nav/*` export. No `transpilePackages` needed. See README §Instalarlo como paquete and `docs/adopcion-en-el-portal.md`.
+- `npm run build:paquete` and `npm run verify:paquete` (fails if a component has no public subpath, a subpath does not resolve to its `.js` and `.d.ts`, a module does not load or the CSS points at a missing file).
+
+### Changed
+- Tokens and the Tailwind theme moved from `src/app/globals.css` to `src/styles/tokens.css` and `src/styles/theme.css`, which `globals.css` imports. The compiled CSS of the demo is the same.
+- `react`, `react-dom`, `next`, `next-themes`, `@base-ui/react` and `lucide-react` are now peerDependencies (and devDependencies for the demo), so a consumer never gets a second copy of a React context. The CLI reads their versions from `peerDependencies`; `cli add` works as before.
+
 ## [0.2.0] - 2026-10-08
 
 ### Changed
