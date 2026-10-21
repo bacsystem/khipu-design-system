@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-10-20
+
+### Added
+- `BotonCopiar` (`patrones/boton-copiar`) accepts `etiqueta`: with it the button shows the text «Copiar» / «Copiado» next to the icon, and the check turns `text-success-foreground`, for action bars. Without it the button is the icon alone, as before (table cells). Brought up from the khipu portal, which had grown it in its own copy.
+- `PieTabla` (`patrones/pie-tabla`) accepts `hrefPagina(p)`: with it, Anterior / Siguiente and the page numbers are `next/link` links, so the page lives in the URL and ⌘/Ctrl/Shift/middle-click opens it in another tab; a plain click still calls `onPagina`. A link with no page to go to gets `aria-disabled` and leaves the tab order. Without `hrefPagina` they stay buttons with the same markup and classes as before. Also from the khipu portal.
+- `lib/navegacion` with `esClickSimple(e)`: true for a left click with no modifier, the check `PieTabla` uses to tell a client-side navigation from «open in a new tab».
+- `SELECT_NATIVO` in `lib/estilos`: a native `<select>` with the look of `ui/Input` (`h-9`), for forms that do not use `ui/select`.
+
+### Changed
+- `CABECERA_TABLA` moved to `lib/estilos` with the rest of the recipes. `patrones/pie-tabla` re-exports it (as it already did with `CONTROL_FILTRO`), so existing imports keep working; `TablaVacia` and `CONTENEDOR_TABLA` stay in `patrones/pie-tabla`.
+
+## [0.3.0] - 2026-10-20
+
+### Added
+- **Installable package.** `npm install github:bacsystem/khipu-design-system#v0.3.0` builds the design system (`prepare`) into ESM + `.d.ts`, with one subpath per component (`khipu-design-system/ui/button`, `/feedback/alerta`, `/formularios/*`, `/navegacion/*`, `/datos/*`, `/patrones/*`, `/lib/*`, `/utils`, `/providers`) and the CSS in `khipu-design-system/styles.css` (also `tokens.css` and `theme.css`). Every `"use client"` directive is kept, so Server Components can render the components that do not need one. The router-bound shell components are a separate `nav/*` export. No `transpilePackages` needed. See README §Instalarlo como paquete and `docs/adopcion-en-el-portal.md`.
+- `npm run build:paquete` and `npm run verify:paquete` (fails if a component has no public subpath, a subpath does not resolve to its `.js` and `.d.ts`, a module does not load or the CSS points at a missing file).
+
+### Changed
+- Tokens and the Tailwind theme moved from `src/app/globals.css` to `src/styles/tokens.css` and `src/styles/theme.css`, which `globals.css` imports. The compiled CSS of the demo is the same.
+- `react`, `react-dom`, `next`, `next-themes`, `@base-ui/react` and `lucide-react` are now peerDependencies (and devDependencies for the demo), so a consumer never gets a second copy of a React context. The CLI reads their versions from `peerDependencies`; `cli add` works as before.
+
 ## [0.2.0] - 2026-10-08
 
 ### Changed

@@ -32,11 +32,11 @@ npx github:bacsystem/khipu-design-system list             # ver todos los compon
 npx github:bacsystem/khipu-design-system add panel-lateral # copia panel-lateral + sheet + button + cabecera-seccion + lib/utils
 ```
 
-`npx github:...` clona este repo en un caché temporal e instala sus dependencias antes de correr la CLI (tarda más que un paquete publicado en npm, es la contrapartida de no publicar nada). Si ya tienes el repo clonado localmente, es más rápido correr `node cli/khipu.mjs add <componente>` directamente desde ahí, apuntando tu proyecto como `cwd`.
+`npx github:...` clona este repo en un caché temporal, instala sus dependencias y compila el paquete (`prepare`) antes de correr la CLI (tarda más que un paquete publicado en npm, es la contrapartida de no publicar nada). Si ya tienes el repo clonado localmente, es más rápido correr `node cli/khipu.mjs add <componente>` directamente desde ahí, apuntando tu proyecto como `cwd`.
 
 Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force` si quieres reemplazarlos). Después de copiar los componentes que necesites, una sola vez por proyecto:
 
-1. Pega en tu `globals.css` los bloques `@import`, `@custom-variant dark`, `@theme inline`, `:root`, `.dark` y `@layer base` de [`src/app/globals.css`](src/app/globals.css). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
+1. Pega en tu `globals.css` los `@import` de [`src/app/globals.css`](src/app/globals.css) y, debajo, el contenido de [`src/styles/tokens.css`](src/styles/tokens.css) (`:root` y `.dark`) y de [`src/styles/theme.css`](src/styles/theme.css) (`@custom-variant dark`, `@theme inline` y `@layer base`). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
 2. Envuelve la app con [`Providers`](src/components/providers.tsx) (tema + toasts + tooltips) y carga las fuentes como en [`src/app/layout.tsx`](src/app/layout.tsx).
 3. Asegura el alias `"@/*": ["./src/*"]` en `tsconfig.json`.
 
@@ -44,11 +44,57 @@ Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force`
 
 El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
 
+## Instalarlo como paquete (desde 0.3.0)
+
+La alternativa a copiar archivos: depender del design system y recibir sus cambios subiendo de versión. No está publicado en npm (`"private": true`, a propósito: publicar lo decide el dueño del repo), así que se instala **desde GitHub, fijado a un tag**:
+
+```bash
+npm install github:bacsystem/khipu-design-system#v0.3.1
+```
+
+npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+, React 19, Tailwind v4** y los peers `@base-ui/react`, `lucide-react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos). No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
+
+**CSS** — una sola línea en tu `globals.css`, después de Tailwind:
+
+```css
+@import "tailwindcss";
+@import "khipu-design-system/styles.css";
+
+/* opcional: tu marca encima, redefiniendo los tokens en :root Y en .dark */
+:root { --primary: #0f5c5e; }
+.dark { --primary: #5cc8c2; }
+```
+
+`styles.css` trae `tw-animate-css`, las variantes `data-open`/`data-closed`/… de shadcn (copiadas en el build: no hace falta instalar `shadcn`), los tokens (`tokens.css`), el tema (`theme.css`) y los `@source` que hacen que **tu** Tailwind genere las clases de los componentes compilados (Tailwind no escanea `node_modules` por su cuenta). `tokens.css` y `theme.css` también se exportan sueltos. Las fuentes no van en el paquete: define `--font-sans` y `--font-mono` (p. ej. con `next/font` en `<html>`, como en [`src/app/layout.tsx`](src/app/layout.tsx)).
+
+**Imports** — un subpath por componente, igual que la carpeta en `src/components/`:
+
+```tsx
+import { Button, buttonVariants } from "khipu-design-system/ui/button";
+import { Dialog, DialogContent } from "khipu-design-system/ui/dialog";
+import { Alerta } from "khipu-design-system/feedback/alerta";
+import { Campo } from "khipu-design-system/formularios/campo";
+import { Tabs } from "khipu-design-system/navegacion/tabs";
+import { PieTabla } from "khipu-design-system/patrones/pie-tabla";
+import { TablaDatos } from "khipu-design-system/datos/tabla-datos";
+import { ACCION_PRINCIPAL, CAMPO } from "khipu-design-system/lib/estilos";
+import { cn } from "khipu-design-system/utils";
+import { Providers } from "khipu-design-system/providers";
+```
+
+- Cada módulo conserva su `"use client"`: los que usan hooks o callbacks son componentes cliente; `ui/button` (y `buttonVariants`), `ui/input`, `ui/card`, `feedback/alerta`, etc. no lo llevan y se pueden usar —y llamar— desde un Server Component.
+- **`nav/*` es un export aparte** (shell, sidebar, top bar, selector de contexto, menú de usuario, mobile nav, theme toggle): dependen del router de Next (`next/link`, `usePathname`) y de `next-themes`, y una app suele tener su propio shell. Están disponibles, pero no son parte del núcleo estable: si tu app ya tiene su navegación, no los importes. `navegacion/paleta` también usa `useRouter`.
+- No hay un `index` que lo exporte todo, a propósito: un barrel mezclaría módulos cliente y servidor y obligaría al bundler a cargar todos los componentes.
+
+**Mantenerlo** — `npm run build:paquete` compila a `dist/`; `npm run verify:paquete` compila y falla si un componente de `src/` no tiene subpath en `exports`, si un subpath no resuelve a su `.js` y su `.d.ts`, si un módulo no carga o si el CSS apunta a algo que no existe. Una carpeta nueva en `src/components/` necesita su entrada `"./<carpeta>/*"` en `package.json`. La receta para migrar el portal de khipu está en [`docs/adopcion-en-el-portal.md`](docs/adopcion-en-el-portal.md).
+
 ## Estructura
 
 ```
 src/
-├── app/globals.css          tokens + @theme
+├── app/globals.css          importa Tailwind + styles/
+├── styles/tokens.css        tokens claro/oscuro (:root, .dark), CSS plano
+├── styles/theme.css         @custom-variant dark + @theme inline + @layer base (Tailwind v4)
 ├── app/layout.tsx           Inter + JetBrains Mono, Providers
 ├── app/ejemplo/             demo: shell completo + galería de componentes
 ├── components/providers.tsx ThemeProvider + ToastProvider + TooltipProvider
@@ -59,7 +105,7 @@ src/
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
-└── lib/                     utils (cn) · estilos (recetas) · formato (fechas/montos, zona America/Lima) · paginacion
+└── lib/                     utils (cn) · estilos (recetas) · formato (fechas/montos, zona America/Lima) · paginacion · navegacion (esClickSimple)
 
 cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano

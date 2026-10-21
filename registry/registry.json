@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08",
+  "generatedAt": "2026-10-20",
   "items": {
     "components/datos/grafico": {
       "name": "grafico",
@@ -711,7 +711,9 @@
       "registryDependencies": [
         "components/ui/selector-por-pagina",
         "lib/estilos",
-        "lib/paginacion"
+        "lib/navegacion",
+        "lib/paginacion",
+        "lib/utils"
       ]
     },
     "components/patrones/pill-estado": {
@@ -1074,6 +1076,16 @@
       "category": "lib",
       "files": [
         "src/lib/paginacion.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/navegacion": {
+      "name": "navegacion",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/navegacion.ts"
       ],
       "dependencies": [],
       "registryDependencies": []
