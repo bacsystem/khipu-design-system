@@ -4,6 +4,7 @@ import { BloqueCodigo } from "@/components/patrones/bloque-codigo";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { AyudaMetrica, FilaMetricas, Metrica } from "@/components/patrones/metricas";
 import { Chip, ChipCodigo, PillEstado } from "@/components/patrones/pill-estado";
+import { NumeroAnimado } from "@/components/patrones/numero-animado";
 import { TablaVacia } from "@/components/patrones/pie-tabla";
 import { ENTRADA, pasoEntrada } from "@/lib/estilos";
 import { Galeria } from "./galeria";
@@ -15,16 +16,18 @@ export default function EjemploPage() {
       <div className={ENTRADA} style={pasoEntrada(0)}>
         <FilaMetricas>
           <Metrica etiqueta="Documentos aceptados" sufijo="/ 136 emitidos" ayuda={<AyudaMetrica tono="ok">98% con CDR</AyudaMetrica>}>
-            133
+            <NumeroAnimado valor={133} />
           </Metrica>
           <Metrica etiqueta="Último correlativo" ayuda="Factura electrónica · 14 Set 2026">
-            <span className="text-primary">F001</span>#00000136
+            <span className="font-mono">
+              <span className="text-primary">F001</span>#00000136
+            </span>
           </Metrica>
           <Metrica etiqueta="Pendientes de envío" ayuda={<AyudaMetrica tono="aviso">Reintento automático</AyudaMetrica>}>
-            2
+            <NumeroAnimado valor={2} />
           </Metrica>
           <Metrica etiqueta="Rechazados" ayuda={<AyudaMetrica tono="error">Revisar observaciones</AyudaMetrica>}>
-            <span className="text-destructive">1</span>
+            <NumeroAnimado valor={1} className="text-destructive-texto" />
           </Metrica>
         </FilaMetricas>
       </div>
