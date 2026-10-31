@@ -39,7 +39,7 @@ La interfaz de khipu se ve antigua: paleta slate + índigo por defecto de Tailwi
 | Acento | Índigo refinado `#5b5bd6` (claro) / `#8585f2` (oscuro) |
 | Enfoque | Sistema completo: tokens + escala + recetas + barrido + Motion |
 | Tipografía | Geist + Geist Mono (vienen en `next/font/google`, sin dependencia nueva) |
-| Movimiento | `motion` ^14 con `LazyMotion` + `domAnimation`; base-ui sigue en CSS |
+| Movimiento | `motion` ^14 con `LazyMotion` + `domMax` (incluye animaciones de layout, necesarias para `layoutId`); base-ui sigue en CSS |
 | Se mantiene | Altura única `h-9`; acción principal casi negra; índigo para confirmar formularios; regla de tonos de estado |
 
 ## 4. Tokens
@@ -62,6 +62,7 @@ La interfaz de khipu se ve antigua: paleta slate + índigo por defecto de Tailwi
 | `accent-border` | `rgba(91,91,214,.22)` | `rgba(133,133,242,.28)` | |
 | `destructive` / `-foreground` | `#dc2547` / `#ffffff` | `#fb6f8a` / `#0b0b0f` | 4.77 · 7.24; texto sobre card 4.77 · 6.83 |
 | `destructive-border` | `rgba(220,37,71,.2)` | `rgba(251,111,138,.3)` | |
+| `destructive-suave` / `destructive-texto` (nuevos) | `#fdeef1` / `#b91c3c` | `#2a1a20` / `#fb6f8a` | 5.67 · 6.11. Fondo y texto de pills, chips y alertas de error: `text-destructive` sobre `bg-destructive/10` daba 4.09 en claro, bajo AA |
 | `success` / `-foreground` / `-border` / `-solid` | `#edfaf3` / `#0f7b4f` / `rgba(15,123,79,.18)` / `#16a34a` | `#0f2a1f` / `#4fd19a` / `rgba(79,209,154,.25)` / `#34d399` | 4.93 · 7.96 |
 | `warning` / `-foreground` / `-border` / `-solid` | `#fef8ec` / `#a15c07` / `rgba(161,92,7,.18)` / `#f59e0b` | `#2e2410` / `#f2c25c` / `rgba(242,194,92,.25)` / `#fbbf24` | 4.90 · 9.19 |
 | `border` | `#e8e8ec` | `rgba(255,255,255,.08)` | |
@@ -142,7 +143,7 @@ components/movimiento.tsx  ProveedorMovimiento (LazyMotion + MotionConfig), "use
 components/**  barrido de clases + Motion donde aplica
 ```
 
-- `ProveedorMovimiento` se monta dentro de `Providers`, junto a tema, diseño, toasts y tooltips. Usa `LazyMotion features={domAnimation} strict`, por lo que los componentes usan `m.*` y no `motion.*`. `strict` hace fallar en desarrollo cualquier `motion.*` que se cuele y cargue el bundle completo.
+- `ProveedorMovimiento` se monta dentro de `Providers`, junto a tema, diseño, toasts y tooltips. Usa `LazyMotion features={domMax} strict` (`domAnimation` no trae `layoutId`), por lo que los componentes usan `m.*` y no `motion.*`. `strict` hace fallar en desarrollo cualquier `motion.*` que se cuele y cargue el bundle completo.
 - `MotionConfig reducedMotion="user"` respeta «reducir movimiento» del sistema, igual que el `motion-safe:` actual de las recetas CSS.
 - `lib/movimiento.ts` exporta `RESORTE` (`{ type: "spring", stiffness: 500, damping: 40, mass: 0.8 }`), `RESORTE_SUAVE` (`stiffness: 300, damping: 30`), `CURVA_SALIDA` (`[0.16, 1, 0.3, 1]`) y `DURACION` (`{ rapida: 0.12, media: 0.2, lenta: 0.32 }`). `globals.css` declara las mismas curvas como `--ease-salida` y las duraciones como `--duracion-*`, y los primitivos de base-ui las usan en sus transiciones. Un comentario en ambos archivos marca que deben ir sincronizados.
 - Fuera de `ProveedorMovimiento` (consumidores que copian un componente con la CLI y no montan el proveedor) los `m.*` no animan pero renderizan bien: se documenta que el proveedor es necesario para el movimiento.
@@ -157,14 +158,14 @@ Diálogo, sheet, drawer, popover, menú, select, combobox, autocomplete, hover-c
 
 | Componente | Efecto | Detalle |
 |---|---|---|
-| `Tabs` (línea y segmentado) | Indicador que se desliza al cambiar de pestaña | `m.span` con `layoutId` único por instancia (`useId`); reemplaza `data-active:border-primary` y `data-active:bg-card` |
+| `Tabs` (línea y segmentado) | Indicador que se desliza al cambiar de pestaña | Sin Motion: `Tabs.Indicator` de base-ui expone `--active-tab-*` y una transición CSS con `ease-salida` lo desliza; reemplaza `data-active:border-primary` y `data-active:bg-card` |
 | `SidebarNav` | El fondo del ítem activo se desliza | `layoutId` por instancia de sidebar |
 | `Toast` | Apilado y salida con resorte | `AnimatePresence` + `layout` en la lista del viewport, solo si el viewport de base-ui lo permite sin romper el temporizador; si no, se queda en CSS (ver §7) |
 | `TablaDatos` | La barra de acciones masivas entra y sale | `AnimatePresence` con `y` + `opacity` |
 | `Kpi`, `Metricas` | El valor cuenta desde 0 al montarse | Pieza cliente nueva `NumeroAnimado` (`patrones/numero-animado.tsx`) que recibe `valor` y `formato`; `Kpi` y `Metricas` siguen siendo Server Components y solo la renderizan |
 | `Sparkline` | La línea se dibuja | `m.path` con `pathLength` 0→1 |
 | `Grafico` | Barras crecen desde la base, la línea se dibuja | `scaleY` con `originY: 1`; `pathLength` |
-| `ProgresoLineal`, `ProgresoCircular` | Avance con resorte | `RESORTE_SUAVE` sobre `scaleX` / `strokeDashoffset` |
+| `ProgresoCircular` | Avance con resorte | `RESORTE_SUAVE` sobre `strokeDashoffset`. `ProgresoLineal` sigue en CSS: base-ui fija el ancho del indicador en línea |
 | `ConfirmacionEnLinea` | Cambio animado de acción a confirmación | `AnimatePresence mode="popLayout"` |
 | `BotonCopiar` | El icono cambia con giro y escala | `AnimatePresence mode="wait"` |
 
@@ -174,7 +175,7 @@ Todo efecto usa `RESORTE` o `CURVA_SALIDA` de `lib/movimiento.ts`, nunca valores
 
 - **SSR y parpadeo.** `NumeroAnimado` renderiza en el servidor el valor final formateado y anima solo en el cliente después de hidratar, así el HTML inicial ya muestra el número correcto y no hay desajuste de hidratación.
 - **Lectores de pantalla.** `NumeroAnimado` pone el valor final en `aria-label` y marca el texto animado con `aria-hidden`.
-- **Reducir movimiento.** Con la preferencia activa, Motion salta al estado final y las transiciones CSS siguen bajo `motion-safe:`.
+- **Reducir movimiento.** Con la preferencia activa, `MotionConfig reducedMotion="user"` anula transformaciones y layout; los efectos que no son transformaciones (trazos, contador, altura de la barra masiva, anillo de progreso) consultan `useReducedMotion()` y saltan al estado final. Solo quedan fundidos de opacidad. Las transiciones CSS siguen bajo `motion-safe:`.
 - **Toasts.** Si `AnimatePresence` choca con el ciclo de vida del `Toast` de base-ui (cierre por tiempo, gesto de deslizar), se conserva la transición CSS actual con las curvas nuevas y se deja constancia en `docs/design-system.md` «Pendientes». No se fuerza.
 - **«Papel».** Hereda recetas, tipografía y sombras. Sus colores no cambian, pero se revisa en `/ejemplo` en claro y oscuro que no quede ningún par por debajo de su contraste actual.
 - **Consumidores existentes.** Los nombres de tokens, recetas y props no cambian, pero los valores sí: es un cambio visual, versión minor `0.3.0` en `CHANGELOG.md`, con nota de que se necesita `motion` como dependencia para los componentes animados (la CLI lo informa sola desde `registry.json`).
@@ -185,6 +186,6 @@ Todo efecto usa `RESORTE` o `CURVA_SALIDA` de `lib/movimiento.ts`, nunca valores
 2. Nuevo `scripts/verificar-tipografia.mjs`, en `npm run lint` junto a `check:alturas`, falla con archivo y línea si un archivo de `src/components/` usa `text-[Npx]`, `uppercase` (salvo una excepción marcada con comentario) o `tracking-wider`.
 3. Script de contraste (el de este spec) sobre los pares de §4.1: todos ≥ 4.5 salvo los marcados como decorativos.
 4. Revisión visual de `/ejemplo` en navegador: diseños «khipu» y «papel» × claro y oscuro, con capturas.
-5. Con «reducir movimiento» emulado en DevTools, ningún elemento anima y todo queda en su estado final.
+5. Con «reducir movimiento» emulado en DevTools, nada se desplaza, escala ni se dibuja: solo quedan fundidos de opacidad y todo llega a su estado final.
 6. `npm run registry:build` y `registry.json` lista `motion` en los componentes animados.
 7. Con `next dev`, ninguna advertencia de hidratación en la consola de `/ejemplo`.
