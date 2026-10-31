@@ -964,6 +964,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 - Modify: `src/components/patrones/pill-estado.tsx`
 - Modify: `src/components/patrones/tarjeta-destacada.tsx`
 - Modify: `src/components/ui/avatar.tsx`
+- Modify: `src/components/ui/badge.tsx`
 - Modify: `src/components/ui/button.tsx`
 - Modify: `src/components/ui/card.tsx`
 - Modify: `src/components/ui/dialog.tsx`
@@ -1018,6 +1019,11 @@ test("sombras, anillos, curva y rojo suave", () => {
   assert.equal(transformar('"bg-destructive/10 hover:bg-destructive/10"'), '"bg-destructive-suave hover:bg-destructive-suave"');
 });
 
+test("rojo legible sobre el fondo suave", () => {
+  assert.equal(transformar('"bg-destructive/10 text-destructive dark:bg-destructive/20"'), '"bg-destructive-suave text-destructive-texto"');
+  assert.equal(transformar('"text-destructive hover:bg-muted"'), '"text-destructive hover:bg-muted"');
+});
+
 test("es idempotente", () => {
   const una = transformar('"text-[11px] uppercase shadow-2xs ease-out"');
   assert.equal(transformar(una), una);
@@ -1062,6 +1068,14 @@ export const REEMPLAZOS = [
   [new RegExp(`${B}bg-destructive/10${F}`, "g"), "bg-destructive-suave"],
 ];
 const MAYUSCULAS = new RegExp(` ?${B}uppercase${F}`, "g");
+// Sobre bg-destructive-suave el rojo base (#dc2547) da 4.25 en claro: en esa línea el texto pasa a destructive-texto,
+// y se quita dark:bg-destructive/20, que pisaría al token suave en oscuro.
+const TEXTO_ROJO = new RegExp(`${B}text-destructive${F}`, "g");
+const FONDO_ROJO_OSCURO = new RegExp(` ?${B}dark:bg-destructive/20${F}`, "g");
+function rojoLegible(linea) {
+  if (!linea.includes("bg-destructive-suave")) return linea;
+  return linea.replace(TEXTO_ROJO, "text-destructive-texto").replace(FONDO_ROJO_OSCURO, "");
+}
 
 /** Aplica el barrido a un texto. Las líneas con `tipografia-ok` conservan sus mayúsculas. */
 export function transformar(texto) {
@@ -1070,6 +1084,7 @@ export function transformar(texto) {
   return salida
     .split("\n")
     .map((linea) => (linea.includes("tipografia-ok") ? linea : linea.replace(MAYUSCULAS, "")))
+    .map(rojoLegible)
     .join("\n");
 }
 
@@ -1105,7 +1120,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
 - [ ] **Step 4: Run the tests, expect PASS**
 
 Run: `node --test scripts/tests/codemod.test.mjs`
-Expected: PASS, `# pass 4`.
+Expected: PASS, `# pass 5`.
 
 - [ ] **Step 5: Confirm the sweep is needed (failing check)**
 
@@ -1115,7 +1130,7 @@ Expected: FAIL (exit 1) listing many `tamaño suelto` / `mayúsculas` hits.
 - [ ] **Step 6: Run the codemod**
 
 Run: `node scripts/codemod-estilo.mjs`
-Expected: prints changed paths and `Codemod: N archivos actualizados.` with N ≤ 62. Every printed path must appear in this task's **Files** list; if one does not, stop and report it instead of committing.
+Expected: prints changed paths and `Codemod: N archivos actualizados.` with N ≤ 63. Every printed path must appear in this task's **Files** list; if one does not, stop and report it instead of committing.
 
 Run it a second time: `node scripts/codemod-estilo.mjs`
 Expected: `Codemod: 0 archivos actualizados.` (idempotent).
@@ -1134,7 +1149,7 @@ Expected: `Alturas: ninguna receta de control sobrescrita.`
 - [ ] **Step 8: Commit**
 
 ```
-git add scripts/codemod-estilo.mjs scripts/tests/codemod.test.mjs src/app/ejemplo/galeria.tsx src/app/ejemplo/page.tsx src/app/ejemplo/tabla.tsx src/components/datos/grafico.tsx src/components/datos/kpi.tsx src/components/datos/lista-datos.tsx src/components/datos/tabla-datos.tsx src/components/datos/timeline.tsx src/components/feedback/alerta.tsx src/components/feedback/banner.tsx src/components/feedback/estado-vacio.tsx src/components/feedback/progreso.tsx src/components/feedback/skeleton.tsx src/components/feedback/toast.tsx src/components/feedback/tooltip.tsx src/components/formularios/autocomplete.tsx src/components/formularios/campo.tsx src/components/formularios/casilla.tsx src/components/formularios/combobox.tsx src/components/formularios/contrasena.tsx src/components/formularios/deslizador.tsx src/components/formularios/entrada-fecha.tsx src/components/formularios/entrada-monto.tsx src/components/formularios/entrada-rango-fechas.tsx src/components/formularios/opciones.tsx src/components/formularios/stepper-numerico.tsx src/components/formularios/zona-archivos.tsx src/components/nav/logo.tsx src/components/nav/menu-usuario.tsx src/components/nav/selector-contexto.tsx src/components/nav/selector-diseno.tsx src/components/nav/sidebar.tsx src/components/nav/sidebar-nav.tsx src/components/nav/theme-toggle.tsx src/components/nav/top-bar.tsx src/components/navegacion/acordeon.tsx src/components/navegacion/dialogo-confirmacion.tsx src/components/navegacion/menu-acciones.tsx src/components/navegacion/paleta.tsx src/components/navegacion/panel-lateral.tsx src/components/navegacion/pasos.tsx src/components/navegacion/tabs.tsx src/components/patrones/bloque-codigo.tsx src/components/patrones/cabecera-dialogo.tsx src/components/patrones/cabecera-seccion.tsx src/components/patrones/confirmacion-en-linea.tsx src/components/patrones/metricas.tsx src/components/patrones/pie-tabla.tsx src/components/patrones/pill-estado.tsx src/components/patrones/tarjeta-destacada.tsx src/components/ui/avatar.tsx src/components/ui/button.tsx src/components/ui/card.tsx src/components/ui/dialog.tsx src/components/ui/grupo-botones.tsx src/components/ui/hover-card.tsx src/components/ui/kbd.tsx src/components/ui/menu.tsx src/components/ui/popover.tsx src/components/ui/select.tsx src/components/ui/selector-por-pagina.tsx src/components/ui/toolbar.tsx
+git add scripts/codemod-estilo.mjs scripts/tests/codemod.test.mjs src/app/ejemplo/galeria.tsx src/app/ejemplo/page.tsx src/app/ejemplo/tabla.tsx src/components/datos/grafico.tsx src/components/datos/kpi.tsx src/components/datos/lista-datos.tsx src/components/datos/tabla-datos.tsx src/components/datos/timeline.tsx src/components/feedback/alerta.tsx src/components/feedback/banner.tsx src/components/feedback/estado-vacio.tsx src/components/feedback/progreso.tsx src/components/feedback/skeleton.tsx src/components/feedback/toast.tsx src/components/feedback/tooltip.tsx src/components/formularios/autocomplete.tsx src/components/formularios/campo.tsx src/components/formularios/casilla.tsx src/components/formularios/combobox.tsx src/components/formularios/contrasena.tsx src/components/formularios/deslizador.tsx src/components/formularios/entrada-fecha.tsx src/components/formularios/entrada-monto.tsx src/components/formularios/entrada-rango-fechas.tsx src/components/formularios/opciones.tsx src/components/formularios/stepper-numerico.tsx src/components/formularios/zona-archivos.tsx src/components/nav/logo.tsx src/components/nav/menu-usuario.tsx src/components/nav/selector-contexto.tsx src/components/nav/selector-diseno.tsx src/components/nav/sidebar.tsx src/components/nav/sidebar-nav.tsx src/components/nav/theme-toggle.tsx src/components/nav/top-bar.tsx src/components/navegacion/acordeon.tsx src/components/navegacion/dialogo-confirmacion.tsx src/components/navegacion/menu-acciones.tsx src/components/navegacion/paleta.tsx src/components/navegacion/panel-lateral.tsx src/components/navegacion/pasos.tsx src/components/navegacion/tabs.tsx src/components/patrones/bloque-codigo.tsx src/components/patrones/cabecera-dialogo.tsx src/components/patrones/cabecera-seccion.tsx src/components/patrones/confirmacion-en-linea.tsx src/components/patrones/metricas.tsx src/components/patrones/pie-tabla.tsx src/components/patrones/pill-estado.tsx src/components/patrones/tarjeta-destacada.tsx src/components/ui/avatar.tsx src/components/ui/badge.tsx src/components/ui/button.tsx src/components/ui/card.tsx src/components/ui/dialog.tsx src/components/ui/grupo-botones.tsx src/components/ui/hover-card.tsx src/components/ui/kbd.tsx src/components/ui/menu.tsx src/components/ui/popover.tsx src/components/ui/select.tsx src/components/ui/selector-por-pagina.tsx src/components/ui/toolbar.tsx
 git commit -m "refactor(ds): sweep components onto the named type scale, shadows and easing
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
