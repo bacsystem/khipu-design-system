@@ -1,6 +1,6 @@
 # khipu design system
 
-Design system para aplicaciones de gestión: tokens (claro/oscuro), componentes base sobre [base-ui](https://base-ui.com), componentes de navegación (sidebar, top bar, selector de contexto, menú de usuario), patrones (métricas, pills, tablas, diálogos, código) y componentes de feedback, formularios, navegación y datos. Stack: **Next.js 15 · React 19 · Tailwind v4 · lucide-react**.
+Design system para aplicaciones de gestión: tokens (claro/oscuro), componentes base sobre [base-ui](https://base-ui.com), componentes de navegación (sidebar, top bar, selector de contexto, menú de usuario), patrones (métricas, pills, tablas, diálogos, código) y componentes de feedback, formularios, navegación y datos. Stack: **Next.js 15 · React 19 · Tailwind v4 · Motion · lucide-react**.
 
 Nació en el portal de facturación electrónica [khipu](https://github.com/bacsystem) y está desacoplado de él: rutas, textos, iconos y handlers entran por props.
 
@@ -36,11 +36,11 @@ npx github:bacsystem/khipu-design-system add panel-lateral # copia panel-lateral
 
 Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force` si quieres reemplazarlos). Después de copiar los componentes que necesites, una sola vez por proyecto:
 
-1. Pega en tu `globals.css` los bloques `@import`, `@custom-variant dark`, `@theme inline`, `:root`, `.dark` y `@layer base` de [`src/app/globals.css`](src/app/globals.css). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
+1. Pega en tu `globals.css` los bloques `@import`, `@custom-variant dark`, `@theme inline`, `:root`, `.dark` y `@layer base` de [`src/app/globals.css`](src/app/globals.css). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`). Si copias componentes animados (sidebar, tabla, KPI, gráficos, progreso, copiar), instala también `motion` y envuelve la app con `ProveedorMovimiento` (ya incluido en `Providers`).
 2. Envuelve la app con [`Providers`](src/components/providers.tsx) (tema + toasts + tooltips) y carga las fuentes como en [`src/app/layout.tsx`](src/app/layout.tsx).
 3. Asegura el alias `"@/*": ["./src/*"]` en `tsconfig.json`.
 
-**Alternativa manual (todo de una vez):** copia `src/components/` y `src/lib/` completos a tu `src/`, e instala tú mismo `@base-ui/react lucide-react class-variance-authority cn next-themes` (+ `tw-animate-css` como dev dependency).
+**Alternativa manual (todo de una vez):** copia `src/components/` y `src/lib/` completos a tu `src/`, e instala tú mismo `@base-ui/react lucide-react class-variance-authority cn next-themes motion` (+ `tw-animate-css` como dev dependency).
 
 El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
 
@@ -49,9 +49,9 @@ El registro que usa la CLI (`registry/registry.json`) se genera con `npm run reg
 ```
 src/
 ├── app/globals.css          tokens + @theme
-├── app/layout.tsx           Inter + JetBrains Mono, Providers
+├── app/layout.tsx           Geist + Geist Mono, Providers
 ├── app/ejemplo/             demo: shell completo + galería de componentes
-├── components/providers.tsx ThemeProvider + DisenoProvider + ToastProvider + TooltipProvider
+├── components/providers.tsx ThemeProvider + DisenoProvider + ProveedorMovimiento + ToastProvider + TooltipProvider
 ├── components/diseno.tsx    DisenoProvider · useDiseno (+ disenos.ts, script-diseno.tsx) — ver docs/design-system.md «Diseños»
 ├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
 ├── components/nav/          shell · sidebar · sidebar-nav · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · top-bar · mobile-nav

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-10-31
+
+### Changed
+- Diseño base «khipu» al estilo Linear/Vercel: neutros zinc, acento índigo `#5b5bd6` / `#8585f2`, sombras en capas (en oscuro con brillo interior), tarjetas de 12 px, sidebar del color del fondo.
+- Tipografía Geist + Geist Mono. Escala con nombre: `text-etiqueta` 12, `text-control` 13, `text-cuerpo` 14, `text-metrica` 24. Sin etiquetas en mayúsculas; mono solo para datos.
+- Pills sin borde; bloque de código sobre el token `codigo`; anillo de foco único (`FOCO`).
+- Los nombres de tokens, recetas y props no cambian: es un cambio visual.
+
+### Added
+- Motion (`motion` ^14) con `ProveedorMovimiento` y `lib/movimiento.ts`. Sidebar, `TablaDatos`, gráficos, `Sparkline`, `ProgresoCircular`, `ConfirmacionEnLinea` y `BotonCopiar` animados; `Tabs` con indicador que se desliza.
+- `NumeroAnimado`, `TrazoAnimado`, receta `SEGMENTO_BASE`, tokens `destructive-suave` / `destructive-texto` (el rojo sobre rojo tenue no llegaba a 4.5) y `codigo` / `codigo-foreground`.
+- `npm run check:tipografia` y `npm run check:contraste` (en `npm run lint`), `npm test`.
+
 ## [0.2.0] - 2026-10-08
 
 ### Changed
