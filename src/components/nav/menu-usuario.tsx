@@ -81,7 +81,7 @@ export function MenuUsuario({
           </div>
           <div className="min-w-0 overflow-hidden">
             <p className="truncate text-control leading-tight font-medium text-foreground">{nombre}</p>
-            <p className="truncate font-mono text-etiqueta leading-tight text-muted-foreground">{usuario.email}</p>
+            <p className="truncate text-etiqueta leading-tight text-muted-foreground">{usuario.email}</p>
           </div>
         </div>
         <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
@@ -96,7 +96,7 @@ export function MenuUsuario({
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-control leading-tight font-medium">{nombre}</p>
-            <p className="mt-0.5 font-mono text-etiqueta leading-snug break-all text-muted-foreground">{usuario.email}</p>
+            <p className="mt-0.5 text-etiqueta leading-snug break-all text-muted-foreground">{usuario.email}</p>
             {usuario.rol ? <p className="mt-0.5 text-etiqueta leading-tight text-muted-foreground">{usuario.rol}</p> : null}
           </div>
           <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-primary" />

@@ -85,7 +85,7 @@ export function ZonaArchivos({
     >
       <UploadCloudIcon className={cn("size-6", sobre ? "text-primary" : "text-muted-foreground/70")} />
       <span className="text-control font-medium text-foreground">{titulo}</span>
-      {ayuda ? <span className="font-mono text-etiqueta text-muted-foreground">{ayuda}</span> : null}
+      {ayuda ? <span className="text-etiqueta text-muted-foreground">{ayuda}</span> : null}
       <input ref={input} id={id} type="file" accept={accept} disabled={disabled} className="sr-only" onChange={(e) => onCambio(e.target.files?.[0] ?? null)} />
     </label>
   );
