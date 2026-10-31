@@ -1,7 +1,9 @@
 "use client";
 
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
+import { m, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
+import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 export type TonoProgreso = "primary" | "success" | "warning" | "destructive";
@@ -55,7 +57,7 @@ export function ProgresoLineal({
         <ProgressPrimitive.Indicator
           className={cn(
             "block h-full rounded-full",
-            indeterminado ? cn("w-1/3 animate-progreso-indeterminado", TONOS[tono]) : cn("transition-[width] duration-300 ease-salida", TONOS[tono]),
+            indeterminado ? cn("w-1/3 animate-progreso-indeterminado", TONOS[tono]) : cn("transition-[width] duration-(--duracion-lenta) ease-salida motion-reduce:transition-none", TONOS[tono]),
           )}
         />
       </ProgressPrimitive.Track>
@@ -93,6 +95,8 @@ export function ProgresoCircular({
   const circunferencia = 2 * Math.PI * radio;
   const indeterminado = valor == null;
   const pct = indeterminado ? 0.25 : Math.min(100, Math.max(0, valor)) / 100;
+  // strokeDashoffset no es una transformación: con «reducir movimiento» se salta aquí, no en MotionConfig.
+  const reducir = useReducedMotion();
 
   return (
     <div
@@ -105,17 +109,19 @@ export function ProgresoCircular({
     >
       <svg width={caja} height={caja} viewBox={`0 0 ${caja} ${caja}`} className="-rotate-90">
         <circle cx={caja / 2} cy={caja / 2} r={radio} strokeWidth={grosor} fill="none" style={{ stroke: "var(--secondary)" }} />
-        <circle
+        <m.circle
           cx={caja / 2}
           cy={caja / 2}
           r={radio}
           strokeWidth={grosor}
           strokeLinecap="round"
           strokeDasharray={circunferencia}
-          strokeDashoffset={circunferencia * (1 - pct)}
           fill="none"
-          className="transition-[stroke-dashoffset] duration-300 ease-salida"
           style={{ stroke: COLOR_TRAZO[tono] }}
+          // initial={false}: el servidor ya pinta el valor; solo se anima cuando cambia.
+          initial={false}
+          animate={{ strokeDashoffset: circunferencia * (1 - pct) }}
+          transition={reducir ? { duration: 0 } : RESORTE_SUAVE}
         />
       </svg>
       {contenido !== null ? (
