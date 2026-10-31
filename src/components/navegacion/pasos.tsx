@@ -64,7 +64,7 @@ export function TarjetaPaso({
   return (
     <section className={cn("rounded-xl border border-border bg-card shadow-xs", className)}>
       <div className="border-b border-border/60 px-5 py-4">
-        <span className="font-mono text-etiqueta text-muted-foreground">
+        <span className="text-etiqueta text-muted-foreground">
           Paso {numero} de {total}
         </span>
         <h2 className="mt-0.5 text-base font-semibold tracking-tight text-foreground">{titulo}</h2>
