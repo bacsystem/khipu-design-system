@@ -31,7 +31,7 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
-            "w-72 rounded-lg bg-popover p-3.5 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none",
+            "w-72 rounded-lg bg-popover p-3.5 text-popover-foreground shadow-md ring-1 ring-border outline-none",
             ANIMACION_POPUP,
             className,
           )}
@@ -59,8 +59,8 @@ function PopoverHeader({
   return (
     <div className={cn("mb-2.5 flex items-start justify-between gap-2", className)}>
       <div className="min-w-0">
-        <PopoverPrimitive.Title className="text-[13px] font-semibold text-foreground">{titulo}</PopoverPrimitive.Title>
-        {descripcion ? <PopoverPrimitive.Description className="mt-0.5 text-[12px] text-muted-foreground">{descripcion}</PopoverPrimitive.Description> : null}
+        <PopoverPrimitive.Title className="text-cuerpo font-semibold text-foreground">{titulo}</PopoverPrimitive.Title>
+        {descripcion ? <PopoverPrimitive.Description className="mt-0.5 text-control text-muted-foreground">{descripcion}</PopoverPrimitive.Description> : null}
       </div>
       {conCierre ? (
         <PopoverClose aria-label="Cerrar" className="shrink-0 rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">

@@ -54,7 +54,7 @@ export function DialogoConfirmacion({
       <DialogContent className="gap-0 p-0 sm:max-w-md">
         <CabeceraDialogo icon={icon} titulo={titulo} descripcion={descripcion} />
         {children || error ? (
-          <div className="grid gap-3 px-5 py-4 text-[13px] leading-relaxed text-muted-foreground">
+          <div className="grid gap-3 px-5 py-4 text-control leading-relaxed text-muted-foreground">
             {children}
             {error ? <p className="text-destructive">{error}</p> : null}
           </div>

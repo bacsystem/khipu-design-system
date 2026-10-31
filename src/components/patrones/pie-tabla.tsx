@@ -6,7 +6,7 @@ import { SelectorPorPagina } from "@/components/ui/selector-por-pagina";
 import { paginasVisibles } from "@/lib/paginacion";
 
 const BOTON =
-  "inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-foreground/80 shadow-2xs transition-colors hover:bg-muted disabled:pointer-events-none disabled:text-muted-foreground/60";
+  "inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-etiqueta font-medium text-foreground/80 shadow-xs transition-colors hover:bg-muted disabled:pointer-events-none disabled:text-muted-foreground/60";
 
 /**
  * Pie de tabla estándar: "Mostrando x–y de N <unidad>", selector de filas, nota opcional y paginación numerada.
@@ -36,7 +36,7 @@ export function PieTabla({
   nota?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-between gap-3 border-t border-border/60 bg-muted px-4 py-2 text-[12px] text-muted-foreground sm:flex-row">
+    <div className="flex flex-col items-center justify-between gap-3 border-t border-border/60 bg-muted px-4 py-2 text-control text-muted-foreground sm:flex-row">
       <div className="flex flex-wrap items-center gap-2">
         <span>
           Mostrando{" "}
@@ -50,7 +50,7 @@ export function PieTabla({
         {nota ? (
           <>
             <span className="hidden text-muted-foreground/40 xl:inline">·</span>
-            <span className="hidden text-[11px] text-muted-foreground/80 xl:inline">{nota}</span>
+            <span className="hidden text-etiqueta text-muted-foreground/80 xl:inline">{nota}</span>
           </>
         ) : null}
       </div>
@@ -61,11 +61,11 @@ export function PieTabla({
         <div className="mx-1 flex items-center gap-0.5">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>
             p === "…" ? (
-              <span key={`sep-${i}`} className="px-1 text-[11px] text-muted-foreground/60">
+              <span key={`sep-${i}`} className="px-1 text-etiqueta text-muted-foreground/60">
                 …
               </span>
             ) : p === pagina ? (
-              <span key={p} aria-current="page" className="flex size-9 items-center justify-center rounded-lg bg-foreground font-mono text-[11px] font-medium text-background shadow-2xs">
+              <span key={p} aria-current="page" className="flex size-9 items-center justify-center rounded-lg bg-foreground font-mono text-etiqueta font-medium text-background shadow-xs">
                 {p}
               </span>
             ) : (
@@ -73,7 +73,7 @@ export function PieTabla({
                 key={p}
                 type="button"
                 onClick={() => onPagina(p)}
-                className="flex size-9 items-center justify-center rounded-lg font-mono text-[11px] text-foreground/80 transition-colors hover:bg-secondary"
+                className="flex size-9 items-center justify-center rounded-lg font-mono text-etiqueta text-foreground/80 transition-colors hover:bg-secondary"
               >
                 {p}
               </button>
@@ -99,7 +99,7 @@ export function TablaVacia({ icon, children }: { icon: ReactNode; children: Reac
 }
 
 /** Estilos compartidos de la tabla estándar. */
-export const CABECERA_TABLA = "h-auto px-3 py-2 text-[11px] font-semibold tracking-wider text-muted-foreground/80 uppercase";
-export const CONTENEDOR_TABLA = "min-w-0 overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs transition-opacity";
+export const CABECERA_TABLA = "h-auto px-3 py-2 text-etiqueta font-semibold text-muted-foreground/80";
+export const CONTENEDOR_TABLA = "min-w-0 overflow-hidden rounded-xl border border-border/90 bg-card shadow-xs transition-opacity";
 // CONTROL_FILTRO vive en lib/estilos.ts junto al resto de la escala de alturas; se re-exporta para no romper a quien lo importa desde aquí.
 export { CONTROL_FILTRO } from "@/lib/estilos";

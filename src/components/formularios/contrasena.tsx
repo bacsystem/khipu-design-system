@@ -84,7 +84,7 @@ export function Contrasena({
           <Meter.Track className="h-1 flex-1 overflow-hidden rounded-full bg-secondary">
             <Meter.Indicator className={cn("block h-full rounded-full transition-[width] duration-300", COLOR_TONO[fuerza.tono])} />
           </Meter.Track>
-          <span className="text-[11px] font-medium text-muted-foreground">{fuerza.etiqueta}</span>
+          <span className="text-etiqueta font-medium text-muted-foreground">{fuerza.etiqueta}</span>
         </Meter.Root>
       ) : null}
     </div>

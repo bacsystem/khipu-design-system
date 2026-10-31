@@ -38,7 +38,7 @@ export function EntradaMonto({
 
   return (
     <div className={cn("relative flex items-center", className)}>
-      <span className="pointer-events-none absolute left-3 font-mono text-[13px] text-muted-foreground">{SIMBOLOS[moneda] ?? moneda}</span>
+      <span className="pointer-events-none absolute left-3 font-mono text-control text-muted-foreground">{SIMBOLOS[moneda] ?? moneda}</span>
       <input
         id={id}
         inputMode="decimal"
@@ -55,7 +55,7 @@ export function EntradaMonto({
           onCambio(Number.isFinite(n) ? Math.round(n * 100) / 100 : null);
         }}
         onBlur={() => setEditando(false)}
-        className={cn(CAMPO, "pl-9 pr-20 text-right font-mono text-[13px] tabular-nums")}
+        className={cn(CAMPO, "pl-9 pr-20 text-right font-mono text-control tabular-nums")}
       />
       {monedas.length > 1 && onMoneda ? (
         <select
@@ -63,7 +63,7 @@ export function EntradaMonto({
           value={moneda}
           disabled={disabled}
           onChange={(e) => onMoneda(e.target.value)}
-          className="absolute right-1.5 h-7 rounded-md border border-border bg-card px-1.5 font-mono text-[11px] font-medium text-foreground shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+          className="absolute right-1.5 h-7 rounded-md border border-border bg-card px-1.5 font-mono text-etiqueta font-medium text-foreground shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
         >
           {monedas.map((m) => (
             <option key={m} value={m}>
@@ -72,7 +72,7 @@ export function EntradaMonto({
           ))}
         </select>
       ) : (
-        <span className="absolute right-3 font-mono text-[11px] text-muted-foreground">{moneda}</span>
+        <span className="absolute right-3 font-mono text-etiqueta text-muted-foreground">{moneda}</span>
       )}
     </div>
   );

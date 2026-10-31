@@ -76,12 +76,12 @@ export function MenuUsuario({
         )}
       >
         <div className="flex min-w-0 items-center gap-2.5">
-          <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground shadow-xs">
+          <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-etiqueta font-bold text-primary-foreground shadow-xs">
             {iniciales(usuario.nombre ?? usuario.email)}
           </div>
           <div className="min-w-0 overflow-hidden">
-            <p className="truncate text-[12px] leading-tight font-medium text-foreground">{nombre}</p>
-            <p className="truncate font-mono text-[10px] leading-tight text-muted-foreground">{usuario.email}</p>
+            <p className="truncate text-control leading-tight font-medium text-foreground">{nombre}</p>
+            <p className="truncate font-mono text-etiqueta leading-tight text-muted-foreground">{usuario.email}</p>
           </div>
         </div>
         <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
@@ -89,15 +89,15 @@ export function MenuUsuario({
 
       {/* Mismo ancho y alineación que el disparador: no invade el contenido principal. */}
       <MenuContent side="top" align="start" className="w-(--anchor-width) min-w-0">
-        <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Tu cuenta</div>
+        <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Tu cuenta</div>
         <div className="flex items-start gap-2.5 rounded-md bg-accent/70 py-1.5 pr-2 pl-2 text-accent-foreground">
-          <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground shadow-xs">
+          <div className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-etiqueta font-bold text-primary-foreground shadow-xs">
             {iniciales(usuario.nombre ?? usuario.email)}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[12px] leading-tight font-medium">{nombre}</p>
-            <p className="mt-0.5 font-mono text-[10px] leading-snug break-all text-muted-foreground">{usuario.email}</p>
-            {usuario.rol ? <p className="mt-0.5 text-[10px] leading-tight text-muted-foreground">{usuario.rol}</p> : null}
+            <p className="text-control leading-tight font-medium">{nombre}</p>
+            <p className="mt-0.5 font-mono text-etiqueta leading-snug break-all text-muted-foreground">{usuario.email}</p>
+            {usuario.rol ? <p className="mt-0.5 text-etiqueta leading-tight text-muted-foreground">{usuario.rol}</p> : null}
           </div>
           <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-primary" />
         </div>
@@ -105,7 +105,7 @@ export function MenuUsuario({
         {mostrarTema ? (
           <>
             <MenuSeparator />
-            <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Tema</div>
+            <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Tema</div>
             <div className="px-0.5 pb-1.5">
               <ThemeToggle conTexto />
             </div>
@@ -115,7 +115,7 @@ export function MenuUsuario({
         {conDiseno ? (
           <>
             {mostrarTema ? null : <MenuSeparator />}
-            <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Diseño</div>
+            <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Diseño</div>
             <div className="px-0.5 pb-1.5">
               <SelectorDiseno />
             </div>

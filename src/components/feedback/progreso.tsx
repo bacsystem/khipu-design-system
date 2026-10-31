@@ -45,9 +45,9 @@ export function ProgresoLineal({
     <ProgressPrimitive.Root value={valor ?? null} className={cn("grid gap-1.5", className)}>
       {etiqueta || (mostrarValor && !indeterminado) ? (
         <div className="flex items-center justify-between gap-2">
-          {etiqueta ? <ProgressPrimitive.Label className="text-[12px] font-medium text-foreground">{etiqueta}</ProgressPrimitive.Label> : <span />}
+          {etiqueta ? <ProgressPrimitive.Label className="text-control font-medium text-foreground">{etiqueta}</ProgressPrimitive.Label> : <span />}
           {mostrarValor && !indeterminado ? (
-            <ProgressPrimitive.Value className="font-mono text-[11px] text-muted-foreground tabular-nums" />
+            <ProgressPrimitive.Value className="font-mono text-etiqueta text-muted-foreground tabular-nums" />
           ) : null}
         </div>
       ) : null}
@@ -55,7 +55,7 @@ export function ProgresoLineal({
         <ProgressPrimitive.Indicator
           className={cn(
             "block h-full rounded-full",
-            indeterminado ? cn("w-1/3 animate-progreso-indeterminado", TONOS[tono]) : cn("transition-[width] duration-300 ease-out", TONOS[tono]),
+            indeterminado ? cn("w-1/3 animate-progreso-indeterminado", TONOS[tono]) : cn("transition-[width] duration-300 ease-salida", TONOS[tono]),
           )}
         />
       </ProgressPrimitive.Track>
@@ -114,12 +114,12 @@ export function ProgresoCircular({
           strokeDasharray={circunferencia}
           strokeDashoffset={circunferencia * (1 - pct)}
           fill="none"
-          className="transition-[stroke-dashoffset] duration-300 ease-out"
+          className="transition-[stroke-dashoffset] duration-300 ease-salida"
           style={{ stroke: COLOR_TRAZO[tono] }}
         />
       </svg>
       {contenido !== null ? (
-        <span className="absolute font-mono text-[11px] font-semibold text-foreground tabular-nums">
+        <span className="absolute font-mono text-etiqueta font-semibold text-foreground tabular-nums">
           {contenido ?? (indeterminado ? "" : `${Math.round(valor!)}%`)}
         </span>
       ) : null}

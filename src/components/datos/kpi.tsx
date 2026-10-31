@@ -49,13 +49,13 @@ export function Kpi({
   const mala = invertir ? positiva : negativa;
   const Flecha = positiva ? ArrowUpRightIcon : negativa ? ArrowDownRightIcon : MinusIcon;
   return (
-    <div className={cn("flex items-start justify-between gap-4 rounded-xl border border-border bg-card px-5 py-4 shadow-2xs", className)}>
+    <div className={cn("flex items-start justify-between gap-4 rounded-xl border border-border bg-card px-5 py-4 shadow-xs", className)}>
       <div className="min-w-0">
-        <span className="block truncate text-[11px] font-medium tracking-wider text-muted-foreground uppercase">{etiqueta}</span>
+        <span className="block truncate text-etiqueta font-medium text-muted-foreground">{etiqueta}</span>
         <div className="mt-1 font-mono text-2xl font-semibold tracking-tight text-foreground tabular-nums">{valor}</div>
         {variacion != null ? (
-          <div className="mt-1 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-            <span className={cn("inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 font-mono font-medium", buena && "bg-success text-success-foreground", mala && "bg-destructive/10 text-destructive", !buena && !mala && "bg-secondary")}>
+          <div className="mt-1 flex items-center gap-1.5 text-etiqueta text-muted-foreground">
+            <span className={cn("inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 font-mono font-medium", buena && "bg-success text-success-foreground", mala && "bg-destructive-suave text-destructive-texto", !buena && !mala && "bg-secondary")}>
               <Flecha className="size-3" />
               {Math.abs(variacion).toFixed(1)}%
             </span>

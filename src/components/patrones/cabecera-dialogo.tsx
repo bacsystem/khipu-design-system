@@ -15,7 +15,7 @@ export function CabeceraDialogo({ icon, titulo, descripcion }: { icon: LucideIco
         <IconoSeccion icon={icon} />
         <div className="min-w-0">
           <DialogTitle className="text-base font-semibold tracking-tight">{titulo}</DialogTitle>
-          {descripcion ? <DialogDescription className="text-[13px]">{descripcion}</DialogDescription> : null}
+          {descripcion ? <DialogDescription className="text-control">{descripcion}</DialogDescription> : null}
         </div>
       </div>
     </DialogHeader>
@@ -37,7 +37,7 @@ export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok"; ic
   return (
     <div
       className={cn(
-        "flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-[12px] leading-relaxed",
+        "flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-control leading-relaxed",
         tono === "aviso" && "border-warning-border bg-warning text-warning-foreground",
         tono === "ok" && "border-success-border bg-success text-success-foreground",
       )}

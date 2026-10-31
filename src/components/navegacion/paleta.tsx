@@ -102,19 +102,19 @@ export function Paleta({
             onKeyDown={teclas}
             placeholder={placeholder}
             aria-label={placeholder}
-            className="h-11 w-full bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground/70"
+            className="h-11 w-full bg-transparent text-control text-foreground outline-none placeholder:text-muted-foreground/70"
           />
           <Kbd className="bg-muted shadow-none">Esc</Kbd>
         </div>
         <div ref={lista} role="listbox" className="max-h-80 overflow-y-auto p-1">
-          {filtrados.length === 0 ? <p className="px-3 py-6 text-center text-[12px] text-muted-foreground">Sin resultados para «{q}»</p> : null}
+          {filtrados.length === 0 ? <p className="px-3 py-6 text-center text-control text-muted-foreground">Sin resultados para «{q}»</p> : null}
           {filtrados.map((c, i) => {
             const Icono = c.icon;
             const cabecera = c.grupo && c.grupo !== grupoActual ? c.grupo : null;
             grupoActual = c.grupo;
             return (
               <div key={c.id} className="contents">
-                {cabecera ? <div className="px-2 pt-2 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">{cabecera}</div> : null}
+                {cabecera ? <div className="px-2 pt-2 pb-1 text-etiqueta font-medium text-muted-foreground">{cabecera}</div> : null}
                 <button
                   type="button"
                   role="option"
@@ -122,13 +122,13 @@ export function Paleta({
                   onMouseEnter={() => setIdx(i)}
                   onClick={() => ejecutar(c)}
                   className={cn(
-                    "flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-[12px] font-medium outline-none",
+                    "flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-control font-medium outline-none",
                     i === idx ? "bg-accent/70 text-accent-foreground" : "text-foreground",
                   )}
                 >
                   {Icono ? <Icono className={cn("size-3.5 shrink-0", i === idx ? "text-accent-foreground" : "text-muted-foreground")} /> : null}
                   <span className="min-w-0 flex-1 truncate">{c.label}</span>
-                  {c.detalle ? <span className="shrink-0 font-mono text-[10px] text-muted-foreground">{c.detalle}</span> : null}
+                  {c.detalle ? <span className="shrink-0 font-mono text-etiqueta text-muted-foreground">{c.detalle}</span> : null}
                 </button>
               </div>
             );

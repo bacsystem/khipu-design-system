@@ -44,9 +44,9 @@ export function EntradaFecha({
         max={max}
         disabled={disabled}
         onChange={(e) => onCambio?.(e.target.value)}
-        className={cn(CAMPO, "pl-9 font-mono text-[13px] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
+        className={cn(CAMPO, "pl-9 font-mono text-control [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60")}
       />
-      {conVistaPrevia && valor ? <span className="pointer-events-none absolute right-10 hidden text-[11px] text-muted-foreground sm:block">{formatearFecha(valor)}</span> : null}
+      {conVistaPrevia && valor ? <span className="pointer-events-none absolute right-10 hidden text-etiqueta text-muted-foreground sm:block">{formatearFecha(valor)}</span> : null}
     </div>
   );
 }

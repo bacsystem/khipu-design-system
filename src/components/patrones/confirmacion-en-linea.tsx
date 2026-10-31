@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 
 const ACCION =
-  "inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-[12px] font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-control font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
 
 /**
  * Acción irreversible confirmada en línea (sin diálogo): "Revocar" → "¿Revocar de forma permanente? [Sí, revocar] [Cancelar]".
@@ -45,7 +45,7 @@ export function ConfirmacionEnLinea({
       <div className="flex items-center justify-end gap-1">
         {abierto ? (
           <>
-            <span className="mr-1 text-[11px] text-muted-foreground">{pregunta}</span>
+            <span className="mr-1 text-etiqueta text-muted-foreground">{pregunta}</span>
             <button type="button" disabled={pendiente} onClick={ejecutar} className={cn(ACCION, "bg-destructive text-white shadow-xs hover:bg-destructive/90")}>
               {pendiente ? <RefreshCwIcon className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
               {confirmar}
@@ -55,13 +55,13 @@ export function ConfirmacionEnLinea({
             </button>
           </>
         ) : (
-          <button type="button" onClick={() => setAbierto(true)} className={cn(ACCION, "text-destructive hover:bg-destructive/10")}>
+          <button type="button" onClick={() => setAbierto(true)} className={cn(ACCION, "text-destructive-texto hover:bg-destructive-suave")}>
             <Icon className="size-3.5" />
             {etiqueta}
           </button>
         )}
       </div>
-      {error ? <span className="text-[11px] text-destructive">{error}</span> : null}
+      {error ? <span className="text-etiqueta text-destructive">{error}</span> : null}
     </div>
   );
 }
