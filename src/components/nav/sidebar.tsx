@@ -45,7 +45,7 @@ export function SidebarContent({
 /** Chip pequeño para la cabecera del sidebar (versión, estándar, entorno). */
 export function ChipSidebar({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex shrink-0 items-center rounded border border-border/60 bg-secondary px-1.5 py-0.5 font-mono text-[10px] font-medium whitespace-nowrap text-secondary-foreground/70">
+    <span className="inline-flex shrink-0 items-center rounded border border-border/60 bg-secondary px-1.5 py-0.5 font-mono text-etiqueta font-medium whitespace-nowrap text-secondary-foreground/70">
       {children}
     </span>
   );
@@ -59,9 +59,9 @@ export function TarjetaPieDeshabilitada({ titulo, valor = "— / —", title }: 
       aria-disabled="true"
       className="grid w-full cursor-not-allowed grid-cols-1 gap-1.5 overflow-hidden rounded-lg border border-border/60 bg-muted/90 p-2.5 opacity-60"
     >
-      <div className="flex items-center justify-between gap-2 text-[11px]">
+      <div className="flex items-center justify-between gap-2 text-etiqueta">
         <span className="truncate font-medium text-foreground/80">{titulo}</span>
-        <span className="shrink-0 font-mono text-[10px] whitespace-nowrap text-muted-foreground">{valor}</span>
+        <span className="shrink-0 font-mono text-etiqueta whitespace-nowrap text-muted-foreground">{valor}</span>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-border">
         <div className="h-full w-0 rounded-full bg-primary" />

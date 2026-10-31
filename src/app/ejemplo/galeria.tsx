@@ -123,7 +123,7 @@ export function Galeria() {
       <section className={SECCION} style={pasoEntrada(5)}>
         <CabeceraSeccion icon={PaletteIcon} titulo="Diseño, botones y tarjetas destacadas" subtitulo="selector de diseño · button · tarjeta destacada" conBorde={false} className="px-0 py-0" />
         <div className="grid max-w-xs gap-1.5">
-          <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Diseño</span>
+          <span className="text-etiqueta font-medium text-muted-foreground">Diseño</span>
           <SelectorDiseno />
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -326,11 +326,11 @@ export function Galeria() {
                 <div className="flex items-center gap-2.5">
                   <Avatar nombre="Ana Torres" tono="primary" />
                   <div className="min-w-0">
-                    <p className="text-[13px] font-medium text-foreground">Ana Torres</p>
-                    <p className="font-mono text-[11px] text-muted-foreground">ana@acme.pe</p>
+                    <p className="text-control font-medium text-foreground">Ana Torres</p>
+                    <p className="font-mono text-etiqueta text-muted-foreground">ana@acme.pe</p>
                   </div>
                 </div>
-                <p className="mt-2 text-[12px] text-muted-foreground">Administradora · 12 documentos emitidos este mes.</p>
+                <p className="mt-2 text-control text-muted-foreground">Administradora · 12 documentos emitidos este mes.</p>
               </HoverCardContent>
             </HoverCard>
             <Avatar nombre="Miguel Valencia" tamano="default" tono="primary" />
@@ -347,14 +347,14 @@ export function Galeria() {
               { valor: "tarjetas", etiqueta: "Tarjetas", icon: <PackageIcon className="size-3.5" /> },
             ]}
           />
-          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1 text-etiqueta text-muted-foreground">
             Paleta <Kbd>⌘K</Kbd>
           </span>
           <Popover>
             <PopoverTrigger className={ACCION_SECUNDARIA}>Filtros avanzados</PopoverTrigger>
             <PopoverContent>
               <PopoverHeader titulo="Filtros avanzados" descripcion="Se aplican solo a esta vista" />
-              <div className="grid gap-2 text-[12px] text-muted-foreground">
+              <div className="grid gap-2 text-control text-muted-foreground">
                 <p>Rango de fechas, moneda y estado SUNAT — cualquier contenido rico que no cabe en un tooltip.</p>
               </div>
             </PopoverContent>
@@ -380,7 +380,7 @@ export function Galeria() {
         <ScrollArea alto="140px" className="rounded-lg border border-border/60 bg-muted/40">
           <div className="grid gap-0.5 p-2">
             {["F001-00000136 · Aceptado", "F001-00000135 · Con observaciones", "F001-00000134 · Rechazado", "F001-00000133 · Aceptado", "F001-00000132 · Aceptado", "F001-00000131 · Enviado", "F001-00000130 · Aceptado"].map((linea) => (
-              <div key={linea} className="rounded-md px-2 py-1.5 font-mono text-[12px] text-muted-foreground hover:bg-secondary">
+              <div key={linea} className="rounded-md px-2 py-1.5 font-mono text-control text-muted-foreground hover:bg-secondary">
                 {linea}
               </div>
             ))}
@@ -416,7 +416,7 @@ export function Galeria() {
                 ]}
               />
             ) : (
-              <p className="text-[13px] text-muted-foreground">Contenido de «{id}».</p>
+              <p className="text-control text-muted-foreground">Contenido de «{id}».</p>
             )
           }
         </Tabs>
@@ -441,7 +441,7 @@ export function Galeria() {
             Paleta ⌘K
           </button>
           <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={BOTON_SECUNDARIO}>Atrás</button><button type="button" className={BOTON_PRIMARIO}>Continuar</button></>}>
-            <p className="text-[13px] text-muted-foreground">Contenido del paso (formulario del certificado).</p>
+            <p className="text-control text-muted-foreground">Contenido del paso (formulario del certificado).</p>
           </TarjetaPaso>
         </div>
         <PanelLateral open={panel} onOpenChange={setPanel} icon={ShieldCheckIcon} titulo="F001-00000136" descripcion="Factura electrónica · Aceptada" pie={<button type="button" className={BOTON_PRIMARIO} onClick={() => setPanel(false)}>Cerrar</button>}>
@@ -498,10 +498,10 @@ export function Galeria() {
             onCambio: setDocsSeleccionados,
             acciones: (
               <>
-                <button type="button" className="text-[12px] font-medium text-accent-foreground hover:underline" onClick={() => toast.ok("Reenviados", `${docsSeleccionados.length} documento(s) en cola.`)}>
+                <button type="button" className="text-control font-medium text-accent-foreground hover:underline" onClick={() => toast.ok("Reenviados", `${docsSeleccionados.length} documento(s) en cola.`)}>
                   Reenviar
                 </button>
-                <button type="button" className="text-[12px] font-medium text-destructive hover:underline" onClick={() => toast.error("No se pudo anular", "Requiere confirmación adicional.")}>
+                <button type="button" className="text-control font-medium text-destructive hover:underline" onClick={() => toast.error("No se pudo anular", "Requiere confirmación adicional.")}>
                   Anular
                 </button>
               </>

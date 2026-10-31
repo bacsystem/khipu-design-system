@@ -35,16 +35,16 @@ export function AyudaMetrica({ tono, children }: { tono: Tono; children: ReactNo
   );
 }
 
-/** Una métrica: etiqueta uppercase, valor mono grande (con sufijo opcional) y ayuda de 11px. */
+/** Una métrica: etiqueta, valor mono grande (con sufijo opcional) y ayuda de 11px. */
 export function Metrica({ etiqueta, children, sufijo, ayuda }: { etiqueta: string; children: ReactNode; sufijo?: ReactNode; ayuda: ReactNode }) {
   return (
     <div className="flex min-w-0 flex-col gap-0.5">
-      <span className="truncate text-[11px] font-medium tracking-wider text-muted-foreground uppercase">{etiqueta}</span>
+      <span className="truncate text-etiqueta font-medium text-muted-foreground">{etiqueta}</span>
       <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 font-mono text-lg font-semibold tracking-tight text-foreground">
         {children}
-        {sufijo ? <span className="text-[12px] font-normal text-muted-foreground">{sufijo}</span> : null}
+        {sufijo ? <span className="text-control font-normal text-muted-foreground">{sufijo}</span> : null}
       </div>
-      <div className="flex min-w-0 items-center gap-1 truncate text-[11px] text-muted-foreground">{ayuda}</div>
+      <div className="flex min-w-0 items-center gap-1 truncate text-etiqueta text-muted-foreground">{ayuda}</div>
     </div>
   );
 }

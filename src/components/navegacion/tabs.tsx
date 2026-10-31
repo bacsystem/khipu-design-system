@@ -44,12 +44,12 @@ export function Tabs<T extends string>({
             className={
               // h-10/h-6 fijos (no padding vertical) para que el contador no altere la altura de la fila.
               estilo === "linea"
-                ? "-mb-px inline-flex h-10 items-center gap-1.5 border-b-2 border-transparent px-1 text-[12px] font-medium whitespace-nowrap text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:border-primary data-active:text-foreground"
+                ? "-mb-px inline-flex h-10 items-center gap-1.5 border-b-2 border-transparent px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:border-primary data-active:text-foreground"
                 : SEGMENTO
             }
           >
             {t.etiqueta}
-            {t.contador != null ? <span className="rounded bg-secondary px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{t.contador}</span> : null}
+            {t.contador != null ? <span className="rounded bg-secondary px-1.5 py-0.5 font-mono text-etiqueta text-muted-foreground">{t.contador}</span> : null}
           </TabsPrimitive.Tab>
         ))}
       </TabsPrimitive.List>

@@ -51,8 +51,8 @@ export function ZonaArchivos({
           <FileIcon className="size-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-mono text-[13px] font-medium text-foreground">{archivo.name}</p>
-          <p className="font-mono text-[11px] text-muted-foreground">{tamano(archivo.size)}</p>
+          <p className="truncate font-mono text-control font-medium text-foreground">{archivo.name}</p>
+          <p className="font-mono text-etiqueta text-muted-foreground">{tamano(archivo.size)}</p>
         </div>
         <button
           type="button"
@@ -84,8 +84,8 @@ export function ZonaArchivos({
       )}
     >
       <UploadCloudIcon className={cn("size-6", sobre ? "text-primary" : "text-muted-foreground/70")} />
-      <span className="text-[13px] font-medium text-foreground">{titulo}</span>
-      {ayuda ? <span className="font-mono text-[11px] text-muted-foreground">{ayuda}</span> : null}
+      <span className="text-control font-medium text-foreground">{titulo}</span>
+      {ayuda ? <span className="font-mono text-etiqueta text-muted-foreground">{ayuda}</span> : null}
       <input ref={input} id={id} type="file" accept={accept} disabled={disabled} className="sr-only" onChange={(e) => onCambio(e.target.files?.[0] ?? null)} />
     </label>
   );

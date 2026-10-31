@@ -38,8 +38,8 @@ export function ThemeToggle({ className, conTexto = false }: { className?: strin
             onClick={() => setTheme(valor)}
             className={cn(
               "flex h-7 items-center justify-center gap-1.5 rounded-md transition-colors",
-              conTexto ? "min-w-0 flex-1 basis-0 gap-1 px-0 text-[12px] font-medium" : "size-7",
-              activo ? "bg-card text-foreground shadow-2xs" : "text-muted-foreground hover:text-foreground",
+              conTexto ? "min-w-0 flex-1 basis-0 gap-1 px-0 text-control font-medium" : "size-7",
+              activo ? "bg-card text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground",
             )}
           >
             <Icono className={cn("shrink-0", conTexto ? "size-3" : "size-4")} />

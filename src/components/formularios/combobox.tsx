@@ -47,17 +47,17 @@ export function Combobox({
       <ComboboxPrimitive.Portal>
         <ComboboxPrimitive.Positioner sideOffset={6} className="isolate z-50">
           <ComboboxPrimitive.Popup className={POPUP_LISTA}>
-            <ComboboxPrimitive.Empty className="px-2 py-2 text-[12px] text-muted-foreground empty:hidden">{vacio}</ComboboxPrimitive.Empty>
+            <ComboboxPrimitive.Empty className="px-2 py-2 text-control text-muted-foreground empty:hidden">{vacio}</ComboboxPrimitive.Empty>
             <ComboboxPrimitive.List>
               {(item: ItemCombobox) => (
                 <ComboboxPrimitive.Item
                   key={item.value}
                   value={item}
-                  className="relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 pr-8 pl-2 text-[12px] font-medium outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground"
+                  className="relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 pr-8 pl-2 text-control font-medium outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground"
                 >
                   <span className="grid min-w-0 flex-1">
                     <span className="truncate">{item.label}</span>
-                    {item.detalle ? <span className="truncate font-mono text-[10px] font-normal text-muted-foreground">{item.detalle}</span> : null}
+                    {item.detalle ? <span className="truncate font-mono text-etiqueta font-normal text-muted-foreground">{item.detalle}</span> : null}
                   </span>
                   <ComboboxPrimitive.ItemIndicator className="absolute right-2 text-primary">
                     <CheckIcon className="size-4" />

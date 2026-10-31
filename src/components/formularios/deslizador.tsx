@@ -48,7 +48,7 @@ export function Deslizador({
       disabled={disabled}
       className={cn("grid gap-1.5", className)}
     >
-      <span className="font-mono text-[12px] text-muted-foreground tabular-nums">
+      <span className="font-mono text-control text-muted-foreground tabular-nums">
         {rango ? `${f(valor[0])} – ${f(valor[1])}` : f(valor as number)}
       </span>
       <SliderPrimitive.Control className="flex w-full items-center py-2">

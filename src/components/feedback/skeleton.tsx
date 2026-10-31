@@ -23,7 +23,7 @@ export function SkeletonMetricas({ columnas = 4 }: { columnas?: number }) {
 /** Tabla en carga: cabecera + N filas de dos líneas. */
 export function SkeletonTabla({ filas = 5, columnas = 4 }: { filas?: number; columnas?: number }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs">
+    <div className="overflow-hidden rounded-xl border border-border/90 bg-card shadow-xs">
       <div className="flex gap-6 border-b border-border/80 bg-muted px-4 py-2.5">
         {Array.from({ length: columnas }).map((_, i) => (
           <Skeleton key={i} className="h-2.5 w-20" />

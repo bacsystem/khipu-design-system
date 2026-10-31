@@ -31,8 +31,8 @@ export function CabeceraSeccion({
     <div className={cn("flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-2 px-4 py-3", conBorde && "border-b border-border/60", className)}>
       <IconoSeccion icon={icon} />
       <div className="flex min-w-0 flex-1 basis-48 flex-col">
-        <h2 className="text-[13px] font-semibold text-foreground">{titulo}</h2>
-        {subtitulo ? <span className="truncate font-mono text-[11px] text-muted-foreground">{subtitulo}</span> : null}
+        <h2 className="text-cuerpo font-semibold text-foreground">{titulo}</h2>
+        {subtitulo ? <span className="truncate font-mono text-etiqueta text-muted-foreground">{subtitulo}</span> : null}
       </div>
       {derecha}
     </div>
@@ -42,7 +42,7 @@ export function CabeceraSeccion({
 /** Pie de tarjeta: mono 11px sobre muted (notas técnicas). */
 export function PieSeccion({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border/60 bg-muted/60 px-4 py-2 font-mono text-[11px] text-muted-foreground", className)}>
+    <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border/60 bg-muted/60 px-4 py-2 font-mono text-etiqueta text-muted-foreground", className)}>
       {children}
     </div>
   );

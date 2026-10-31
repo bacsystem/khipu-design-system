@@ -19,7 +19,7 @@ export type ItemNav = {
 export type GrupoNav = { titulo: string; items: ItemNav[] };
 
 const ITEM_BASE =
-  "flex w-full min-w-0 items-center gap-2.5 overflow-hidden rounded-md border border-transparent px-2.5 py-1.5 text-[13px]";
+  "flex w-full min-w-0 items-center gap-2.5 overflow-hidden rounded-md border border-transparent px-2.5 py-1.5 text-control";
 const ENTRADA_INDICADOR = "motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-50 motion-safe:duration-150";
 
 /** Navegación del sidebar por grupos; el ítem activo se detecta por prefijo de la ruta actual. */
@@ -30,7 +30,7 @@ export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
     <nav className="grid w-full grid-cols-1 gap-3 px-2 pt-2">
       {grupos.map((grupo) => (
         <div key={grupo.titulo} className="grid w-full grid-cols-1 gap-0.5">
-          <span className="truncate px-2.5 py-1 text-[10px] font-medium tracking-wider text-muted-foreground/80 uppercase">{grupo.titulo}</span>
+          <span className="truncate px-2.5 py-1 text-etiqueta font-medium text-muted-foreground/80">{grupo.titulo}</span>
           {grupo.items.map((item) => {
             const Icono = item.icon;
             if (!item.href) {
@@ -43,7 +43,7 @@ export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
                 >
                   <Icono className="size-[18px] shrink-0 text-muted-foreground/40" />
                   <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                  <span className="shrink-0 rounded bg-secondary px-1 py-0.5 text-[9px] font-medium tracking-wide whitespace-nowrap uppercase">
+                  <span className="shrink-0 rounded bg-secondary px-1 py-0.5 text-etiqueta font-medium whitespace-nowrap">
                     {item.pendiente ?? "Pronto"}
                   </span>
                 </span>

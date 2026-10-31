@@ -137,13 +137,13 @@ export function TablaDatos<T>({
   return (
     <div className={cn(CONTENEDOR_TABLA, className)}>
       {seleccion && seleccionados.length > 0 ? (
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-accent/60 px-4 py-2 text-[12px] text-accent-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-accent/60 px-4 py-2 text-control text-accent-foreground">
           <span className="font-medium">
             <span className="font-mono font-semibold">{seleccionados.length}</span> seleccionado{seleccionados.length === 1 ? "" : "s"}
           </span>
           <div className="flex items-center gap-2">
             {seleccion.acciones}
-            <button type="button" onClick={() => seleccion.onCambio([])} className="text-[12px] font-medium text-muted-foreground transition-colors hover:text-foreground">
+            <button type="button" onClick={() => seleccion.onCambio([])} className="text-control font-medium text-muted-foreground transition-colors hover:text-foreground">
               Cancelar
             </button>
           </div>
@@ -160,7 +160,7 @@ export function TablaDatos<T>({
             {columnas.map((c, i) => (
               <TableHead key={c.id} style={{ width: c.ancho }} className={cn(CABECERA_TABLA, i === 0 && !seleccion && "pl-4", i === columnas.length - 1 && "pr-4", c.alinear === "derecha" && "text-right")}>
                 {c.ordenable ? (
-                  <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 uppercase hover:text-foreground", orden?.id === c.id && "text-foreground")}>
+                  <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 hover:text-foreground", orden?.id === c.id && "text-foreground")}>
                     {c.titulo}
                     {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon className="size-3" /> : <ArrowDownIcon className="size-3" /> : <ArrowUpDownIcon className="size-3 opacity-50" />}
                   </button>
@@ -171,7 +171,7 @@ export function TablaDatos<T>({
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody className="text-[13px]">
+        <TableBody className="text-control">
           {visibles.map((f) => {
             const id = clave(f);
             return (

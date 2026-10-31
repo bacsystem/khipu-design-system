@@ -20,12 +20,12 @@ export function SelectorDiseno({ className }: { className?: string }) {
       }}
       items={disenos.map((d) => ({ value: d.valor, label: d.etiqueta }))}
     >
-      <SelectTrigger aria-label="Diseño de la interfaz" size="campo" className={cn("w-full bg-muted text-[12px] font-medium", className)}>
+      <SelectTrigger aria-label="Diseño de la interfaz" size="campo" className={cn("w-full bg-muted text-control font-medium", className)}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false}>
         {disenos.map((d) => (
-          <SelectItem key={d.valor} value={d.valor} className="text-[12px] font-medium">
+          <SelectItem key={d.valor} value={d.valor} className="text-control font-medium">
             {d.etiqueta}
           </SelectItem>
         ))}

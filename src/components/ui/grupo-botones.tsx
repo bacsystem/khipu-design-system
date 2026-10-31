@@ -9,8 +9,8 @@ export type OpcionSegmentada<T extends string> = { valor: T; etiqueta: ReactNode
 
 // Los dos miden h-9 por fuera (altura única de control); `sm` solo es más compacto de texto y padding.
 const TAMANOS = {
-  sm: { grupo: "h-9 p-0.5", boton: "h-7 px-2 text-[11px]" },
-  default: { grupo: "h-9 p-0.5", boton: "h-7 px-3 text-[12px]" },
+  sm: { grupo: "h-9 p-0.5", boton: "h-7 px-2 text-etiqueta" },
+  default: { grupo: "h-9 p-0.5", boton: "h-7 px-3 text-control" },
 } as const;
 
 /**
@@ -56,7 +56,7 @@ export function GrupoBotones<T extends string>({
           value={o.valor}
           disabled={o.disabled}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-md font-medium whitespace-nowrap text-muted-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 hover:text-foreground data-pressed:bg-card data-pressed:text-foreground data-pressed:shadow-2xs disabled:pointer-events-none disabled:opacity-50",
+            "inline-flex items-center gap-1.5 rounded-md font-medium whitespace-nowrap text-muted-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/50 hover:text-foreground data-pressed:bg-card data-pressed:text-foreground data-pressed:shadow-xs disabled:pointer-events-none disabled:opacity-50",
             t.boton,
           )}
         >

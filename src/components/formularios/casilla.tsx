@@ -27,7 +27,7 @@ export function Casilla({
   className?: string;
 }) {
   return (
-    <label htmlFor={id} className={cn("flex cursor-pointer items-start gap-2.5 text-[13px]", disabled && "cursor-not-allowed opacity-60", className)}>
+    <label htmlFor={id} className={cn("flex cursor-pointer items-start gap-2.5 text-control", disabled && "cursor-not-allowed opacity-60", className)}>
       <CheckboxPrimitive.Root
         id={id}
         checked={checked}
@@ -42,7 +42,7 @@ export function Casilla({
       </CheckboxPrimitive.Root>
       <span className="grid gap-0.5">
         <span className="font-medium text-foreground">{etiqueta}</span>
-        {descripcion ? <span className="text-[12px] text-muted-foreground">{descripcion}</span> : null}
+        {descripcion ? <span className="text-control text-muted-foreground">{descripcion}</span> : null}
       </span>
     </label>
   );
@@ -69,10 +69,10 @@ export function Interruptor({
   className?: string;
 }) {
   return (
-    <label htmlFor={id} className={cn("flex cursor-pointer items-center justify-between gap-4 text-[13px]", disabled && "cursor-not-allowed opacity-60", className)}>
+    <label htmlFor={id} className={cn("flex cursor-pointer items-center justify-between gap-4 text-control", disabled && "cursor-not-allowed opacity-60", className)}>
       <span className="grid min-w-0 gap-0.5">
         <span className="font-medium text-foreground">{etiqueta}</span>
-        {descripcion ? <span className="text-[12px] text-muted-foreground">{descripcion}</span> : null}
+        {descripcion ? <span className="text-control text-muted-foreground">{descripcion}</span> : null}
       </span>
       <SwitchPrimitive.Root
         id={id}

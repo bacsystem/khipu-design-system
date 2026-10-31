@@ -39,7 +39,7 @@ export function PanelLateral({
           <IconoSeccion icon={icon} />
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-semibold tracking-tight text-foreground">{titulo}</h2>
-            {descripcion ? <p className="text-[13px] text-muted-foreground">{descripcion}</p> : null}
+            {descripcion ? <p className="text-control text-muted-foreground">{descripcion}</p> : null}
           </div>
           <SheetClose aria-label="Cerrar" className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
             <XIcon className="size-4" />

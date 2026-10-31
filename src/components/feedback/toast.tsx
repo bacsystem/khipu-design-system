@@ -29,16 +29,16 @@ function Lista() {
               key={t.id}
               toast={t}
               className={cn(
-                "relative flex w-full items-start gap-2.5 rounded-xl border border-border bg-popover px-3.5 py-3 text-popover-foreground shadow-md ring-1 ring-foreground/5",
+                "relative flex w-full items-start gap-2.5 rounded-xl border border-border bg-popover px-3.5 py-3 text-popover-foreground shadow-md ring-1 ring-border",
                 "transition-[opacity,transform] duration-200 data-ending-style:translate-y-2 data-ending-style:opacity-0 data-starting-style:translate-y-2 data-starting-style:opacity-0",
               )}
             >
               <Icono className={cn("mt-0.5 size-4 shrink-0", COLORES[tono])} />
               <ToastPrimitive.Content className="min-w-0 flex-1">
-                <ToastPrimitive.Title className="text-[13px] leading-tight font-semibold" />
-                <ToastPrimitive.Description className="mt-0.5 text-[12px] leading-snug text-muted-foreground" />
+                <ToastPrimitive.Title className="text-control leading-tight font-semibold" />
+                <ToastPrimitive.Description className="mt-0.5 text-control leading-snug text-muted-foreground" />
                 {t.actionProps ? (
-                  <ToastPrimitive.Action className="mt-2 inline-flex h-9 items-center rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-foreground shadow-2xs hover:bg-muted" />
+                  <ToastPrimitive.Action className="mt-2 inline-flex h-9 items-center rounded-lg border border-border bg-card px-2.5 text-control font-medium text-foreground shadow-xs hover:bg-muted" />
                 ) : null}
               </ToastPrimitive.Content>
               <ToastPrimitive.Close aria-label="Cerrar" className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">

@@ -33,7 +33,7 @@ export default function EjemploPage() {
         <TablaEjemplo />
       </div>
 
-      <section className={`${ENTRADA} rounded-xl border border-border bg-card shadow-2xs`} style={pasoEntrada(2)}>
+      <section className={`${ENTRADA} rounded-xl border border-border bg-card shadow-xs`} style={pasoEntrada(2)}>
         <CabeceraSeccion icon={KeyRoundIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · neutro" derecha={<Chip>4 tonos</Chip>} />
         <div className="flex flex-wrap items-center gap-2 px-4 py-3">
           <PillEstado tono="ok">Aceptado</PillEstado>
@@ -56,7 +56,7 @@ export default function EjemploPage() {
         <BloqueCodigo tono="claro" codigo={`{\n  "estado": "exito",\n  "datos": { "serie": "F001", "numero": 137 }\n}`} />
       </div>
 
-      <section className={`${ENTRADA} rounded-xl border border-border bg-card shadow-2xs`} style={pasoEntrada(4)}>
+      <section className={`${ENTRADA} rounded-xl border border-border bg-card shadow-xs`} style={pasoEntrada(4)}>
         <TablaVacia icon={<InboxIcon className="size-6" />}>Todavía no hay documentos. Crea el primero con «Nuevo documento».</TablaVacia>
       </section>
 

@@ -18,7 +18,7 @@ function escala(max: number, pasos = 4): number[] {
 function Leyenda({ series }: { series: Serie[] }) {
   if (series.length < 2) return null;
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 pt-2 text-[11px] text-muted-foreground">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 pt-2 text-etiqueta text-muted-foreground">
       {series.map((s, i) => (
         <span key={s.nombre} className="inline-flex items-center gap-1.5">
           <span className="size-2 rounded-sm" style={{ background: COLORES[i % COLORES.length] }} />
@@ -33,7 +33,7 @@ function Leyenda({ series }: { series: Serie[] }) {
 function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array<{ nombre: string; valor: string; color: string }> }) {
   return (
     <div
-      className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-[11px] text-popover-foreground shadow-md"
+      className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-etiqueta text-popover-foreground shadow-md"
       style={{ left: `clamp(4rem, ${x}%, calc(100% - 4rem))` }}
     >
       <div className="mb-0.5 font-medium">{titulo}</div>
@@ -82,9 +82,9 @@ export function GraficoBarras({
   const y = (v: number) => m.top + h - (v / max) * h;
 
   return (
-    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-2xs", className)}>
-      {titulo ? <div className="px-1 pb-2 text-[13px] font-semibold text-foreground">{titulo}</div> : null}
-      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible text-[10px]">
+    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
+      {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
+      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible text-etiqueta">
         <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
         {ticks.map((t) => (
           <g key={t}>
@@ -153,9 +153,9 @@ export function GraficoLineas({
   const y = (v: number) => m.top + h - (v / max) * h;
 
   return (
-    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-2xs", className)}>
-      {titulo ? <div className="px-1 pb-2 text-[13px] font-semibold text-foreground">{titulo}</div> : null}
-      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible text-[10px]" onMouseLeave={() => setHover(null)}>
+    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
+      {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
+      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible text-etiqueta" onMouseLeave={() => setHover(null)}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de líneas"}</title>
         {ticks.map((t) => (
           <g key={t}>

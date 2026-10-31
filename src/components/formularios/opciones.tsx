@@ -39,7 +39,7 @@ export function GrupoOpciones<T extends string>({
         <label
           key={o.valor}
           className={cn(
-            "flex cursor-pointer items-start gap-2.5 text-[13px]",
+            "flex cursor-pointer items-start gap-2.5 text-control",
             estilo === "tarjetas" && "rounded-lg border border-border bg-card p-3 transition-colors has-data-checked:border-primary has-data-checked:bg-accent/60",
             o.disabled && "cursor-not-allowed opacity-60",
           )}
@@ -53,7 +53,7 @@ export function GrupoOpciones<T extends string>({
           </Radio.Root>
           <span className="grid gap-0.5">
             <span className="font-medium text-foreground">{o.etiqueta}</span>
-            {o.descripcion ? <span className="text-[12px] text-muted-foreground">{o.descripcion}</span> : null}
+            {o.descripcion ? <span className="text-control text-muted-foreground">{o.descripcion}</span> : null}
           </span>
         </label>
       ))}

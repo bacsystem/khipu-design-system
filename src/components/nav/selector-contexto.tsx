@@ -20,7 +20,7 @@ function Avatar({ item, activo }: { item: ContextoItem; activo: boolean }) {
   return (
     <div
       className={cn(
-        "flex size-6 shrink-0 items-center justify-center rounded-md text-[11px] font-bold",
+        "flex size-6 shrink-0 items-center justify-center rounded-md text-etiqueta font-bold",
         activo ? "bg-primary text-primary-foreground shadow-xs" : "bg-secondary text-foreground/80",
       )}
     >
@@ -68,15 +68,15 @@ export function SelectorContexto({
         <div className="flex min-w-0 items-center gap-2.5">
           {activo ? <Avatar item={activo} activo /> : null}
           <div className="min-w-0 overflow-hidden">
-            <p className="truncate text-[12px] leading-tight font-medium text-foreground">{activo?.nombre}</p>
-            {activo?.detalle ? <p className="truncate font-mono text-[10px] leading-tight text-muted-foreground">{activo.detalle}</p> : null}
+            <p className="truncate text-control leading-tight font-medium text-foreground">{activo?.nombre}</p>
+            {activo?.detalle ? <p className="truncate font-mono text-etiqueta leading-tight text-muted-foreground">{activo.detalle}</p> : null}
           </div>
         </div>
         <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
       </SelectPrimitive.Trigger>
 
       <SelectContent align="start" alignItemWithTrigger={false} sideOffset={6} className="w-(--anchor-width) min-w-0 p-1">
-        <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">{etiqueta}</div>
+        <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">{etiqueta}</div>
         {items.map((item) => (
           <SelectPrimitive.Item
             key={item.id}
@@ -85,8 +85,8 @@ export function SelectorContexto({
           >
             <Avatar item={item} activo={item.id === activo?.id} />
             <div className="min-w-0 flex-1 overflow-hidden">
-              <SelectPrimitive.ItemText className="block truncate text-[12px] leading-tight font-medium">{item.nombre}</SelectPrimitive.ItemText>
-              {item.detalle ? <span className="block truncate font-mono text-[10px] leading-tight text-muted-foreground">{item.detalle}</span> : null}
+              <SelectPrimitive.ItemText className="block truncate text-control leading-tight font-medium">{item.nombre}</SelectPrimitive.ItemText>
+              {item.detalle ? <span className="block truncate font-mono text-etiqueta leading-tight text-muted-foreground">{item.detalle}</span> : null}
             </div>
             <SelectPrimitive.ItemIndicator className="absolute right-2 flex size-4 items-center justify-center text-primary">
               <CheckIcon className="size-4" />

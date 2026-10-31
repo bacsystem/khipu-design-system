@@ -4,11 +4,11 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import { cn } from "@/lib/utils";
 
 const TAMANOS = {
-  xs: "size-5 text-[9px]",
-  sm: "size-6 text-[10px]",
-  default: "size-8 text-[11px]",
-  lg: "size-10 text-[13px]",
-  xl: "size-12 text-[15px]",
+  xs: "size-5 text-etiqueta",
+  sm: "size-6 text-etiqueta",
+  default: "size-8 text-etiqueta",
+  lg: "size-10 text-control",
+  xl: "size-12 text-base",
 } as const;
 
 const TONOS = {

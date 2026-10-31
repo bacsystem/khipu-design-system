@@ -8,7 +8,7 @@ const ESTILOS: Record<Tono, { caja: string; icono: LucideIcon }> = {
   info: { caja: "border-accent-border bg-accent text-accent-foreground", icono: InfoIcon },
   ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircle2Icon },
   aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: TriangleAlertIcon },
-  error: { caja: "border-destructive-border bg-destructive/10 text-destructive", icono: CircleAlertIcon },
+  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: CircleAlertIcon },
 };
 
 /**
@@ -34,7 +34,7 @@ export function Banner({
 }) {
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
-    <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 border-b px-4 py-2.5 text-[13px]", ESTILOS[tono].caja, className)}>
+    <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 border-b px-4 py-2.5 text-control", ESTILOS[tono].caja, className)}>
       <Icono className="size-4 shrink-0" />
       <div className="min-w-0 flex-1 leading-relaxed">{children}</div>
       {accion ? <div className="shrink-0">{accion}</div> : null}
