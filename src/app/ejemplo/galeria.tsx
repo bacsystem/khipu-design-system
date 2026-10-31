@@ -39,6 +39,7 @@ import { Tabs } from "@/components/navegacion/tabs";
 import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
+import { NumeroAnimado } from "@/components/patrones/numero-animado";
 import { TarjetaDestacada } from "@/components/patrones/tarjeta-destacada";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -479,9 +480,9 @@ export function Galeria() {
       <section className={SECCION} style={pasoEntrada(9)}>
         <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos · selección múltiple" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 md:grid-cols-3">
-          <Kpi etiqueta="Facturado (mes)" valor="S/ 128,430" variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
-          <Kpi etiqueta="Documentos emitidos" valor="1,236" variacion={-3.1} serie={[120, 110, 130, 125, 118, 121, 116]} />
-          <Kpi etiqueta="Rechazados" valor="4" variacion={-40} invertir serie={[9, 7, 8, 6, 5, 6, 4]} />
+          <Kpi etiqueta="Facturado (mes)" valor={<NumeroAnimado valor={128430} prefijo="S/ " />} variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
+          <Kpi etiqueta="Documentos emitidos" valor={<NumeroAnimado valor={1236} />} variacion={-3.1} serie={[120, 110, 130, 125, 118, 121, 116]} />
+          <Kpi etiqueta="Rechazados" valor={<NumeroAnimado valor={4} />} variacion={-40} invertir serie={[9, 7, 8, 6, 5, 6, 4]} />
         </div>
         <div className="grid gap-3 lg:grid-cols-2">
           <GraficoBarras titulo="Documentos por mes" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] }, { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] }]} />
