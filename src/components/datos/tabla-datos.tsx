@@ -2,10 +2,12 @@
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, CheckIcon, InboxIcon, MinusIcon } from "lucide-react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
 import { CABECERA_TABLA, CONTENEDOR_TABLA, PieTabla, TablaVacia } from "@/components/patrones/pie-tabla";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { POR_PAGINA_DEFECTO } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
 
@@ -118,6 +120,8 @@ export function TablaDatos<T>({
   }
 
   const idsVisibles = visibles.map(clave);
+  // La altura no es una transformación: MotionConfig no la anula con «reducir movimiento», así que se corta aquí.
+  const reducir = useReducedMotion();
   const seleccionados = seleccion?.seleccionados ?? [];
   const todosSeleccionados = idsVisibles.length > 0 && idsVisibles.every((id) => seleccionados.includes(id));
   const algunoSeleccionado = !todosSeleccionados && idsVisibles.some((id) => seleccionados.includes(id));
@@ -136,8 +140,17 @@ export function TablaDatos<T>({
 
   return (
     <div className={cn(CONTENEDOR_TABLA, className)}>
+      <AnimatePresence initial={false}>
       {seleccion && seleccionados.length > 0 ? (
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-accent/60 px-4 py-2 text-control text-accent-foreground">
+        <m.div
+          key="barra-masiva"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={reducir ? { duration: 0 } : { duration: DURACION.media, ease: CURVA_SALIDA }}
+          className="overflow-hidden"
+        >
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-accent/60 px-4 py-2 text-control text-accent-foreground">
           <span className="font-medium">
             <span className="font-mono font-semibold">{seleccionados.length}</span> seleccionado{seleccionados.length === 1 ? "" : "s"}
           </span>
@@ -148,7 +161,9 @@ export function TablaDatos<T>({
             </button>
           </div>
         </div>
+        </m.div>
       ) : null}
+      </AnimatePresence>
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">
