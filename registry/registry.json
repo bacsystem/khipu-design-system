@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08",
+  "generatedAt": "2026-10-15",
   "items": {
     "components/datos/grafico": {
       "name": "grafico",
@@ -70,6 +70,28 @@
         "components/patrones/metricas",
         "lib/utils"
       ]
+    },
+    "components/diseno": {
+      "name": "diseno",
+      "type": "component",
+      "category": "diseno",
+      "files": [
+        "src/components/diseno.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/disenos"
+      ]
+    },
+    "components/disenos": {
+      "name": "disenos",
+      "type": "component",
+      "category": "disenos",
+      "files": [
+        "src/components/disenos.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
     },
     "components/feedback/alerta": {
       "name": "alerta",
@@ -395,6 +417,8 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "components/diseno",
+        "components/nav/selector-diseno",
         "components/nav/theme-toggle",
         "components/ui/menu",
         "lib/utils"
@@ -427,6 +451,20 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "components/ui/select",
+        "lib/utils"
+      ]
+    },
+    "components/nav/selector-diseno": {
+      "name": "selector-diseno",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/selector-diseno.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/diseno",
         "components/ui/select",
         "lib/utils"
       ]
@@ -726,6 +764,20 @@
         "lib/utils"
       ]
     },
+    "components/patrones/tarjeta-destacada": {
+      "name": "tarjeta-destacada",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/tarjeta-destacada.tsx"
+      ],
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
     "components/providers": {
       "name": "providers",
       "type": "component",
@@ -737,8 +789,21 @@
         "next-themes"
       ],
       "registryDependencies": [
+        "components/diseno",
         "components/feedback/toast",
         "components/feedback/tooltip"
+      ]
+    },
+    "components/script-diseno": {
+      "name": "script-diseno",
+      "type": "component",
+      "category": "script-diseno",
+      "files": [
+        "src/components/script-diseno.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/disenos"
       ]
     },
     "components/ui/avatar": {

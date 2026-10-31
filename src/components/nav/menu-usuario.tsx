@@ -3,6 +3,8 @@
 import { ChevronsUpDownIcon, LogOutIcon, ShieldCheckIcon, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { Menu, MenuContent, MenuItem, MenuLinkItem, MenuSeparator, MenuTrigger } from "@/components/ui/menu";
+import { useDiseno } from "@/components/diseno";
+import { SelectorDiseno } from "@/components/nav/selector-diseno";
 import { ThemeToggle } from "@/components/nav/theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +34,7 @@ function iniciales(texto: string): string {
 
 /**
  * Bloque de usuario del sidebar: disparador tipo tarjeta (igual que SelectorContexto) y menú del mismo ancho con
- * la cuenta, el tema en línea, acciones propias y "Cerrar sesión".
+ * la cuenta, el tema en línea, el diseño (debajo del tema), acciones propias y "Cerrar sesión".
  */
 export function MenuUsuario({
   usuario,
@@ -40,14 +42,19 @@ export function MenuUsuario({
   onCerrarSesion,
   textoCerrarSesion = "Cerrar sesión",
   mostrarTema = true,
+  mostrarDiseno = true,
 }: {
   usuario: UsuarioMenu;
   acciones?: AccionMenu[];
   onCerrarSesion: () => void | Promise<void>;
   textoCerrarSesion?: string;
   mostrarTema?: boolean;
+  /** Muestra el selector de diseño bajo el tema. Solo aparece con `DisenoProvider` y dos diseños o más. */
+  mostrarDiseno?: boolean;
 }) {
   const [saliendo, setSaliendo] = useState(false);
+  const { disenos } = useDiseno();
+  const conDiseno = mostrarDiseno && disenos.length > 1;
   const nombre = usuario.nombre ?? usuario.email.split("@")[0] ?? usuario.email;
 
   async function salir() {
@@ -101,6 +108,16 @@ export function MenuUsuario({
             <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Tema</div>
             <div className="px-0.5 pb-1.5">
               <ThemeToggle conTexto />
+            </div>
+          </>
+        ) : null}
+
+        {conDiseno ? (
+          <>
+            {mostrarTema ? null : <MenuSeparator />}
+            <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Diseño</div>
+            <div className="px-0.5 pb-1.5">
+              <SelectorDiseno />
             </div>
           </>
         ) : null}

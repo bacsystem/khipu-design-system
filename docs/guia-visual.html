@@ -142,6 +142,18 @@
   .btn.xs { height: 24px; padding: 0 6px; font-size: 11px; border-radius: 6px; }
   .btn.icon { width: 36px; padding: 0; justify-content: center; }
   .btn.icon.sm { width: 36px; }
+  .btn.suave { background: var(--accent); color: var(--accent-foreground); }
+  .destacada { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; padding: 24px; border-radius: 12px; }
+  .destacada .ic { flex-shrink: 0; margin-top: 2px; font-size: 18px; line-height: 1; }
+  .destacada .tx { flex: 1 1 224px; min-width: 0; }
+  .destacada .tx b { display: block; font-size: 16px; font-weight: 600; line-height: 1.35; }
+  .destacada .tx span { display: block; margin-top: 4px; font-size: 13px; line-height: 1.6; }
+  .destacada .ac { flex-shrink: 0; align-self: center; }
+  .destacada.neutro { background: var(--secondary); color: var(--foreground); }
+  .destacada.info { background: var(--accent); color: var(--accent-foreground); }
+  .destacada.ok { background: var(--success); color: var(--success-foreground); }
+  .destacada.aviso { background: var(--warning); color: var(--warning-foreground); }
+  .destacada.invertido { background: var(--foreground); color: var(--background); }
   .segment { display: inline-flex; height: 36px; padding: 4px; gap: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--secondary); }
   .segment span { display: inline-flex; align-items: center; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .segment span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
@@ -488,6 +500,8 @@
           <hr>
           <div class="lab">Tema</div>
           <div style="padding:0 2px 6px"><div class="tt wide"><span class="on">☀ Claro</span><span>☾ Oscuro</span><span>▭ Sistema</span></div></div>
+          <div class="lab">Diseño</div>
+          <div style="padding:0 2px 6px"><div class="select" style="width:100%;justify-content:space-between;background:var(--muted)">khipu <span style="color:var(--muted-foreground)">▾</span></div></div>
           <hr>
           <div class="mi"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg>Cambiar contraseña</div>
           <div class="mi hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Documentación API</div>
@@ -541,6 +555,7 @@
         <div class="eyebrow" style="margin-bottom:8px">ui/button · variantes cva</div>
         <div class="row">
           <button class="btn brand">default</button>
+          <button class="btn suave">suave</button>
           <button class="btn outline">outline</button>
           <button class="btn" style="background:var(--secondary)">secondary</button>
           <button class="btn ghost">ghost</button>
@@ -579,6 +594,44 @@
           <div class="tt"><span class="on">☀</span><span>☾</span><span>▭</span></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Tarjeta destacada</h2><p>Panel de color plano, sin borde ni sombra, para destacar un bloque. Cinco tonos, todos de tokens existentes. <span class="src">patrones/tarjeta-destacada.tsx</span></p></div>
+    <div class="grid cols-2">
+      <div class="destacada neutro"><span class="ic">▤</span><div class="tx"><b>Tu primer documento</b><span>Emítelo en modo de pruebas; no tiene validez tributaria.</span></div><div class="ac"><button class="btn suave">Emitir</button></div></div>
+      <div class="destacada info"><span class="ic">✦</span><div class="tx"><b>Novedad: reenvío masivo</b><span>Reenvía a SUNAT todos los comprobantes observados con un clic.</span></div><div class="ac"><button class="btn suave">Ver más</button></div></div>
+      <div class="destacada ok"><span class="ic">◈</span><div class="tx"><b>Certificado vigente</b><span>Vence en 11 meses; te avisamos con 30 días de anticipación.</span></div></div>
+      <div class="destacada aviso"><span class="ic">🔔︎</span><div class="tx"><b>Plan por vencer</b><span>Renueva antes del 30 de octubre para no interrumpir las emisiones.</span></div><div class="ac"><button class="btn outline">Renovar</button></div></div>
+    </div>
+    <div class="destacada invertido" style="margin-top:12px"><span class="ic">➚</span><div class="tx"><b>Pasa a producción</b><span>Cuando tus series estén listas, activa el entorno de producción desde Empresa.</span></div><div class="ac"><button class="btn outline">Activar producción</button></div></div>
+    <p class="lead" style="font-size:12px;margin-top:8px">Contraste del texto sobre su fondo (claro / oscuro): neutro 16.30 / 11.87 · info 7.07 / 8.23 · ok 5.21 / 7.69 · aviso 4.84 / 8.63 · invertido 17.13 / 15.62. Sobre <code>invertido</code> la acción usa <code>BOTON_SECUNDARIO</code>, no <code>ACCION_PRINCIPAL</code>.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Diseños</h2><p>Un diseño es un bloque de tokens que se activa con <code>&lt;html data-diseno="…"&gt;</code>; se elige en el menú de usuario, debajo de Tema, y convive con claro/oscuro. <span class="src">components/diseno.tsx · nav/selector-diseno.tsx · globals.css</span></p></div>
+    <div class="grid cols-6">
+      <div class="swatch"><div class="chipc" style="background:#fafafc"></div><div class="info"><span class="name">khipu · background</span><span class="val">#fafafc</span><span class="val">dark #0a0e1a</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#64748b"></div><div class="info"><span class="name">khipu · muted-foreground</span><span class="val">#64748b</span><span class="val">dark #94a3b8</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#f6f5f4"></div><div class="info"><span class="name">papel · background</span><span class="val">#f6f5f4</span><span class="val">dark #191817</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#0075de"></div><div class="info"><span class="name">papel · primary</span><span class="val">#0075de</span><span class="val">dark #62aef0</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#e6f3fe"></div><div class="info"><span class="name">papel · accent</span><span class="val">#e6f3fe</span><span class="val">dark #0f2a45</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#111111"></div><div class="info"><span class="name">papel · foreground</span><span class="val">#111111</span><span class="val">dark #f6f5f4</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#615d59"></div><div class="info"><span class="name">papel · muted-foreground</span><span class="val">#615d59</span><span class="val">dark #a8a29e</span></div></div>
+    </div>
+    <p class="lead" style="font-size:12px;margin-top:8px"><b>Papel</b> viene del estilo Notion de Refero: lienzo cálido con tarjetas blancas, bordes de 1 px en vez de sombras, un solo azul de acción y transiciones de 200 ms. Contraste: <code>primary-foreground</code> sobre <code>primary</code> 4.57, texto de <code>accent</code> 6.04, <code>muted-foreground</code> 5.99 sobre el fondo. El azul de la referencia sobre el lienzo da 4.19, así que un enlace <code>text-primary</code> sobre el fondo queda bajo 4.5. El oscuro de Papel es derivado: Notion no define uno. El diseño base <b>khipu</b> no define bloque: son los tokens de <code>:root</code> y <code>.dark</code>.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Movimiento</h2><p>Corto y funcional: confirma una acción o introduce contenido, nunca decora. Todo va bajo <code>motion-safe:</code>, así que con «reducir movimiento» no se anima nada. <span class="src">lib/estilos.ts (PRESION, ENTRADA, pasoEntrada) · globals.css (--animate-entrada)</span></p></div>
+    <div class="card pad">
+      <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7">
+        <li><b>Al pulsar</b> (<code>PRESION</code>): el control se hunde unos 0.7 px, igual en todas las recetas de botón y de acción.</li>
+        <li><b>Al aparecer</b> (<code>ENTRADA</code> + <code>pasoEntrada(i)</code>): fundido y 8 px hacia arriba, 220 ms, con 40 ms de retraso por posición. Se activa donde la pongas; ningún componente la trae por defecto.</li>
+        <li><b>Sidebar</b>: el ítem activo muestra una barra a la izquierda y un punto que entran con un zoom de 150 ms.</li>
+        <li><b>Reglas</b>: 150–250 ms, solo <code>transform</code> y <code>opacity</code>, sin spring ni bounce en los controles.</li>
+      </ul>
     </div>
   </section>
 

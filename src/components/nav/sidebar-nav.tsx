@@ -20,6 +20,7 @@ export type GrupoNav = { titulo: string; items: ItemNav[] };
 
 const ITEM_BASE =
   "flex w-full min-w-0 items-center gap-2.5 overflow-hidden rounded-md border border-transparent px-2.5 py-1.5 text-[13px]";
+const ENTRADA_INDICADOR = "motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-50 motion-safe:duration-150";
 
 /** Navegación del sidebar por grupos; el ítem activo se detecta por prefijo de la ruta actual. */
 export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
@@ -56,15 +57,17 @@ export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   ITEM_BASE,
-                  "transition-colors",
+                  "relative transition-colors",
                   active
                     ? "bg-sidebar-primary font-medium text-sidebar-primary-foreground"
                     : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                 )}
               >
+                {/* Se monta al activarse el ítem: la barra y el punto entran con un zoom corto (solo con movimiento permitido). */}
+                {active ? <span aria-hidden className={cn(ENTRADA_INDICADOR, "absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary")} /> : null}
                 <Icono className={cn("size-[18px] shrink-0", active ? "text-primary" : "text-muted-foreground/70")} />
                 <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                {active ? <span className="size-1.5 shrink-0 rounded-full bg-primary" /> : null}
+                {active ? <span className={cn(ENTRADA_INDICADOR, "size-1.5 shrink-0 rounded-full bg-primary")} /> : null}
               </Link>
             );
           })}

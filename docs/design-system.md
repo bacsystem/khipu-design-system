@@ -214,6 +214,7 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 | Variante | Estilo | Uso |
 |---|---|---|
 | `default` | `bg-primary text-primary-foreground hover:bg-primary/80` | CTA en formularios públicos/onboarding |
+| `suave` | `bg-accent text-accent-foreground`; hover mezcla `accent` con 8 % de `accent-foreground` | Acción secundaria con presencia, junto a una principal; contraste del texto 7.07 claro / 8.23 oscuro |
 | `outline` | `border-border bg-background hover:bg-muted` | Acciones secundarias en formularios |
 | `secondary` | `bg-secondary` | Neutro |
 | `ghost` | solo hover `bg-muted` | Iconos (hamburguesa, refrescar) |
@@ -223,9 +224,10 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 Tamaños: `default`, `sm` y `lg` miden `h-9` (cambian padding y texto); iconos `icon`, `icon-sm` e `icon-lg` miden `size-9`. `xs` (h-6) e `icon-xs` (24) solo van dentro de otro control (§4).
 
 ### Recetas de `lib/estilos.ts` (formularios y diálogos)
-- `BOTON_PRIMARIO`: `h-9 rounded-lg bg-primary text-primary-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`.
-- `BOTON_SECUNDARIO`: `h-9 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-foreground/80 shadow-2xs hover:bg-muted`.
-- `BOTON_DESTRUCTIVO`: `h-9 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:bg-destructive/90` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
+- `BOTON_PRIMARIO`: `h-9 rounded-lg bg-primary text-primary-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:opacity-95` + `PRESION`.
+- `BOTON_SECUNDARIO`: `h-9 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-foreground/80 shadow-2xs hover:bg-muted` + `PRESION`.
+- `BOTON_DESTRUCTIVO`: `h-9 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:bg-destructive/90` + `PRESION` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
+- `ACCION_PRINCIPAL` y `ACCION_SECUNDARIA` (top bar, filtros) también llevan `PRESION`. `PRESION` es `motion-safe:active:scale-[0.98]` (§Movimiento).
 - Pie de diálogo, `PanelLateral`, `TarjetaPaso` y `Drawer` usan las mismas; `BOTON_*_PIE` quedan como alias obsoletos (§4).
 - Cierre de diálogos informativos: botón `bg-foreground text-background` ("Entendido").
 
@@ -261,6 +263,7 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 - **Cabecera de sección**: `flex items-center gap-2.5 px-4 py-3 border-b border-border/60` → icono en caja `size-8 rounded-lg bg-accent text-primary` (lucide 16 px) + título 13 px semibold + subtítulo mono 11 px; a la derecha, chips/contadores (`rounded border bg-muted px-2 py-0.5 font-mono text-[11px]`).
 - **Pie de tarjeta**: `border-t border-border/60 bg-muted/60 px-4 py-2 font-mono text-[11px] text-muted-foreground`, con iconos 12 px (`Lock`, `KeyRound`).
 - **Fila de métricas** (cabecera de cada página): una tarjeta `px-5 py-3 shadow-xs` con `grid grid-cols-2 lg:grid-cols-4 lg:divide-x`; cada `Metrica` = etiqueta uppercase 11 px → valor mono `text-lg font-semibold` (con sufijo `text-[12px] font-normal text-muted-foreground`, p. ej. `/ 5 creadas`) → ayuda 11 px con punto de estado (`size-1.5 rounded-full bg-success-solid|warning-solid|destructive`).
+- **Tarjeta destacada** (`patrones/tarjeta-destacada.tsx`): panel de color plano `rounded-xl p-6`, sin borde ni sombra, para destacar un bloque (bienvenida, función nueva, plan, siguiente paso). Tonos `neutro | info | ok | aviso | invertido` con los tokens de siempre; el título y la descripción llevan el color del tono, sin opacidad, así el contraste calculado vale para ambos. No es un aviso (no anuncia nada al lector de pantalla): para eso, `Alerta`.
 - **Tarjeta deshabilitada / próximamente**: `opacity-60`/`70`, `cursor-not-allowed`, chip `PRÓXIMAMENTE` (mono 10 px uppercase) y `title`.
 
 ---
@@ -348,6 +351,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 ## 18. Tema, iconografía y formato
 
 - **Tema**: `next-themes` con `class` en `<html>`; opciones Claro / Oscuro / Sistema en el menú de usuario. Componentes que dependen del tema en cliente (`ThemeToggle`) pintan sin selección hasta montar para no romper la hidratación.
+- **Diseño**: select «Diseño» en el menú de usuario, justo debajo de Tema (`nav/selector-diseno.tsx`). Es independiente del tema: el diseño va en `<html data-diseno>` y claro/oscuro en la clase `.dark`, así que cada diseño existe en los dos modos. Ver «Diseños» en §20.
 - **Iconos**: lucide-react. 18 px en el sidebar, 16 px en botones y cabeceras, 14 px en acciones de fila y menús, 12 px en pies/ayudas. Color por defecto `text-muted-foreground`; primary solo para el activo o el icono de sección.
 - **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
 - **Accesibilidad**: todo disparador de menú/diálogo con `aria-label`; controles segmentados como `radiogroup`; `sr-only` para etiquetas de iconos; foco visible con `ring-ring`.
@@ -359,7 +363,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 | Carpeta | Componentes |
 |---|---|
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
-| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `top-bar`, `mobile-nav` |
+| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
 | `components/empresa` | `certificado-form`, `credenciales-sol-form`, `nueva-empresa-dialog`, `nueva-empresa-form`, `referencia-empresa` |
@@ -392,6 +396,60 @@ Quinto lote: `Separator` (sobre `base-ui/separator`; en vertical necesita una al
 Sexto lote: `HoverCard` (sobre `base-ui/preview-card`; su disparador es un `<a>` por defecto — pensado para previsualizar un enlace —, pero con `render` toma la forma de lo que le pases, igual que `Tooltip`; solo con hover/foco, sin clic, para fichas de vista previa que no necesitan la acción inmediata de un `Popover`), `ScrollArea` (sobre `base-ui/scroll-area`; scrollbar propio del kit en vez del nativo, `alto` obligatorio), `Deslizador` (en `formularios/`, sobre `base-ui/slider`; un valor o un rango de dos manijas con `valor` como tupla) y `Banner` (en `feedback/`; aviso de ancho completo para el `Shell`, sobre `TopBar` y no dentro de `main` — a diferencia de `Alerta`, que es una banda con esquinas dentro de una página).
 
 Séptimo lote: `Autocomplete` (en `formularios/`, sobre `base-ui/autocomplete`; a diferencia de `Combobox`, no fuerza a elegir un valor de la lista — `value`/`onValueChange` son el texto libre, y clic en una sugerencia solo lo rellena), `Toolbar` (sobre `base-ui/toolbar`; barra de controles agrupados con foco por flechas entre ellos — contenedor `h-9`/`p-0.5` con botones internos `size-7`, el mismo patrón de `GrupoBotones` y `Tabs estilo="segmentado"`) y `Drawer` (sobre `base-ui/drawer`; hoja inferior para móvil con arrastre nativo para cerrar, a diferencia de `Sheet` que solo anima entrada/salida sin gesto de arrastre).
+
+Octavo lote (estilo Notion de Refero): `TarjetaDestacada` (en `patrones/`; panel de color plano de cinco tonos, a diferencia de `Alerta` es contenido estático y no un aviso; a diferencia de `Card` trae tono y estructura fija de icono, título, descripción y acción), la variante `suave` de `Button` (relleno `accent`; entre `ghost`/`outline` y `default`) y el mecanismo de **diseños** descrito abajo.
+
+### Diseños
+
+Un diseño es un conjunto de tokens que cambia el aspecto de toda la interfaz sin tocar los componentes. Se elige en el menú de usuario, bajo Tema, y se guarda en `localStorage` (`khipu-diseno`).
+
+| Pieza | Qué hace |
+|---|---|
+| `components/disenos.ts` | La lista `DISENOS` (`valor` + `etiqueta`), `DISENO_POR_DEFECTO` (`"khipu"`) y la clave de localStorage |
+| `components/diseno.tsx` | `DisenoProvider` (guarda el diseño y lo pone en `<html data-diseno>`) y `useDiseno()` (sin proveedor devuelve una lista vacía y no falla) |
+| `components/script-diseno.tsx` | `ScriptDiseno`, script en línea para el `<head>` del layout raíz: aplica el diseño guardado antes del primer pintado, sin parpadeo |
+| `components/nav/selector-diseno.tsx` | `SelectorDiseno`: un `Select` de `h-9`; no pinta nada con un solo diseño o sin proveedor |
+| `MenuUsuario` | Muestra el selector bajo Tema; `mostrarDiseno={false}` lo oculta |
+
+Para adoptarlo en una app: envuelve con `DisenoProvider` (dentro de `ThemeProvider`) y pon `<ScriptDiseno />` dentro de `<head>` en `app/layout.tsx`. Sin eso, `MenuUsuario` se ve exactamente como antes.
+
+**Agregar un diseño:** (1) un bloque en `globals.css` que sobrescriba solo los tokens que cambian; (2) su entrada en `DISENOS`; (3) el contraste de cada par de texto afectado, calculado y no estimado.
+
+```css
+html[data-diseno="papel"]:not(.dark) { --background: #f6f5f4; --primary: #0075de; /* … */ }
+html[data-diseno="papel"].dark { --background: #191817; --primary: #62aef0; /* … */ }
+```
+
+El selector lleva `:not(.dark)` (o `.dark` para un bloque oscuro) a propósito: sin eso, los valores claros del diseño le ganarían por especificidad al modo oscuro. El diseño base `khipu` no tiene bloque: son los tokens de `:root` y `.dark`.
+
+**Diseños disponibles:**
+
+| Valor | Origen | Cambia (claro) | Oscuro |
+|---|---|---|---|
+| `khipu` | Diseño base | — | — |
+| `papel` | Estilo Notion de Refero | Lienzo `--background` `#f6f5f4` con tarjetas blancas; un solo azul de acción (`--primary` `#0075de`, `--ring`, `--brand`) y su fondo suave `--accent` `#e6f3fe` con texto `#005bab` (6.04); bordes de 1 px `rgba(0,0,0,0.08)` en vez de sombras; texto `--foreground` `#111111` (17.34) y `--muted-foreground` `#615d59` (5.99 sobre el fondo, 6.53 sobre card, 5.63 sobre secondary); `secondary`, `muted` y sidebar en tonos cálidos; transiciones de 200 ms con `ease` (`--default-transition-*`, en ambos temas) | Derivado, no de la referencia (Notion no define oscuro): superficies cálidas (`#191817`, card `#211f1e`) y el mismo azul aclarado (`--primary` `#62aef0` con texto `#111111`, 7.94) |
+
+Excepciones de `papel`: el azul `#0075de` sobre el lienzo da 4.19 (sobre card, 4.57), así que un enlace `text-primary` directamente sobre el fondo queda bajo 4.5; el texto sobre fondo de acento usa `#005bab`. `--chart-1` no cambia para que no se confunda con `--chart-5`. Los radios (12 px tarjetas, 8 px botones) y la fuente Inter ya son los de khipu.
+
+### Movimiento
+
+El movimiento en khipu es corto y funcional: confirma una acción o introduce contenido, nunca decora. Una sola receta de cada tipo, en `lib/estilos.ts`:
+
+| Receta | Qué hace | Dónde se usa |
+|---|---|---|
+| `PRESION` | Al pulsar, el control se hunde unos 0.7 px (`motion-safe:active:scale-[0.98]`) | Todas las recetas de botón y de acción (`BOTON_*`, `ACCION_*`) |
+| `ENTRADA` + `pasoEntrada(i)` | El bloque entra con un fundido y 8 px hacia arriba, 220 ms `ease-out`; cada posición `i` se retrasa 40 ms | En la demo (`/ejemplo`): bloques de la página y secciones de la galería. **Ningún componente la activa solo**: la pones tú donde la quieras |
+
+El indicador del ítem activo del sidebar (barra a la izquierda y punto) entra con un zoom de 150 ms al activarse.
+
+**Cómo usar la entrada:** `<div className={ENTRADA} style={pasoEntrada(2)}>`. Con `cn()`, `cn(TARJETA, ENTRADA)`. Se apoya en el token `--animate-entrada` y en `@keyframes entrada` de `globals.css`: pégalos junto con el resto de los bloques de ese archivo.
+
+**Reglas:**
+- Duración de 150–250 ms. Solo `transform` y `opacity`; nada que mueva el layout.
+- Todo va bajo `motion-safe:`: con «reducir movimiento» activado en el sistema no se anima nada y el contenido aparece de una vez.
+- Sin spring ni bounce en los controles. La referencia de Notion los reserva para elementos decorativos.
+- Una animación de entrada usa `backwards`, no `both`: al terminar suelta el `transform`, que si no dejaría un contexto de apilamiento permanente.
+- El diseño `papel` fija las transiciones en 200 ms (`--default-transition-duration`, §Diseños); `ENTRADA` mantiene sus 220 ms en todos los diseños.
 
 ### Pendientes
 

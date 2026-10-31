@@ -5,13 +5,21 @@
  * un select, un filtro o una acción de fila puestos lado a lado quedan alineados sin pensarlo. Nunca `cn(RECETA, "h-N")`:
  * sobrescribir la altura a mano es justo lo que hace que dos controles de la misma fila terminen midiendo distinto.
  */
+import type { CSSProperties } from "react";
+
+// ── Movimiento: una sola respuesta al pulsar y una sola entrada de contenido (docs/design-system.md «Movimiento») ──
+// Todo va bajo `motion-safe:`: con «reducir movimiento» activado en el sistema no se anima nada.
+/** Respuesta al pulsar un control: se hunde unos 0.7 px. */
+export const PRESION = "motion-safe:active:scale-[0.98]";
+/** Entrada de un bloque al aparecer (fundido + 8 px hacia arriba). Escalona con `style={{ "--i": n }}`: 40 ms por posición (el retraso vive en `--animate-entrada`). */
+export const ENTRADA = "motion-safe:animate-entrada";
+/** La posición `i` del bloque en la cascada de `ENTRADA`: `style={pasoEntrada(2)}`. */
+export const pasoEntrada = (i: number) => ({ "--i": i }) as CSSProperties;
 
 // ── Acciones de página: top bar, barra de filtros, acciones sueltas en tarjetas, alertas o estados vacíos ──
 // La principal es negra (foreground) para no competir con los colores de estado; el índigo queda para confirmar formularios.
-export const ACCION_PRINCIPAL =
-  "inline-flex h-9 items-center gap-1.5 rounded-lg bg-foreground px-3 text-[12px] font-medium whitespace-nowrap text-background shadow-xs transition-colors hover:bg-foreground/90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
-export const ACCION_SECUNDARIA =
-  "inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium whitespace-nowrap text-foreground/80 shadow-2xs transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+export const ACCION_PRINCIPAL = `inline-flex h-9 items-center gap-1.5 rounded-lg bg-foreground px-3 text-[12px] font-medium whitespace-nowrap text-background shadow-xs transition-[color,background-color,transform] hover:bg-foreground/90 ${PRESION} disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60`;
+export const ACCION_SECUNDARIA = `inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium whitespace-nowrap text-foreground/80 shadow-2xs transition-[color,background-color,transform] hover:bg-muted hover:text-foreground ${PRESION} disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60`;
 // Select, buscador y refrescar de una barra de filtros: la misma altura que las acciones de arriba.
 export const CONTROL_FILTRO = "h-9 rounded-lg border border-border bg-card text-[12px] font-medium text-foreground shadow-2xs";
 // Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, o vistas que son enlaces): caja de h-9 con segmentos de h-7.
@@ -31,12 +39,9 @@ export const AYUDA_CAMPO = "font-mono text-[11px] text-muted-foreground";
 
 // disabled:pointer-events-none (igual que ui/button.tsx) es lo que de verdad evita que el :hover del mouse
 // que se quedó sobre el botón le gane a disabled:opacity-60 en la cascada; cursor-not-allowed solo no basta.
-export const BOTON_PRIMARIO =
-  "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-semibold text-primary-foreground shadow-xs transition-all hover:opacity-95 active:scale-[0.99] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
-export const BOTON_SECUNDARIO =
-  "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-foreground/80 shadow-2xs transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
-export const BOTON_DESTRUCTIVO =
-  "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-destructive px-3.5 text-[13px] font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.99] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+export const BOTON_PRIMARIO = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13px] font-semibold text-primary-foreground shadow-xs transition-all hover:opacity-95 ${PRESION} disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60`;
+export const BOTON_SECUNDARIO = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-foreground/80 shadow-2xs transition-[color,background-color,transform] hover:bg-muted hover:text-foreground ${PRESION} disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60`;
+export const BOTON_DESTRUCTIVO = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-destructive px-3.5 text-[13px] font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 ${PRESION} disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60`;
 
 // El pie de diálogo, PanelLateral, TarjetaPaso y Drawer ya no tiene una altura propia: usa los mismos botones.
 /** @deprecated Desde 0.2.0 es igual a `BOTON_PRIMARIO`. Se conserva para no romper imports. */

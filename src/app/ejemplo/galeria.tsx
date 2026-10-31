@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, BoldIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ItalicIcon, ListOrderedIcon, PackageIcon, PencilIcon, SendIcon, ShieldCheckIcon, Trash2Icon, UnderlineIcon } from "lucide-react";
+import { BellIcon, BoldIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ItalicIcon, ListOrderedIcon, PackageIcon, PaletteIcon, PencilIcon, RocketIcon, SendIcon, ShieldCheckIcon, SparklesIcon, Trash2Icon, UnderlineIcon } from "lucide-react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -28,6 +28,7 @@ import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/e
 import { GrupoOpciones } from "@/components/formularios/opciones";
 import { StepperNumerico } from "@/components/formularios/stepper-numerico";
 import { ZonaArchivos } from "@/components/formularios/zona-archivos";
+import { SelectorDiseno } from "@/components/nav/selector-diseno";
 import { Acordeon } from "@/components/navegacion/acordeon";
 import { DialogoConfirmacion } from "@/components/navegacion/dialogo-confirmacion";
 import { MenuAcciones } from "@/components/navegacion/menu-acciones";
@@ -38,7 +39,9 @@ import { Tabs } from "@/components/navegacion/tabs";
 import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
+import { TarjetaDestacada } from "@/components/patrones/tarjeta-destacada";
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { GrupoBotones } from "@/components/ui/grupo-botones";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -47,7 +50,7 @@ import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/compon
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar";
-import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_SECUNDARIO, TARJETA } from "@/lib/estilos";
+import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_SECUNDARIO, ENTRADA, pasoEntrada, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
 
@@ -79,8 +82,7 @@ const COLUMNAS: Columna<Doc>[] = [
   },
 ];
 
-const SECCION = cn(TARJETA, "grid gap-4 px-5 py-4");
-
+const SECCION = cn(TARJETA, ENTRADA, "grid gap-4 px-5 py-4");
 export function Galeria() {
   const toast = useToast();
   const [confirmar, setConfirmar] = useState(false);
@@ -117,8 +119,43 @@ export function Galeria() {
 
   return (
     <>
+      {/* ── Diseño, botones y tarjetas destacadas ─────────────────── */}
+      <section className={SECCION} style={pasoEntrada(5)}>
+        <CabeceraSeccion icon={PaletteIcon} titulo="Diseño, botones y tarjetas destacadas" subtitulo="selector de diseño · button · tarjeta destacada" conBorde={false} className="px-0 py-0" />
+        <div className="grid max-w-xs gap-1.5">
+          <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">Diseño</span>
+          <SelectorDiseno />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button>Default</Button>
+          <Button variant="suave">Suave</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="destructive">Destructive</Button>
+          <Button variant="link">Link</Button>
+          <Button variant="suave" disabled title="Exportar: próximamente">
+            Deshabilitado
+          </Button>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <TarjetaDestacada tono="neutro" icono={<FileTextIcon />} titulo="Tu primer documento" descripcion="Emítelo en modo de pruebas; no tiene validez tributaria." accion={<Button variant="suave">Emitir</Button>} />
+          <TarjetaDestacada tono="info" icono={<SparklesIcon />} titulo="Novedad: reenvío masivo" descripcion="Reenvía a SUNAT todos los comprobantes observados con un clic." accion={<Button variant="suave">Ver más</Button>} />
+          <TarjetaDestacada tono="ok" icono={<ShieldCheckIcon />} titulo="Certificado vigente" descripcion="Vence en 11 meses; te avisamos con 30 días de anticipación." />
+          <TarjetaDestacada tono="aviso" icono={<BellIcon />} titulo="Plan por vencer" descripcion="Renueva antes del 30 de octubre para no interrumpir las emisiones." accion={<button type="button" className={BOTON_SECUNDARIO}>Renovar</button>} />
+          <TarjetaDestacada
+            tono="invertido"
+            className="md:col-span-2"
+            icono={<RocketIcon />}
+            titulo="Pasa a producción"
+            descripcion="Cuando tus series estén listas, activa el entorno de producción desde Empresa."
+            accion={<button type="button" className={BOTON_SECUNDARIO}>Activar producción</button>}
+          />
+        </div>
+      </section>
+
       {/* ── Feedback ─────────────────────────────────────────────── */}
-      <section className={SECCION}>
+      <section className={SECCION} style={pasoEntrada(6)}>
         <CabeceraSeccion icon={BellIcon} titulo="Feedback" subtitulo="toast · tooltip · alerta · skeleton · estado vacío · progreso · spinner · banner" conBorde={false} className="px-0 py-0" />
         {bannerVisible ? (
           <div className="-mx-5 -mt-4 overflow-hidden rounded-t-xl">
@@ -189,7 +226,7 @@ export function Galeria() {
       </section>
 
       {/* ── Formularios ─────────────────────────────────────────── */}
-      <section className={SECCION}>
+      <section className={SECCION} style={pasoEntrada(7)}>
         <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador etiqueta="Buscar documentos" valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
@@ -275,7 +312,7 @@ export function Galeria() {
       </section>
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
-      <section className={SECCION}>
+      <section className={SECCION} style={pasoEntrada(8)}>
         <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · drawer · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · toolbar · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
@@ -439,7 +476,7 @@ export function Galeria() {
       </section>
 
       {/* ── Datos y dashboard ───────────────────────────────────── */}
-      <section className={SECCION}>
+      <section className={SECCION} style={pasoEntrada(9)}>
         <CabeceraSeccion icon={ShieldCheckIcon} titulo="Datos y dashboard" subtitulo="kpi · gráficos · tabla de datos · selección múltiple" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 md:grid-cols-3">
           <Kpi etiqueta="Facturado (mes)" valor="S/ 128,430" variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
