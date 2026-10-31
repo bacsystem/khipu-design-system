@@ -253,12 +253,17 @@
  * no define modo oscuro ni esas superficies, se derivaron del mismo matiz cálido.
  */
 html[data-diseno="papel"] {
+  /* Las recetas usan duration-(--duracion-*) explícito: papel fija sus 200 ms aquí, no solo en el default de Tailwind. */
   --default-transition-duration: 200ms;
   --default-transition-timing-function: ease;
+  --duracion-rapida: 200ms;
+  --duracion-media: 200ms;
+  --duracion-lenta: 200ms;
 }
 
 html[data-diseno="papel"]:not(.dark) {
   --background: #f6f5f4;
+  --sidebar: #f6f5f4;
   --foreground: #111111;
   --card-foreground: #111111;
   --popover-foreground: #111111;
