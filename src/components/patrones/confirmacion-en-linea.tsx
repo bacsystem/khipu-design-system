@@ -1,11 +1,21 @@
 "use client";
 
 import { BanIcon, RefreshCwIcon, type LucideIcon } from "lucide-react";
+import { AnimatePresence, m } from "motion/react";
 import { useState, useTransition } from "react";
+import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 const ACCION =
-  "inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-control font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-control font-medium whitespace-nowrap transition-colors duration-(--duracion-rapida) ease-salida disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+
+// La acción sale hacia la izquierda y la confirmación entra desde la derecha (y al revés al cancelar).
+const CAMBIO = {
+  initial: { opacity: 0, x: 8 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -8 },
+  transition: { duration: DURACION.rapida, ease: CURVA_SALIDA },
+};
 
 /**
  * Acción irreversible confirmada en línea (sin diálogo): "Revocar" → "¿Revocar de forma permanente? [Sí, revocar] [Cancelar]".
@@ -42,26 +52,31 @@ export function ConfirmacionEnLinea({
 
   return (
     <div className="flex flex-col items-end gap-1">
-      <div className="flex items-center justify-end gap-1">
-        {abierto ? (
-          <>
-            <span className="mr-1 text-etiqueta text-muted-foreground">{pregunta}</span>
-            <button type="button" disabled={pendiente} onClick={ejecutar} className={cn(ACCION, "bg-destructive text-white shadow-xs hover:bg-destructive/90")}>
-              {pendiente ? <RefreshCwIcon className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
-              {confirmar}
-            </button>
-            <button type="button" disabled={pendiente} onClick={() => setAbierto(false)} className={cn(ACCION, "border border-border bg-card text-foreground/80 hover:bg-muted")}>
-              Cancelar
-            </button>
-          </>
-        ) : (
-          <button type="button" onClick={() => setAbierto(true)} className={cn(ACCION, "text-destructive-texto hover:bg-destructive-suave")}>
-            <Icon className="size-3.5" />
-            {etiqueta}
-          </button>
-        )}
+      {/* `relative`: `popLayout` saca de flujo el bloque que sale y lo posiciona contra este contenedor. */}
+      <div className="relative flex items-center justify-end">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {abierto ? (
+            <m.div key="confirmar" {...CAMBIO} className="flex items-center justify-end gap-1">
+              <span className="mr-1 text-etiqueta text-muted-foreground">{pregunta}</span>
+              <button type="button" disabled={pendiente} onClick={ejecutar} className={cn(ACCION, "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90")}>
+                {pendiente ? <RefreshCwIcon className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
+                {confirmar}
+              </button>
+              <button type="button" disabled={pendiente} onClick={() => setAbierto(false)} className={cn(ACCION, "border border-border bg-card text-foreground shadow-xs hover:bg-secondary")}>
+                Cancelar
+              </button>
+            </m.div>
+          ) : (
+            <m.div key="accion" {...CAMBIO}>
+              <button type="button" onClick={() => setAbierto(true)} className={cn(ACCION, "text-destructive-texto hover:bg-destructive-suave")}>
+                <Icon className="size-3.5" />
+                {etiqueta}
+              </button>
+            </m.div>
+          )}
+        </AnimatePresence>
       </div>
-      {error ? <span className="text-etiqueta text-destructive">{error}</span> : null}
+      {error ? <span className="text-etiqueta text-destructive-texto">{error}</span> : null}
     </div>
   );
 }
