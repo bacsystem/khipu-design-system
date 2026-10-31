@@ -147,7 +147,7 @@ Reglas:
 | `lg` | `0 16px 40px -8px rgba(16,16,24,.16), 0 4px 12px -4px rgba(16,16,24,.08)` | `inset 0 1px 0 rgba(255,255,255,.06), 0 24px 48px -12px rgba(0,0,0,.7)` | Diálogos, sheets, toasts |
 
   `shadow-xs` en controles, `shadow-sm` en tarjetas, `shadow-md` + `ring-1 ring-border` en popups, `shadow-lg` en diálogos, sheets y toasts; diálogos sobre `bg-overlay`. Nada más alto que eso.
-- **Bordes:** `border-border`, sin opacidades intermedias.
+- **Bordes:** `border-border` en contenedores y controles; solo dos opacidades, `border-border/80` en cabeceras de tabla, línea de tiempo y top bar, y `border-border/60` en divisores internos (filas, cabecera y pie de diálogo, tarjetas del sidebar). Ninguna otra.
 - **Foco:** un único anillo, la receta `FOCO` de `lib/estilos.ts` (`focus-visible:ring-2 ring-ring/50 ring-offset-2 ring-offset-background`).
 
 ### Escala de alturas
@@ -194,7 +194,7 @@ No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-1
 De arriba abajo:
 
 1. **Cabecera (h-14, `border-b`)**: `LogoMarca` (icono 32 px con gradiente `from-primary to-primary-light`, tres nudos de khipu, texto "khipu" + ".pe" en primary) y chip `UBL 2.1` (`font-mono text-etiqueta`, `bg-secondary`).
-2. **Selector de empresa** (`nav/empresa-selector.tsx`): tarjeta `rounded-lg border-border/60 bg-muted/80 p-2`, avatar cuadrado 24 px `bg-primary` con inicial, razón social `text-control font-medium` + `RUC …` `font-mono text-etiqueta`, `ChevronsUpDown`. Popup del **mismo ancho que el disparador** (`w-(--anchor-width)`), etiqueta "CAMBIAR DE EMPRESA", filas con `data-highlighted:bg-accent/70`, check en primary a la derecha.
+2. **Selector de empresa** (`nav/empresa-selector.tsx`): tarjeta `rounded-lg border-border/60 bg-muted/80 p-2`, avatar cuadrado 24 px `bg-primary` con inicial, razón social `text-control font-medium` + `RUC …` `font-mono text-etiqueta`, `ChevronsUpDown`. Popup del **mismo ancho que el disparador** (`w-(--anchor-width)`), etiqueta "Cambiar de empresa" (tipo oración), filas con `data-highlighted:bg-accent/70`, check en primary a la derecha.
 3. **Navegación** (`nav/sidebar-nav.tsx`): grupos con etiqueta `text-etiqueta font-medium text-muted-foreground` en tipo oración ("Emisión & SUNAT", "Configuración"). Ítem: `rounded-md px-2.5 py-1.5 text-control`, icono lucide 18 px. Estados: activo → `bg-sidebar-primary text-sidebar-primary-foreground`, icono en primary y punto `size-1.5 bg-primary` a la derecha; hover → `bg-sidebar-accent`; **pendiente** → texto `muted-foreground/50`, `cursor-not-allowed`, chip «Pronto» (`text-etiqueta font-medium`, `bg-secondary`, en tipo oración).
 4. **Pie (`border-t p-3`)**: tarjeta "Plan y consumo" deshabilitada (barra de progreso vacía, `— / —`, `opacity-60`, `title` próximamente) y el **menú de usuario** (§7).
 
@@ -202,10 +202,10 @@ De arriba abajo:
 
 - **Disparador**: misma tarjeta que el selector de empresa (avatar 24 px `bg-primary` con iniciales del correo, nombre `text-control`, correo `font-mono text-etiqueta`, `ChevronsUpDown`; `data-popup-open:bg-secondary`).
 - **Popup** (`side="top"`, ancho = disparador, `min-w-0`): 
-  - "TU CUENTA" + fila resaltada `bg-accent/70` con avatar, nombre, correo completo (mono, `break-all`) y rol en su propia línea (`Administrador` / `Emisor` / `Solo lectura`), icono `ShieldCheck` en primary.
-  - "TEMA" + `ThemeToggle conTexto`: control segmentado a todo el ancho, tres opciones con icono 12 px + etiqueta `text-etiqueta` (**Claro · Oscuro · Sistema**), activa con `bg-card shadow-xs`.
+  - "Tu cuenta" + fila resaltada `bg-accent/70` con avatar, nombre, correo completo (mono, `break-all`) y rol en su propia línea (`Administrador` / `Emisor` / `Solo lectura`), icono `ShieldCheck` en primary.
+  - "Tema" + `ThemeToggle conTexto`: control segmentado a todo el ancho, tres opciones con icono 12 px + etiqueta `text-etiqueta` (**Claro · Oscuro · Sistema**), activa con `bg-card shadow-xs`.
   - Ítems: `Cambiar contraseña` (abre diálogo que envía el enlace de restablecimiento al correo de la sesión), `Documentación API` (`/developers`, pestaña nueva).
-  - `Cerrar sesión` en variante `destructive` (rojo, hover `bg-destructive/10`).
+  - `Cerrar sesión` en variante `destructive` (`text-destructive-texto`, resaltado `bg-destructive-suave`).
 - **`ui/menu.tsx`** (wrapper de base-ui `Menu`): `MenuContent` (`rounded-lg bg-popover p-1 shadow-md ring-1 ring-border`, animación scale/opacity 150 ms), `MenuItem` (`rounded-md px-2 py-1.5 text-control font-medium`, iconos `size-3.5 text-muted-foreground`, highlight `bg-accent/70`), `MenuLinkItem`, `MenuRadioGroup`/`MenuRadioItem` (check a la derecha), `MenuGroupLabel` (`text-etiqueta font-medium text-muted-foreground`), `MenuSeparator` (`-mx-1 my-1 h-px bg-border/70`). Es el menú a reutilizar para "más acciones" (⋯) de tablas.
 
 ---
@@ -247,7 +247,7 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 | `outline` | `border-border bg-background hover:bg-muted` | Acciones secundarias en formularios |
 | `secondary` | `bg-secondary` | Neutro |
 | `ghost` | solo hover `bg-muted` | Iconos (hamburguesa, refrescar) |
-| `destructive` | `bg-destructive/10 text-destructive hover:bg-destructive/20` | Acciones irreversibles |
+| `destructive` | `bg-destructive-suave text-destructive-texto`; hover mezcla `destructive-suave` con 12 % de `destructive` | Acciones irreversibles |
 | `link` | `text-primary hover:underline` | Enlaces inline |
 
 Tamaños: `default`, `sm` y `lg` miden `h-9` (cambian padding y texto); iconos `icon`, `icon-sm` e `icon-lg` miden `size-9`. `xs` (h-6) e `icon-xs` (24) solo van dentro de otro control (§4).
@@ -303,8 +303,8 @@ Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 
 1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`SEGMENTADO` + `SEGMENTO`: caja `min-h-9 p-0.5`, segmentos `h-7`, activo `bg-card shadow-sm` por `data-active` o `aria-current="page"`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-9 rounded-lg border bg-card text-control font-medium shadow-xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-9`, icono gira mientras `useTransition` está pendiente) — todo a `h-9` para alinear con el `Select` de la misma barra.
 2. **Contenedor**: `overflow-hidden rounded-xl border border-border bg-card shadow-sm`; `opacity-60` mientras refresca.
-3. **Cabecera**: `bg-muted border-b border-border`, celdas `px-3 py-2 text-etiqueta font-medium text-muted-foreground` en tipo oración; primera columna checkbox deshabilitado (selección múltiple próximamente).
-4. **Filas**: `group border-b border-border hover:bg-muted/80`, `text-control`; celda principal con dos líneas (valor fuerte + subtítulo `text-etiqueta`, mono si es un dato); identificadores en chip `rounded bg-secondary px-2 py-0.5 font-mono font-semibold text-primary` (inactivos: `bg-muted text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
+3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-etiqueta font-medium text-muted-foreground` en tipo oración; primera columna checkbox deshabilitado (selección múltiple próximamente).
+4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-control`; celda principal con dos líneas (valor fuerte + subtítulo `text-etiqueta`, mono si es un dato); identificadores en `ChipCodigo` (`rounded-md px-2 py-0.5 font-mono text-control font-medium bg-accent text-accent-foreground`; inactivos: `bg-secondary text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
 5. **Vacío**: fila única `py-14 text-center` con icono 24 px y mensaje ("Todavía no tienes… Crea la primera con «…»" / "No hay … con los filtros seleccionados").
 6. **Pie**: `border-t border-border bg-muted px-4 py-2 text-etiqueta` → "Mostrando **x–y** de **N** …" · selector de filas · nota contextual (`hidden xl:inline`) | paginación (`Anterior` / números `size-7` con actual `bg-foreground text-background` / `Siguiente`), con `paginasVisibles()` de `lib/paginacion.ts` (1, 2, …, actual±1, …, últimas 2).
 
@@ -318,10 +318,10 @@ Filtrado/paginación en cliente cuando la API devuelve todo (series, API keys); 
 
 | Tono | Clases | Estados SUNAT / entidades |
 |---|---|---|
-| Verde | `border-success-border bg-success text-success-foreground`, punto `bg-success-solid` | `ACEPTADO` ("Aceptado con CDR" si trae CDR), serie/llave **Activa**, credenciales OK |
-| Ámbar | `border-warning-border bg-warning text-warning-foreground`, punto `bg-warning-solid` | `ACEPTADO_CON_OBS`, BETA, certificado por vencer |
-| Rojo | `border-destructive-border bg-destructive/10 text-destructive`, punto `bg-destructive` | `RECHAZADO`, `INVALIDO`, `ERROR_ENVIO`, vencido |
-| Neutro | `border-border bg-secondary text-muted-foreground`, punto `bg-muted-foreground/50` | `RECIBIDO`, `FIRMADO`, `ENVIADO`, `PENDIENTE_AGRUPACION`, `ANULADO`, **Inactiva**, **Revocada** |
+| Verde | `bg-success text-success-foreground`, punto `bg-success-solid` | `ACEPTADO` ("Aceptado con CDR" si trae CDR), serie/llave **Activa**, credenciales OK |
+| Ámbar | `bg-warning text-warning-foreground`, punto `bg-warning-solid` | `ACEPTADO_CON_OBS`, BETA, certificado por vencer |
+| Rojo | `bg-destructive-suave text-destructive-texto`, punto `bg-destructive` | `RECHAZADO`, `INVALIDO`, `ERROR_ENVIO`, vencido |
+| Neutro | `bg-secondary text-muted-foreground`, punto `bg-muted-foreground/50` | `RECIBIDO`, `FIRMADO`, `ENVIADO`, `PENDIENTE_AGRUPACION`, `ANULADO`, **Inactiva**, **Revocada** |
 
 - **Chips informativos**: `Chip`: `rounded-md bg-secondary px-2 py-0.5 font-mono text-etiqueta text-muted-foreground` (contadores, "id: 193f4b35", `UBL 2.1`).
 - **Chip de tipo de comprobante**: caja `size-7 rounded bg-accent font-mono text-etiqueta font-semibold text-primary` con el código (`01`, `03`, `07`, `08`).
