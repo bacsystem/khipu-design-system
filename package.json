@@ -10,8 +10,11 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint && npm run check:alturas",
+    "lint": "eslint && npm run check:alturas && npm run check:tipografia && npm run check:contraste",
     "check:alturas": "node scripts/verificar-alturas.mjs",
+    "check:tipografia": "node scripts/verificar-tipografia.mjs",
+    "check:contraste": "node scripts/verificar-contraste.mjs",
+    "test": "node --test \"scripts/tests/*.test.mjs\"",
     "typecheck": "tsc --noEmit",
     "registry:build": "node scripts/build-registry.mjs"
   },
