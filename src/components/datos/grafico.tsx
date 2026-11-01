@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "motion/react";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState, type RefObject } from "react";
 import { MovimientoLocal } from "@/components/movimiento";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
 import { TARJETA } from "@/lib/estilos";
@@ -34,6 +34,26 @@ function Leyenda({ series, colores = COLORES }: { series: Serie[]; colores?: str
       ))}
     </div>
   );
+}
+
+/**
+ * Ancho real en px del contenedor del SVG. El viewBox usa ese ancho para que el texto de los ejes mida lo que dice
+ * (10 px) a cualquier tamaño: con un viewBox fijo el gráfico se estiraba y las etiquetas crecían con él.
+ * Arranca en 640 (servidor y primer render) y se ajusta al medir.
+ */
+function useAnchoReal(): [RefObject<HTMLDivElement | null>, number] {
+  const caja = useRef<HTMLDivElement>(null);
+  const [ancho, setAncho] = useState(640);
+  useEffect(() => {
+    const el = caja.current;
+    if (!el) return;
+    const medir = () => setAncho(Math.max(240, Math.round(el.clientWidth)));
+    medir();
+    const observador = new ResizeObserver(medir);
+    observador.observe(el);
+    return () => observador.disconnect();
+  }, []);
+  return [caja, ancho];
 }
 
 /** Tooltip anclado en horizontal al índice (porcentaje del ancho) y en vertical dentro de la tarjeta, bajo el título. */
@@ -81,7 +101,7 @@ export function GraficoBarras({
 }) {
   const id = useId();
   const [hover, setHover] = useState<number | null>(null);
-  const ancho = 640;
+  const [caja, ancho] = useAnchoReal();
   const mg = { top: 8, right: 8, bottom: 24, left: 44 };
   const w = ancho - mg.left - mg.right;
   const h = alto - mg.top - mg.bottom;
@@ -94,7 +114,7 @@ export function GraficoBarras({
   return (
     <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
       {titulo ? <div className="px-1 pb-2 text-titulo text-foreground">{titulo}</div> : null}
-      <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }}>
+      <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={`${id}-t`} className="block max-w-full overflow-visible" style={{ fontSize: 10 }}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
         {ticks.map((t) => (
           <g key={t}>
@@ -137,7 +157,7 @@ export function GraficoBarras({
             </g>
           );
         })}
-      </svg></MovimientoLocal>
+      </svg></MovimientoLocal></div>
       {hover != null ? (
         <Tooltip
           x={((mg.left + hover * grupo + grupo / 2) / ancho) * 100}
@@ -172,7 +192,7 @@ export function GraficoLineas({
 }) {
   const id = useId();
   const [hover, setHover] = useState<number | null>(null);
-  const ancho = 640;
+  const [caja, ancho] = useAnchoReal();
   const mg = { top: 8, right: 12, bottom: 24, left: 44 };
   const w = ancho - mg.left - mg.right;
   const h = alto - mg.top - mg.bottom;
@@ -184,7 +204,7 @@ export function GraficoLineas({
   return (
     <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
       {titulo ? <div className="px-1 pb-2 text-titulo text-foreground">{titulo}</div> : null}
-      <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
+      <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={`${id}-t`} className="block max-w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de líneas"}</title>
         {ticks.map((t) => (
           <g key={t}>
@@ -214,7 +234,7 @@ export function GraficoLineas({
             </text>
           </g>
         ))}
-      </svg></MovimientoLocal>
+      </svg></MovimientoLocal></div>
       {hover != null ? (
         <Tooltip x={(x(hover) / ancho) * 100} titulo={categorias[hover]} filas={series.map((s, j) => ({ nombre: s.nombre, valor: formato(s.valores[hover] ?? 0), color: COLORES[j % COLORES.length] }))} />
       ) : null}
