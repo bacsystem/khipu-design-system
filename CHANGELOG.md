@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-11-01
+
 ### Fixed
-- Text fields no longer zoom the page on iPhone: iOS Safari enlarges the page when a field under 16 px takes focus and leaves it enlarged. `CAMPO`, `SELECT_NATIVO` and `ui/input` use the new `text-campo` (16 px) below `md` and `text-control` (13 px) from `md`; the 34 px control height is unchanged.
+- Text fields no longer zoom the page on iPhone: iOS Safari enlarges the page when a field under 16 px takes focus and leaves it enlarged. `CAMPO`, `SELECT_NATIVO` and `ui/input` use the new `text-campo` (16 px) below `md` and `text-control` (13 px) from `md`; the 34 px control height is unchanged. The `Buscador` and `StepperNumerico` fields and the command palette input do the same, and `cn` knows `text-campo`.
 - The phone drawer (`MobileNav`) scrolls: `SidebarContent` is `h-full overflow-hidden`, so on a short screen the user block at the bottom (theme, appearance, sign out) was out of reach.
 - `PanelLateral` has an accessible name: its title is the dialog's `SheetTitle` (and its description the `SheetDescription`) instead of a loose heading.
 
