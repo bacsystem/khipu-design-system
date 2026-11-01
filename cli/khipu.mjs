@@ -123,7 +123,7 @@ function comandoAdd(nombres, { force }) {
 
   if (dependenciasNpm.size) {
     const conVersion = [...dependenciasNpm].sort().map((dep) => {
-      // React, Next, base-ui, lucide y next-themes son peerDependencies desde que el repo también es un paquete (0.3.0).
+      // React, Next, base-ui y next-themes son peerDependencies; lucide-react es peer opcional desde 0.5.0 (los iconos del kit son @phosphor-icons/react, dependencia).
       const version = pkgKhipu.dependencies?.[dep] ?? pkgKhipu.peerDependencies?.[dep];
       return version ? `${dep}@${version}` : dep;
     });
@@ -134,7 +134,8 @@ function comandoAdd(nombres, { force }) {
     "\nRecuerda (una sola vez por proyecto, ver README §Usarlo en tu proyecto):" +
       "\n  1. Pega en tu globals.css (después de @import \"tailwindcss\") src/styles/tokens.css y src/styles/theme.css." +
       "\n  2. Envuelve la app con <Providers> y carga las fuentes como en src/app/layout.tsx." +
-      '\n  3. Alias "@/*": ["./src/*"] en tsconfig.json.',
+      '\n  3. Alias "@/*": ["./src/*"] en tsconfig.json.' +
+      "\n  4. Los componentes animados necesitan `motion`; los iconos del kit son `@phosphor-icons/react` (lucide-react es opcional).",
   );
 }
 
