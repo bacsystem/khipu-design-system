@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-11-01
 - **Rama base:** `main` (0.4.0, `5107d20`)
-- **Estado:** pendiente de aprobación
+- **Estado:** aprobado (2026-11-01)
 - **Boceto de referencia:** `b.html` del scratchpad de la sesión (servido en `http://127.0.0.1:4100/b.html` mientras se diseñó). Las capturas aprobadas son la fuente de verdad visual; los valores exactos están en este documento.
 - **Referencia de estilo:** FitMove (Dribbble, aportada por el usuario): pasteles, tarjetas redondeadas sin borde, píldoras, mucho color en superficies y poco en botones.
 
@@ -83,7 +83,7 @@ La 0.4.0 (Linear/Vercel, índigo) se percibe plana: texto de 12–14 px sin jera
 |---|---|---|
 | Lienzo claro | `#fbfbfc` | `#eceef1` |
 | Tarjeta | radio 12, borde + sombra | radio **18**, **sin borde**, sin sombra en reposo; hover: `0 10px 24px -10px rgba(16,17,20,.14)` y −2 px (solo KPI) |
-| Popover, diálogo, menú, toast | radio 12, sombra | radio 16, sombra `--sombra-lg` (se conserva) |
+| Popover, diálogo, menú, toast | radio 12, sombra | radio **18** (`rounded-xl`, el mismo de la tarjeta), sombra `--sombra-md`/`--sombra-lg` (se conserva) |
 | Botón, chip, pill de estado, segmentado, paginador, ítem de menú | radio 8 | **píldora** (`rounded-full`) |
 | Campo, select, textarea | radio 8, borde | radio **12**, borde `--input`, fondo `card` |
 | Fila de tabla | línea separadora | **banda** redondeada 12 px con fondo `soft`, 3 px entre filas, hover `soft` + `line` 40 % |
@@ -103,7 +103,7 @@ Anatomía (claro y oscuro), aplicada a `Kpi` y a una variante de `Metrica`:
 4. **Pie:** chip de variación (`↑ 12%` verde, `↓ 2` rojo, neutro) + texto terciario.
 5. **Destacada** (`destacada`): fondo `acento` en claro; en oscuro superficie teñida (§9).
 
-Props nuevas, todas opcionales: `icono?: IconoComponente`, `tono?: "ok" | "aviso" | "error" | "neutro" | "acento"`, `visual?: { tipo: "barra"; valor: number } | { tipo: "puntos"; total: number; marcados: number }`, `destacada?: boolean`, `acciones?: ReactNode` (contenido del «⋯»). `serie`, `variacion`, `periodo`, `invertir` siguen igual. `FilaMetricas` pasa de «una tarjeta dividida» a grilla de tarjetas separadas con gap 12 (mismo export, mismas props).
+Props nuevas, todas opcionales: `icono?: IconoComponente`, `tono?: "ok" | "aviso" | "error" | "neutro" | "acento"`, `visual?: { tipo: "barra"; valor: number } | { tipo: "puntos"; total: number; marcados: number }`, `destacada?: boolean`, `acciones?: ReactNode` (slot a la derecha del encabezado, típicamente un `MenuAcciones`; el «⋯» lo pone ese menú). `serie`, `variacion`, `periodo`, `invertir` siguen igual. `FilaMetricas` pasa de «una tarjeta dividida» a grilla de tarjetas separadas con gap 12 (mismo export, mismas props).
 
 ## 8. Paletas y tono oscuro como preferencia del usuario
 
@@ -117,7 +117,7 @@ Props nuevas, todas opcionales: `icono?: IconoComponente`, `tono?: "ok" | "aviso
 | Coral | `#ffc6b3` / `#5a1d0c` | `#e3dafb` / `#4a2b8c` | `#fbe39b` | 8.65 · 7.78 |
 | Violeta | `#dacbff` / `#34146b` | `#c6efdf` / `#0f5b40` | `#ffd3e6` | 9.58 · 6.49 |
 
-`--acento-suave`, `--acento-2-suave`, `--acento-3-suave`: en claro valores fijos del boceto; en oscuro `color-mix(in srgb, var(--acento*) 14%, transparent)`.
+`--acento-suave`, `--acento-2-suave`, `--acento-3-suave`: en claro `color-mix(in srgb, var(--acento*) 30%, #ffffff)` (texto de acento encima: 10.8–12.8); en oscuro `color-mix(in srgb, var(--acento*) 14%, var(--card))`. Texto terciario claro: `#666a76` (5.40 tarjeta, 4.95 `soft`, 4.65 lienzo).
 
 **Mapeo a tokens existentes** (para que todo componente actual tome la paleta sin tocarlo): `--sidebar-primary` = `--acento`, `--sidebar-primary-foreground` = `--acento-texto`, `--accent` = `--acento-suave`, `--accent-foreground` = `--acento-texto`, `--chart-1` = `--acento-2`, `--chart-destacado` (nuevo) = `--acento`, `--chart-2..5` siguen siendo los semánticos validados. `--primary` = `#16181d` (claro) / `#f4f5f7` (oscuro), `--primary-foreground` inverso. `--ring` = `--acento-texto` (≥ 8:1 sobre card; el pastel no sirve como anillo).
 
@@ -148,9 +148,9 @@ Props nuevas, todas opcionales: `icono?: IconoComponente`, `tono?: "ok" | "aviso
 |---|---|---|---|---|---|---|---|
 | **Medianoche** (defecto) | `#0a0f1c` | `#111a2c` | `#19233a` | `#222d45` | `#e9eef8` (14.97) | `#a3afc7` (7.88) | `#8794ad` (5.69 / 5.12) |
 | Grafito | `#111214` | `#1a1b1f` | `#232529` | `#2c2e33` | `#eceef2` (14.81) | `#a9abb3` (7.51) | `#8e9099` (5.41 / 4.82) |
-| Tintado | `color-mix(acento 5%, #0b0c10)` | `color-mix(acento 6%, #15171b)` | `color-mix(acento 8%, #1d2025)` | `color-mix(acento 10%, #262930)` | `#eceef2` | `#a2a6b2` | `#8a8e9b` |
+| Tintado | `color-mix(acento 5%, #0b0c10)` | `color-mix(acento 6%, #15171b)` | `color-mix(acento 8%, #1d2025)` | `color-mix(acento 10%, #262930)` | `#eceef2` | `#a2a6b2` | `#979ba7` |
 
-Tintado depende de la paleta: el verificador de contraste lo calcula para las 5 (los valores resultan entre los de Grafito y el oscuro 0.4; el umbral 4.5 se exige igual). Sidebar: degradado del tono de tarjeta un 4 % más claro → tono base.
+Tintado depende de la paleta: el verificador de contraste lo calcula para las 5. El terciario es `#979ba7` (no `#8a8e9b`, que daba 4.06 sobre `soft` con Lima): 4.78–4.94 sobre `soft` y 5.67–5.72 sobre tarjeta. Sidebar: degradado del tono de tarjeta un 4 % más claro → tono base.
 
 ## 10. Accesibilidad
 
