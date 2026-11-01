@@ -167,7 +167,7 @@ export function TablaDatos<T>({
       </AnimatePresence></MovimientoLocal>
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">
+          <TableRow className="hover:bg-transparent">
             {seleccion ? (
               <TableHead className="w-10 pl-4">
                 <CasillaCelda etiqueta="Seleccionar todo en esta página" checked={todosSeleccionados} indeterminate={algunoSeleccionado} onCheckedChange={alternarTodos} />

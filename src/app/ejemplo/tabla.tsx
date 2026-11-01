@@ -60,7 +60,7 @@ export function TablaEjemplo() {
       <div className={CONTENEDOR_TABLA}>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">
+            <TableRow className="hover:bg-transparent">
               <TableHead className={cn(CABECERA_TABLA, "pl-4")}>Llave</TableHead>
               <TableHead className={CABECERA_TABLA}>Creada</TableHead>
               <TableHead className={cn(CABECERA_TABLA, "px-4")}>Estado</TableHead>

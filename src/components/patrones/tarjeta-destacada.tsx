@@ -36,7 +36,7 @@ export function TarjetaDestacada({ tono, titulo, descripcion, icono, accion, chi
     <div className={cn(variantes({ tono }), className)} {...props}>
       {icono ? <span className="mt-0.5 shrink-0 [&_svg:not([class*='size-'])]:size-5">{icono}</span> : null}
       <div className="min-w-0 flex-1 basis-56">
-        <p className="text-base leading-snug font-semibold break-words">{titulo}</p>
+        <p className="text-titulo break-words">{titulo}</p>
         {descripcion ? <p className="mt-1 text-control leading-relaxed break-words">{descripcion}</p> : null}
         {children ? <div className="mt-3">{children}</div> : null}
       </div>

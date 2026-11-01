@@ -14,7 +14,7 @@ export function CabeceraDialogo({ icon, titulo, descripcion }: { icon: IconoComp
       <div className="flex items-center gap-2.5">
         <IconoSeccion icon={icon} />
         <div className="min-w-0">
-          <DialogTitle className="text-base font-semibold tracking-tight">{titulo}</DialogTitle>
+          <DialogTitle className="text-titulo">{titulo}</DialogTitle>
           {descripcion ? <DialogDescription className="text-control">{descripcion}</DialogDescription> : null}
         </div>
       </div>
