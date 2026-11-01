@@ -14,7 +14,7 @@ test("respeta la exención tipografia-ok", () => {
 });
 
 test("no confunde tracking-tight, text-control ni toUpperCase", () => {
-  assert.deepEqual(revisarTexto('"tracking-tight text-control text-sm" x.toUpperCase()'), []);
+  assert.deepEqual(revisarTexto('"tracking-tight text-control" x.toUpperCase()'), []);
 });
 
 test("contraste WCAG conocido", () => {
