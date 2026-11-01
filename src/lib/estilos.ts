@@ -78,6 +78,13 @@ export const BOTON_DESTRUCTIVO_PIE = BOTON_DESTRUCTIVO;
 export const ROTULO = "text-etiqueta font-semibold uppercase tracking-[0.04em] text-texto-terciario";
 
 // ── Tablas ──
+// Acciones de la barra que aparece al seleccionar filas en `TablaDatos` (barra oscura: `foreground` de fondo).
+/** Botón de acción masiva: píldora clara sobre la barra oscura de selección. */
+export const ACCION_MASIVA = `inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-background/90 ${TRANSICION_CONTROL} hover:bg-background/12 hover:text-background focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none ${DESHABILITADO}`;
+/** Acción masiva destructiva (anular, eliminar). La barra invierte el tema (oscura en claro, clara en oscuro), así que el rojo
+ * también: rosa claro sobre la barra oscura (9.2:1) y rojo oscuro sobre la clara (6.2:1). Hex a propósito: no hay token invertido. */
+export const ACCION_MASIVA_PELIGRO = `inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-[#ff9fb0] ${TRANSICION_CONTROL} hover:bg-[#ff9fb0]/15 focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none dark:text-[#a3263c] dark:hover:bg-[#a3263c]/10 ${DESHABILITADO}`;
+
 // Celda de cabecera de la tabla estándar (`TableHead`). `patrones/pie-tabla` la re-exporta para no romper a quien la importa desde allí.
 export const CABECERA_TABLA = `h-auto px-3 pt-2.5 pb-1 ${ROTULO}`;
 

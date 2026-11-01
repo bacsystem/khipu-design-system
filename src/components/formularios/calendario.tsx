@@ -104,13 +104,12 @@ export function Calendario({
                 const esHoy = d.iso === hoy;
                 const habilitado = dentroDeRango(d.iso, min, max);
                 return (
-                  <td key={d.iso} className="p-0.5 text-center">
+                  <td key={d.iso} role="gridcell" aria-selected={elegido} className="p-0.5 text-center">
                     <button
                       type="button"
                       data-iso={d.iso}
                       tabIndex={d.iso === foco ? 0 : -1}
                       disabled={!habilitado}
-                      aria-selected={elegido}
                       aria-current={esHoy ? "date" : undefined}
                       aria-label={formatearFecha(d.iso)}
                       onClick={() => onElegir(d.iso)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, ListNumbersIcon, PackageIcon, PaletteIcon, PaperPlaneTiltIcon, PencilSimpleIcon, RocketLaunchIcon, ShieldCheckIcon, SparkleIcon, TextBIcon, TextItalicIcon, TextUnderlineIcon, TrashIcon, TrayIcon } from "@phosphor-icons/react";
+import { BellIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, ListNumbersIcon, PackageIcon, PaletteIcon, PaperPlaneTiltIcon, PencilSimpleIcon, ProhibitIcon, RocketLaunchIcon, ShieldCheckIcon, SparkleIcon, TextBIcon, TextItalicIcon, TextUnderlineIcon, TrashIcon, TrayIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -52,7 +52,7 @@ import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/compon
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar";
-import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_SECUNDARIO, ENTRADA, pasoEntrada, TARJETA } from "@/lib/estilos";
+import { ACCION_MASIVA, ACCION_MASIVA_PELIGRO, ACCION_PRINCIPAL, ACCION_SECUNDARIA, BOTON_PRIMARIO, BOTON_SECUNDARIO, ENTRADA, pasoEntrada, TARJETA } from "@/lib/estilos";
 import { formatearMonto } from "@/lib/formato";
 import { cn } from "@/lib/utils";
 
@@ -501,10 +501,16 @@ export function Galeria() {
             onCambio: setDocsSeleccionados,
             acciones: (
               <>
-                <button type="button" className="text-control font-medium text-accent-foreground hover:underline" onClick={() => toast.ok("Reenviados", `${docsSeleccionados.length} documento(s) en cola.`)}>
+                <button type="button" className={ACCION_MASIVA} onClick={() => toast.ok("Reenviados", `${docsSeleccionados.length} documento(s) en cola.`)}>
+                  <PaperPlaneTiltIcon className="size-4" />
                   Reenviar
                 </button>
-                <button type="button" className="text-control font-medium text-destructive hover:underline" onClick={() => toast.error("No se pudo anular", "Requiere confirmación adicional.")}>
+                <button type="button" className={ACCION_MASIVA} onClick={() => toast.ok("Descarga lista", `${docsSeleccionados.length} XML comprimidos.`)}>
+                  <DownloadSimpleIcon className="size-4" />
+                  Descargar XML
+                </button>
+                <button type="button" className={ACCION_MASIVA_PELIGRO} onClick={() => toast.error("No se pudo anular", "Requiere confirmación adicional.")}>
+                  <ProhibitIcon className="size-4" />
                   Anular
                 </button>
               </>

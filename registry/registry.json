@@ -286,6 +286,22 @@
         "lib/utils"
       ]
     },
+    "components/formularios/calendario": {
+      "name": "calendario",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/calendario.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "lib/calendario",
+        "lib/formato",
+        "lib/utils"
+      ]
+    },
     "components/formularios/campo": {
       "name": "campo",
       "type": "component",
@@ -371,8 +387,11 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/formularios/calendario",
+        "components/ui/popover",
         "lib/estilos",
         "lib/formato",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -482,8 +501,7 @@
       "registryDependencies": [
         "components/apariencia",
         "components/diseno",
-        "components/nav/selector-apariencia",
-        "components/nav/selector-diseno",
+        "components/nav/panel-apariencia",
         "components/nav/theme-toggle",
         "components/ui/menu",
         "lib/estilos",
@@ -504,6 +522,26 @@
       "registryDependencies": [
         "components/ui/button",
         "components/ui/sheet"
+      ]
+    },
+    "components/nav/panel-apariencia": {
+      "name": "panel-apariencia",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/panel-apariencia.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/apariencia",
+        "components/diseno",
+        "components/nav/selector-apariencia",
+        "components/nav/selector-diseno",
+        "components/nav/theme-toggle",
+        "components/navegacion/panel-lateral",
+        "lib/estilos"
       ]
     },
     "components/nav/selector-apariencia": {
@@ -1295,6 +1333,16 @@
       "dependencies": [
         "@phosphor-icons/react"
       ],
+      "registryDependencies": []
+    },
+    "lib/calendario": {
+      "name": "calendario",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/calendario.ts"
+      ],
+      "dependencies": [],
       "registryDependencies": []
     }
   }

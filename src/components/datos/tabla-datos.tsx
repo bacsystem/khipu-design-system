@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { ArrowDownIcon, ArrowUpIcon, ArrowsDownUpIcon, CheckIcon, MinusIcon, TrayIcon } from "@phosphor-icons/react";
+import { ArrowDownIcon, ArrowUpIcon, ArrowsDownUpIcon, CheckIcon, MinusIcon, TrayIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
@@ -151,14 +151,30 @@ export function TablaDatos<T>({
           transition={reducir ? { duration: 0 } : { duration: DURACION.media, ease: CURVA_SALIDA }}
           className="overflow-hidden"
         >
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-accent/60 px-4 py-2 text-control text-accent-foreground">
-          <span className="font-medium">
-            <span className="font-mono font-semibold">{seleccionados.length}</span> seleccionado{seleccionados.length === 1 ? "" : "s"}
-          </span>
-          <div className="flex items-center gap-2">
-            {seleccion.acciones}
-            <button type="button" onClick={() => seleccion.onCambio([])} className="text-control font-medium text-muted-foreground transition-colors hover:text-foreground">
-              Cancelar
+        {/* Barra de acciones masivas: píldora oscura sobre la tabla, contador en el acento, acciones en píldora
+            (recetas ACCION_MASIVA / ACCION_MASIVA_PELIGRO) y «Quitar selección» al final. */}
+        <div className="px-1 pt-2 pb-1">
+          <div
+            role="toolbar"
+            aria-label="Acciones sobre la selección"
+            className="flex flex-wrap items-center gap-1 rounded-full bg-foreground py-1 pr-1 pl-1.5 text-control text-background shadow-elevada"
+          >
+            <span className="flex items-center gap-2 pr-2">
+              <span className="grid h-7 min-w-7 place-items-center rounded-full bg-acento px-2 text-control font-semibold text-acento-texto tabular-nums">
+                {seleccionados.length}
+              </span>
+              <span className="font-medium">seleccionado{seleccionados.length === 1 ? "" : "s"}</span>
+            </span>
+            <span aria-hidden className="mx-1 h-5 w-px bg-background/20" />
+            <div className="flex flex-1 flex-wrap items-center gap-0.5">{seleccion.acciones}</div>
+            <button
+              type="button"
+              aria-label="Quitar selección"
+              title="Quitar selección"
+              onClick={() => seleccion.onCambio([])}
+              className="grid size-8 shrink-0 place-items-center rounded-full text-background/70 transition-colors hover:bg-background/12 hover:text-background focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none"
+            >
+              <XIcon weight="bold" className="size-4" />
             </button>
           </div>
         </div>
