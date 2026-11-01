@@ -55,7 +55,7 @@ export function EntradaMonto({
           onCambio(Number.isFinite(n) ? Math.round(n * 100) / 100 : null);
         }}
         onBlur={() => setEditando(false)}
-        className={cn(CAMPO, "pl-9 pr-20 text-right font-mono text-control tabular-nums")}
+        className={cn(CAMPO, "pl-9 pr-20 text-right font-mono tabular-nums")}
       />
       {monedas.length > 1 && onMoneda ? (
         <select

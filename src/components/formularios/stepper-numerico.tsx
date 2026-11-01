@@ -57,7 +57,7 @@ export function StepperNumerico({
           <MinusIcon weight="bold" className="size-3.5" />
         </NumberField.Decrement>
         <NumberField.Input
-          className="w-12 bg-transparent text-center text-control font-semibold text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-12 bg-transparent text-center text-campo md:text-control font-semibold text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
         <NumberField.Increment
           aria-label="Aumentar"
