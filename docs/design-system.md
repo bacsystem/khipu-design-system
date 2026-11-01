@@ -166,7 +166,7 @@ Reglas:
 - **Mono solo para identificadores.** Ni las ayudas de campo ni los montos van en mono.
 - **Números:** `tabular-nums` en todo dato numérico; montos en 650.
 - El texto terciario nunca baja de 4.5:1 (§2 «Contraste»).
-- `npm run check:tipografia` prohíbe en `src/components`, `src/app/ejemplo` y `src/lib` los tamaños sueltos (`text-[Npx]`), los de Tailwind (`text-sm`, `text-base`…; salvo en los primitivos de `components/ui/`, que se migran aparte) y `uppercase` o el tracking ancho fuera de `src/lib/estilos.ts`. Una línea que necesite un literal en mayúsculas lleva el comentario de exención `tipografia-ok`. `cn` (`src/lib/utils.ts`) conoce la escala, `titulo` y `titulo-pagina` incluidos, así que no confunde un tamaño con un color al combinar clases.
+- `npm run check:tipografia` prohíbe en `src/components`, `src/app/ejemplo` y `src/lib` los tamaños sueltos (`text-[Npx]`), los de Tailwind (`text-sm`, `text-base`…, también en los primitivos de `components/ui/`) y `uppercase` o el tracking ancho fuera de `src/lib/estilos.ts`. Una línea que necesite un literal en mayúsculas lleva el comentario de exención `tipografia-ok`. `cn` (`src/lib/utils.ts`) conoce la escala, `titulo` y `titulo-pagina` incluidos, así que no confunde un tamaño con un color al combinar clases.
 
 ---
 
@@ -600,7 +600,7 @@ Props nuevas, todas opcionales: `icono`, `tono` (`ok | aviso | error | neutro | 
 ### Gráficos
 
 - Con una serie, `GraficoBarras` pinta las barras en `--chart-base` (el `acento-2` de la paleta; en oscuro al 38 %) y la barra `destacado` (índice) en `--chart-destacado`, el `acento` pleno. Con varias series usa `--chart-1..5` en orden fijo. `GraficoLineas` y `Sparkline` usan `--chart-1`.
-- **Accesibilidad:** las barras pastel no llegan a 3:1 sobre la tarjeta en claro. Se compensa con el valor de cada barra en su `<title>` (lo leen el lector de pantalla y el tooltip nativo), el tooltip con el valor al pasar el mouse y la barra destacada en `acento` con su etiqueta. Ningún dato se comunica solo por el color de la barra.
+- **Accesibilidad (WCAG 1.4.11):** el relleno pastel no llega a 3:1 sobre la tarjeta en claro, así que cada barra (y cada muestra de la leyenda) lleva un borde de 1 px en `--chart-trazo-*` (`base`, `destacado`, `3`, `4`, `5`), que sí supera 3:1 en las 5 paletas y los 3 tonos oscuros; `npm run check:contraste` lo comprueba. `GraficoLineas` con varias series usa esos mismos colores de trazo. Además, el valor de cada barra va en su `<title>` y en el tooltip: ningún dato se comunica solo por el color.
 - Rejilla recesiva, etiquetas de eje en texto terciario, leyenda solo con ≥ 2 series, máximo 5 series.
 
 ### Pendientes

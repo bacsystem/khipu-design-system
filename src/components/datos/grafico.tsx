@@ -9,9 +9,12 @@ import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 export type Serie = { nombre: string; valores: number[] };
-// Líneas: trazo fuerte (chart-1 es el texto del acento 2). Barras: los pasteles de la paleta, como en el boceto; desde la 4.ª serie, los semánticos.
-const COLORES = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
+// Barras: relleno pastel de la paleta (como en el boceto) con un borde de 1 px que sí llega a 3:1 sobre la tarjeta
+// (WCAG 1.4.11; el pastel solo queda en 1.3–1.6). Líneas: el color de borde de cada serie, que cumple el mismo 3:1
+// (el verde y el ámbar semánticos de chart-2/chart-3 quedaban en 2–2.5 sobre blanco). Lo mide `npm run check:contraste`.
 const COLORES_BARRAS = ["var(--chart-base)", "var(--chart-destacado)", "var(--acento-3)", "var(--chart-4)", "var(--chart-5)"];
+const TRAZOS = ["var(--chart-trazo-base)", "var(--chart-trazo-destacado)", "var(--chart-trazo-3)", "var(--chart-trazo-4)", "var(--chart-trazo-5)"];
+const COLORES = ["var(--chart-1)", ...TRAZOS.slice(1)];
 
 function escala(max: number, pasos = 4): number[] {
   if (max <= 0) return [0, 1];
@@ -23,13 +26,16 @@ function escala(max: number, pasos = 4): number[] {
 }
 
 /** Leyenda en píldoras, a la derecha del título. Solo con ≥ 2 series. */
-function Leyenda({ series, colores = COLORES }: { series: Array<{ nombre: string }>; colores?: string[] }) {
+function Leyenda({ series, colores = COLORES, trazos }: { series: Array<{ nombre: string }>; colores?: string[]; trazos?: string[] }) {
   if (series.length < 2) return null;
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       {series.map((s, i) => (
         <span key={s.nombre} className="inline-flex items-center gap-1.5 rounded-full bg-secondary py-0.5 pr-2.5 pl-2 text-etiqueta font-medium text-foreground">
-          <span className="size-2 rounded-full" style={{ background: colores[i % colores.length] }} />
+          <span
+            className="size-2.5 rounded-full"
+            style={{ background: colores[i % colores.length], boxShadow: trazos ? `inset 0 0 0 1px ${trazos[i % trazos.length]}` : undefined }}
+          />
           {s.nombre}
         </span>
       ))}
@@ -125,7 +131,7 @@ export function GraficoBarras({
 
   return (
     <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
-      <Cabecera titulo={titulo} leyenda={<Leyenda series={series} colores={COLORES_BARRAS} />} />
+      <Cabecera titulo={titulo} leyenda={<Leyenda series={series} colores={COLORES_BARRAS} trazos={TRAZOS} />} />
       <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={`${id}-t`} className="block max-w-full overflow-visible" style={{ fontSize: 10 }}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
         {ticks.map((t) => (
@@ -154,6 +160,8 @@ export function GraficoBarras({
                     key={s.nombre}
                     d={`M${bx},${mg.top + h} v${-Math.max(0, bh - r)} a${r},${r} 0 0 1 ${r},${-r} h${barra - 2 * r} a${r},${r} 0 0 1 ${r},${r} v${Math.max(0, bh - r)} z`}
                     fill={series.length === 1 ? (i === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES_BARRAS[j % COLORES_BARRAS.length]}
+                    stroke={series.length === 1 ? (i === destacado ? "var(--chart-trazo-destacado)" : "var(--chart-trazo-base)") : TRAZOS[j % TRAZOS.length]}
+                    strokeWidth={1}
                     style={{ originY: 1 }}
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 1 }}

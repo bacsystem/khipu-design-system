@@ -16,3 +16,7 @@ test("text-base y text-sm sueltos se marcan fuera de ui/", () => {
   assert.equal(revisarTexto('"text-base"', "src/components/patrones/x.tsx").length, 1);
   assert.equal(revisarTexto('"text-sm"', "src/components/patrones/x.tsx").length, 1);
 });
+
+test("ui/ ya no está exento: los primitivos también usan la escala", () => {
+  assert.equal(revisarTexto('"text-xs"', "src/components/ui/badge.tsx").length, 1);
+});

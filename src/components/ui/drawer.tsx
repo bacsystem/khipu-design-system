@@ -45,7 +45,7 @@ function DrawerContent({ className, children, ...props }: DrawerPrimitive.Popup.
         <DrawerPrimitive.Popup
           data-slot="drawer-content"
           className={cn(
-            "flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-xl border-t border-border bg-popover bg-clip-padding pb-[env(safe-area-inset-bottom)] text-sm text-popover-foreground shadow-lg transition-transform duration-(--duracion-media) ease-in-out data-ending-style:translate-y-full data-starting-style:translate-y-full sm:max-w-sm",
+            "flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-xl border-t border-border bg-popover bg-clip-padding pb-[env(safe-area-inset-bottom)] text-cuerpo text-popover-foreground shadow-lg transition-transform duration-(--duracion-media) ease-in-out data-ending-style:translate-y-full data-starting-style:translate-y-full sm:max-w-sm",
             className,
           )}
           {...props}
@@ -67,11 +67,11 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function DrawerTitle({ className, ...props }: DrawerPrimitive.Title.Props) {
-  return <DrawerPrimitive.Title data-slot="drawer-title" className={cn("font-heading text-base font-medium text-foreground", className)} {...props} />;
+  return <DrawerPrimitive.Title data-slot="drawer-title" className={cn("font-heading text-titulo text-foreground", className)} {...props} />;
 }
 
 function DrawerDescription({ className, ...props }: DrawerPrimitive.Description.Props) {
-  return <DrawerPrimitive.Description data-slot="drawer-description" className={cn("text-sm text-muted-foreground", className)} {...props} />;
+  return <DrawerPrimitive.Description data-slot="drawer-description" className={cn("text-control text-muted-foreground", className)} {...props} />;
 }
 
 export { Drawer, DrawerTrigger, DrawerClose, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription };

@@ -8,7 +8,7 @@ const TAMANOS = {
   sm: "size-6 text-etiqueta",
   default: "size-8 text-etiqueta",
   lg: "size-10 text-control",
-  xl: "size-12 text-base",
+  xl: "size-12 text-titulo",
 } as const;
 
 const TONOS = {

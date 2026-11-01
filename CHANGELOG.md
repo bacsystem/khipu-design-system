@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-11-01
+
+### Fixed
+- Chart contrast (WCAG 1.4.11): every bar and legend swatch gets a 1 px border in the new `--chart-trazo-*` tokens, ≥ 3:1 against the card in all 5 palettes and 3 dark tones. Multi-series lines use the same stroke colors. `verificar-contraste` now checks these pairs (620 pairs, 20 combinations).
+- `components/ui/*` primitives (`Badge`, `Avatar`, `Button` xs, `Drawer`, `Input`, `Label`, `Table` caption) use the named type scale (`text-etiqueta`, `text-control`, `text-cuerpo`, `text-titulo`) instead of Tailwind sizes; `verificar-tipografia` no longer exempts `ui/`.
+
 ## [0.5.0] - 2026-11-01
 
 ### Changed
