@@ -29,7 +29,7 @@ export function MenuAcciones({ acciones, etiqueta = "Más acciones", className }
           className,
         )}
       >
-        <DotsThreeIcon className="size-4" />
+        <DotsThreeIcon weight="bold" className="size-4" />
       </MenuTrigger>
       <MenuContent side="bottom" align="end" className="min-w-44">
         {acciones.map((a) => {

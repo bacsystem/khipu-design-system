@@ -93,7 +93,7 @@ export function MenuUsuario({
             <p className="truncate text-etiqueta leading-tight text-muted-foreground">{usuario.email}</p>
           </div>
         </div>
-        <CaretUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
+        <CaretUpDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70" />
       </MenuTrigger>
 
       {/* Mismo ancho y alineación que el disparador: no invade el contenido principal. */}

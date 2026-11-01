@@ -178,7 +178,7 @@ export function TablaDatos<T>({
                 {c.ordenable ? (
                   <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 hover:text-foreground", orden?.id === c.id && "text-foreground")}>
                     {c.titulo}
-                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon className="size-3" /> : <ArrowDownIcon className="size-3" /> : <ArrowsDownUpIcon className="size-3 opacity-50" />}
+                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon weight="bold" className="size-3" /> : <ArrowDownIcon weight="bold" className="size-3" /> : <ArrowsDownUpIcon weight="bold" className="size-3 opacity-50" />}
                   </button>
                 ) : (
                   c.titulo

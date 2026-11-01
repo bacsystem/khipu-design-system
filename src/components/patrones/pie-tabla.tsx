@@ -113,7 +113,7 @@ export function PieTabla({
       </div>
       <div className="flex items-center gap-1">
         <Salto a={pagina - 1} habilitado={hayAnterior} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
-          <CaretLeftIcon className="size-3.5" /> Anterior
+          <CaretLeftIcon weight="bold" className="size-3.5" /> Anterior
         </Salto>
         <div className="mx-1 flex items-center gap-0.5">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>
@@ -133,7 +133,7 @@ export function PieTabla({
           )}
         </div>
         <Salto a={pagina + 1} habilitado={haySiguiente} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
-          Siguiente <CaretRightIcon className="size-3.5" />
+          Siguiente <CaretRightIcon weight="bold" className="size-3.5" />
         </Salto>
       </div>
     </div>

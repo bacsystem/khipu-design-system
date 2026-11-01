@@ -54,7 +54,7 @@ export function BotonCopiar({
           transition={{ duration: DURACION.rapida, ease: CURVA_SALIDA }}
           className="inline-flex"
         >
-          {copiado ? <CheckIcon className="size-3.5 text-success-foreground" /> : <CopyIcon className="size-3.5" />}
+          {copiado ? <CheckIcon weight="bold" className="size-3.5 text-success-foreground" /> : <CopyIcon weight="bold" className="size-3.5" />}
         </m.span>
       </AnimatePresence></MovimientoLocal>
       {etiqueta ? (copiado ? "Copiado" : "Copiar") : null}

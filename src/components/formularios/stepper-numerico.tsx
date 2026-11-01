@@ -54,7 +54,7 @@ export function StepperNumerico({
             t.boton,
           )}
         >
-          <MinusIcon className="size-3.5" />
+          <MinusIcon weight="bold" className="size-3.5" />
         </NumberField.Decrement>
         <NumberField.Input
           className="w-14 border-x border-border bg-transparent text-center font-mono text-control text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
@@ -66,7 +66,7 @@ export function StepperNumerico({
             t.boton,
           )}
         >
-          <PlusIcon className="size-3.5" />
+          <PlusIcon weight="bold" className="size-3.5" />
         </NumberField.Increment>
       </NumberField.Group>
     </NumberField.Root>

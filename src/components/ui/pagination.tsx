@@ -112,7 +112,7 @@ function PaginationEllipsis({
       )}
       {...props}
     >
-      <DotsThreeIcon
+      <DotsThreeIcon weight="bold"
       />
       <span className="sr-only">Más páginas</span>
     </span>

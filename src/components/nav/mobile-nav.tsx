@@ -18,7 +18,7 @@ export function MobileNav({ children }: { children: ReactNode }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="ghost" size="icon-sm" />}>
-        <ListIcon className="size-5" />
+        <ListIcon weight="bold" className="size-5" />
         <span className="sr-only">Abrir menú</span>
       </SheetTrigger>
       <SheetContent side="left" showCloseButton={false} className="w-60 bg-sidebar p-0 text-sidebar-foreground">

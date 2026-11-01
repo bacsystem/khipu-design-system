@@ -62,7 +62,7 @@ function MenuRadioItem({ className, children, ...props }: MenuPrimitive.RadioIte
     <MenuPrimitive.RadioItem data-slot="menu-radio-item" className={cn(ITEM, "pr-8", className)} {...props}>
       {children}
       <MenuPrimitive.RadioItemIndicator className="absolute right-2 flex items-center">
-        <CheckIcon className="size-3.5 text-foreground" />
+        <CheckIcon weight="bold" className="size-3.5 text-foreground" />
       </MenuPrimitive.RadioItemIndicator>
     </MenuPrimitive.RadioItem>
   );

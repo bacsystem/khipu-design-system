@@ -42,7 +42,7 @@ function Lista() {
                 ) : null}
               </ToastPrimitive.Content>
               <ToastPrimitive.Close aria-label="Cerrar" className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
-                <XIcon className="size-3.5" />
+                <XIcon weight="bold" className="size-3.5" />
               </ToastPrimitive.Close>
             </ToastPrimitive.Root>
           );

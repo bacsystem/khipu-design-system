@@ -61,7 +61,7 @@ export function ConfirmacionEnLinea({
             <m.div key="confirmar" {...CAMBIO} className="flex items-center justify-end gap-1">
               <span className="mr-1 text-etiqueta text-muted-foreground">{pregunta}</span>
               <button type="button" disabled={pendiente} onClick={ejecutar} className={cn(ACCION, "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90")}>
-                {pendiente ? <ArrowClockwiseIcon className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
+                {pendiente ? <ArrowClockwiseIcon weight="bold" className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
                 {confirmar}
               </button>
               <button type="button" disabled={pendiente} onClick={() => setAbierto(false)} className={cn(ACCION, "border border-border bg-card text-foreground shadow-xs hover:bg-secondary")}>

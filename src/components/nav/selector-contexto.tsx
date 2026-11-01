@@ -72,7 +72,7 @@ export function SelectorContexto({
             {activo?.detalle ? <p className="truncate font-mono text-etiqueta leading-tight text-muted-foreground">{activo.detalle}</p> : null}
           </div>
         </div>
-        <CaretUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
+        <CaretUpDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70" />
       </SelectPrimitive.Trigger>
 
       <SelectContent align="start" alignItemWithTrigger={false} sideOffset={6} className="w-(--anchor-width) min-w-0 p-1">
@@ -89,7 +89,7 @@ export function SelectorContexto({
               {item.detalle ? <span className="block truncate font-mono text-etiqueta leading-tight text-muted-foreground">{item.detalle}</span> : null}
             </div>
             <SelectPrimitive.ItemIndicator className="absolute right-2 flex size-4 items-center justify-center text-primary">
-              <CheckIcon className="size-4" />
+              <CheckIcon weight="bold" className="size-4" />
             </SelectPrimitive.ItemIndicator>
           </SelectPrimitive.Item>
         ))}

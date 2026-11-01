@@ -18,7 +18,7 @@ export function AccionesEjemplo({ principal, secundaria }: { principal: string; 
       </button>
       <Dialog open={abierto} onOpenChange={setAbierto}>
         <DialogTrigger className={principal}>
-          <PlusIcon className="size-4" />
+          <PlusIcon weight="bold" className="size-4" />
           Nuevo documento
         </DialogTrigger>
         <DialogContent className="gap-0 p-0">

@@ -24,7 +24,7 @@ export function Spinner({
   className?: string;
 } & Omit<SVGProps<SVGSVGElement>, "className">) {
   return (
-    <CircleNotchIcon
+    <CircleNotchIcon weight="bold"
       role="status"
       aria-label="Cargando"
       className={cn("animate-spin text-current", TAMANOS[tamano], className)}

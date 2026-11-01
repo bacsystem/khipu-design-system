@@ -61,7 +61,7 @@ export function ZonaArchivos({
           onClick={() => onCambio(null)}
           className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
         >
-          <XIcon className="size-4" />
+          <XIcon weight="bold" className="size-4" />
         </button>
       </div>
     );

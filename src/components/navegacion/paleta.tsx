@@ -95,7 +95,7 @@ export function Paleta({
       <DialogContent className="mt-[12vh] gap-0 self-start overflow-hidden p-0 sm:max-w-lg" showCloseButton={false}>
         <DialogTitle className="sr-only">Paleta de comandos</DialogTitle>
         <div className="flex items-center gap-2 border-b border-border/60 px-3">
-          <MagnifyingGlassIcon className="size-4 shrink-0 text-muted-foreground/70" />
+          <MagnifyingGlassIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70" />
           <input
             autoFocus
             value={q}

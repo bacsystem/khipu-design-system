@@ -41,7 +41,7 @@ export function Combobox({
       <div className="relative">
         <ComboboxPrimitive.Input id={id} placeholder={placeholder} className={cn(CAMPO, "pr-9", className)} />
         <ComboboxPrimitive.Trigger aria-label="Abrir opciones" className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5 text-muted-foreground/70 hover:text-foreground">
-          <CaretDownIcon className="size-4" />
+          <CaretDownIcon weight="bold" className="size-4" />
         </ComboboxPrimitive.Trigger>
       </div>
       <ComboboxPrimitive.Portal>
@@ -60,7 +60,7 @@ export function Combobox({
                     {item.detalle ? <span className="truncate font-mono text-etiqueta font-normal text-muted-foreground">{item.detalle}</span> : null}
                   </span>
                   <ComboboxPrimitive.ItemIndicator className="absolute right-2 text-primary">
-                    <CheckIcon className="size-4" />
+                    <CheckIcon weight="bold" className="size-4" />
                   </ComboboxPrimitive.ItemIndicator>
                 </ComboboxPrimitive.Item>
               )}

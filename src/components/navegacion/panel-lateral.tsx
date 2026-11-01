@@ -43,7 +43,7 @@ export function PanelLateral({
             {descripcion ? <p className="text-control text-muted-foreground">{descripcion}</p> : null}
           </div>
           <SheetClose aria-label="Cerrar" className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
-            <XIcon className="size-4" />
+            <XIcon weight="bold" className="size-4" />
           </SheetClose>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>

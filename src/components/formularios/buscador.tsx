@@ -35,7 +35,7 @@ export function Buscador({
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "value" | "onChange" | "placeholder" | "className" | "type">) {
   return (
     <div className="relative flex items-center">
-      <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
+      <MagnifyingGlassIcon weight="bold" className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
       <input
         id={id}
         type="search"
@@ -57,7 +57,7 @@ export function Buscador({
           onClick={() => onCambio("")}
           className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
         >
-          <XIcon className="size-3.5" />
+          <XIcon weight="bold" className="size-3.5" />
         </button>
       ) : null}
     </div>

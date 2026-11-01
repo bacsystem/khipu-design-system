@@ -81,7 +81,7 @@ export function TopBar({
       <div className="flex shrink-0 items-center gap-2.5">
         {buscador ? (
           <div className="relative hidden w-72 lg:block" title={buscador.title}>
-            <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-texto-terciario" />
+            <MagnifyingGlassIcon weight="bold" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-texto-terciario" />
             <input
               readOnly
               disabled={!buscador.onClick}
