@@ -4,51 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>khipu Design System</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
   :root {
-    --background: #fbfbfc; --foreground: #18181b;
-    --card: #ffffff; --muted: #f7f7f8; --muted-foreground: #6b6b76;
-    --secondary: #f4f4f5; --border: #e8e8ec;
-    --primary: #5b5bd6; --primary-light: #7373e0; --primary-foreground: #ffffff;
-    --accent: #f0f0fd; --accent-foreground: #4747c2; --accent-border: rgba(91,91,214,.22);
-    --success: #edfaf3; --success-foreground: #0f7b4f; --success-border: rgba(15,123,79,.18); --success-solid: #16a34a;
-    --warning: #fef8ec; --warning-foreground: #a15c07; --warning-border: rgba(161,92,7,.18); --warning-solid: #f59e0b;
-    --destructive: #dc2547; --destructive-soft: #fdeef1; --destructive-text: #b91c3c; --destructive-border: rgba(220,37,71,.2);
-    --overlay: rgba(10,10,15,.32); --ring: #5b5bd6;
-    --sidebar: #fbfbfc; --sidebar-foreground: #3f3f46; --sidebar-primary: #ededf5; --sidebar-primary-foreground: #3c3cb0; --sidebar-accent: #f2f2f4;
-    --code-bg: #0f0f14; --code-fg: #e4e4e9;
-    --shadow-2xs: 0 1px 2px rgba(16,16,24,.05); --shadow-xs: 0 1px 2px rgba(16,16,24,.06), 0 1px 3px rgba(16,16,24,.04); --shadow-md: 0 4px 12px -2px rgba(16,16,24,.08), 0 2px 4px -2px rgba(16,16,24,.05);
-    --radius: 8px;
-    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --background: #eceef1; --foreground: #16181d;
+    --card: #ffffff; --muted: #f4f5f7; --muted-foreground: #5d6170;
+    --secondary: #f4f5f7; --border: rgba(16,17,20,.08);
+    --primary: #16181d; --primary-light: #3a3d45; --primary-foreground: #ffffff;
+    --accent: #f2fbd3; --accent-foreground: #2f3a07; --accent-border: rgba(47,58,7,.2);
+    --success: #e5f5c4; --success-foreground: #2f6b12; --success-border: rgba(47,107,18,.18); --success-solid: #16a34a;
+    --warning: #fdf0c2; --warning-foreground: #8a5a00; --warning-border: rgba(138,90,0,.18); --warning-solid: #f59e0b;
+    --destructive: #dc2547; --destructive-soft: #fde3e7; --destructive-text: #a3263c; --destructive-border: rgba(163,38,60,.2);
+    --overlay: rgba(16,17,20,.32); --ring: #2f3a07;
+    --sidebar: #ffffff; --sidebar-foreground: #5d6170; --sidebar-primary: #d4f06b; --sidebar-primary-foreground: #2f3a07; --sidebar-accent: #f4f5f7;
+    --code-bg: #16181d; --code-fg: #e4e4e9;
+    --shadow-2xs: 0 1px 2px rgba(16,17,20,.05); --shadow-xs: 0 1px 2px rgba(16,17,20,.06), 0 1px 3px rgba(16,17,20,.04); --shadow-md: 0 4px 12px -2px rgba(16,17,20,.08), 0 2px 4px -2px rgba(16,17,20,.05);
+    --radius: 12px;
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --background: #0b0b0f; --foreground: #ededf0;
-      --card: #131318; --muted: #16161b; --muted-foreground: #9b9ba6;
-      --secondary: #1c1c22; --border: rgba(255,255,255,.08);
-      --primary: #8585f2; --primary-light: #a3a3f7; --primary-foreground: #0b0b0f;
-      --accent: #1e1e33; --accent-foreground: #b4b4fa; --accent-border: rgba(133,133,242,.28);
-      --success: #0f2a1f; --success-foreground: #4fd19a; --success-border: rgba(79,209,154,.25); --success-solid: #34d399;
-      --warning: #2e2410; --warning-foreground: #f2c25c; --warning-border: rgba(242,194,92,.25); --warning-solid: #fbbf24;
-      --destructive: #fb6f8a; --destructive-soft: #2a1a20; --destructive-text: #fb6f8a; --destructive-border: rgba(251,111,138,.3);
-      --overlay: rgba(0,0,0,.6); --ring: #8585f2;
-      --sidebar: #0b0b0f; --sidebar-foreground: #c4c4cc; --sidebar-primary: #1e1e33; --sidebar-primary-foreground: #b4b4fa; --sidebar-accent: #16161b;
+      --background: #0a0f1c; --foreground: #e9eef8;
+      --card: #111a2c; --muted: #19233a; --muted-foreground: #a3afc7;
+      --secondary: #19233a; --border: rgba(233,238,248,.07);
+      --primary: #f4f5f7; --primary-light: #ffffff; --primary-foreground: #0a0b0e;
+      --accent: #2c3835; --accent-foreground: #d4f06b; --accent-border: rgba(212,240,107,.26);
+      --success: #273432; --success-foreground: #b9e45a; --success-border: rgba(185,228,90,.25); --success-solid: #a3d94a;
+      --warning: #2e3232; --warning-foreground: #f3cf5a; --warning-border: rgba(243,207,90,.25); --warning-solid: #fbbf24;
+      --destructive: #fb7189; --destructive-soft: #2f283a; --destructive-text: #f7899b; --destructive-border: rgba(247,137,155,.3);
+      --overlay: rgba(0,0,0,.6); --ring: #d4f06b;
+      --sidebar: #0f1626; --sidebar-foreground: #a3afc7; --sidebar-primary: #2c3835; --sidebar-primary-foreground: #d4f06b; --sidebar-accent: #19233a;
       --shadow-2xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.4); --shadow-xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 3px rgba(0,0,0,.45); --shadow-md: inset 0 1px 0 rgba(255,255,255,.05), 0 8px 24px -4px rgba(0,0,0,.6);
     }
   }
   :root[data-theme="dark"] {
-    --background: #0b0b0f; --foreground: #ededf0;
-    --card: #131318; --muted: #16161b; --muted-foreground: #9b9ba6;
-    --secondary: #1c1c22; --border: rgba(255,255,255,.08);
-    --primary: #8585f2; --primary-light: #a3a3f7; --primary-foreground: #0b0b0f;
-    --accent: #1e1e33; --accent-foreground: #b4b4fa; --accent-border: rgba(133,133,242,.28);
-    --success: #0f2a1f; --success-foreground: #4fd19a; --success-border: rgba(79,209,154,.25); --success-solid: #34d399;
-    --warning: #2e2410; --warning-foreground: #f2c25c; --warning-border: rgba(242,194,92,.25); --warning-solid: #fbbf24;
-    --destructive: #fb6f8a; --destructive-soft: #2a1a20; --destructive-text: #fb6f8a; --destructive-border: rgba(251,111,138,.3);
-    --overlay: rgba(0,0,0,.6); --ring: #8585f2;
-    --sidebar: #0b0b0f; --sidebar-foreground: #c4c4cc; --sidebar-primary: #1e1e33; --sidebar-primary-foreground: #b4b4fa; --sidebar-accent: #16161b;
+    --background: #0a0f1c; --foreground: #e9eef8;
+    --card: #111a2c; --muted: #19233a; --muted-foreground: #a3afc7;
+    --secondary: #19233a; --border: rgba(233,238,248,.07);
+    --primary: #f4f5f7; --primary-light: #ffffff; --primary-foreground: #0a0b0e;
+    --accent: #2c3835; --accent-foreground: #d4f06b; --accent-border: rgba(212,240,107,.26);
+    --success: #273432; --success-foreground: #b9e45a; --success-border: rgba(185,228,90,.25); --success-solid: #a3d94a;
+    --warning: #2e3232; --warning-foreground: #f3cf5a; --warning-border: rgba(243,207,90,.25); --warning-solid: #fbbf24;
+    --destructive: #fb7189; --destructive-soft: #2f283a; --destructive-text: #f7899b; --destructive-border: rgba(247,137,155,.3);
+    --overlay: rgba(0,0,0,.6); --ring: #d4f06b;
+    --sidebar: #0f1626; --sidebar-foreground: #a3afc7; --sidebar-primary: #2c3835; --sidebar-primary-foreground: #d4f06b; --sidebar-accent: #19233a;
     --shadow-2xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.4); --shadow-xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 3px rgba(0,0,0,.45); --shadow-md: inset 0 1px 0 rgba(255,255,255,.05), 0 8px 24px -4px rgba(0,0,0,.6);
   }
 
@@ -57,7 +57,7 @@
   .wrap { max-width: 1120px; margin: 0 auto; padding-block: 40px 80px; padding-inline: 24px; }
   a { color: var(--primary); }
   h1, h2, h3, h4 { text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
-  h1 { font-size: 28px; line-height: 36px; font-weight: 600; }
+  h1 { font-size: 28px; line-height: 34px; font-weight: 600; }
   h2 { font-size: 16px; font-weight: 600; }
   h3 { font-size: 13px; font-weight: 600; }
   h4 { font-size: 12px; font-weight: 600; }
@@ -125,7 +125,7 @@
 
   /* controls */
   .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 500; border: 1px solid transparent; cursor: pointer; white-space: nowrap; color: var(--foreground); background: transparent; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 500; border: 1px solid transparent; cursor: pointer; white-space: nowrap; color: var(--foreground); background: transparent; }
   .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
   .btn.primary { background: var(--foreground); color: var(--background); box-shadow: var(--shadow-xs); }
   .btn.brand { background: var(--primary); color: var(--primary-foreground); font-weight: 600; box-shadow: var(--shadow-xs); }
@@ -136,12 +136,12 @@
   .btn.danger:hover { background: var(--destructive-soft); }
   .btn.danger-solid { background: var(--destructive); color: var(--primary-foreground); box-shadow: var(--shadow-xs); }
   .btn[disabled] { opacity: .6; cursor: not-allowed; }
-  .btn.sm { height: 36px; padding: 0 10px; font-size: 11px; border-radius: 8px; }
-  .btn.h10 { height: 36px; padding: 0 14px; font-size: 13px; }
-  .btn.h9 { height: 36px; padding: 0 14px; font-size: 13px; }
+  .btn.sm { height: 34px; padding: 0 10px; font-size: 11px; border-radius: 8px; }
+  .btn.h10 { height: 34px; padding: 0 14px; font-size: 13px; }
+  .btn.h9 { height: 34px; padding: 0 14px; font-size: 13px; }
   .btn.xs { height: 24px; padding: 0 6px; font-size: 11px; border-radius: 6px; }
-  .btn.icon { width: 36px; padding: 0; justify-content: center; }
-  .btn.icon.sm { width: 36px; }
+  .btn.icon { width: 34px; padding: 0; justify-content: center; }
+  .btn.icon.sm { width: 34px; }
   .btn.suave { background: var(--accent); color: var(--accent-foreground); }
   .destacada { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; padding: 24px; border-radius: 12px; }
   .destacada .ic { flex-shrink: 0; margin-top: 2px; font-size: 18px; line-height: 1; }
@@ -154,25 +154,25 @@
   .destacada.ok { background: var(--success); color: var(--success-foreground); }
   .destacada.aviso { background: var(--warning); color: var(--warning-foreground); }
   .destacada.invertido { background: var(--foreground); color: var(--background); }
-  .segment { display: inline-flex; height: 36px; padding: 4px; gap: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--secondary); }
+  .segment { display: inline-flex; height: 34px; padding: 4px; gap: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--secondary); }
   .segment span { display: inline-flex; align-items: center; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .segment span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
-  .segment.sm { height: 36px; padding: 2px; gap: 2px; }
+  .segment.sm { height: 34px; padding: 2px; gap: 2px; }
   .segment.sm span { padding: 0 10px; font-size: 11px; }
-  .select { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); font-size: 12px; font-weight: 500; box-shadow: var(--shadow-2xs); }
+  .select { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); font-size: 12px; font-weight: 500; box-shadow: var(--shadow-2xs); }
   .select.off { color: var(--muted-foreground); opacity: .7; }
   .field { display: grid; gap: 6px; }
   .field label { font-size: 12px; font-weight: 500; }
-  .field input { height: 36px; width: 100%; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); padding: 0 12px; font: inherit; font-size: 14px; }
+  .field input { height: 34px; width: 100%; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); padding: 0 12px; font: inherit; font-size: 14px; }
   .field input:focus { outline: none; border-color: var(--ring); background: var(--card); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent); }
   .field input.err { border-color: var(--destructive); }
   .field .help { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
   .field .error { font-size: 13px; color: var(--destructive); }
   .dato { display: grid; gap: 4px; }
   .dato .l { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
-  .dato .v { height: 36px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+  .dato .v { height: 34px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
   .dato .v.pend { color: var(--muted-foreground); opacity: .6; cursor: not-allowed; border-style: dashed; }
-  .tt { display: inline-flex; height: 36px; padding: 2px; gap: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); }
+  .tt { display: inline-flex; height: 34px; padding: 2px; gap: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); }
   .tt span { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; color: var(--muted-foreground); font-size: 12px; }
   .tt span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
   .tt.wide { width: 100%; }
@@ -193,9 +193,9 @@
   .right { text-align: right; }
   .tfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 16px; background: var(--muted); border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); }
   .pager { display: inline-flex; align-items: center; gap: 4px; }
-  .pager span { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; font-family: var(--font-mono); font-size: 11px; }
+  .pager span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px; font-family: var(--font-mono); font-size: 11px; }
   .pager span.on { background: var(--foreground); color: var(--background); }
-  .seg-sm { display: inline-flex; height: 36px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+  .seg-sm { display: inline-flex; height: 34px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
   .seg-sm span { min-width: 32px; padding: 0 6px; height: 30px; display: grid; place-items: center; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
   .seg-sm span.on { background: var(--foreground); color: var(--background); }
   .empty { padding: 44px 16px; text-align: center; color: var(--muted-foreground); font-size: 13px; display: grid; gap: 6px; justify-items: center; }
@@ -225,7 +225,7 @@
   .crumb .sl { color: var(--border); }
   .crumb b { font-weight: 600; }
   .vsep { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
-  .search { display: inline-flex; align-items: center; gap: 8px; height: 36px; width: 220px; padding: 0 8px 0 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: 12px; opacity: .8; }
+  .search { display: inline-flex; align-items: center; gap: 8px; height: 34px; width: 220px; padding: 0 8px 0 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: 12px; opacity: .8; }
   .search kbd { margin-left: auto; font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); background: var(--card); }
   .topbar-note { display: grid; gap: 4px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); background: var(--card); }
   .shellbody { display: grid; grid-template-columns: 240px minmax(0,1fr); }
@@ -293,7 +293,7 @@
   .two { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
   @media (max-width: 520px) { .two { grid-template-columns: 1fr; } }
   .secret { display: flex; gap: 8px; align-items: center; }
-  .secret code { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .secret code { flex: 1; min-width: 0; height: 34px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--foreground); font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .callout { display: flex; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
   .callout.warn { background: var(--warning); color: var(--warning-foreground); border: 1px solid var(--warning-border); }
   .callout.ok { background: var(--success); color: var(--success-foreground); border: 1px solid var(--success-border); }
@@ -374,7 +374,7 @@
   </section>
 
   <section>
-    <div class="section-head"><h2>Color · marca y semánticos</h2><p>El índigo es el único acento. Verde, ámbar y rosa son estado, no decoración.</p></div>
+    <div class="section-head"><h2>Color · marca y semánticos</h2><p>El color de acento es la paleta que elige cada usuario (Lima por defecto; también Índigo, Océano, Coral y Violeta) y vive en superficies: ítem activo, métrica destacada, gráficos. Verde, ámbar y rojo son estado y no cambian con la paleta.</p></div>
     <div class="grid cols-6">
       <div class="swatch"><div class="chipc" style="background:var(--primary)"></div><div class="info"><span class="name">primary / ring</span><span class="val">#5b5bd6</span><span class="val">dark #8585f2</span></div></div>
       <div class="swatch"><div class="chipc" style="background:linear-gradient(135deg,var(--primary),var(--primary-light))"></div><div class="info"><span class="name">primary → primary-light</span><span class="val">#5b5bd6 → #7373e0</span><span class="val">logo</span></div></div>
@@ -393,9 +393,9 @@
   </section>
 
   <section>
-    <div class="section-head"><h2>Tipografía</h2><p>Geist para interfaz, Geist Mono solo para datos: series, montos, fechas en celdas, ids, hashes, código. Escala con nombre: <code>text-etiqueta</code> 12, <code>text-control</code> 13, <code>text-cuerpo</code> 14, <code>text-base</code> 16, <code>text-metrica</code> 24.</p></div>
+    <div class="section-head"><h2>Tipografía</h2><p>Inter para interfaz, JetBrains Mono solo para identificadores: correlativos, ids, llaves, hashes, código (fechas y montos van en Inter con <code>tabular-nums</code>). Escala con nombre: <code>text-etiqueta</code> 11.5, <code>text-control</code> 13, <code>text-cuerpo</code> 13, <code>text-titulo</code> 14.5, <code>text-titulo-pagina</code> 21, <code>text-metrica</code> 26.</p></div>
     <div class="card pad">
-      <div class="spec"><span class="k">headline · 28/36 · 600</span><span style="font-size:28px;line-height:36px;font-weight:600;letter-spacing:-.02em">Series de facturación</span></div>
+      <div class="spec"><span class="k">headline · 28/36 · 600</span><span style="font-size:28px;line-height:34px;font-weight:600;letter-spacing:-.02em">Series de facturación</span></div>
       <div class="spec"><span class="k">dialog title · 16/24 · 600</span><span style="font-size:16px;font-weight:600;letter-spacing:-.01em">Nueva serie o contingencia</span></div>
       <div class="spec"><span class="k">page (miga) · 13 · 600</span><span style="font-size:13px"><span style="color:var(--muted-foreground)">Configuración</span> <span style="color:var(--border)">/</span> <b>API keys &amp; integración</b></span></div>
       <div class="spec"><span class="k">section · 13/11 mono</span><span><b style="font-size:13px">Llaves de acceso</b><br><span class="sub">Solo se guarda el hash · el secreto se muestra una vez, al crearla</span></span></div>
@@ -526,10 +526,10 @@
   </section>
 
   <section>
-    <div class="section-head"><h2>Botones y recetas</h2><p>La acción principal de la top bar es negra (foreground). El índigo confirma dentro de formularios. <span class="src">ui/button.tsx · lib/estilos.ts · nav/top-bar.tsx</span></p></div>
+    <div class="section-head"><h2>Botones y recetas</h2><p>La acción principal es casi negra en claro y casi blanca en oscuro; botones, chips y segmentados son píldoras. El color de la paleta no va en botones. <span class="src">ui/button.tsx · lib/estilos.ts · nav/top-bar.tsx</span></p></div>
     <div class="card pad stack">
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Top bar · h-9 · 12px</div>
+        <div class="eyebrow" style="margin-bottom:8px">Top bar · h-control (34 px) · 12px</div>
         <div class="row">
           <button class="btn primary">＋ Crear API key</button>
           <button class="btn outline">▤ Referencia técnica</button>
@@ -540,7 +540,7 @@
         </div>
       </div>
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Formularios y diálogos · h-9</div>
+        <div class="eyebrow" style="margin-bottom:8px">Formularios y diálogos · h-control (34 px)</div>
         <div class="row">
           <button class="btn brand h10">Guardar serie</button>
           <button class="btn outline h10">Cancelar</button>
@@ -570,7 +570,7 @@
         </div>
       </div>
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Acciones de fila · h-9 · 12px · separadas por |</div>
+        <div class="eyebrow" style="margin-bottom:8px">Acciones de fila · h-control (34 px) · 12px · separadas por |</div>
         <div class="row">
           <button class="btn ghost sm" disabled title="Regenerar: próximamente">⟳ Regenerar</button><span class="sep">|</span><button class="btn danger sm">⊘ Revocar</button>
           <span class="sep">·</span>
@@ -583,13 +583,13 @@
         <p class="lead" style="font-size:12px;margin-top:6px">Las confirmaciones irreversibles se hacen <b>en línea</b> dentro de la fila, no con un diálogo. El botón copiar (<code>boton-copiar.tsx</code>) cambia a ✓ durante 1,5 s y en filas aparece al pasar el cursor.</p>
       </div>
       <div>
-        <div class="eyebrow" style="margin-bottom:8px">Controles de filtro · h-9</div>
+        <div class="eyebrow" style="margin-bottom:8px">Controles de filtro · h-control (34 px)</div>
         <div class="row">
           <div class="segment"><span class="on">Todos</span><span>Facturas</span><span>Boletas</span><span>Notas de crédito</span></div>
           <div class="select">Estado SUNAT: Todos <span style="color:var(--muted-foreground)">▾</span></div>
           <div class="select off" title="Filtro por serie: próximamente">Serie: Todas ▾</div>
           <div class="select off" title="Filtro por período: próximamente">Período: Todos ▾</div>
-          <div class="select" style="width:36px;justify-content:center;padding:0" title="Refrescar lista">⟳</div>
+          <div class="select" style="width:34px;justify-content:center;padding:0" title="Refrescar lista">⟳</div>
           <div class="segment sm"><span class="on">cURL</span><span>Node.js / TS</span><span>Python</span></div>
           <div class="tt"><span class="on">☀</span><span>☾</span><span>▭</span></div>
         </div>
@@ -715,7 +715,7 @@
     <div class="section-head"><h2>Tabla estándar</h2><p>Barra de filtros → contenedor → cabecera muted → filas de 46px → vacío → pie con rango, filas por página y paginación. Mismo esqueleto en comprobantes, series y API keys.</p></div>
     <div class="thead-bar">
       <div class="sec-head"><div class="sec-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg></div><div><h3>Llaves de acceso</h3><span class="sub">Solo se guarda el hash · el secreto se muestra una vez, al crearla</span></div></div>
-      <div class="row"><div class="select">Estado: Todas ▾</div><div class="select" style="width:36px;justify-content:center;padding:0">⟳</div></div>
+      <div class="row"><div class="select">Estado: Todas ▾</div><div class="select" style="width:34px;justify-content:center;padding:0">⟳</div></div>
     </div>
     <div class="card" style="overflow:hidden">
       <div style="overflow-x:auto">
@@ -909,7 +909,7 @@
     <ul class="rules">
       <li><b>Solo datos reales.</b> Lo que Stitch muestra y el backend no soporta se renderiza deshabilitado con <code>title</code> explicativo, nunca se oculta ni se simula.</li>
       <li><b>Color por token.</b> Nada de <code>emerald-500</code> ni hex en componentes; los semánticos tienen fondo, texto, borde y sólido, con variante dark.</li>
-      <li><b>Mono para datos.</b> Series, correlativos, montos, fechas, RUC, hashes y códigos SUNAT van en Geist Mono con <code>tabular-nums</code>.</li>
+      <li><b>Mono solo para identificadores.</b> Series, correlativos, hashes, llaves y códigos SUNAT van en JetBrains Mono; montos, fechas, RUC y cantidades en Inter con <code>tabular-nums</code>.</li>
       <li><b>Sin desbordes.</b> Contenedores flex/grid llevan <code>min-w-0</code>; columnas <code>minmax(0,1fr)</code>; tablas dentro de <code>overflow-x-auto</code>; textos que crecen envuelven, no se recortan. La miga de la top bar lleva <code>overflow-hidden</code> para no pisar los pills.</li>
       <li><b>El TopBar es el h1.</b> Las páginas no repiten título; el breadcrumb y la acción principal contextual viven en el header. Máximo dos secundarias + una principal; el resto va en diálogos.</li>
       <li><b>Popups al ancho del disparador.</b> Selector de empresa y menú de usuario miden lo que su tarjeta (<code>w-(--anchor-width)</code>, <code>min-w-0</code>) y no invaden el contenido principal.</li>
