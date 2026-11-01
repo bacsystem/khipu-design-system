@@ -4,6 +4,7 @@ import { m } from "motion/react";
 import { useId, useState } from "react";
 import { MovimientoLocal } from "@/components/movimiento";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
+import { TARJETA } from "@/lib/estilos";
 import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
@@ -37,17 +38,17 @@ function Leyenda({ series }: { series: Serie[] }) {
 function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array<{ nombre: string; valor: string; color: string }> }) {
   return (
     <div
-      className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-etiqueta text-popover-foreground shadow-md"
+      className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-lg bg-foreground px-2.5 py-1.5 text-etiqueta text-background shadow-md"
       style={{ left: `clamp(4rem, ${x}%, calc(100% - 4rem))` }}
     >
       <div className="mb-0.5 font-medium">{titulo}</div>
       {filas.map((f) => (
         <div key={f.nombre} className="flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5 text-background/70">
             <span className="size-2 rounded-sm" style={{ background: f.color }} />
             {f.nombre}
           </span>
-          <span className="font-mono tabular-nums">{f.valor}</span>
+          <span className="font-semibold tabular-nums">{f.valor}</span>
         </div>
       ))}
     </div>
@@ -64,6 +65,7 @@ export function GraficoBarras({
   formato = (v) => v.toLocaleString("en-US"),
   alto = 200,
   titulo,
+  destacado,
   className,
 }: {
   categorias: string[];
@@ -71,6 +73,8 @@ export function GraficoBarras({
   formato?: (v: number) => string;
   alto?: number;
   titulo?: string;
+  /** Índice de la categoría a resaltar con el acento de la paleta (solo con una serie). */
+  destacado?: number;
   className?: string;
 }) {
   const id = useId();
@@ -86,14 +90,14 @@ export function GraficoBarras({
   const y = (v: number) => mg.top + h - (v / max) * h;
 
   return (
-    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
-      {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
+    <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
+      {titulo ? <div className="px-1 pb-2 text-titulo text-foreground">{titulo}</div> : null}
       <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 3"} />
-            <text x={mg.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--muted-foreground)" fontFamily="var(--font-mono)">
+            <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" />
+            <text x={mg.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--texto-terciario)" className="tabular-nums">
               {formato(t)}
             </text>
           </g>
@@ -108,21 +112,24 @@ export function GraficoBarras({
                 const bx = x0 + j * (barra + 2);
                 const by = y(v);
                 const bh = Math.max(0, mg.top + h - by);
+                const r = Math.min(8, barra / 2);
                 // Crece desde la línea base; cada categoría entra 30 ms después de la anterior. scaleY es una transformación:
                 // con «reducir movimiento» MotionConfig la deja en su estado final.
                 return (
                   <m.path
                     key={s.nombre}
-                    d={`M${bx},${mg.top + h} v${-Math.max(0, bh - 4)} a4,4 0 0 1 4,-4 h${barra - 8} a4,4 0 0 1 4,4 v${Math.max(0, bh - 4)} z`}
-                    fill={COLORES[j % COLORES.length]}
+                    d={`M${bx},${mg.top + h} v${-Math.max(0, bh - r)} a${r},${r} 0 0 1 ${r},${-r} h${barra - 2 * r} a${r},${r} 0 0 1 ${r},${r} v${Math.max(0, bh - r)} z`}
+                    fill={series.length === 1 ? (i === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES[j % COLORES.length]}
                     style={{ originY: 1 }}
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 1 }}
                     transition={{ ...RESORTE_SUAVE, delay: i * 0.03 }}
-                  />
+                  >
+                    <title>{`${c}: ${formato(v)}`}</title>
+                  </m.path>
                 );
               })}
-              <text x={mg.left + i * grupo + grupo / 2} y={alto - 8} textAnchor="middle" fill="var(--muted-foreground)">
+              <text x={mg.left + i * grupo + grupo / 2} y={alto - 8} textAnchor="middle" fill="var(--texto-terciario)">
                 {c}
               </text>
             </g>
@@ -133,7 +140,11 @@ export function GraficoBarras({
         <Tooltip
           x={((mg.left + hover * grupo + grupo / 2) / ancho) * 100}
           titulo={categorias[hover]}
-          filas={series.map((s, j) => ({ nombre: s.nombre, valor: formato(s.valores[hover] ?? 0), color: COLORES[j % COLORES.length] }))}
+          filas={series.map((s, j) => ({
+            nombre: s.nombre,
+            valor: formato(s.valores[hover] ?? 0),
+            color: series.length === 1 ? (hover === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES[j % COLORES.length],
+          }))}
         />
       ) : null}
       <Leyenda series={series} />
@@ -169,14 +180,14 @@ export function GraficoLineas({
   const y = (v: number) => mg.top + h - (v / max) * h;
 
   return (
-    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
-      {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
+    <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
+      {titulo ? <div className="px-1 pb-2 text-titulo text-foreground">{titulo}</div> : null}
       <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de líneas"}</title>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 3"} />
-            <text x={mg.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--muted-foreground)" fontFamily="var(--font-mono)">
+            <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" />
+            <text x={mg.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--texto-terciario)" className="tabular-nums">
               {formato(t)}
             </text>
           </g>
@@ -196,7 +207,7 @@ export function GraficoLineas({
         {categorias.map((c, i) => (
           <g key={c}>
             <rect x={x(i) - w / categorias.length / 2} y={mg.top} width={w / categorias.length} height={h} fill="transparent" onMouseEnter={() => setHover(i)} />
-            <text x={x(i)} y={alto - 8} textAnchor="middle" fill="var(--muted-foreground)">
+            <text x={x(i)} y={alto - 8} textAnchor="middle" fill="var(--texto-terciario)">
               {c}
             </text>
           </g>
