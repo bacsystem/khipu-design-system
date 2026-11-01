@@ -10,6 +10,7 @@ import { Chip, ChipCodigo, PillEstado } from "@/components/patrones/pill-estado"
 import { NumeroAnimado } from "@/components/patrones/numero-animado";
 import { TablaVacia } from "@/components/patrones/pie-tabla";
 import { ENTRADA, TARJETA, pasoEntrada } from "@/lib/estilos";
+import { PESO_ICONO } from "@/lib/iconos";
 import { Galeria } from "./galeria";
 import { TablaEjemplo } from "./tabla";
 
@@ -93,7 +94,7 @@ export default function EjemploPage() {
       </div>
 
       <section className={`${ENTRADA} ${TARJETA}`} style={pasoEntrada(6)}>
-        <TablaVacia icon={<TrayIcon className="size-6" />}>Todavía no hay documentos. Crea el primero con «Nuevo documento».</TablaVacia>
+        <TablaVacia icon={<TrayIcon weight={PESO_ICONO} className="size-6" />}>Todavía no hay documentos. Crea el primero con «Nuevo documento».</TablaVacia>
       </section>
 
       <Galeria />
