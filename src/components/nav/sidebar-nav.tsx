@@ -5,6 +5,8 @@ import { m } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useId } from "react";
+import { ROTULO } from "@/lib/estilos";
+import { PESO_ICONO, PESO_ICONO_ACTIVO } from "@/lib/iconos";
 import { RESORTE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +25,7 @@ export type GrupoNav = { titulo: string; items: ItemNav[] };
 
 // Sin overflow-hidden: recortaría el fondo activo mientras se desliza desde otro ítem. La etiqueta trunca por su cuenta (min-w-0).
 // `isolate` deja el fondo activo (-z-10) detrás del icono y del texto.
-const ITEM_BASE = "relative isolate flex w-full min-w-0 items-center gap-2.5 rounded-md px-2.5 py-1.5 text-control";
+const ITEM_BASE = "relative isolate flex w-full min-w-0 items-center gap-2.5 rounded-full px-3 py-[7px] text-control";
 
 /** Navegación del sidebar por grupos; el ítem activo se detecta por prefijo de la ruta actual y su fondo se desliza al cambiar. */
 export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
@@ -32,18 +34,18 @@ export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
   const idIndicador = useId();
 
   return (
-    <nav className="grid w-full grid-cols-1 gap-3 px-2 pt-2">
+    <nav className="grid w-full grid-cols-1 gap-4 px-2.5 pt-2">
       {grupos.map((grupo) => (
         <div key={grupo.titulo} className="grid w-full grid-cols-1 gap-0.5">
-          <span className="truncate px-2.5 pt-1 pb-1 text-etiqueta font-medium text-muted-foreground">{grupo.titulo}</span>
+          <span className={cn("truncate px-3 pt-1 pb-1.5", ROTULO)}>{grupo.titulo}</span>
           {grupo.items.map((item) => {
             const Icono = item.icon;
             if (!item.href) {
               return (
                 <span key={item.label} aria-disabled="true" title={item.title ?? `${item.label}: próximamente`} className={cn(ITEM_BASE, "cursor-not-allowed text-muted-foreground/60")}>
-                  <Icono className="size-4 shrink-0 text-muted-foreground/50" />
+                  <Icono weight={PESO_ICONO} className="size-[18px] shrink-0 text-muted-foreground/50" />
                   <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                  <span className="shrink-0 rounded-md bg-secondary px-1.5 py-0.5 text-etiqueta font-medium whitespace-nowrap">{item.pendiente ?? "Pronto"}</span>
+                  <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-etiqueta font-medium whitespace-nowrap">{item.pendiente ?? "Pronto"}</span>
                 </span>
               );
             }
@@ -56,11 +58,11 @@ export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
                 className={cn(
                   ITEM_BASE,
                   "transition-colors duration-(--duracion-rapida) ease-salida",
-                  active ? "font-medium text-sidebar-primary-foreground" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                  active ? "font-semibold text-sidebar-primary-foreground" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                 )}
               >
-                {active ? <m.span layoutId={`${idIndicador}-activo`} aria-hidden transition={RESORTE} className="absolute inset-0 -z-10 rounded-md bg-sidebar-primary" /> : null}
-                <Icono className={cn("size-4 shrink-0", active ? "text-primary" : "text-muted-foreground")} />
+                {active ? <m.span layoutId={`${idIndicador}-activo`} aria-hidden transition={RESORTE} className="absolute inset-0 -z-10 rounded-full border border-acento-borde bg-sidebar-primary" /> : null}
+                <Icono weight={active ? PESO_ICONO_ACTIVO : PESO_ICONO} className={cn("size-[18px] shrink-0", active ? "text-current" : "text-muted-foreground")} />
                 <span className="min-w-0 flex-1 truncate">{item.label}</span>
               </Link>
             );

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { SidebarNav, type GrupoNav } from "./sidebar-nav";
 
 /**
- * Contenido del sidebar (240px en desktop, cajón lateral en móvil). Se compone por slots para no acoplarlo a ninguna app:
+ * Contenido del sidebar (216px en desktop, cajón lateral en móvil). Se compone por slots para no acoplarlo a ninguna app:
  * `marca` (LogoMarca), `chip` (p. ej. versión/estándar), `selector` (SelectorContexto), `grupos` (SidebarNav),
  * `pie` (tarjetas de plan, avisos) y `usuario` (MenuUsuario).
  */
@@ -24,7 +24,7 @@ export function SidebarContent({
   return (
     <div className="flex h-full w-full min-w-0 flex-col justify-between overflow-hidden select-none">
       <div className="flex w-full min-w-0 flex-col">
-        <div className="flex h-14 w-full min-w-0 shrink-0 items-center justify-between gap-2 overflow-hidden border-b border-border/60 px-4">
+        <div className="flex h-14 w-full min-w-0 shrink-0 items-center justify-between gap-2 overflow-hidden px-4">
           {marca}
           {chip}
         </div>
@@ -33,7 +33,7 @@ export function SidebarContent({
       </div>
 
       {pie || usuario ? (
-        <div className="flex w-full min-w-0 flex-col gap-2.5 border-t border-border/60 p-3">
+        <div className="flex w-full min-w-0 flex-col gap-2.5 p-3">
           {pie}
           {usuario}
         </div>
