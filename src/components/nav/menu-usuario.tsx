@@ -9,6 +9,7 @@ import { useDiseno } from "@/components/diseno";
 import { SelectorApariencia } from "@/components/nav/selector-apariencia";
 import { SelectorDiseno } from "@/components/nav/selector-diseno";
 import { ThemeToggle } from "@/components/nav/theme-toggle";
+import { ROTULO } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 export type UsuarioMenu = {
@@ -96,7 +97,7 @@ export function MenuUsuario({
       </MenuTrigger>
 
       {/* Mismo ancho y alineación que el disparador: no invade el contenido principal. */}
-      <MenuContent side="top" align="start" className="w-(--anchor-width) min-w-0">
+      <MenuContent side="top" align="start" className="w-[max(var(--anchor-width),15rem)] min-w-0">
         <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Tu cuenta</div>
         <div className="flex items-start gap-2.5 rounded-lg bg-accent py-1.5 pr-2 pl-2 text-accent-foreground">
           <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-acento text-etiqueta font-bold text-acento-texto shadow-xs">
@@ -113,9 +114,9 @@ export function MenuUsuario({
         {mostrarTema ? (
           <>
             <MenuSeparator />
-            <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Tema</div>
-            <div className="px-0.5 pb-1.5">
-              <ThemeToggle conTexto />
+            <div className="flex items-center justify-between gap-3 px-2 py-1.5">
+              <span className={ROTULO}>Tema</span>
+              <ThemeToggle />
             </div>
           </>
         ) : null}
@@ -123,7 +124,7 @@ export function MenuUsuario({
         {conDiseno ? (
           <>
             {mostrarTema ? null : <MenuSeparator />}
-            <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Diseño</div>
+            <div className={cn("px-2 pt-1.5 pb-1", ROTULO)}>Diseño</div>
             <div className="px-0.5 pb-1.5">
               <SelectorDiseno />
             </div>
@@ -133,8 +134,7 @@ export function MenuUsuario({
         {conApariencia ? (
           <>
             <MenuSeparator />
-            <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">Apariencia</div>
-            <div className="px-2 pb-2">
+            <div className="px-2 pt-1.5 pb-2.5">
               <SelectorApariencia />
             </div>
           </>

@@ -328,3 +328,23 @@ html[data-diseno="papel"].dark {
   --sidebar-border: rgba(246, 245, 244, 0.12);
   --sidebar-ring: #62aef0;
 }
+
+/*
+ * Tipografía (preferencia del usuario). Cada fuente la carga la app en --fuente-<valor> (next/font, ver src/app/layout.tsx);
+ * aquí solo se elige cuál va en --font-sans. Inter es la de la app (sin bloque). JetBrains Mono (--font-mono) no cambia.
+ */
+html:not([data-diseno="papel"])[data-fuente="jakarta"] {
+  --font-sans: var(--fuente-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+html:not([data-diseno="papel"])[data-fuente="manrope"] {
+  --font-sans: var(--fuente-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+
+html:not([data-diseno="papel"])[data-fuente="dmsans"] {
+  --font-sans: var(--fuente-dmsans), ui-sans-serif, system-ui, sans-serif;
+}
+
+html:not([data-diseno="papel"])[data-fuente="figtree"] {
+  --font-sans: var(--fuente-figtree), ui-sans-serif, system-ui, sans-serif;
+}

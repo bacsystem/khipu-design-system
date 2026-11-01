@@ -2,13 +2,17 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
+  CLAVE_FUENTE,
   CLAVE_PALETA,
   CLAVE_TONO_OSCURO,
+  FUENTES,
+  FUENTE_POR_DEFECTO,
   PALETAS,
   PALETA_POR_DEFECTO,
   TONOS_OSCURO,
   TONO_OSCURO_POR_DEFECTO,
   valorValido,
+  type Fuente,
   type Paleta,
   type PreferenciasApariencia,
   type TonoOscuro,
@@ -21,6 +25,9 @@ type ContextoApariencia = {
   tonoOscuro: string;
   setTonoOscuro: (valor: string) => void;
   tonosOscuro: TonoOscuro[];
+  fuente: string;
+  setFuente: (valor: string) => void;
+  fuentes: Fuente[];
 };
 
 // Sin proveedor no hay nada que elegir: las listas vacías hacen que SelectorApariencia y el menú de usuario no muestren nada.
@@ -31,10 +38,13 @@ const SIN_PROVEEDOR: ContextoApariencia = {
   tonoOscuro: TONO_OSCURO_POR_DEFECTO,
   setTonoOscuro: () => {},
   tonosOscuro: [],
+  fuente: FUENTE_POR_DEFECTO,
+  setFuente: () => {},
+  fuentes: [],
 };
 const Contexto = createContext<ContextoApariencia>(SIN_PROVEEDOR);
 
-/** Paleta y tono oscuro activos, y cómo cambiarlos. Fuera de `AparienciaProvider` devuelve listas vacías y no falla. */
+/** Paleta, tono oscuro y tipografía activos, y cómo cambiarlos. Fuera de `AparienciaProvider` devuelve listas vacías y no falla. */
 export function useApariencia(): ContextoApariencia {
   return useContext(Contexto);
 }
@@ -48,28 +58,31 @@ function guardar(clave: string, valor: string) {
 }
 
 /**
- * Guarda la paleta y el tono oscuro elegidos en localStorage y los aplica como `data-paleta` / `data-oscuro` en `<html>`.
- * `inicial` (p. ej. el perfil del usuario leído en el servidor) gana sobre lo guardado; `onCambio` recibe las dos
- * preferencias en cada cambio para que la app las guarde en su backend. Para que no haya parpadeo, pon `ScriptDiseno`
- * (con el mismo `inicial`) en el `<head>`.
+ * Guarda la paleta, el tono oscuro y la tipografía elegidos en localStorage y los aplica como `data-paleta`,
+ * `data-oscuro` y `data-fuente` en `<html>`. `inicial` (p. ej. el perfil del usuario leído en el servidor) gana sobre lo
+ * guardado; `onCambio` recibe las tres preferencias en cada cambio para que la app las guarde en su backend. Para que
+ * no haya parpadeo, pon `ScriptDiseno` (con el mismo `inicial`) en el `<head>`.
  */
 export function AparienciaProvider({
   children,
   paletas = PALETAS,
   tonosOscuro = TONOS_OSCURO,
+  fuentes = FUENTES,
   inicial,
   onCambio,
 }: {
   children: ReactNode;
   paletas?: Paleta[];
   tonosOscuro?: TonoOscuro[];
+  fuentes?: Fuente[];
   inicial?: Partial<PreferenciasApariencia>;
   onCambio?: (preferencias: PreferenciasApariencia) => void;
 }) {
   const [paleta, setPaletaEstado] = useState(() => valorValido(inicial?.paleta, paletas, PALETA_POR_DEFECTO));
   const [tonoOscuro, setTonoEstado] = useState(() => valorValido(inicial?.tonoOscuro, tonosOscuro, TONO_OSCURO_POR_DEFECTO));
-  const actual = useRef<PreferenciasApariencia>({ paleta, tonoOscuro });
-  actual.current = { paleta, tonoOscuro };
+  const [fuente, setFuenteEstado] = useState(() => valorValido(inicial?.fuente, fuentes, FUENTE_POR_DEFECTO));
+  const actual = useRef<PreferenciasApariencia>({ paleta, tonoOscuro, fuente });
+  actual.current = { paleta, tonoOscuro, fuente };
   const avisar = useRef(onCambio);
   avisar.current = onCambio;
 
@@ -78,7 +91,8 @@ export function AparienciaProvider({
     const d = document.documentElement.dataset;
     setPaletaEstado(valorValido(d.paleta, paletas, PALETA_POR_DEFECTO));
     setTonoEstado(valorValido(d.oscuro, tonosOscuro, TONO_OSCURO_POR_DEFECTO));
-  }, [paletas, tonosOscuro]);
+    setFuenteEstado(valorValido(d.fuente, fuentes, FUENTE_POR_DEFECTO));
+  }, [paletas, tonosOscuro, fuentes]);
 
   const setPaleta = useCallback(
     (valor: string) => {
@@ -102,9 +116,20 @@ export function AparienciaProvider({
     [tonosOscuro],
   );
 
+  const setFuente = useCallback(
+    (valor: string) => {
+      if (!fuentes.some((f) => f.valor === valor)) return;
+      setFuenteEstado(valor);
+      document.documentElement.dataset.fuente = valor;
+      guardar(CLAVE_FUENTE, valor);
+      avisar.current?.({ ...actual.current, fuente: valor });
+    },
+    [fuentes],
+  );
+
   const valor = useMemo(
-    () => ({ paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro }),
-    [paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro],
+    () => ({ paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro, fuente, setFuente, fuentes }),
+    [paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro, fuente, setFuente, fuentes],
   );
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }

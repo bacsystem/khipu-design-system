@@ -11,3 +11,8 @@ export type IconoComponente = ComponentType<{ className?: string; weight?: IconW
 export const PESO_ICONO: IconWeight = "duotone";
 /** Peso del estado activo o destacado (ítem del sidebar, métrica destacada, tab activa): relleno. */
 export const PESO_ICONO_ACTIVO: IconWeight = "fill";
+/**
+ * Peso de los iconos funcionales (caret, check, cerrar, más/menos, flechas, ⋯, lupa, copiar, refrescar, spinner): bold.
+ * El duotono queda para los semánticos; en un glifo de 1 trazo el relleno suave se veía como un triángulo o una mancha.
+ */
+export const PESO_ICONO_FUNCIONAL: IconWeight = "bold";
