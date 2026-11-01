@@ -40,3 +40,11 @@ test("el sidebar mide 248 px (260 con el margen) y el cajón lo mismo", () => {
 test("la fila vacía de una tabla no lleva la píldora gris de las celdas", () => {
   assert.match(leer("src/components/patrones/pie-tabla.tsx"), /<TableCell colSpan=\{columnas\} className="bg-transparent group-hover\/fila:bg-transparent">/);
 });
+
+// 0.5.4: cinco pestañas subrayadas miden más que un teléfono; la fila tiene que desplazarse ella y no empujar la página.
+test("la fila de pestañas subrayadas se desplaza a lo ancho y su indicador no queda recortado", () => {
+  const tabs = leer("src/components/navegacion/tabs.tsx");
+  assert.match(tabs, /const PESTANAS_LINEA =\s*"flex items-center gap-4 overflow-x-auto/);
+  assert.match(tabs, /linea: cn\(INDICADOR_BASE, "bottom-0 h-0\.5/);
+  assert.doesNotMatch(tabs, /"flex items-center gap-4 border-b border-border"/);
+});

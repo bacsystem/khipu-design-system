@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.4] - 2026-11-01
+
+### Fixed
+- Underlined `Tabs` (`estilo="linea"`) scroll horizontally when they do not fit, with no visible scrollbar: on a phone five tabs were wider than the screen and pushed the whole page sideways. The base line is an inset shadow and the indicator sits at `bottom-0`, so the scroll container does not clip it.
+
 ## [0.5.3] - 2026-11-01
 
 ### Changed
