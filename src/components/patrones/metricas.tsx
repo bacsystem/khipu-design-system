@@ -127,6 +127,8 @@ export function ChipVariacion({ variacion, invertir, destacada }: { variacion: n
 /**
  * Una métrica en su tarjeta: etiqueta, valor grande (con sufijo opcional), mini visual opcional y ayuda. Para que el
  * valor cuente al aparecer, pásale `<NumeroAnimado valor={…} />` como hijo; un identificador va envuelto en `font-mono`.
+ * `texto` cuando el valor es una palabra (un estado, un entorno, un código) y no un número: va en `text-metrica-texto` (18 px),
+ * porque a 22 px una palabra larga domina la tarjeta y la parte en dos líneas.
  */
 export function Metrica({
   etiqueta,
@@ -138,6 +140,7 @@ export function Metrica({
   visual,
   destacada,
   acciones,
+  texto,
 }: {
   etiqueta: string;
   children: ReactNode;
@@ -148,10 +151,11 @@ export function Metrica({
   visual?: VisualMetrica;
   destacada?: boolean;
   acciones?: ReactNode;
+  texto?: boolean;
 }) {
   return (
     <TarjetaMetrica etiqueta={etiqueta} icono={icono} tono={tono} destacada={destacada} acciones={acciones}>
-      <div className={cn("flex min-w-0 flex-wrap items-baseline gap-x-1.5 text-metrica tabular-nums", destacada ? "text-current" : "text-foreground")}>
+      <div className={cn("flex min-w-0 flex-wrap items-baseline gap-x-1.5", texto ? "text-metrica-texto" : "text-metrica tabular-nums", destacada ? "text-current" : "text-foreground")}>
         {children}
         {sufijo ? <span className={cn("text-control font-normal", destacada ? "opacity-70" : "text-texto-terciario")}>{sufijo}</span> : null}
       </div>

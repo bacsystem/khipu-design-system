@@ -158,7 +158,8 @@ Regla de tonos para estado: **verde** = aceptado/activo, **ámbar** = provisiona
 | `text-cuerpo` | 13 / 20 px | 400 | 0 | Texto base (`body`), cuerpo de diálogo |
 | `text-titulo` | 14.5 / 20 px | 620 | −0.014em | Títulos de tarjeta, diálogo y panel |
 | `text-titulo-pagina` | 21 / 24 px | 650 | −0.028em | `h1` de página |
-| `text-metrica` | 26 / 28 px | 650 | −0.035em | Valor de métrica y KPI (`tabular-nums`) |
+| `text-metrica` | 22 / 26 px | 650 | −0.035em | Valor de métrica y KPI (`tabular-nums`) |
+| `text-metrica-texto` | 18 / 26 px | 620 | −0.02em | Valor de métrica que es una palabra: un estado, un entorno, un código (`Metrica texto`) |
 
 Reglas:
 
@@ -190,11 +191,11 @@ Reglas:
 
 ### Escala de alturas
 
-**Altura única de control: `h-control` (34 px).** El token es `--spacing-control: 2.125rem` en `@theme` (`src/styles/theme.css`), así que Tailwind genera `h-control`, `min-h-control` y `size-control`. Todo control interactivo —botón, input, select, buscador, filtro, control segmentado, stepper, acción de fila de tabla, paginación, pie de diálogo, menú «⋯» de fila— mide `h-control` (o `size-control` si es solo un icono). Así cualquier par de controles puesto lado a lado queda alineado, en una barra, en un formulario o en una fila de tabla, sin elegir entre escalas.
+**Altura única de control: `h-control` (32 px; 34 px hasta 0.5.2).** El token es `--spacing-control: 2rem` en `@theme` (`src/styles/theme.css`), así que Tailwind genera `h-control`, `min-h-control` y `size-control`. Todo control interactivo —botón, input, select, buscador, filtro, control segmentado, stepper, acción de fila de tabla, paginación, pie de diálogo, menú «⋯» de fila— mide `h-control` (o `size-control` si es solo un icono). Así cualquier par de controles puesto lado a lado queda alineado, en una barra, en un formulario o en una fila de tabla, sin elegir entre escalas.
 
 | Pieza | Altura | Recetas / componentes |
 |---|---|---|
-| Control | **`h-control`** (34 px) | `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto`, `<select>` nativo con `SELECT_NATIVO`), `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` (todos los tamaños salvo `xs`), `ui/Input`, `SelectTrigger` (todos los `size`), `StepperNumerico`, `PieTabla`, `SelectorPorPagina`, `ConfirmacionEnLinea`, `MenuAcciones`, `Toolbar`, `ThemeToggle`, `GrupoBotones` |
+| Control | **`h-control`** (32 px) | `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO` (`Entrada`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto`, `<select>` nativo con `SELECT_NATIVO`), `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` (todos los tamaños salvo `xs`), `ui/Input`, `SelectTrigger` (todos los `size`), `StepperNumerico`, `PieTabla`, `SelectorPorPagina`, `ConfirmacionEnLinea`, `MenuAcciones`, `Toolbar`, `ThemeToggle`, `GrupoBotones` |
 | Contenedor segmentado | píldora `min-h-control` con ítems `h-7` | `SEGMENTADO`/`SEGMENTO`, `Toolbar`, `GrupoBotones`, `SelectorPorPagina`, `ThemeToggle`, `Segmentado` de `BloqueCodigo`: por fuera miden lo mismo que cualquier control |
 | Dentro de otro control | `h-6`/`h-7` | `Button` `size="xs"`/`"icon-xs"` y el selector de moneda de `EntradaMonto`: solo van dentro de un control de `h-control`, nunca sueltos en una fila |
 
@@ -221,7 +222,7 @@ No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-1
 └──────────────┴────────────────────────────────────────────┘
 ```
 
-- **Desktop (md ≥ 768):** sidebar flotante de **216 px**: tarjeta (`bg-sidebar`) con radio 18 px y 12 px de margen sobre el lienzo, `overflow-y-auto`.
+- **Desktop (md ≥ 768):** sidebar flotante de **248 px** (216 px hasta 0.5.2: cortaba el nombre de la empresa y el correo): tarjeta (`bg-sidebar`) con radio 18 px y 12 px de margen sobre el lienzo, `overflow-y-auto`.
 - **Móvil:** el sidebar se oculta; la top bar muestra un botón hamburguesa que abre el mismo `SidebarContent` en un `Sheet` lateral (`nav/mobile-nav.tsx`).
 - **Contenido:** `grid grid-cols-1 gap-3 max-w-[1520px] mx-auto min-w-0`. Las tablas pueden desbordar horizontalmente dentro de su contenedor (`overflow-hidden rounded-xl` + `Table` con scroll), la página nunca.
 
@@ -312,7 +313,7 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 ## 10. Formularios
 
 - **Campo** (`CAMPO`): `h-control rounded-lg border border-input bg-card px-3 text-control` (radio 12 px), placeholder en `texto-terciario`; foco `border-ring ring-3 ring-ring/20`; deshabilitado `opacity-60 cursor-not-allowed`.
-- **Etiqueta** (`ETIQUETA_CAMPO`): `text-control font-medium`. **Ayuda** (`AYUDA_CAMPO`): `text-etiqueta text-muted-foreground` (mono solo si muestra un dato técnico). Error: `text-sm text-destructive` bajo el campo.
+- **Etiqueta** (`ETIQUETA_CAMPO`, y `ui/Label`): `text-etiqueta font-medium` (13 px hasta 0.5.2). **Ayuda** (`AYUDA_CAMPO`): `text-etiqueta text-muted-foreground` (mono solo si muestra un dato técnico). Error: `text-sm text-destructive` bajo el campo.
 - **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta en tipo oración (`ETIQUETA_DATO`) + caja `h-control rounded-lg border bg-muted px-3 font-mono text-control`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
 - **Select** (`ui/select.tsx`, base-ui): disparador `h-control rounded-lg border-border bg-card text-control font-medium shadow-xs` (todos los `size` miden `h-control`; `size="campo"` solo agrega el padding de `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
 - **Selector de filas** (`ui/selector-por-pagina.tsx`): grupo `h-control rounded-lg border bg-card p-0.5` con `10 · 20 · 50`, activo `bg-foreground text-background`.
@@ -340,7 +341,7 @@ Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 2. **Contenedor** (`CONTENEDOR_TABLA`): tarjeta `rounded-xl bg-card` sin borde; `opacity-60` mientras refresca.
 3. **Cabecera** (`CABECERA_TABLA`): sin fondo, celdas con `ROTULO` (`text-etiqueta` 600 en mayúsculas, `tracking-[0.04em]`, `texto-terciario`); primera columna checkbox deshabilitado (selección múltiple próximamente).
 4. **Filas**: bandas redondeadas de 12 px sobre `soft` (`secondary`), separadas por 3 px, sin línea separadora; la fila seleccionada toma `accent`. `text-control`; celda principal con dos líneas (valor fuerte + subtítulo `text-etiqueta`, mono si es un dato); identificadores en `ChipCodigo` (`rounded-md px-2 py-0.5 font-mono text-control font-medium bg-accent text-accent-foreground`; inactivos: `bg-secondary text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
-5. **Vacío**: fila única `py-14 text-center` con icono 24 px y mensaje ("Todavía no tienes… Crea la primera con «…»" / "No hay … con los filtros seleccionados").
+5. **Vacío** (`FilaVacia columnas={n} icon={…}`): fila única `py-14 text-center` con icono 24 px y mensaje ("Todavía no tienes… Crea la primera con «…»" / "No hay … con los filtros seleccionados"), **sin** la banda `soft` de las celdas (un mensaje de 14 líneas de alto en banda gris se ve como un bloque suelto). Sin `icon` sirve para «Cargando…».
 6. **Pie**: `border-t border-border/60 bg-muted px-4 py-2 text-control` → "Mostrando **x–y** de **N** …" · selector de filas · nota contextual (`hidden xl:inline`) | paginación (`Anterior` / números `size-7` con actual `bg-foreground text-background` / `Siguiente`), con `paginasVisibles()` de `lib/paginacion.ts` (1, 2, …, actual±1, …, últimas 2).
 
 Filtrado/paginación en cliente cuando la API devuelve todo (series, API keys); en servidor con `?pagina=&por_pagina=` y `x-total-count` para comprobantes.

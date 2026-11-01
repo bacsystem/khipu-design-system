@@ -3,6 +3,7 @@
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { SelectorPorPagina } from "@/components/ui/selector-por-pagina";
 import { esClickSimple } from "@/lib/navegacion";
 import { paginasVisibles } from "@/lib/paginacion";
@@ -141,12 +142,27 @@ export function PieTabla({
 }
 
 /** Estado vacío para el cuerpo de una tabla (úsalo en una fila con colSpan). */
-export function TablaVacia({ icon, children }: { icon: ReactNode; children: ReactNode }) {
+export function TablaVacia({ icon, children }: { icon?: ReactNode; children: ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-2 py-14 text-center text-muted-foreground">
       {icon}
       <p className="text-cuerpo">{children}</p>
     </div>
+  );
+}
+
+/**
+ * El cuerpo de una tabla sin filas (vacía, cargando o sin coincidencias): una fila que ocupa todas las columnas, **sin** la píldora gris de
+ * las celdas (`bg-secondary`), que en un mensaje de 14 líneas de alto se ve como un bloque gris suelto dentro de la tarjeta. Sin `icon`,
+ * solo el texto (p. ej. «Cargando…»).
+ */
+export function FilaVacia({ columnas, icon, children }: { columnas: number; icon?: ReactNode; children: ReactNode }) {
+  return (
+    <TableRow className="hover:bg-transparent">
+      <TableCell colSpan={columnas} className="bg-transparent group-hover/fila:bg-transparent">
+        <TablaVacia icon={icon}>{children}</TablaVacia>
+      </TableCell>
+    </TableRow>
   );
 }
 

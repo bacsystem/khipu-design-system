@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { SidebarNav, type GrupoNav } from "./sidebar-nav";
 
 /**
- * Contenido del sidebar (216px en desktop, cajón lateral en móvil). Se compone por slots para no acoplarlo a ninguna app:
+ * Contenido del sidebar (248px en desktop, cajón lateral en móvil). Se compone por slots para no acoplarlo a ninguna app:
  * `marca` (LogoMarca), `chip` (p. ej. versión/estándar), `selector` (SelectorContexto), `grupos` (SidebarNav),
  * `pie` (tarjetas de plan, avisos) y `usuario` (MenuUsuario).
  */
