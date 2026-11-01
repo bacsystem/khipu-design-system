@@ -49,7 +49,7 @@ El registro que usa la CLI (`registry/registry.json`) se genera con `npm run reg
 La alternativa a copiar archivos: depender del design system y recibir sus cambios subiendo de versión. No está publicado en npm (`"private": true`, a propósito: publicar lo decide el dueño del repo), así que se instala **desde GitHub, fijado a un tag**:
 
 ```bash
-npm install github:bacsystem/khipu-design-system#v0.3.1
+npm install github:bacsystem/khipu-design-system#v0.4.0
 ```
 
 npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+, React 19, Tailwind v4** y los peers `@base-ui/react`, `lucide-react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos). `motion` sí viene como dependencia del paquete. No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
