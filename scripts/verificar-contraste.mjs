@@ -44,7 +44,15 @@ export const PARES = [
   ["--sidebar-accent-foreground", "--sidebar-accent"],
   ["--codigo-foreground", "--codigo"],
 ];
-export const PARES_NO_TEXTO = [["--ring", "--card"]];
+// Indicadores no textuales (≥ 3:1): el anillo de foco y el borde de las marcas de gráfico (sus rellenos pastel no llegan).
+export const PARES_NO_TEXTO = [
+  ["--ring", "--card"],
+  ["--chart-trazo-base", "--card"],
+  ["--chart-trazo-destacado", "--card"],
+  ["--chart-trazo-3", "--card"],
+  ["--chart-trazo-4", "--card"],
+  ["--chart-trazo-5", "--card"],
+];
 
 function luminanciaRgb({ r, g, b }) {
   const [R, G, B] = [r, g, b].map((v) => v / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
@@ -190,7 +198,7 @@ function principal() {
     console.error(`Contraste fuera de WCAG AA (docs/design-system.md §2):\n${errores.join("\n")}`);
     process.exit(1);
   }
-  console.log(`Contraste: ${pares} pares en 20 combinaciones (texto ≥ ${MINIMO}, foco ≥ ${MINIMO_NO_TEXTO}).`);
+  console.log(`Contraste: ${pares} pares en 20 combinaciones (texto ≥ ${MINIMO}; foco y gráficos ≥ ${MINIMO_NO_TEXTO}).`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) principal();

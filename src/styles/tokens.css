@@ -77,6 +77,12 @@
   --chart-3: #f59e0b;
   --chart-4: #e11d48;
   --chart-5: #0ea5e9;
+  /* Borde de 1 px de cada marca de gráfico: el relleno pastel queda bajo 3:1 sobre la tarjeta (WCAG 1.4.11), el borde no. */
+  --chart-trazo-base: var(--acento-2-texto);
+  --chart-trazo-destacado: var(--acento-texto);
+  --chart-trazo-3: color-mix(in srgb, var(--acento-3) 55%, #000000);
+  --chart-trazo-4: var(--chart-4);
+  --chart-trazo-5: color-mix(in srgb, var(--chart-5) 70%, #000000);
   --radius: 0.75rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #5d6170;
@@ -149,6 +155,12 @@
   --chart-3: #bf8a26;
   --chart-4: #dc4a68;
   --chart-5: #3a88c6;
+  /* En oscuro los pasteles ya contrastan con la tarjeta: el borde es el mismo color, pleno. */
+  --chart-trazo-base: var(--acento-2);
+  --chart-trazo-destacado: var(--acento);
+  --chart-trazo-3: var(--acento-3);
+  --chart-trazo-4: var(--chart-4);
+  --chart-trazo-5: var(--chart-5);
   --sidebar: #0f1626;
   --sidebar-foreground: #a3afc7;
   --sidebar-accent: #19233a;

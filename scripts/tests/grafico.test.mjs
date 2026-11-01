@@ -35,3 +35,9 @@ test("GraficoAnillos: un anillo por serie, valores en texto y como <title>", () 
   assert.match(fuente, /<title id=\{`\$\{id\}-t`\}>\{anillos\.map\(\(a\) => `\$\{a\.nombre\}: \$\{a\.valor\}%`\)/);
   assert.match(fuente, /series\.slice\(0, 5\)/);
 });
+
+test("cada barra lleva un borde de 1 px con el color de trazo (contraste no textual ≥ 3:1)", () => {
+  assert.match(fuente, /stroke=\{series\.length === 1 \? \(i === destacado \? "var\(--chart-trazo-destacado\)" : "var\(--chart-trazo-base\)"\) : TRAZOS\[j % TRAZOS\.length\]\}/);
+  assert.match(fuente, /strokeWidth=\{1\}/);
+  assert.doesNotMatch(fuente, /"var\(--chart-2\)"|"var\(--chart-3\)"/);
+});
