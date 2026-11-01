@@ -1,6 +1,28 @@
 {
   "generatedAt": "2026-11-01",
   "items": {
+    "components/apariencia-opciones": {
+      "name": "apariencia-opciones",
+      "type": "component",
+      "category": "apariencia-opciones",
+      "files": [
+        "src/components/apariencia-opciones.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "components/apariencia": {
+      "name": "apariencia",
+      "type": "component",
+      "category": "apariencia",
+      "files": [
+        "src/components/apariencia.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/apariencia-opciones"
+      ]
+    },
     "components/datos/grafico": {
       "name": "grafico",
       "type": "component",
@@ -14,6 +36,7 @@
       "registryDependencies": [
         "components/datos/trazo-animado",
         "components/movimiento",
+        "lib/estilos",
         "lib/movimiento",
         "lib/utils"
       ]
@@ -25,11 +48,11 @@
       "files": [
         "src/components/datos/kpi.tsx"
       ],
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": [],
       "registryDependencies": [
         "components/datos/trazo-animado",
+        "components/patrones/metricas",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -54,7 +77,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react",
+        "@phosphor-icons/react",
         "motion"
       ],
       "registryDependencies": [
@@ -125,9 +148,10 @@
         "src/components/feedback/alerta.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -139,9 +163,10 @@
         "src/components/feedback/banner.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -152,10 +177,9 @@
       "files": [
         "src/components/feedback/estado-vacio.tsx"
       ],
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": [],
       "registryDependencies": [
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -196,7 +220,7 @@
         "src/components/feedback/spinner.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -211,7 +235,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -240,7 +264,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -255,7 +279,7 @@
         "src/components/formularios/buscador.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -284,7 +308,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -299,7 +323,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -315,7 +339,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -344,7 +368,7 @@
         "src/components/formularios/entrada-fecha.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -403,7 +427,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -417,7 +441,7 @@
         "src/components/formularios/zona-archivos.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -453,13 +477,16 @@
         "src/components/nav/menu-usuario.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/apariencia",
         "components/diseno",
+        "components/nav/selector-apariencia",
         "components/nav/selector-diseno",
         "components/nav/theme-toggle",
         "components/ui/menu",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -471,11 +498,26 @@
         "src/components/nav/mobile-nav.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/button",
         "components/ui/sheet"
+      ]
+    },
+    "components/nav/selector-apariencia": {
+      "name": "selector-apariencia",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/selector-apariencia.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/apariencia",
+        "components/diseno",
+        "lib/estilos",
+        "lib/utils"
       ]
     },
     "components/nav/selector-contexto": {
@@ -487,7 +529,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/select",
@@ -526,10 +568,11 @@
         "src/components/nav/sidebar-nav.tsx"
       ],
       "dependencies": [
-        "lucide-react",
         "motion"
       ],
       "registryDependencies": [
+        "lib/estilos",
+        "lib/iconos",
         "lib/movimiento",
         "lib/utils"
       ]
@@ -552,7 +595,7 @@
         "src/components/nav/theme-toggle.tsx"
       ],
       "dependencies": [
-        "lucide-react",
+        "@phosphor-icons/react",
         "next-themes"
       ],
       "registryDependencies": [
@@ -567,7 +610,7 @@
         "src/components/nav/top-bar.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/kbd",
@@ -584,7 +627,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -598,12 +641,13 @@
         "src/components/navegacion/dialogo-confirmacion.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/patrones/cabecera-dialogo",
         "components/ui/dialog",
-        "lib/estilos"
+        "lib/estilos",
+        "lib/iconos"
       ]
     },
     "components/navegacion/menu-acciones": {
@@ -614,10 +658,11 @@
         "src/components/navegacion/menu-acciones.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/menu",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -629,11 +674,12 @@
         "src/components/navegacion/paleta.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/dialog",
         "components/ui/kbd",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -645,11 +691,12 @@
         "src/components/navegacion/panel-lateral.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/patrones/cabecera-seccion",
         "components/ui/sheet",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -661,7 +708,7 @@
         "src/components/navegacion/pasos.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -715,7 +762,7 @@
         "src/components/patrones/boton-copiar.tsx"
       ],
       "dependencies": [
-        "lucide-react",
+        "@phosphor-icons/react",
         "motion"
       ],
       "registryDependencies": [
@@ -731,11 +778,10 @@
       "files": [
         "src/components/patrones/cabecera-dialogo.tsx"
       ],
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": [],
       "registryDependencies": [
         "components/ui/dialog",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -746,10 +792,9 @@
       "files": [
         "src/components/patrones/cabecera-seccion.tsx"
       ],
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": [],
       "registryDependencies": [
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -761,11 +806,12 @@
         "src/components/patrones/confirmacion-en-linea.tsx"
       ],
       "dependencies": [
-        "lucide-react",
+        "@phosphor-icons/react",
         "motion"
       ],
       "registryDependencies": [
         "components/movimiento",
+        "lib/iconos",
         "lib/movimiento",
         "lib/utils"
       ]
@@ -777,8 +823,12 @@
       "files": [
         "src/components/patrones/metricas.tsx"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
       "registryDependencies": [
+        "lib/estilos",
+        "lib/iconos",
         "lib/utils"
       ]
     },
@@ -804,7 +854,7 @@
         "src/components/patrones/pie-tabla.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/selector-por-pagina",
@@ -848,13 +898,16 @@
         "src/components/providers.tsx"
       ],
       "dependencies": [
+        "@phosphor-icons/react",
         "next-themes"
       ],
       "registryDependencies": [
+        "components/apariencia",
         "components/diseno",
         "components/feedback/toast",
         "components/feedback/tooltip",
-        "components/movimiento"
+        "components/movimiento",
+        "lib/iconos"
       ]
     },
     "components/script-diseno": {
@@ -866,6 +919,7 @@
       ],
       "dependencies": [],
       "registryDependencies": [
+        "components/apariencia-opciones",
         "components/disenos"
       ]
     },
@@ -934,7 +988,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/button",
@@ -1031,7 +1085,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/utils"
@@ -1045,7 +1099,7 @@
         "src/components/ui/pagination.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/button",
@@ -1061,7 +1115,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -1091,7 +1145,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "lib/estilos",
@@ -1134,7 +1188,7 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "@phosphor-icons/react"
       ],
       "registryDependencies": [
         "components/ui/button",
@@ -1227,6 +1281,18 @@
         "src/lib/movimiento.ts"
       ],
       "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/iconos": {
+      "name": "iconos",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/iconos.ts"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
       "registryDependencies": []
     }
   }
