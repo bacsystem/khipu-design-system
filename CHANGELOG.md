@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Select: lista de radio 16 con hover suave, check en círculo de acento y caret que gira. Campos: foco con el anillo del acento (`FOCO_CAMPO`), error con anillo rojo tenue. Checks de 18 px (radio 6), switch más fino, opciones en tarjeta teñidas con el acento. Stepper en píldora, slider más fino.
 - Diálogos de radio 22 sin líneas entre cabecera y pie, con el icono en un círculo del tono (`CabeceraDialogo` `tono`) y velo más suave (2 px de desenfoque). Panel lateral flotante (12 px de margen, radio 20). Avisos sin borde. Tabs con contador en píldora; acordeón sobre superficie suave.
 - Gráficos: barras de radio 9, leyenda en píldoras junto al título, el viewBox sigue el ancho real (las etiquetas quedan en 10 px a cualquier tamaño).
+- `TablaDatos`: la barra de selección pasa a ser una barra flotante en píldora que invierte el tema, con el contador en un círculo de acento, acciones en píldora (recetas `ACCION_MASIVA` y `ACCION_MASIVA_PELIGRO`) y «Quitar selección» redondo. Antes eran enlaces de texto sobre una franja tenue.
 - `MenuUsuario` es compacto: cuenta, tema solo con iconos, «Apariencia…» y cerrar sesión. Las preferencias (paleta, tono oscuro, tipografía, diseño) van en `PanelApariencia`, un panel a la derecha con vista previa en vivo.
 - Ninguna prop ni export se quitó ni cambió de nombre.
 
