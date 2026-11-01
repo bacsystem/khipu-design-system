@@ -15,8 +15,14 @@ const PESTANA_LINEA =
 // `-z-10` dentro de una lista `isolate`: queda sobre el fondo de la lista y debajo del texto de las pestañas.
 const INDICADOR_BASE =
   "absolute -z-10 left-(--active-tab-left) w-(--active-tab-width) transition-[left,width,top,height] duration-(--duracion-media) ease-salida motion-reduce:transition-none";
+// La fila subrayada se desplaza a lo ancho cuando las pestañas no entran (en un teléfono, cinco pestañas miden más que la pantalla y empujaban la página entera),
+// sin barra de desplazamiento a la vista. La línea de base es una sombra interior y no un `border-b`, y el indicador va en `bottom-0`: con `overflow-x-auto` el
+// navegador recorta también en vertical, y un indicador en `-bottom-px` sobre el borde quedaba cortado.
+const PESTANAS_LINEA =
+  "flex items-center gap-4 overflow-x-auto [scrollbar-width:none] shadow-[inset_0_-1px_0_var(--color-border)] [&::-webkit-scrollbar]:hidden";
+
 const INDICADOR = {
-  linea: cn(INDICADOR_BASE, "-bottom-px h-0.5 rounded-full bg-foreground"),
+  linea: cn(INDICADOR_BASE, "bottom-0 h-0.5 rounded-full bg-foreground"),
   segmentado: cn(INDICADOR_BASE, "top-(--active-tab-top) h-(--active-tab-height) rounded-full bg-card shadow-sm ring-1 ring-border dark:bg-input"),
 };
 
@@ -46,7 +52,7 @@ export function Tabs<T extends string>({
 }) {
   return (
     <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => onCambio?.(v as T)} className={className}>
-      <TabsPrimitive.List className={cn("relative isolate", estilo === "linea" ? "flex items-center gap-4 border-b border-border" : SEGMENTADO)}>
+      <TabsPrimitive.List className={cn("relative isolate", estilo === "linea" ? PESTANAS_LINEA : SEGMENTADO)}>
         {items.map((t) => (
           <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
