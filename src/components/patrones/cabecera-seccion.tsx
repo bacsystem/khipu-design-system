@@ -1,4 +1,4 @@
-import type { IconoComponente } from "@/lib/iconos";
+import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export function IconoSeccion({ icon: Icon, className }: { icon: IconoComponente; className?: string }) {
   return (
     <div className={cn("flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent text-primary", className)}>
-      <Icon className="size-4" />
+      <Icon weight={PESO_ICONO} className="size-4" />
     </div>
   );
 }

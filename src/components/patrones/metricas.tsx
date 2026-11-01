@@ -1,4 +1,4 @@
-import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "@phosphor-icons/react";
+import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 import { TARJETA_ELEVABLE } from "@/lib/estilos";
 import { PESO_ICONO, PESO_ICONO_ACTIVO, type IconoComponente } from "@/lib/iconos";
