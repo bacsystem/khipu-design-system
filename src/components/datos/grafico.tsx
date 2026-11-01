@@ -9,7 +9,9 @@ import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 export type Serie = { nombre: string; valores: number[] };
+// Líneas: trazo fuerte (chart-1 es el texto del acento 2). Barras: los pasteles de la paleta, como en el boceto; desde la 4.ª serie, los semánticos.
 const COLORES = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
+const COLORES_BARRAS = ["var(--chart-base)", "var(--chart-destacado)", "var(--acento-3)", "var(--chart-4)", "var(--chart-5)"];
 
 function escala(max: number, pasos = 4): number[] {
   if (max <= 0) return [0, 1];
@@ -20,13 +22,13 @@ function escala(max: number, pasos = 4): number[] {
   return Array.from({ length: Math.round(tope / paso) + 1 }, (_, i) => i * paso);
 }
 
-function Leyenda({ series }: { series: Serie[] }) {
+function Leyenda({ series, colores = COLORES }: { series: Serie[]; colores?: string[] }) {
   if (series.length < 2) return null;
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 pt-2 text-etiqueta text-muted-foreground">
       {series.map((s, i) => (
         <span key={s.nombre} className="inline-flex items-center gap-1.5">
-          <span className="size-2 rounded-sm" style={{ background: COLORES[i % COLORES.length] }} />
+          <span className="size-2 rounded-sm" style={{ background: colores[i % colores.length] }} />
           {s.nombre}
         </span>
       ))}
@@ -119,7 +121,7 @@ export function GraficoBarras({
                   <m.path
                     key={s.nombre}
                     d={`M${bx},${mg.top + h} v${-Math.max(0, bh - r)} a${r},${r} 0 0 1 ${r},${-r} h${barra - 2 * r} a${r},${r} 0 0 1 ${r},${r} v${Math.max(0, bh - r)} z`}
-                    fill={series.length === 1 ? (i === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES[j % COLORES.length]}
+                    fill={series.length === 1 ? (i === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES_BARRAS[j % COLORES_BARRAS.length]}
                     style={{ originY: 1 }}
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 1 }}
@@ -143,11 +145,11 @@ export function GraficoBarras({
           filas={series.map((s, j) => ({
             nombre: s.nombre,
             valor: formato(s.valores[hover] ?? 0),
-            color: series.length === 1 ? (hover === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES[j % COLORES.length],
+            color: series.length === 1 ? (hover === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES_BARRAS[j % COLORES_BARRAS.length],
           }))}
         />
       ) : null}
-      <Leyenda series={series} />
+      <Leyenda series={series} colores={COLORES_BARRAS} />
     </div>
   );
 }

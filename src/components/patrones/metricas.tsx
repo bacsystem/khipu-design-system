@@ -66,7 +66,9 @@ export function TarjetaMetrica({
       className={cn(
         TARJETA_ELEVABLE,
         "flex min-w-0 flex-col gap-2 px-[15px] pt-3.5 pb-[13px]",
-        destacada && "border-acento-borde bg-acento-superficie text-acento-superficie-texto dark:bg-acento-superficie",
+        // Dentro de otra tarjeta (galería, paneles) la métrica pasa a la superficie suave: blanco sobre blanco no se distingue.
+        "in-[.bg-card]:bg-secondary in-[.bg-card]:shadow-none",
+        destacada && "border-acento-borde bg-acento-superficie text-acento-superficie-texto in-[.bg-card]:bg-acento-superficie dark:bg-acento-superficie",
         className,
       )}
     >
