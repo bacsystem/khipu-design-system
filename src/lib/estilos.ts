@@ -1,7 +1,7 @@
 /**
  * Recetas de clases compartidas (evita copiar la misma cadena en cada componente).
  *
- * Todos los controles miden lo mismo: `h-9` (36 px), la altura única de docs/design-system.md §4. Un botón, un input,
+ * Todos los controles miden lo mismo: `h-control` (36 px), la altura única de docs/design-system.md §4. Un botón, un input,
  * un select, un filtro o una acción de fila puestos lado a lado quedan alineados sin pensarlo. Nunca `cn(RECETA, "h-N")`:
  * sobrescribir la altura a mano es justo lo que hace que dos controles de la misma fila terminen midiendo distinto.
  *
@@ -27,13 +27,13 @@ const DESHABILITADO = "disabled:pointer-events-none disabled:cursor-not-allowed 
 
 // ── Acciones de página: top bar, barra de filtros, acciones sueltas en tarjetas, alertas o estados vacíos ──
 // La principal es casi negra (foreground) para no competir con los colores de estado; el índigo queda para confirmar formularios.
-export const ACCION_PRINCIPAL = `inline-flex h-9 items-center gap-1.5 rounded-lg bg-foreground px-3 text-control font-medium whitespace-nowrap text-background shadow-xs ${TRANSICION_CONTROL} hover:bg-foreground/85 ${FOCO} ${PRESION} ${DESHABILITADO}`;
-export const ACCION_SECUNDARIA = `inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-control font-medium whitespace-nowrap text-foreground shadow-xs ${TRANSICION_CONTROL} hover:border-input hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
+export const ACCION_PRINCIPAL = `inline-flex h-control items-center gap-1.5 rounded-lg bg-foreground px-3 text-control font-medium whitespace-nowrap text-background shadow-xs ${TRANSICION_CONTROL} hover:bg-foreground/85 ${FOCO} ${PRESION} ${DESHABILITADO}`;
+export const ACCION_SECUNDARIA = `inline-flex h-control items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-control font-medium whitespace-nowrap text-foreground shadow-xs ${TRANSICION_CONTROL} hover:border-input hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
 // Select, buscador y refrescar de una barra de filtros: la misma altura que las acciones de arriba.
-export const CONTROL_FILTRO = "h-9 rounded-lg border border-border bg-card text-control font-medium text-foreground shadow-xs";
-// Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, o vistas que son enlaces): caja de h-9 con segmentos de h-7.
-// `min-h-9` y no `h-9`: con muchas opciones la caja se parte en filas en vez de desbordarse, y con una sola fila mide igual.
-export const SEGMENTADO = "inline-flex min-h-9 w-fit flex-wrap items-center gap-0.5 rounded-lg bg-secondary p-0.5";
+export const CONTROL_FILTRO = "h-control rounded-lg border border-border bg-card text-control font-medium text-foreground shadow-xs";
+// Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, o vistas que son enlaces): caja de h-control con segmentos de h-7.
+// `min-h-control` y no `h-control`: con muchas opciones la caja se parte en filas en vez de desbordarse, y con una sola fila mide igual.
+export const SEGMENTADO = "inline-flex min-h-control w-fit flex-wrap items-center gap-0.5 rounded-lg bg-secondary p-0.5";
 /** Segmento sin fondo de activo: para `Tabs`, que pinta el activo con un indicador que se desliza. */
 export const SEGMENTO_BASE =
   "relative inline-flex h-7 items-center gap-1.5 rounded-md px-3 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground aria-[current=page]:text-foreground";
@@ -43,20 +43,20 @@ export const SEGMENTO = `${SEGMENTO_BASE} data-active:bg-card data-active:shadow
 
 // ── Formularios: el campo y su CTA ──
 export const CAMPO =
-  "h-9 w-full rounded-lg border border-input bg-card px-3 text-control text-foreground shadow-xs transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-3 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "h-control w-full rounded-lg border border-input bg-card px-3 text-control text-foreground shadow-xs transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-3 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60";
 /** @deprecated Desde 0.2.0 todos los campos miden lo mismo: usa `CAMPO`. Se conserva para no romper imports. */
 export const CAMPO_FILTRO = CAMPO;
 export const ETIQUETA_CAMPO = "text-control font-medium text-foreground";
 export const AYUDA_CAMPO = "text-etiqueta text-muted-foreground";
 /** `<select>` nativo con el aspecto de `CAMPO`: para formularios que no usan `ui/select` (p. ej. hechos con react-hook-form). */
 export const SELECT_NATIVO =
-  "h-9 rounded-lg border border-input bg-card px-2.5 text-control text-foreground shadow-xs transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none focus:border-ring focus:ring-3 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "h-control rounded-lg border border-input bg-card px-2.5 text-control text-foreground shadow-xs transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none focus:border-ring focus:ring-3 focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 // disabled:pointer-events-none (igual que ui/button.tsx) es lo que de verdad evita que el :hover del mouse
 // que se quedó sobre el botón le gane a disabled:opacity-60 en la cascada; cursor-not-allowed solo no basta.
-export const BOTON_PRIMARIO = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-control font-medium text-primary-foreground shadow-xs ${TRANSICION_CONTROL} hover:bg-primary/90 ${FOCO} ${PRESION} ${DESHABILITADO}`;
-export const BOTON_SECUNDARIO = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-control font-medium text-foreground shadow-xs ${TRANSICION_CONTROL} hover:border-input hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
-export const BOTON_DESTRUCTIVO = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-destructive px-3.5 text-control font-medium text-destructive-foreground shadow-xs ${TRANSICION_CONTROL} hover:bg-destructive/90 ${FOCO} ${PRESION} ${DESHABILITADO}`;
+export const BOTON_PRIMARIO = `inline-flex h-control items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-control font-medium text-primary-foreground shadow-xs ${TRANSICION_CONTROL} hover:bg-primary/90 ${FOCO} ${PRESION} ${DESHABILITADO}`;
+export const BOTON_SECUNDARIO = `inline-flex h-control items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-control font-medium text-foreground shadow-xs ${TRANSICION_CONTROL} hover:border-input hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
+export const BOTON_DESTRUCTIVO = `inline-flex h-control items-center justify-center gap-1.5 rounded-lg bg-destructive px-3.5 text-control font-medium text-destructive-foreground shadow-xs ${TRANSICION_CONTROL} hover:bg-destructive/90 ${FOCO} ${PRESION} ${DESHABILITADO}`;
 
 // El pie de diálogo, PanelLateral, TarjetaPaso y Drawer ya no tiene una altura propia: usa los mismos botones.
 /** @deprecated Desde 0.2.0 es igual a `BOTON_PRIMARIO`. Se conserva para no romper imports. */

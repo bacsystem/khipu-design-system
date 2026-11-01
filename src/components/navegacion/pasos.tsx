@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,7 @@ export function Pasos({ pasos, actual, className }: { pasos: Paso[]; actual: num
                 estado === "pendiente" && "border-border bg-muted text-muted-foreground",
               )}
             >
-              {estado === "hecho" ? <CheckIcon className="size-3.5" strokeWidth={3} /> : i + 1}
+              {estado === "hecho" ? <CheckIcon className="size-3.5" weight="bold" /> : i + 1}
             </span>
             <div className="min-w-0">
               <p className={cn("text-control font-medium", estado === "pendiente" ? "text-muted-foreground" : "text-foreground")}>{p.titulo}</p>

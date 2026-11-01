@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, CheckIcon, InboxIcon, MinusIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, ArrowsDownUpIcon, CheckIcon, MinusIcon, TrayIcon } from "@phosphor-icons/react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
@@ -37,7 +37,7 @@ function CasillaCelda({
       className={CASILLA_CELDA}
     >
       <CheckboxPrimitive.Indicator className="text-primary-foreground">
-        {indeterminate ? <MinusIcon className="size-3" strokeWidth={3} /> : <CheckIcon className="size-3" strokeWidth={3} />}
+        {indeterminate ? <MinusIcon className="size-3" weight="bold" /> : <CheckIcon className="size-3" weight="bold" />}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
@@ -178,7 +178,7 @@ export function TablaDatos<T>({
                 {c.ordenable ? (
                   <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 hover:text-foreground", orden?.id === c.id && "text-foreground")}>
                     {c.titulo}
-                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon className="size-3" /> : <ArrowDownIcon className="size-3" /> : <ArrowUpDownIcon className="size-3 opacity-50" />}
+                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon className="size-3" /> : <ArrowDownIcon className="size-3" /> : <ArrowsDownUpIcon className="size-3 opacity-50" />}
                   </button>
                 ) : (
                   c.titulo
@@ -216,7 +216,7 @@ export function TablaDatos<T>({
           {visibles.length === 0 ? (
             <TableRow className="hover:bg-transparent">
               <TableCell colSpan={seleccion ? columnas.length + 1 : columnas.length}>
-                <TablaVacia icon={<InboxIcon className="size-6" />}>{vacio}</TablaVacia>
+                <TablaVacia icon={<TrayIcon className="size-6" />}>{vacio}</TablaVacia>
               </TableCell>
             </TableRow>
           ) : null}

@@ -1,14 +1,15 @@
-import { CheckCircle2Icon, CircleAlertIcon, InfoIcon, TriangleAlertIcon, XIcon, type LucideIcon } from "lucide-react";
+import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon, XIcon } from "@phosphor-icons/react";
+import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Tono = "info" | "ok" | "aviso" | "error";
 
-const ESTILOS: Record<Tono, { caja: string; icono: LucideIcon }> = {
+const ESTILOS: Record<Tono, { caja: string; icono: IconoComponente }> = {
   info: { caja: "border-accent-border bg-accent text-accent-foreground", icono: InfoIcon },
-  ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircle2Icon },
-  aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: TriangleAlertIcon },
-  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: CircleAlertIcon },
+  ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircleIcon },
+  aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: WarningIcon },
+  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
 };
 
 /**
@@ -29,7 +30,7 @@ export function Banner({
   children: ReactNode;
   accion?: ReactNode;
   onCerrar?: () => void;
-  icon?: LucideIcon;
+  icon?: IconoComponente;
   className?: string;
 }) {
   const Icono = icon ?? ESTILOS[tono].icono;

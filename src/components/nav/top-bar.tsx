@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchIcon } from "lucide-react";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Kbd } from "@/components/ui/kbd";
@@ -82,13 +82,13 @@ export function TopBar({
       <div className="flex shrink-0 items-center gap-2.5">
         {buscador ? (
           <div className="relative hidden w-64 lg:block" title={buscador.title}>
-            <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
+            <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
             <input
               readOnly
               disabled={!buscador.onClick}
               onClick={buscador.onClick}
               placeholder={buscador.placeholder}
-              className="h-9 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-control text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
+              className="h-control w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-control text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
             />
             {buscador.atajo ? (
               <Kbd className="absolute top-1/2 right-2 -translate-y-1/2">{buscador.atajo}</Kbd>

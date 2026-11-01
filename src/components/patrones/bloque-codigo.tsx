@@ -35,7 +35,7 @@ export function BloqueCodigo({
           {metodo ? <span className="rounded-md bg-accent px-1.5 py-0.5 font-mono text-etiqueta font-semibold text-accent-foreground">{metodo.toUpperCase()}</span> : null}
           {url ? <code className="min-w-0 flex-1 truncate font-mono text-control text-foreground">{url}</code> : null}
           {barra}
-          <BotonCopiar texto={codigo} className="size-9 rounded-lg" />
+          <BotonCopiar texto={codigo} className="size-control rounded-lg" />
         </div>
       ) : null}
       <pre
@@ -55,7 +55,7 @@ export function BloqueCodigo({
 /** Control segmentado pequeño (pestañas de lenguaje, filtros por tipo). */
 export function Segmentado<T extends string>({ opciones, valor, onCambio, className }: { opciones: Array<{ id: T; etiqueta: string }>; valor: T; onCambio: (v: T) => void; className?: string }) {
   return (
-    <div className={cn("inline-flex h-9 shrink-0 items-center gap-0.5 rounded-lg bg-secondary p-0.5", className)}>
+    <div className={cn("inline-flex h-control shrink-0 items-center gap-0.5 rounded-lg bg-secondary p-0.5", className)}>
       {opciones.map((o) => (
         <button
           key={o.id}

@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyRoundIcon, RefreshCwIcon } from "lucide-react";
+import { ArrowClockwiseIcon, KeyIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { ConfirmacionEnLinea } from "@/components/patrones/confirmacion-en-linea";
@@ -37,7 +37,7 @@ export function TablaEjemplo() {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <CabeceraSeccion icon={KeyRoundIcon} titulo="Llaves de acceso" subtitulo="solo se guarda el hash" conBorde={false} className="min-w-0 flex-nowrap px-0 py-0" />
+        <CabeceraSeccion icon={KeyIcon} titulo="Llaves de acceso" subtitulo="solo se guarda el hash" conBorde={false} className="min-w-0 flex-nowrap px-0 py-0" />
         <div className="flex flex-wrap items-center gap-2.5">
           <Select items={ITEMS_ESTADO} value={estado} onValueChange={(v) => { setEstado(v ?? "todas"); setPagina(1); }}>
             <SelectTrigger className={cn(CONTROL_FILTRO, "w-auto min-w-36 pl-3")}>
@@ -51,8 +51,8 @@ export function TablaEjemplo() {
               ))}
             </SelectContent>
           </Select>
-          <button type="button" title="Refrescar" className={cn(CONTROL_FILTRO, "inline-flex size-9 items-center justify-center text-muted-foreground hover:text-foreground")}>
-            <RefreshCwIcon className="size-4" />
+          <button type="button" title="Refrescar" className={cn(CONTROL_FILTRO, "inline-flex size-control items-center justify-center text-muted-foreground hover:text-foreground")}>
+            <ArrowClockwiseIcon className="size-4" />
           </button>
         </div>
       </div>

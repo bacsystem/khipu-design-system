@@ -2,7 +2,7 @@
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ export function Casilla({
         className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-input bg-muted transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/30 data-checked:border-primary data-checked:bg-primary"
       >
         <CheckboxPrimitive.Indicator className="text-primary-foreground">
-          <CheckIcon className="size-3" strokeWidth={3} />
+          <CheckIcon className="size-3" weight="bold" />
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
       <span className="grid gap-0.5">

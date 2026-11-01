@@ -5,7 +5,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "@/lib/utils"
 
 import { Button } from "@/components/ui/button"
-import { XIcon } from "lucide-react"
+import { XIcon } from "@phosphor-icons/react";
 
 /**
  * Un clic fuera no cierra el modal (`disablePointerDismissal` por defecto): un clic perdido no debe tirar lo escrito en un formulario

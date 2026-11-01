@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 const Menu = MenuPrimitive.Root;

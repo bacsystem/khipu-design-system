@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, BoldIcon, DownloadIcon, EyeIcon, FileTextIcon, InboxIcon, ItalicIcon, ListOrderedIcon, PackageIcon, PaletteIcon, PencilIcon, RocketIcon, SendIcon, ShieldCheckIcon, SparklesIcon, Trash2Icon, UnderlineIcon } from "lucide-react";
+import { BellIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, ListNumbersIcon, PackageIcon, PaletteIcon, PaperPlaneTiltIcon, PencilSimpleIcon, RocketLaunchIcon, ShieldCheckIcon, SparkleIcon, TextBIcon, TextItalicIcon, TextUnderlineIcon, TrashIcon, TrayIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
@@ -74,9 +74,9 @@ const COLUMNAS: Columna<Doc>[] = [
       <MenuAcciones
         acciones={[
           { label: "Ver detalle", icon: EyeIcon, onClick: () => {} },
-          { label: "Descargar XML", icon: DownloadIcon, onClick: () => {} },
-          { label: "Editar", icon: PencilIcon, disabled: true, title: "Edición: próximamente" },
-          { label: "Eliminar", icon: Trash2Icon, destructiva: true, separador: true, onClick: () => {} },
+          { label: "Descargar XML", icon: DownloadSimpleIcon, onClick: () => {} },
+          { label: "Editar", icon: PencilSimpleIcon, disabled: true, title: "Edición: próximamente" },
+          { label: "Eliminar", icon: TrashIcon, destructiva: true, separador: true, onClick: () => {} },
         ]}
       />
     ),
@@ -141,13 +141,13 @@ export function Galeria() {
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           <TarjetaDestacada tono="neutro" icono={<FileTextIcon />} titulo="Tu primer documento" descripcion="Emítelo en modo de pruebas; no tiene validez tributaria." accion={<Button variant="suave">Emitir</Button>} />
-          <TarjetaDestacada tono="info" icono={<SparklesIcon />} titulo="Novedad: reenvío masivo" descripcion="Reenvía a SUNAT todos los comprobantes observados con un clic." accion={<Button variant="suave">Ver más</Button>} />
+          <TarjetaDestacada tono="info" icono={<SparkleIcon />} titulo="Novedad: reenvío masivo" descripcion="Reenvía a SUNAT todos los comprobantes observados con un clic." accion={<Button variant="suave">Ver más</Button>} />
           <TarjetaDestacada tono="ok" icono={<ShieldCheckIcon />} titulo="Certificado vigente" descripcion="Vence en 11 meses; te avisamos con 30 días de anticipación." />
           <TarjetaDestacada tono="aviso" icono={<BellIcon />} titulo="Plan por vencer" descripcion="Renueva antes del 30 de octubre para no interrumpir las emisiones." accion={<button type="button" className={BOTON_SECUNDARIO}>Renovar</button>} />
           <TarjetaDestacada
             tono="invertido"
             className="md:col-span-2"
-            icono={<RocketIcon />}
+            icono={<RocketLaunchIcon />}
             titulo="Pasa a producción"
             descripcion="Cuando tus series estén listas, activa el entorno de producción desde Empresa."
             accion={<button type="button" className={BOTON_SECUNDARIO}>Activar producción</button>}
@@ -184,7 +184,7 @@ export function Galeria() {
               Con tooltip
             </button>
           </Tooltip>
-          <BotonAsync pendiente={enviando} icon={<SendIcon className="size-4" />} textoPendiente="Enviando…" className={ACCION_PRINCIPAL} onClick={simularEnvio}>
+          <BotonAsync pendiente={enviando} icon={<PaperPlaneTiltIcon className="size-4" />} textoPendiente="Enviando…" className={ACCION_PRINCIPAL} onClick={simularEnvio}>
             Enviar a SUNAT
           </BotonAsync>
         </div>
@@ -214,21 +214,21 @@ export function Galeria() {
         <div className="grid gap-3 lg:grid-cols-2">
           <SkeletonMetricas columnas={2} />
           <div className="flex items-center gap-3">
-            <Skeleton className="size-9 rounded-full" />
+            <Skeleton className="size-control rounded-full" />
             <div className="grid flex-1 gap-1.5">
               <Skeleton className="h-3 w-1/2" />
               <Skeleton className="h-2.5 w-3/4" />
             </div>
           </div>
         </div>
-        <EstadoVacio icon={InboxIcon} titulo="Sin documentos todavía" accion={<button type="button" className={BOTON_PRIMARIO}>Nuevo documento</button>}>
+        <EstadoVacio icon={TrayIcon} titulo="Sin documentos todavía" accion={<button type="button" className={BOTON_PRIMARIO}>Nuevo documento</button>}>
           Cuando emitas el primero aparecerá aquí con su estado en SUNAT.
         </EstadoVacio>
       </section>
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION} style={pasoEntrada(7)}>
-        <CabeceraSeccion icon={PencilIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilSimpleIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador etiqueta="Buscar documentos" valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
           <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo)">
@@ -344,7 +344,7 @@ export function Galeria() {
             valor={vista}
             onCambio={setVista}
             opciones={[
-              { valor: "lista", etiqueta: "Lista", icon: <ListOrderedIcon className="size-3.5" /> },
+              { valor: "lista", etiqueta: "Lista", icon: <ListNumbersIcon className="size-3.5" /> },
               { valor: "tarjetas", etiqueta: "Tarjetas", icon: <PackageIcon className="size-3.5" /> },
             ]}
           />
@@ -363,13 +363,13 @@ export function Galeria() {
           <Toolbar aria-label="Formato de texto">
             <ToolbarGroup aria-label="Estilo de fuente">
               <ToolbarButton aria-label="Negrita" aria-pressed={negrita} onClick={() => setNegrita((v) => !v)}>
-                <BoldIcon />
+                <TextBIcon />
               </ToolbarButton>
               <ToolbarButton aria-label="Cursiva" aria-pressed={cursiva} onClick={() => setCursiva((v) => !v)}>
-                <ItalicIcon />
+                <TextItalicIcon />
               </ToolbarButton>
               <ToolbarButton aria-label="Subrayado" aria-pressed={subrayado} onClick={() => setSubrayado((v) => !v)}>
-                <UnderlineIcon />
+                <TextUnderlineIcon />
               </ToolbarButton>
             </ToolbarGroup>
             <ToolbarSeparator />
@@ -471,7 +471,7 @@ export function Galeria() {
           comandos={[
             { id: "docs", label: "Documentos", detalle: "/ejemplo", grupo: "Ir a", icon: FileTextIcon, href: "/ejemplo" },
             { id: "keys", label: "API keys", detalle: "/ejemplo/api-keys", grupo: "Ir a", href: "/ejemplo/api-keys" },
-            { id: "nuevo", label: "Nuevo documento", grupo: "Acciones", icon: PencilIcon, onSelect: () => toast.info("Nuevo documento") },
+            { id: "nuevo", label: "Nuevo documento", grupo: "Acciones", icon: PencilSimpleIcon, onSelect: () => toast.info("Nuevo documento") },
           ]}
         />
       </section>

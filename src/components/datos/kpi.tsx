@@ -1,4 +1,4 @@
-import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "lucide-react";
+import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
 import { cn } from "@/lib/utils";

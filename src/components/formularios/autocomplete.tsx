@@ -1,7 +1,7 @@
 "use client";
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
-import { SearchIcon, XIcon } from "lucide-react";
+import { MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react";
 import { CAMPO, POPUP_LISTA } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +36,7 @@ export function Autocomplete({
         <AutocompletePrimitive.Clear aria-label="Limpiar" className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5 text-muted-foreground/70 hover:text-foreground">
           <XIcon className="size-4" />
         </AutocompletePrimitive.Clear>
-        <SearchIcon className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 size-4 text-muted-foreground/70" />
+        <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 size-4 text-muted-foreground/70" />
       </div>
       <AutocompletePrimitive.Portal>
         <AutocompletePrimitive.Positioner sideOffset={6} className="isolate z-50">

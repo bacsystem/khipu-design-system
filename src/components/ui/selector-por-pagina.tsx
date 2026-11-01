@@ -7,7 +7,7 @@ export function SelectorPorPagina({ valor, onCambio }: { valor: number; onCambio
   return (
     <div className="inline-flex items-center gap-2 text-etiqueta text-muted-foreground" role="group" aria-label="Filas por página">
       <span>Filas</span>
-      <div className="inline-flex h-9 items-center rounded-lg border border-border bg-card p-0.5 shadow-xs">
+      <div className="inline-flex h-control items-center rounded-lg border border-border bg-card p-0.5 shadow-xs">
         {OPCIONES_POR_PAGINA.map((n) => (
           <button
             key={n}
