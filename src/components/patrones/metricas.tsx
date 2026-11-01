@@ -161,12 +161,13 @@ export function Metrica({
   );
 }
 
-/** Fila de métricas: tarjetas separadas por 12px (4 columnas en desktop, 2 en tablet, 1 en móvil). */
-export function FilaMetricas({ children, columnas = 4 }: { children: ReactNode; columnas?: 2 | 3 | 4 }) {
+/** Fila de métricas: tarjetas separadas por 12px (4 columnas en desktop, 2 en tablet, 1 en móvil; `columnas` de 2 a 5). */
+export function FilaMetricas({ children, columnas = 4 }: { children: ReactNode; columnas?: 2 | 3 | 4 | 5 }) {
   return (
     <section
       className={cn(
         "grid grid-cols-1 gap-3 sm:grid-cols-2",
+        columnas === 5 && "lg:grid-cols-5",
         columnas === 4 && "lg:grid-cols-4",
         columnas === 3 && "lg:grid-cols-3",
         columnas === 2 && "lg:grid-cols-2",

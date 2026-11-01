@@ -3,7 +3,7 @@
 import { XIcon } from "@phosphor-icons/react";
 import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { IconoSeccion } from "@/components/patrones/cabecera-seccion";
 import { cn } from "@/lib/utils";
 
@@ -39,8 +39,8 @@ export function PanelLateral({
         <div className="flex items-start gap-2.5 px-5 pt-5 pb-3">
           <IconoSeccion icon={icon} />
           <div className="min-w-0 flex-1">
-            <h2 className="text-titulo text-foreground">{titulo}</h2>
-            {descripcion ? <p className="text-control text-muted-foreground">{descripcion}</p> : null}
+            <SheetTitle className="text-titulo text-foreground">{titulo}</SheetTitle>
+            {descripcion ? <SheetDescription className="text-control text-muted-foreground">{descripcion}</SheetDescription> : null}
           </div>
           <SheetClose aria-label="Cerrar" className="-mt-1 -mr-1 grid size-8 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground">
             <XIcon weight="bold" className="size-4" />

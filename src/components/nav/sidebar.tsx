@@ -11,6 +11,7 @@ export function SidebarContent({
   chip,
   selector,
   grupos,
+  etiquetaMenu,
   pie,
   usuario,
 }: {
@@ -18,6 +19,8 @@ export function SidebarContent({
   chip?: ReactNode;
   selector?: ReactNode;
   grupos: GrupoNav[];
+  /** Nombre accesible del menú (`aria-label` de su `nav`). */
+  etiquetaMenu?: string;
   pie?: ReactNode;
   usuario?: ReactNode;
 }) {
@@ -29,7 +32,7 @@ export function SidebarContent({
           {chip}
         </div>
         {selector ? <div className="px-3 pt-3 pb-2">{selector}</div> : null}
-        <SidebarNav grupos={grupos} />
+        <SidebarNav grupos={grupos} etiqueta={etiquetaMenu} />
       </div>
 
       {pie || usuario ? (
