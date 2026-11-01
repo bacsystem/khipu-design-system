@@ -19,12 +19,15 @@ function GrupoMuestras({
   valor,
   onCambio,
   forma,
+  grande = false,
 }: {
   etiqueta: string;
   opciones: Opcion[];
   valor: string;
   onCambio: (valor: string) => void;
   forma: "circulo" | "tarjeta" | "texto";
+  /** Muestras más grandes y el nombre de la elegida también en las paletas (panel «Apariencia»). */
+  grande?: boolean;
 }) {
   const botones = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -35,8 +38,8 @@ function GrupoMuestras({
   }
 
   return (
-    <div className="grid gap-1.5">
-      <div role="radiogroup" aria-label={etiqueta} className={cn("flex items-center gap-1.5", forma === "circulo" && "flex-wrap")}>
+    <div className={cn("grid", grande ? "gap-2" : "gap-1.5")}>
+      <div role="radiogroup" aria-label={etiqueta} className={cn("flex items-center", grande ? "gap-2.5" : "gap-1.5", forma === "circulo" && "flex-wrap")}>
         {opciones.map((o, i) => {
           const activa = o.valor === valor;
           return (
@@ -64,9 +67,10 @@ function GrupoMuestras({
               style={o.estilo}
               className={cn(
                 "shrink-0 cursor-pointer transition-shadow duration-(--duracion-rapida) ease-salida",
-                forma === "circulo" && "size-5 rounded-full",
-                forma === "tarjeta" && "h-7 min-w-0 flex-1 rounded-lg",
-                forma === "texto" && "grid h-8 min-w-0 flex-1 place-items-center rounded-lg bg-secondary text-cuerpo font-semibold text-foreground",
+                forma === "circulo" && (grande ? "size-9 rounded-full" : "size-5 rounded-full"),
+                forma === "tarjeta" && (grande ? "h-14 min-w-0 flex-1 rounded-xl" : "h-7 min-w-0 flex-1 rounded-lg"),
+                forma === "texto" &&
+                  cn("grid min-w-0 flex-1 place-items-center bg-secondary font-semibold text-foreground", grande ? "h-12 rounded-xl text-titulo-pagina" : "h-8 rounded-lg text-cuerpo"),
                 activa
                   ? cn("ring-2 ring-foreground ring-offset-2 ring-offset-popover", forma === "texto" && "bg-popover")
                   : forma !== "texto" && "ring-1 ring-border",
@@ -78,7 +82,7 @@ function GrupoMuestras({
           );
         })}
       </div>
-      {forma !== "circulo" ? (
+      {forma !== "circulo" || grande ? (
         <span className="text-center text-etiqueta text-texto-terciario">{opciones.find((o) => o.valor === valor)?.etiqueta}</span>
       ) : null}
     </div>
@@ -86,7 +90,7 @@ function GrupoMuestras({
 }
 
 /** Muestras de las paletas (acento, acento 2 y acento 3 en un círculo). No pinta nada sin `AparienciaProvider` ni con «papel». */
-export function SelectorPaleta({ className }: { className?: string }) {
+export function SelectorPaleta({ className, grande }: { className?: string; grande?: boolean }) {
   const { paleta, setPaleta, paletas } = useApariencia();
   const { diseno } = useDiseno();
   if (paletas.length < 2 || diseno === "papel") return null;
@@ -97,7 +101,7 @@ export function SelectorPaleta({ className }: { className?: string }) {
   }));
   return (
     <div className={className}>
-      <GrupoMuestras forma="circulo" etiqueta="Paleta de color" opciones={opciones} valor={paleta} onCambio={setPaleta} />
+      <GrupoMuestras grande={grande} forma="circulo" etiqueta="Paleta de color" opciones={opciones} valor={paleta} onCambio={setPaleta} />
     </div>
   );
 }
@@ -106,7 +110,7 @@ export function SelectorPaleta({ className }: { className?: string }) {
  * Muestras de los tonos del modo oscuro: lienzo, tarjeta y acento de la paleta en diagonal, para que se distingan (tres
  * círculos casi negros no se diferenciaban). Se puede elegir estando en claro: se aplica al pasar a oscuro.
  */
-export function SelectorTonoOscuro({ className }: { className?: string }) {
+export function SelectorTonoOscuro({ className, grande }: { className?: string; grande?: boolean }) {
   const { tonoOscuro, setTonoOscuro, tonosOscuro } = useApariencia();
   const { diseno } = useDiseno();
   if (tonosOscuro.length < 2 || diseno === "papel") return null;
@@ -117,20 +121,20 @@ export function SelectorTonoOscuro({ className }: { className?: string }) {
   }));
   return (
     <div className={className}>
-      <GrupoMuestras forma="tarjeta" etiqueta="Tono del modo oscuro" opciones={opciones} valor={tonoOscuro} onCambio={setTonoOscuro} />
+      <GrupoMuestras grande={grande} forma="tarjeta" etiqueta="Tono del modo oscuro" opciones={opciones} valor={tonoOscuro} onCambio={setTonoOscuro} />
     </div>
   );
 }
 
 /** Tipografías de interfaz: un «Aa» dibujado en cada fuente. Los datos siguen en JetBrains Mono. */
-export function SelectorTipografia({ className }: { className?: string }) {
+export function SelectorTipografia({ className, grande }: { className?: string; grande?: boolean }) {
   const { fuente, setFuente, fuentes } = useApariencia();
   const { diseno } = useDiseno();
   if (fuentes.length < 2 || diseno === "papel") return null;
   const opciones = fuentes.map((f) => ({ valor: f.valor, etiqueta: f.etiqueta, estilo: { fontFamily: f.familia }, contenido: "Aa" }));
   return (
     <div className={className}>
-      <GrupoMuestras forma="texto" etiqueta="Tipografía" opciones={opciones} valor={fuente} onCambio={setFuente} />
+      <GrupoMuestras grande={grande} forma="texto" etiqueta="Tipografía" opciones={opciones} valor={fuente} onCambio={setFuente} />
     </div>
   );
 }
