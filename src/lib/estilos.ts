@@ -50,15 +50,16 @@ export const FOCO_CAMPO_VISIBLE =
   "focus-visible:border-acento-texto focus-visible:ring-3 focus-visible:ring-acento/55 dark:focus-visible:border-acento dark:focus-visible:ring-acento/25";
 /** Campo con error (`aria-invalid`): borde y anillo rojo tenue. */
 export const ERROR_CAMPO = "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15";
+// `text-campo` (16 px) hasta `md`: con menos, iOS Safari amplía la página al enfocar el campo.
 export const CAMPO =
-  "h-control w-full rounded-lg border border-input bg-card px-3 text-control text-foreground transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none placeholder:text-texto-terciario focus:border-acento-texto focus:ring-3 focus:ring-acento/55 dark:focus:border-acento dark:focus:ring-acento/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 disabled:cursor-not-allowed disabled:opacity-60";
+  "h-control w-full rounded-lg border border-input bg-card px-3 text-campo md:text-control text-foreground transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none placeholder:text-texto-terciario focus:border-acento-texto focus:ring-3 focus:ring-acento/55 dark:focus:border-acento dark:focus:ring-acento/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 disabled:cursor-not-allowed disabled:opacity-60";
 /** @deprecated Desde 0.2.0 todos los campos miden lo mismo: usa `CAMPO`. Se conserva para no romper imports. */
 export const CAMPO_FILTRO = CAMPO;
 export const ETIQUETA_CAMPO = "text-control font-medium text-foreground";
 export const AYUDA_CAMPO = "text-etiqueta text-muted-foreground";
 /** `<select>` nativo con el aspecto de `CAMPO`: para formularios que no usan `ui/select` (p. ej. hechos con react-hook-form). */
 export const SELECT_NATIVO =
-  "h-control rounded-lg border border-input bg-card px-2.5 text-control text-foreground transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none focus:border-acento-texto focus:ring-3 focus:ring-acento/55 dark:focus:border-acento dark:focus:ring-acento/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 disabled:cursor-not-allowed disabled:opacity-60";
+  "h-control rounded-lg border border-input bg-card px-2.5 text-campo md:text-control text-foreground transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none focus:border-acento-texto focus:ring-3 focus:ring-acento/55 dark:focus:border-acento dark:focus:ring-acento/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 disabled:cursor-not-allowed disabled:opacity-60";
 
 // disabled:pointer-events-none (igual que ui/button.tsx) es lo que de verdad evita que el :hover del mouse
 // que se quedó sobre el botón le gane a disabled:opacity-60 en la cascada; cursor-not-allowed solo no basta.

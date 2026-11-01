@@ -19,6 +19,8 @@ export type ItemNav = {
   pendiente?: string;
   /** Tooltip explicando por qué todavía no está disponible. */
   title?: string;
+  /** Activo solo si la ruta es exactamente `href` (un «Inicio» en `/admin` no debe marcarse en todas las páginas que cuelgan de él). Por defecto, por prefijo. */
+  exacto?: boolean;
 };
 
 export type GrupoNav = { titulo: string; items: ItemNav[] };
@@ -28,13 +30,13 @@ export type GrupoNav = { titulo: string; items: ItemNav[] };
 const ITEM_BASE = "relative isolate flex w-full min-w-0 items-center gap-2.5 rounded-full px-3 py-[7px] text-control";
 
 /** Navegación del sidebar por grupos; el ítem activo se detecta por prefijo de la ruta actual y su fondo se desliza al cambiar. */
-export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
+export function SidebarNav({ grupos, etiqueta }: { grupos: GrupoNav[]; etiqueta?: string }) {
   const pathname = usePathname();
   // Un layoutId por instancia: el sidebar de escritorio y el del menú móvil no comparten indicador.
   const idIndicador = useId();
 
   return (
-    <nav className="grid w-full grid-cols-1 gap-4 px-2.5 pt-2">
+    <nav aria-label={etiqueta} className="grid w-full grid-cols-1 gap-4 px-2.5 pt-2">
       {grupos.map((grupo) => (
         <div key={grupo.titulo} className="grid w-full grid-cols-1 gap-0.5">
           <span className={cn("truncate px-3 pt-1 pb-1.5", ROTULO)}>{grupo.titulo}</span>
@@ -49,7 +51,7 @@ export function SidebarNav({ grupos }: { grupos: GrupoNav[] }) {
                 </span>
               );
             }
-            const active = pathname.startsWith(item.href);
+            const active = item.exacto ? pathname === item.href : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

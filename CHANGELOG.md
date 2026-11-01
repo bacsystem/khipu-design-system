@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Text fields no longer zoom the page on iPhone: iOS Safari enlarges the page when a field under 16 px takes focus and leaves it enlarged. `CAMPO`, `SELECT_NATIVO` and `ui/input` use the new `text-campo` (16 px) below `md` and `text-control` (13 px) from `md`; the 34 px control height is unchanged.
+- The phone drawer (`MobileNav`) scrolls: `SidebarContent` is `h-full overflow-hidden`, so on a short screen the user block at the bottom (theme, appearance, sign out) was out of reach.
+- `PanelLateral` has an accessible name: its title is the dialog's `SheetTitle` (and its description the `SheetDescription`) instead of a loose heading.
+
+### Added
+- Accessible names as props, with the same Spanish defaults: `SidebarNav` `etiqueta` (and `SidebarContent` `etiquetaMenu`) names its `nav`, `TopBar` `etiquetaUbicacion` the breadcrumb, `MobileNav` `etiqueta` the button. An app in another language no longer has these landmarks in Spanish.
+- `ItemNav.exacto`: the item is active only when the route is exactly its `href` (a «Home» at `/admin` was active on every page below it, because items match by prefix).
+- `FilaMetricas` `columnas={5}`.
+
 ## [0.5.1] - 2026-11-01
 
 ### Fixed

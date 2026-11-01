@@ -98,6 +98,9 @@
   --text-etiqueta--line-height: 1rem;
   --text-control: 0.8125rem;
   --text-control--line-height: 1.25rem;
+  /* Letra de un campo de texto en pantallas táctiles: iOS Safari amplía la página al enfocar un campo de menos de 16 px y la deja ampliada. Desde `md`, `text-control`. */
+  --text-campo: 1rem;
+  --text-campo--line-height: 1.25rem;
   --text-cuerpo: 0.8125rem;
   --text-cuerpo--line-height: 1.25rem;
   --text-titulo: 0.90625rem;

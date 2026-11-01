@@ -49,6 +49,7 @@ export function TopBar({
   menuMovil,
   buscador,
   acciones,
+  etiquetaUbicacion = "Ubicación",
 }: {
   migas: Miga[];
   pills?: PillEntorno[];
@@ -56,6 +57,8 @@ export function TopBar({
   /** `{ placeholder, onClick }` o `false` para ocultarlo; sin `onClick` se muestra deshabilitado ("próximamente"). */
   buscador?: { placeholder: string; atajo?: string; onClick?: () => void; title?: string } | false;
   acciones?: ReactNode;
+  /** Nombre accesible de la miga (`aria-label` de su `nav`). */
+  etiquetaUbicacion?: string;
 }) {
   const pathname = usePathname();
   const miga = migas.find((m) => pathname.startsWith(m.prefijo));
@@ -66,7 +69,7 @@ export function TopBar({
         {menuMovil ? <div className="md:hidden">{menuMovil}</div> : null}
 
         {miga ? (
-          <nav aria-label="Ubicación" className="flex min-w-0 shrink items-center gap-1.5 overflow-hidden text-control whitespace-nowrap">
+          <nav aria-label={etiquetaUbicacion} className="flex min-w-0 shrink items-center gap-1.5 overflow-hidden text-control whitespace-nowrap">
             <span className="text-texto-terciario">{miga.seccion}</span>
             <span className="text-texto-terciario/50">/</span>
             <h1 className="truncate font-heading text-titulo text-foreground">{miga.pagina}</h1>

@@ -6,8 +6,11 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-/** Hamburguesa de la top bar que abre el mismo `SidebarContent` en un cajón lateral; se cierra al navegar. */
-export function MobileNav({ children }: { children: ReactNode }) {
+/**
+ * Hamburguesa de la top bar que abre el mismo `SidebarContent` en un cajón lateral; se cierra al navegar. El cajón se desplaza: en una pantalla baja el usuario del pie
+ * (tema, apariencia, cerrar sesión) quedaba fuera. `etiqueta` es el nombre accesible del botón.
+ */
+export function MobileNav({ children, etiqueta = "Abrir menú" }: { children: ReactNode; etiqueta?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -19,10 +22,11 @@ export function MobileNav({ children }: { children: ReactNode }) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="ghost" size="icon-sm" />}>
         <ListIcon weight="bold" className="size-5" />
-        <span className="sr-only">Abrir menú</span>
+        <span className="sr-only">{etiqueta}</span>
       </SheetTrigger>
       <SheetContent side="left" showCloseButton={false} className="w-60 bg-sidebar p-0 text-sidebar-foreground">
-        {children}
+        {/* `SidebarContent` es `h-full overflow-hidden`: se le da un contenedor que se desplaza y se lo deja crecer al contenido. */}
+        <div className="h-full overflow-y-auto [&>div]:h-auto [&>div]:min-h-full [&>div]:overflow-visible">{children}</div>
       </SheetContent>
     </Sheet>
   );
