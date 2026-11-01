@@ -1,8 +1,9 @@
 "use client";
 
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import { MonitorIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { PESO_ICONO_FUNCIONAL } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
 
 const OPCIONES = [
@@ -11,7 +12,10 @@ const OPCIONES = [
   { valor: "system", etiqueta: "Sistema", Icono: MonitorIcon },
 ] as const;
 
-/** `conTexto`: variante ancha con etiqueta visible en cada opción (p. ej. dentro del menú de usuario). */
+/**
+ * Claro / oscuro / sistema como control segmentado en píldora. Por defecto solo iconos (nombre en `title` y `aria-label`):
+ * en el menú de usuario el texto no entraba. `conTexto` muestra además la etiqueta, para espacios anchos.
+ */
 export function ThemeToggle({ className, conTexto = false }: { className?: string; conTexto?: boolean }) {
   const { theme, setTheme } = useTheme();
   // El tema real solo se conoce en el cliente (localStorage / prefers-color-scheme);
@@ -24,7 +28,7 @@ export function ThemeToggle({ className, conTexto = false }: { className?: strin
     <div
       role="radiogroup"
       aria-label="Tema de la interfaz"
-      className={cn("inline-flex h-9 items-center rounded-lg border border-border bg-muted p-0.5", conTexto && "w-full", className)}
+      className={cn("inline-flex items-center gap-0.5 rounded-full bg-secondary p-[3px]", conTexto && "w-full", className)}
     >
       {OPCIONES.map(({ valor, etiqueta, Icono }) => {
         const activo = actual === valor;
@@ -34,16 +38,17 @@ export function ThemeToggle({ className, conTexto = false }: { className?: strin
             type="button"
             role="radio"
             aria-checked={activo}
+            aria-label={etiqueta}
             title={etiqueta}
             onClick={() => setTheme(valor)}
             className={cn(
-              "flex h-7 items-center justify-center gap-1.5 rounded-md transition-colors",
-              conTexto ? "min-w-0 flex-1 basis-0 gap-1 px-0 text-control font-medium" : "size-7",
-              activo ? "bg-card text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground",
+              "flex h-7 items-center justify-center gap-1.5 rounded-full transition-colors duration-(--duracion-rapida) ease-salida",
+              conTexto ? "min-w-0 flex-1 basis-0 px-2 text-control font-medium" : "w-8",
+              activo ? "bg-card text-foreground shadow-xs ring-1 ring-border" : "text-muted-foreground hover:text-foreground",
             )}
           >
-            <Icono className={cn("shrink-0", conTexto ? "size-3" : "size-4")} />
-            <span className={conTexto ? "truncate" : "sr-only"}>{etiqueta}</span>
+            <Icono weight={PESO_ICONO_FUNCIONAL} className="size-4 shrink-0" />
+            {conTexto ? <span className="truncate">{etiqueta}</span> : null}
           </button>
         );
       })}

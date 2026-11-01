@@ -3,7 +3,7 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import { cn } from "@/lib/utils";
 
-const PULGAR = "block size-4 rounded-full border-2 border-primary bg-card shadow-xs outline-none transition-transform focus-visible:ring-3 focus-visible:ring-ring/30 data-dragging:scale-110";
+const PULGAR = "block size-[18px] rounded-full bg-white shadow-[0_0_0_1.5px_var(--primary),0_2px_6px_rgba(0,0,0,0.15)] outline-none transition-transform duration-(--duracion-rapida) ease-salida focus-visible:ring-4 focus-visible:ring-acento/55 data-dragging:scale-110";
 
 /**
  * Control deslizante para una magnitud continua (monto, cantidad, porcentaje) o un rango de dos manijas
@@ -48,11 +48,11 @@ export function Deslizador({
       disabled={disabled}
       className={cn("grid gap-1.5", className)}
     >
-      <span className="font-mono text-control text-muted-foreground tabular-nums">
+      <span className="text-control font-semibold text-foreground tabular-nums">
         {rango ? `${f(valor[0])} – ${f(valor[1])}` : f(valor as number)}
       </span>
       <SliderPrimitive.Control className="flex w-full items-center py-2">
-        <SliderPrimitive.Track className="relative h-1.5 w-full rounded-full bg-secondary">
+        <SliderPrimitive.Track className="relative h-1 w-full rounded-full bg-secondary">
           <SliderPrimitive.Indicator className="absolute h-full rounded-full bg-primary" />
           <SliderPrimitive.Thumb className={PULGAR} getAriaLabel={etiquetaManija} />
           {rango ? <SliderPrimitive.Thumb className={PULGAR} getAriaLabel={etiquetaManija} /> : null}

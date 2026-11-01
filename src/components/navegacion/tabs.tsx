@@ -17,7 +17,7 @@ const INDICADOR_BASE =
   "absolute -z-10 left-(--active-tab-left) w-(--active-tab-width) transition-[left,width,top,height] duration-(--duracion-media) ease-salida motion-reduce:transition-none";
 const INDICADOR = {
   linea: cn(INDICADOR_BASE, "-bottom-px h-0.5 rounded-full bg-foreground"),
-  segmentado: cn(INDICADOR_BASE, "top-(--active-tab-top) h-(--active-tab-height) rounded-md bg-card shadow-sm dark:bg-input"),
+  segmentado: cn(INDICADOR_BASE, "top-(--active-tab-top) h-(--active-tab-height) rounded-full bg-card shadow-sm ring-1 ring-border dark:bg-input"),
 };
 
 /**
@@ -50,7 +50,7 @@ export function Tabs<T extends string>({
         {items.map((t) => (
           <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
-            {t.contador != null ? <span className="rounded-md bg-secondary px-1.5 py-0.5 font-mono text-etiqueta text-muted-foreground tabular-nums">{t.contador}</span> : null}
+            {t.contador != null ? <span className="rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums in-data-active:bg-acento in-data-active:text-acento-texto">{t.contador}</span> : null}
           </TabsPrimitive.Tab>
         ))}
         <TabsPrimitive.Indicator className={INDICADOR[estilo]} />

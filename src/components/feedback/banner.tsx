@@ -1,14 +1,15 @@
-import { CheckCircle2Icon, CircleAlertIcon, InfoIcon, TriangleAlertIcon, XIcon, type LucideIcon } from "lucide-react";
+import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
+import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Tono = "info" | "ok" | "aviso" | "error";
 
-const ESTILOS: Record<Tono, { caja: string; icono: LucideIcon }> = {
-  info: { caja: "border-accent-border bg-accent text-accent-foreground", icono: InfoIcon },
-  ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircle2Icon },
-  aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: TriangleAlertIcon },
-  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: CircleAlertIcon },
+const ESTILOS: Record<Tono, { caja: string; icono: IconoComponente }> = {
+  info: { caja: "bg-accent text-accent-foreground", icono: InfoIcon },
+  ok: { caja: "bg-success text-success-foreground", icono: CheckCircleIcon },
+  aviso: { caja: "bg-warning text-warning-foreground", icono: WarningIcon },
+  error: { caja: "bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
 };
 
 /**
@@ -29,18 +30,18 @@ export function Banner({
   children: ReactNode;
   accion?: ReactNode;
   onCerrar?: () => void;
-  icon?: LucideIcon;
+  icon?: IconoComponente;
   className?: string;
 }) {
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
-    <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 border-b px-4 py-2.5 text-control", ESTILOS[tono].caja, className)}>
-      <Icono className="size-4 shrink-0" />
+    <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 px-4 py-2.5 text-control", ESTILOS[tono].caja, className)}>
+      <Icono weight={PESO_ICONO} className="size-4 shrink-0" />
       <div className="min-w-0 flex-1 leading-relaxed">{children}</div>
       {accion ? <div className="shrink-0">{accion}</div> : null}
       {onCerrar ? (
         <button type="button" onClick={onCerrar} aria-label="Cerrar aviso" className="shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100">
-          <XIcon className="size-3.5" />
+          <XIcon weight="bold" className="size-3.5" />
         </button>
       ) : null}
     </div>

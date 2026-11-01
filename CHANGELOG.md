@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-11-01
+
+### Changed
+- Diseño base «khipu» pastel y compacto: lienzo gris claro `#eceef1`, tarjetas blancas sin borde ni sombra en reposo, el color de la paleta en superficies (ítem activo, métrica destacada, gráficos) y no en botones. Oscuro por defecto «Medianoche» (`#0a0f1c`, tarjeta `#111a2c`) con los acentos como superficie teñida + texto pastel.
+- Tipografía Inter (interfaz, con `cv11`, `ss01`, `ss03`) + JetBrains Mono (solo correlativos, ids, llaves y código). Escala: `text-etiqueta` 11.5, `text-control` 13, `text-cuerpo` 13, `text-metrica` 26; nuevas `text-titulo` 14.5 y `text-titulo-pagina` 21.
+- Iconos de Phosphor (`@phosphor-icons/react`) en todos los componentes, peso duotono y relleno (`fill`) en el estado activo o destacado, siempre sin fondo ni contenedor: el color dice el significado.
+- Altura única de control: 34 px (`h-control`, `--spacing-control: 2.125rem`) en lugar de `h-9`.
+- Botones, chips, pills de estado, segmentados, ítems de menú y paginación en píldora (`rounded-full`). Radios 12 px en campos (`rounded-lg`) y 18 px en tarjetas, popovers y diálogos (`rounded-xl`), con `--radius: 0.75rem`.
+- Filas de tabla como bandas redondeadas de 12 px sobre `soft`, separadas por 3 px; cabeceras de tabla y de grupo con `ROTULO` (11.5 px, 600, mayúsculas).
+- Sidebar flotante de 216 px: tarjeta con radio 18 y margen 12, ítem activo en píldora con el acento y su icono relleno.
+- Acción principal casi negra (`#16181d`) en claro y casi blanca (`#f4f5f7`) en oscuro (`--primary`); el anillo de foco es `--acento-texto` (≥ 8:1 sobre tarjeta).
+- `FilaMetricas` pasa de una tarjeta dividida a una grilla de tarjetas separadas con gap 12 (mismo export, mismas props).
+- `lucide-react` deja de usarse en los componentes y pasa a peer **opcional**; las props de icono aceptan Phosphor y Lucide.
+- Iconos funcionales (caret, check, cerrar, ±, flechas, ⋯, lupa, copiar, refrescar, spinner) en **bold**; el duotono queda para los semánticos (`PESO_ICONO_FUNCIONAL`).
+- `EntradaFecha` usa un calendario propio en un popover (`Calendario`) en lugar del selector nativo del navegador: mismo valor ISO y mismas props (`conVistaPrevia` queda sin efecto). Teclado: flechas, RePág/AvPág (Shift: año), Inicio/Fin, Enter.
+- Select: lista de radio 16 con hover suave, check en círculo de acento y caret que gira. Campos: foco con el anillo del acento (`FOCO_CAMPO`), error con anillo rojo tenue. Checks de 18 px (radio 6), switch más fino, opciones en tarjeta teñidas con el acento. Stepper en píldora, slider más fino.
+- Diálogos de radio 22 sin líneas entre cabecera y pie, con el icono en un círculo del tono (`CabeceraDialogo` `tono`) y velo más suave (2 px de desenfoque). Panel lateral flotante (12 px de margen, radio 20). Avisos sin borde. Tabs con contador en píldora; acordeón sobre superficie suave.
+- Gráficos: barras de radio 9, leyenda en píldoras junto al título, el viewBox sigue el ancho real (las etiquetas quedan en 10 px a cualquier tamaño).
+- `TablaDatos`: la barra de selección pasa a ser una barra flotante en píldora que invierte el tema, con el contador en un círculo de acento, acciones en píldora (recetas `ACCION_MASIVA` y `ACCION_MASIVA_PELIGRO`) y «Quitar selección» redondo. Antes eran enlaces de texto sobre una franja tenue.
+- `MenuUsuario` es compacto: cuenta, tema solo con iconos, «Apariencia…» y cerrar sesión. Las preferencias (paleta, tono oscuro, tipografía, diseño) van en `PanelApariencia`, un panel a la derecha con vista previa en vivo.
+- Ninguna prop ni export se quitó ni cambió de nombre.
+
+### Added
+- **Apariencia elegible por el usuario**: `AparienciaProvider`, `useApariencia`, `PanelApariencia`, `SelectorApariencia`, `SelectorPaleta`, `SelectorTonoOscuro` y `SelectorTipografia` (`nav/selector-apariencia`), `PALETAS`, `TONOS_OSCURO` y `FUENTES` (`apariencia-opciones`). Cinco paletas (Lima por defecto, Índigo, Océano, Coral, Violeta) en `html[data-paleta]`, tres tonos oscuros (Medianoche por defecto, Grafito, Tintado) en `.dark[data-oscuro]` y cinco tipografías (Inter por defecto, Plus Jakarta Sans, Manrope, DM Sans, Figtree) en `html[data-fuente]`, guardados en `localStorage` (`khipu-paleta`, `khipu-oscuro`, `khipu-fuente`). No aplican con el diseño «papel».
+- `ScriptDiseno` acepta `paletas`, `tonosOscuro`, `fuentes` e `inicial` y aplica `data-paleta`, `data-oscuro` y `data-fuente` antes del primer pintado. `Providers` acepta `apariencia` (`inicial`, `onCambio`…), que pasa a `AparienciaProvider`.
+- `Metrica` y `Kpi`: `icono`, `tono` (`ok | aviso | error | neutro | acento`), `visual` (`barra` o `puntos`), `destacada` y `acciones`. Piezas sueltas: `TarjetaMetrica`, `VisualDeMetrica`, `ChipVariacion`.
+- `GraficoBarras` `destacado`: índice de la barra que va en el acento de la paleta (con una serie). `GraficoAnillos`: anillos concéntricos con la paleta y su leyenda.
+- `Calendario` (`formularios/calendario`) y `lib/calendario` (fechas ISO sin desfase de zona horaria).
+- `IconoComponente`, `PESO_ICONO`, `PESO_ICONO_ACTIVO` y `PESO_ICONO_FUNCIONAL` (`lib/iconos`); recetas `ROTULO`, `TARJETA_ELEVABLE`, `FOCO_CAMPO`, `FOCO_CAMPO_VISIBLE` y `ERROR_CAMPO` (`lib/estilos`). `TonoOscuro` acepta `lienzo` (muestra de dos tonos).
+- Tokens `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto`, `--acento-3`, `--acento-suave`, `--acento-2-suave`, `--acento-3-suave`, `--acento-superficie`, `--acento-superficie-texto`, `--acento-borde`, `--texto-terciario`, `--info` / `--info-foreground`, `--chart-base`, `--chart-destacado`, `--borde-tarjeta`, `--brillo-tarjeta`, `--sombra-elevada`; utilidades `text-titulo`, `text-titulo-pagina` y `h-control`.
+- Subrutas del paquete `khipu-design-system/apariencia` y `khipu-design-system/apariencia-opciones`.
+- `npm run check:contraste` mide las 20 combinaciones (5 paletas × claro + 3 tonos oscuros).
+
+### Upgrading from 0.4.x
+1. Vuelve a pegar `src/styles/tokens.css` y `src/styles/theme.css` (o sube el tag del paquete a `#v0.5.0`, cuyo `styles.css` ya los trae): hay tokens nuevos obligatorios (`--acento*`, `--texto-terciario`, `--info*`, `--chart-base`, `--chart-destacado`, `--borde-tarjeta`, `--brillo-tarjeta`, `--sombra-elevada`, `--spacing-control`, `--text-titulo*`) y los bloques de paleta y de tono oscuro.
+2. Instala `@phosphor-icons/react`. `lucide-react` es opcional: si ya pasas iconos de Lucide a `icon`/`icono`, siguen funcionando (ignoran `weight`).
+3. Cambia `next/font` a `Inter` + `JetBrains_Mono` en `--font-sans` / `--font-mono`, como en `src/app/layout.tsx`. Para ofrecer las otras tipografías, cárgalas en `--fuente-jakarta`, `--fuente-manrope`, `--fuente-dmsans` y `--fuente-figtree` con `preload: false`.
+4. Los controles miden 34 px: cualquier `h-9` escrito a mano junto a un control del kit pasa a `h-control` (y `size-9` a `size-control`).
+5. Para guardar la paleta, el tono oscuro y la tipografía por usuario, pasa `inicial` (leído del perfil en el servidor) y `onCambio` a `Providers` (`apariencia`) y el mismo `inicial` a `ScriptDiseno`.
+
 ## [0.4.0] - 2026-10-31
 
 ### Changed

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
 import { AnimatePresence, m } from "motion/react";
 import { useState } from "react";
 import { MovimientoLocal } from "@/components/movimiento";
@@ -8,7 +8,7 @@ import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 /**
- * Copia `texto` al portapapeles; el icono gira a un check durante 1.5 s. `className` ajusta tamaño y radio (p. ej. `size-9 rounded-lg`).
+ * Copia `texto` al portapapeles; el icono gira a un check durante 1.5 s. `className` ajusta tamaño y radio (p. ej. `size-control rounded-lg`).
  * Sin `etiqueta` es solo el icono (celdas de tabla); con ella muestra "Copiar" / "Copiado" (barras de acciones).
  */
 export function BotonCopiar({
@@ -54,7 +54,7 @@ export function BotonCopiar({
           transition={{ duration: DURACION.rapida, ease: CURVA_SALIDA }}
           className="inline-flex"
         >
-          {copiado ? <CheckIcon className="size-3.5 text-success-foreground" /> : <CopyIcon className="size-3.5" />}
+          {copiado ? <CheckIcon weight="bold" className="size-3.5 text-success-foreground" /> : <CopyIcon weight="bold" className="size-3.5" />}
         </m.span>
       </AnimatePresence></MovimientoLocal>
       {etiqueta ? (copiado ? "Copiado" : "Copiar") : null}

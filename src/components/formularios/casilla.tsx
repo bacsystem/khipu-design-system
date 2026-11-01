@@ -2,7 +2,7 @@
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -34,15 +34,15 @@ export function Casilla({
         defaultChecked={defaultChecked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
-        className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-input bg-muted transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/30 data-checked:border-primary data-checked:bg-primary"
+        className="mt-px flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border-[1.5px] border-input bg-card transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:border-primary data-checked:bg-primary"
       >
         <CheckboxPrimitive.Indicator className="text-primary-foreground">
-          <CheckIcon className="size-3" strokeWidth={3} />
+          <CheckIcon className="size-3" weight="bold" />
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
       <span className="grid gap-0.5">
         <span className="font-medium text-foreground">{etiqueta}</span>
-        {descripcion ? <span className="text-control text-muted-foreground">{descripcion}</span> : null}
+        {descripcion ? <span className="text-control text-texto-terciario">{descripcion}</span> : null}
       </span>
     </label>
   );
@@ -80,9 +80,9 @@ export function Interruptor({
         defaultChecked={defaultChecked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
-        className="relative h-5 w-9 shrink-0 rounded-full border border-border bg-secondary p-0.5 transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/30 data-checked:border-primary data-checked:bg-primary"
+        className="relative h-[22px] w-9 shrink-0 rounded-full bg-input p-[3px] transition-colors duration-(--duracion-media) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:bg-primary"
       >
-        <SwitchPrimitive.Thumb className="block size-3.5 rounded-full bg-card shadow-xs transition-transform data-checked:translate-x-4" />
+        <SwitchPrimitive.Thumb className="block size-4 rounded-full bg-white shadow-sm transition-transform duration-(--duracion-media) ease-salida data-checked:translate-x-3.5 dark:data-checked:bg-primary-foreground" />
       </SwitchPrimitive.Root>
     </label>
   );

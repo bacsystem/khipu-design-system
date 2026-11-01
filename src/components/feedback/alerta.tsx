@@ -1,14 +1,15 @@
-import { CheckCircle2Icon, CircleAlertIcon, InfoIcon, TriangleAlertIcon, type LucideIcon } from "lucide-react";
+import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon } from "@phosphor-icons/react/dist/ssr";
+import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Tono = "info" | "ok" | "aviso" | "error";
 
-const ESTILOS: Record<Tono, { caja: string; icono: LucideIcon }> = {
-  info: { caja: "border-accent-border bg-accent text-accent-foreground", icono: InfoIcon },
-  ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircle2Icon },
-  aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: TriangleAlertIcon },
-  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: CircleAlertIcon },
+const ESTILOS: Record<Tono, { caja: string; icono: IconoComponente }> = {
+  info: { caja: "bg-accent text-accent-foreground", icono: InfoIcon },
+  ok: { caja: "bg-success text-success-foreground", icono: CheckCircleIcon },
+  aviso: { caja: "bg-warning text-warning-foreground", icono: WarningIcon },
+  error: { caja: "bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
 };
 
 /**
@@ -27,13 +28,13 @@ export function Alerta({
   titulo?: ReactNode;
   children: ReactNode;
   accion?: ReactNode;
-  icon?: LucideIcon;
+  icon?: IconoComponente;
   className?: string;
 }) {
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
-    <div role={tono === "error" ? "alert" : "status"} className={cn("flex flex-wrap items-start gap-3 rounded-xl border px-4 py-3", ESTILOS[tono].caja, className)}>
-      <Icono className="mt-0.5 size-4 shrink-0" />
+    <div role={tono === "error" ? "alert" : "status"} className={cn("flex flex-wrap items-start gap-3 rounded-[14px] px-4 py-3", ESTILOS[tono].caja, className)}>
+      <Icono weight={PESO_ICONO} className="mt-0.5 size-4 shrink-0" />
       <div className="min-w-0 flex-1 basis-56 text-control leading-relaxed">
         {titulo ? <p className="font-semibold">{titulo}</p> : null}
         <div className={cn(titulo && "mt-0.5 opacity-90")}>{children}</div>

@@ -40,20 +40,20 @@ export function GrupoOpciones<T extends string>({
           key={o.valor}
           className={cn(
             "flex cursor-pointer items-start gap-2.5 text-control",
-            estilo === "tarjetas" && "rounded-lg border border-border bg-card p-3 transition-colors has-data-checked:border-primary has-data-checked:bg-accent/60",
+            estilo === "tarjetas" && "rounded-[14px] border-[1.5px] border-transparent bg-secondary p-3 transition-colors duration-(--duracion-rapida) ease-salida has-data-checked:border-acento-texto has-data-checked:bg-acento-suave dark:has-data-checked:border-acento",
             o.disabled && "cursor-not-allowed opacity-60",
           )}
         >
           <Radio.Root
             value={o.valor}
             disabled={o.disabled}
-            className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-input bg-muted transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/30 data-checked:border-primary data-checked:bg-primary"
+            className="mt-px flex size-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-input bg-card transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:border-primary data-checked:bg-primary"
           >
-            <Radio.Indicator className="size-1.5 rounded-full bg-primary-foreground" />
+            <Radio.Indicator className="size-[7px] rounded-full bg-primary-foreground" />
           </Radio.Root>
           <span className="grid gap-0.5">
             <span className="font-medium text-foreground">{o.etiqueta}</span>
-            {o.descripcion ? <span className="text-control text-muted-foreground">{o.descripcion}</span> : null}
+            {o.descripcion ? <span className="text-control text-texto-terciario">{o.descripcion}</span> : null}
           </span>
         </label>
       ))}

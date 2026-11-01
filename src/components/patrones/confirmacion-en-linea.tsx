@@ -1,6 +1,7 @@
 "use client";
 
-import { BanIcon, RefreshCwIcon, type LucideIcon } from "lucide-react";
+import { ArrowClockwiseIcon, ProhibitIcon } from "@phosphor-icons/react";
+import type { IconoComponente } from "@/lib/iconos";
 import { AnimatePresence, m } from "motion/react";
 import { useState, useTransition } from "react";
 import { MovimientoLocal } from "@/components/movimiento";
@@ -8,7 +9,7 @@ import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 const ACCION =
-  "inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-control font-medium whitespace-nowrap transition-colors duration-(--duracion-rapida) ease-salida disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-control items-center gap-1 rounded-lg px-2.5 text-control font-medium whitespace-nowrap transition-colors duration-(--duracion-rapida) ease-salida disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
 
 // La acción sale hacia la izquierda y la confirmación entra desde la derecha (y al revés al cancelar).
 const CAMBIO = {
@@ -26,13 +27,13 @@ export function ConfirmacionEnLinea({
   etiqueta,
   pregunta,
   confirmar,
-  icon: Icon = BanIcon,
+  icon: Icon = ProhibitIcon,
   onConfirmar,
 }: {
   etiqueta: string;
   pregunta: string;
   confirmar: string;
-  icon?: LucideIcon;
+  icon?: IconoComponente;
   onConfirmar: () => Promise<string | null | void>;
 }) {
   const [abierto, setAbierto] = useState(false);
@@ -60,7 +61,7 @@ export function ConfirmacionEnLinea({
             <m.div key="confirmar" {...CAMBIO} className="flex items-center justify-end gap-1">
               <span className="mr-1 text-etiqueta text-muted-foreground">{pregunta}</span>
               <button type="button" disabled={pendiente} onClick={ejecutar} className={cn(ACCION, "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90")}>
-                {pendiente ? <RefreshCwIcon className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
+                {pendiente ? <ArrowClockwiseIcon weight="bold" className="size-3.5 animate-spin" /> : <Icon className="size-3.5" />}
                 {confirmar}
               </button>
               <button type="button" disabled={pendiente} onClick={() => setAbierto(false)} className={cn(ACCION, "border border-border bg-card text-foreground shadow-xs hover:bg-secondary")}>

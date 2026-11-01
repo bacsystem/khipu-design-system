@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenIcon, PlusIcon } from "lucide-react";
+import { BookOpenIcon, PlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CabeceraDialogo, PieDialogo } from "@/components/patrones/cabecera-dialogo";
@@ -18,7 +18,7 @@ export function AccionesEjemplo({ principal, secundaria }: { principal: string; 
       </button>
       <Dialog open={abierto} onOpenChange={setAbierto}>
         <DialogTrigger className={principal}>
-          <PlusIcon className="size-4" />
+          <PlusIcon weight="bold" className="size-4" />
           Nuevo documento
         </DialogTrigger>
         <DialogContent className="gap-0 p-0">

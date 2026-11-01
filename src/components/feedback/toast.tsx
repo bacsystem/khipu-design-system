@@ -1,13 +1,13 @@
 "use client";
 
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
-import { CheckCircle2Icon, CircleAlertIcon, InfoIcon, TriangleAlertIcon, XIcon } from "lucide-react";
+import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon, XIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Tono = "ok" | "aviso" | "error" | "info";
 
-const ICONOS: Record<Tono, typeof InfoIcon> = { ok: CheckCircle2Icon, aviso: TriangleAlertIcon, error: CircleAlertIcon, info: InfoIcon };
+const ICONOS: Record<Tono, typeof InfoIcon> = { ok: CheckCircleIcon, aviso: WarningIcon, error: WarningCircleIcon, info: InfoIcon };
 const COLORES: Record<Tono, string> = {
   ok: "text-success-foreground",
   aviso: "text-warning-foreground",
@@ -38,11 +38,11 @@ function Lista() {
                 <ToastPrimitive.Title className="text-control leading-tight font-semibold" />
                 <ToastPrimitive.Description className="mt-0.5 text-control leading-snug text-muted-foreground" />
                 {t.actionProps ? (
-                  <ToastPrimitive.Action className="mt-2 inline-flex h-9 items-center rounded-lg border border-border bg-card px-2.5 text-control font-medium text-foreground shadow-xs hover:bg-muted" />
+                  <ToastPrimitive.Action className="mt-2 inline-flex h-control items-center rounded-full border border-border bg-card px-2.5 text-control font-medium text-foreground shadow-xs hover:bg-muted" />
                 ) : null}
               </ToastPrimitive.Content>
               <ToastPrimitive.Close aria-label="Cerrar" className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
-                <XIcon className="size-3.5" />
+                <XIcon weight="bold" className="size-3.5" />
               </ToastPrimitive.Close>
             </ToastPrimitive.Root>
           );

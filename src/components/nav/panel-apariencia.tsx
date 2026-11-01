@@ -1,0 +1,74 @@
+"use client";
+
+import { PaletteIcon } from "@phosphor-icons/react";
+import type { ReactNode } from "react";
+import { useApariencia } from "@/components/apariencia";
+import { useDiseno } from "@/components/diseno";
+import { PanelLateral } from "@/components/navegacion/panel-lateral";
+import { SelectorPaleta, SelectorTipografia, SelectorTonoOscuro } from "@/components/nav/selector-apariencia";
+import { SelectorDiseno } from "@/components/nav/selector-diseno";
+import { ThemeToggle } from "@/components/nav/theme-toggle";
+import { ROTULO } from "@/lib/estilos";
+
+function Seccion({ titulo, ayuda, children }: { titulo: string; ayuda?: string; children: ReactNode }) {
+  return (
+    <section className="grid gap-2.5">
+      <div>
+        <h3 className={ROTULO}>{titulo}</h3>
+        {ayuda ? <p className="mt-0.5 text-etiqueta text-texto-terciario">{ayuda}</p> : null}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+/**
+ * Panel derecho con las preferencias de apariencia del usuario: tema, paleta, tono oscuro, tipografía y diseño. Cada
+ * cambio se aplica al instante (la página de atrás cambia en vivo) y se guarda como el resto de las preferencias.
+ * Lo abre «Apariencia…» del menú de usuario; las secciones sin opciones (sin proveedor, o con «papel») no se muestran.
+ */
+export function PanelApariencia({ open, onOpenChange }: { open: boolean; onOpenChange: (abierto: boolean) => void }) {
+  const { paletas, tonosOscuro, fuentes } = useApariencia();
+  const { diseno, disenos } = useDiseno();
+  const conPreferencias = diseno !== "papel";
+
+  return (
+    <PanelLateral
+      open={open}
+      onOpenChange={onOpenChange}
+      icon={PaletteIcon}
+      titulo="Apariencia"
+      descripcion="Se aplica al instante y se guarda en este navegador."
+      ancho="sm:max-w-sm"
+    >
+      <div className="grid gap-6 pb-4">
+        <Seccion titulo="Tema">
+          <ThemeToggle conTexto />
+        </Seccion>
+        {conPreferencias && paletas.length > 1 ? (
+          <Seccion titulo="Paleta" ayuda="El color de acento: ítem activo, métricas destacadas y gráficos.">
+            <SelectorPaleta grande />
+          </Seccion>
+        ) : null}
+        {conPreferencias && tonosOscuro.length > 1 ? (
+          <Seccion titulo="Tono oscuro" ayuda="Se usa cuando el tema es oscuro.">
+            <SelectorTonoOscuro grande />
+          </Seccion>
+        ) : null}
+        {conPreferencias && fuentes.length > 1 ? (
+          <Seccion titulo="Tipografía" ayuda="Los datos (correlativos, ids) siguen en JetBrains Mono.">
+            <SelectorTipografia grande />
+            <p className="rounded-xl bg-secondary px-3 py-2.5 text-cuerpo text-foreground">
+              Factura <span className="font-mono">F001-00000136</span> · S/ 4,820.00 aceptada por SUNAT.
+            </p>
+          </Seccion>
+        ) : null}
+        {disenos.length > 1 ? (
+          <Seccion titulo="Diseño">
+            <SelectorDiseno />
+          </Seccion>
+        ) : null}
+      </div>
+    </PanelLateral>
+  );
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
+import { CloudArrowUpIcon, FileIcon, XIcon } from "@phosphor-icons/react";
 import { useRef, useState, type DragEvent } from "react";
 import { cn } from "@/lib/utils";
 
@@ -61,7 +61,7 @@ export function ZonaArchivos({
           onClick={() => onCambio(null)}
           className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
         >
-          <XIcon className="size-4" />
+          <XIcon weight="bold" className="size-4" />
         </button>
       </div>
     );
@@ -83,7 +83,7 @@ export function ZonaArchivos({
         className,
       )}
     >
-      <UploadCloudIcon className={cn("size-6", sobre ? "text-primary" : "text-muted-foreground/70")} />
+      <CloudArrowUpIcon className={cn("size-6", sobre ? "text-primary" : "text-muted-foreground/70")} />
       <span className="text-control font-medium text-foreground">{titulo}</span>
       {ayuda ? <span className="text-etiqueta text-muted-foreground">{ayuda}</span> : null}
       <input ref={input} id={id} type="file" accept={accept} disabled={disabled} className="sr-only" onChange={(e) => onCambio(e.target.files?.[0] ?? null)} />

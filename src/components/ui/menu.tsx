@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 const Menu = MenuPrimitive.Root;
@@ -24,7 +24,7 @@ function MenuContent({
         <MenuPrimitive.Popup
           data-slot="menu-content"
           className={cn(
-            "min-w-56 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-border outline-none",
+            "min-w-56 rounded-xl bg-popover p-1.5 text-popover-foreground shadow-md ring-1 ring-border outline-none",
             "origin-(--transform-origin) transition-[opacity,transform] duration-(--duracion-rapida) data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
             className,
           )}
@@ -36,7 +36,7 @@ function MenuContent({
 }
 
 const ITEM =
-  "relative flex w-full cursor-default items-center gap-2 rounded-md px-2 py-1.5 text-control leading-tight font-medium text-foreground outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-muted-foreground data-highlighted:[&_svg]:text-accent-foreground";
+  "relative flex w-full cursor-default items-center gap-2 rounded-lg px-2.5 py-1.5 text-control leading-tight font-medium text-foreground outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-muted-foreground data-highlighted:[&_svg]:text-accent-foreground";
 
 function MenuItem({ className, variant = "default", ...props }: MenuPrimitive.Item.Props & { variant?: "default" | "destructive" }) {
   return (
@@ -62,7 +62,7 @@ function MenuRadioItem({ className, children, ...props }: MenuPrimitive.RadioIte
     <MenuPrimitive.RadioItem data-slot="menu-radio-item" className={cn(ITEM, "pr-8", className)} {...props}>
       {children}
       <MenuPrimitive.RadioItemIndicator className="absolute right-2 flex items-center">
-        <CheckIcon className="size-3.5 text-foreground" />
+        <CheckIcon weight="bold" className="size-3.5 text-foreground" />
       </MenuPrimitive.RadioItemIndicator>
     </MenuPrimitive.RadioItem>
   );

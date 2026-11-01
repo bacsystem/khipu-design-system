@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,7 @@ export function Pasos({ pasos, actual, className }: { pasos: Paso[]; actual: num
                 estado === "pendiente" && "border-border bg-muted text-muted-foreground",
               )}
             >
-              {estado === "hecho" ? <CheckIcon className="size-3.5" strokeWidth={3} /> : i + 1}
+              {estado === "hecho" ? <CheckIcon className="size-3.5" weight="bold" /> : i + 1}
             </span>
             <div className="min-w-0">
               <p className={cn("text-control font-medium", estado === "pendiente" ? "text-muted-foreground" : "text-foreground")}>{p.titulo}</p>
@@ -67,7 +67,7 @@ export function TarjetaPaso({
         <span className="text-etiqueta text-muted-foreground">
           Paso {numero} de {total}
         </span>
-        <h2 className="mt-0.5 text-base font-semibold tracking-tight text-foreground">{titulo}</h2>
+        <h2 className="mt-0.5 text-titulo text-foreground">{titulo}</h2>
       </div>
       <div className="grid gap-4 px-5 py-4">{children}</div>
       {pie ? <div className="flex items-center justify-end gap-2 border-t border-border/60 px-5 py-3">{pie}</div> : null}

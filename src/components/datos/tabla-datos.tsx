@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, CheckIcon, InboxIcon, MinusIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, ArrowsDownUpIcon, CheckIcon, MinusIcon, TrayIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
@@ -13,7 +13,7 @@ import { POR_PAGINA_DEFECTO } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
 
 const CASILLA_CELDA =
-  "flex size-4 shrink-0 items-center justify-center rounded border border-input bg-muted transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/30 data-checked:border-primary data-checked:bg-primary data-indeterminate:border-primary data-indeterminate:bg-primary";
+  "flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border-[1.5px] border-input bg-card transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:border-primary data-checked:bg-primary data-indeterminate:border-primary data-indeterminate:bg-primary";
 
 /** Checkbox sin etiqueta visible, para la columna de selección de `TablaDatos` (`Casilla` siempre pinta un texto al lado). */
 function CasillaCelda({
@@ -37,7 +37,7 @@ function CasillaCelda({
       className={CASILLA_CELDA}
     >
       <CheckboxPrimitive.Indicator className="text-primary-foreground">
-        {indeterminate ? <MinusIcon className="size-3" strokeWidth={3} /> : <CheckIcon className="size-3" strokeWidth={3} />}
+        {indeterminate ? <MinusIcon className="size-3" weight="bold" /> : <CheckIcon className="size-3" weight="bold" />}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
@@ -151,14 +151,30 @@ export function TablaDatos<T>({
           transition={reducir ? { duration: 0 } : { duration: DURACION.media, ease: CURVA_SALIDA }}
           className="overflow-hidden"
         >
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-accent/60 px-4 py-2 text-control text-accent-foreground">
-          <span className="font-medium">
-            <span className="font-mono font-semibold">{seleccionados.length}</span> seleccionado{seleccionados.length === 1 ? "" : "s"}
-          </span>
-          <div className="flex items-center gap-2">
-            {seleccion.acciones}
-            <button type="button" onClick={() => seleccion.onCambio([])} className="text-control font-medium text-muted-foreground transition-colors hover:text-foreground">
-              Cancelar
+        {/* Barra de acciones masivas: píldora oscura sobre la tabla, contador en el acento, acciones en píldora
+            (recetas ACCION_MASIVA / ACCION_MASIVA_PELIGRO) y «Quitar selección» al final. */}
+        <div className="px-1 pt-2 pb-1">
+          <div
+            role="toolbar"
+            aria-label="Acciones sobre la selección"
+            className="flex flex-wrap items-center gap-1 rounded-full bg-foreground py-1 pr-1 pl-1.5 text-control text-background shadow-elevada"
+          >
+            <span className="flex items-center gap-2 pr-2">
+              <span className="grid h-7 min-w-7 place-items-center rounded-full bg-acento px-2 text-control font-semibold text-acento-texto tabular-nums">
+                {seleccionados.length}
+              </span>
+              <span className="font-medium">seleccionado{seleccionados.length === 1 ? "" : "s"}</span>
+            </span>
+            <span aria-hidden className="mx-1 h-5 w-px bg-background/20" />
+            <div className="flex flex-1 flex-wrap items-center gap-0.5">{seleccion.acciones}</div>
+            <button
+              type="button"
+              aria-label="Quitar selección"
+              title="Quitar selección"
+              onClick={() => seleccion.onCambio([])}
+              className="grid size-8 shrink-0 place-items-center rounded-full text-background/70 transition-colors hover:bg-background/12 hover:text-background focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none"
+            >
+              <XIcon weight="bold" className="size-4" />
             </button>
           </div>
         </div>
@@ -167,7 +183,7 @@ export function TablaDatos<T>({
       </AnimatePresence></MovimientoLocal>
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">
+          <TableRow className="hover:bg-transparent">
             {seleccion ? (
               <TableHead className="w-10 pl-4">
                 <CasillaCelda etiqueta="Seleccionar todo en esta página" checked={todosSeleccionados} indeterminate={algunoSeleccionado} onCheckedChange={alternarTodos} />
@@ -178,7 +194,7 @@ export function TablaDatos<T>({
                 {c.ordenable ? (
                   <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 hover:text-foreground", orden?.id === c.id && "text-foreground")}>
                     {c.titulo}
-                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon className="size-3" /> : <ArrowDownIcon className="size-3" /> : <ArrowUpDownIcon className="size-3 opacity-50" />}
+                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon weight="bold" className="size-3" /> : <ArrowDownIcon weight="bold" className="size-3" /> : <ArrowsDownUpIcon weight="bold" className="size-3 opacity-50" />}
                   </button>
                 ) : (
                   c.titulo
@@ -194,8 +210,8 @@ export function TablaDatos<T>({
               <TableRow
                 key={id}
                 onClick={onFila ? () => onFila(f) : undefined}
-                data-selected={seleccion?.seleccionados.includes(id) || undefined}
-                className={cn("group border-b border-border/60 hover:bg-muted/80 data-selected:bg-accent/40", onFila && "cursor-pointer")}
+                data-state={seleccion?.seleccionados.includes(id) ? "selected" : undefined}
+                className={cn("group", onFila && "cursor-pointer")}
               >
                 {seleccion ? (
                   <TableCell className="w-10 pl-4">
@@ -216,7 +232,7 @@ export function TablaDatos<T>({
           {visibles.length === 0 ? (
             <TableRow className="hover:bg-transparent">
               <TableCell colSpan={seleccion ? columnas.length + 1 : columnas.length}>
-                <TablaVacia icon={<InboxIcon className="size-6" />}>{vacio}</TablaVacia>
+                <TablaVacia icon={<TrayIcon className="size-6" />}>{vacio}</TablaVacia>
               </TableCell>
             </TableRow>
           ) : null}

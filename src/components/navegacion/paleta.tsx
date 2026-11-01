@@ -1,6 +1,7 @@
 "use client";
 
-import { SearchIcon, type LucideIcon } from "lucide-react";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import type { IconoComponente } from "@/lib/iconos";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -13,7 +14,7 @@ export type ComandoPaleta = {
   /** Texto secundario (ruta, atajo, categoría). */
   detalle?: string;
   grupo?: string;
-  icon?: LucideIcon;
+  icon?: IconoComponente;
   /** Navega a `href` o ejecuta `onSelect`. */
   href?: string;
   onSelect?: () => void;
@@ -94,7 +95,7 @@ export function Paleta({
       <DialogContent className="mt-[12vh] gap-0 self-start overflow-hidden p-0 sm:max-w-lg" showCloseButton={false}>
         <DialogTitle className="sr-only">Paleta de comandos</DialogTitle>
         <div className="flex items-center gap-2 border-b border-border/60 px-3">
-          <SearchIcon className="size-4 shrink-0 text-muted-foreground/70" />
+          <MagnifyingGlassIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70" />
           <input
             autoFocus
             value={q}

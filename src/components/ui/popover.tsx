@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { XIcon } from "lucide-react";
+import { XIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { ANIMACION_POPUP } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
@@ -31,7 +31,7 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
-            "w-72 rounded-lg bg-popover p-3.5 text-popover-foreground shadow-md ring-1 ring-border outline-none",
+            "w-72 rounded-xl bg-popover p-3.5 text-popover-foreground shadow-md ring-1 ring-border outline-none",
             ANIMACION_POPUP,
             className,
           )}
@@ -64,7 +64,7 @@ function PopoverHeader({
       </div>
       {conCierre ? (
         <PopoverClose aria-label="Cerrar" className="shrink-0 rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
-          <XIcon className="size-3.5" />
+          <XIcon weight="bold" className="size-3.5" />
         </PopoverClose>
       ) : null}
     </div>

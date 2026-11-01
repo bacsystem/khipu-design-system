@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyRoundIcon, RefreshCwIcon } from "lucide-react";
+import { ArrowClockwiseIcon, KeyIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { ConfirmacionEnLinea } from "@/components/patrones/confirmacion-en-linea";
@@ -37,7 +37,7 @@ export function TablaEjemplo() {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <CabeceraSeccion icon={KeyRoundIcon} titulo="Llaves de acceso" subtitulo="solo se guarda el hash" conBorde={false} className="min-w-0 flex-nowrap px-0 py-0" />
+        <CabeceraSeccion icon={KeyIcon} titulo="Llaves de acceso" subtitulo="solo se guarda el hash" conBorde={false} className="min-w-0 flex-nowrap px-0 py-0" />
         <div className="flex flex-wrap items-center gap-2.5">
           <Select items={ITEMS_ESTADO} value={estado} onValueChange={(v) => { setEstado(v ?? "todas"); setPagina(1); }}>
             <SelectTrigger className={cn(CONTROL_FILTRO, "w-auto min-w-36 pl-3")}>
@@ -51,8 +51,8 @@ export function TablaEjemplo() {
               ))}
             </SelectContent>
           </Select>
-          <button type="button" title="Refrescar" className={cn(CONTROL_FILTRO, "inline-flex size-9 items-center justify-center text-muted-foreground hover:text-foreground")}>
-            <RefreshCwIcon className="size-4" />
+          <button type="button" title="Refrescar" className={cn(CONTROL_FILTRO, "inline-flex size-control items-center justify-center text-muted-foreground hover:text-foreground")}>
+            <ArrowClockwiseIcon weight="bold" className="size-4" />
           </button>
         </div>
       </div>
@@ -60,7 +60,7 @@ export function TablaEjemplo() {
       <div className={CONTENEDOR_TABLA}>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">
+            <TableRow className="hover:bg-transparent">
               <TableHead className={cn(CABECERA_TABLA, "pl-4")}>Llave</TableHead>
               <TableHead className={CABECERA_TABLA}>Creada</TableHead>
               <TableHead className={cn(CABECERA_TABLA, "px-4")}>Estado</TableHead>
@@ -69,7 +69,7 @@ export function TablaEjemplo() {
           </TableHeader>
           <TableBody className="text-control">
             {data.map((k) => (
-              <TableRow key={k.id} className={cn("group border-b border-border/60 hover:bg-muted/80", !k.activa && "opacity-80")}>
+              <TableRow key={k.id} className={cn("group", !k.activa && "opacity-80")}>
                 <TableCell className="py-2 pr-3 pl-4">
                   <ChipCodigo inactivo={!k.activa}>{k.prefijo}</ChipCodigo>
                   <div className="mt-0.5 font-mono text-etiqueta text-muted-foreground/80">id: {k.id.slice(0, 8)}</div>

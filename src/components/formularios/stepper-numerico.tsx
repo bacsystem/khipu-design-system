@@ -1,19 +1,19 @@
 "use client";
 
 import { NumberField } from "@base-ui/react/number-field";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-// Las dos variantes miden h-9 (altura única de control); `variante` se conserva por compatibilidad.
+// Las dos variantes miden h-control (altura única de control); `variante` se conserva por compatibilidad.
 const TAMANOS = {
-  filtro: { grupo: "h-9", boton: "size-9" },
-  campo: { grupo: "h-9", boton: "size-9" },
+  filtro: { grupo: "h-control", boton: "size-control" },
+  campo: { grupo: "h-control", boton: "size-control" },
 } as const;
 
 /**
  * Cantidad numérica con +/− (ítems de una línea, plazos en días, cupos). El valor se escribe directo o se pisa
  * con las flechas; `min`/`max` deshabilitan el botón correspondiente al llegar al límite (los pinta base-ui solo).
- * Mide h-9 como cualquier otro control; `variante` ya no cambia la altura.
+ * Mide h-control como cualquier otro control; `variante` ya no cambia la altura.
  */
 export function StepperNumerico({
   id,
@@ -46,27 +46,27 @@ export function StepperNumerico({
   const t = TAMANOS[variante];
   return (
     <NumberField.Root id={id} value={valor} onValueChange={onCambio} min={min} max={max} step={paso} disabled={disabled}>
-      <NumberField.Group className={cn("inline-flex w-fit items-stretch overflow-hidden rounded-lg border border-border bg-card shadow-xs", t.grupo, className)}>
+      <NumberField.Group className={cn("inline-flex w-fit items-stretch overflow-hidden rounded-full border border-input bg-card focus-within:border-acento-texto focus-within:ring-3 focus-within:ring-acento/55 dark:focus-within:border-acento dark:focus-within:ring-acento/25", t.grupo, className)}>
         <NumberField.Decrement
           aria-label="Disminuir"
           className={cn(
-            "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:bg-muted disabled:pointer-events-none disabled:opacity-40",
+            "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:bg-secondary disabled:pointer-events-none disabled:opacity-40",
             t.boton,
           )}
         >
-          <MinusIcon className="size-3.5" />
+          <MinusIcon weight="bold" className="size-3.5" />
         </NumberField.Decrement>
         <NumberField.Input
-          className="w-14 border-x border-border bg-transparent text-center font-mono text-control text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-12 bg-transparent text-center text-control font-semibold text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
         <NumberField.Increment
           aria-label="Aumentar"
           className={cn(
-            "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:bg-muted disabled:pointer-events-none disabled:opacity-40",
+            "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:bg-secondary disabled:pointer-events-none disabled:opacity-40",
             t.boton,
           )}
         >
-          <PlusIcon className="size-3.5" />
+          <PlusIcon weight="bold" className="size-3.5" />
         </NumberField.Increment>
       </NumberField.Group>
     </NumberField.Root>

@@ -1,31 +1,53 @@
-import type { LucideIcon } from "lucide-react";
+import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { IconoSeccion } from "./cabecera-seccion";
+
+/** Color del círculo del icono de un diálogo. `peligro` para acciones irreversibles. */
+export type TonoDialogo = "neutro" | "peligro" | "aviso" | "ok";
+
+const CIRCULO: Record<TonoDialogo, string> = {
+  neutro: "bg-accent text-accent-foreground",
+  peligro: "bg-destructive-suave text-destructive-texto",
+  aviso: "bg-warning text-warning-foreground",
+  ok: "bg-success text-success-foreground",
+};
 
 /**
- * Cabecera estándar de diálogo: icono en accent + título 16px + descripción 13px.
- * Úsala dentro de `<DialogContent className="gap-0 p-0">`; el cuerpo va en `px-5 py-4` y el pie en `PieDialogo`.
+ * Cabecera estándar de diálogo: icono en un círculo del tono (la única excepción a «icono sin fondo»: es la cara del
+ * diálogo), título y descripción. Sin línea debajo: el espacio separa. Úsala dentro de `<DialogContent className="gap-0 p-0">`;
+ * el cuerpo va en `px-5 pb-2` y el pie en `PieDialogo`.
  */
-export function CabeceraDialogo({ icon, titulo, descripcion }: { icon: LucideIcon; titulo: ReactNode; descripcion?: ReactNode }) {
+export function CabeceraDialogo({
+  icon: Icon,
+  titulo,
+  descripcion,
+  tono = "neutro",
+}: {
+  icon: IconoComponente;
+  titulo: ReactNode;
+  descripcion?: ReactNode;
+  tono?: TonoDialogo;
+}) {
   return (
-    <DialogHeader className="border-b border-border/60 px-5 py-4 pr-14">
-      <div className="flex items-center gap-2.5">
-        <IconoSeccion icon={icon} />
-        <div className="min-w-0">
-          <DialogTitle className="text-base font-semibold tracking-tight">{titulo}</DialogTitle>
-          {descripcion ? <DialogDescription className="text-control">{descripcion}</DialogDescription> : null}
+    <DialogHeader className="px-5 pt-5 pb-3 pr-14">
+      <div className="flex items-start gap-3">
+        <span className={cn("grid size-10 shrink-0 place-items-center rounded-full", CIRCULO[tono])}>
+          <Icon aria-hidden weight={PESO_ICONO} className="size-[22px]" />
+        </span>
+        <div className="min-w-0 pt-0.5">
+          <DialogTitle>{titulo}</DialogTitle>
+          {descripcion ? <DialogDescription className="mt-0.5">{descripcion}</DialogDescription> : null}
         </div>
       </div>
     </DialogHeader>
   );
 }
 
-/** Pie de diálogo; con `izquierda` (p. ej. un enlace) reparte los extremos. */
+/** Pie de diálogo; con `izquierda` (p. ej. un enlace) reparte los extremos. Sin línea encima. */
 export function PieDialogo({ children, izquierda, className }: { children: ReactNode; izquierda?: ReactNode; className?: string }) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-2 border-t border-border/60 px-5 py-3", izquierda ? "justify-between" : "justify-end", className)}>
+    <div className={cn("flex flex-wrap items-center gap-2 px-5 pt-3 pb-5", izquierda ? "justify-between" : "justify-end", className)}>
       {izquierda}
       <div className="flex items-center gap-2">{children}</div>
     </div>
@@ -33,16 +55,16 @@ export function PieDialogo({ children, izquierda, className }: { children: React
 }
 
 /** Aviso dentro de un diálogo o formulario (ámbar para advertencias, verde para confirmaciones). */
-export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok"; icon: LucideIcon; children: ReactNode }) {
+export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok"; icon: IconoComponente; children: ReactNode }) {
   return (
     <div
       className={cn(
-        "flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-control leading-relaxed",
-        tono === "aviso" && "border-warning-border bg-warning text-warning-foreground",
-        tono === "ok" && "border-success-border bg-success text-success-foreground",
+        "flex items-start gap-2.5 rounded-[14px] px-3 py-2.5 text-control leading-relaxed",
+        tono === "aviso" && "bg-warning text-warning-foreground",
+        tono === "ok" && "bg-success text-success-foreground",
       )}
     >
-      <Icon className="mt-0.5 size-4 shrink-0" />
+      <Icon aria-hidden weight={PESO_ICONO} className="mt-0.5 size-4 shrink-0" />
       <div>{children}</div>
     </div>
   );
