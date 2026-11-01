@@ -45,7 +45,8 @@ export function Buscador({
         placeholder={placeholder}
         className={cn(
           variante === "campo" ? CAMPO : CONTROL_FILTRO,
-          "w-full pr-8 pl-8 placeholder:text-muted-foreground/70 [&::-webkit-search-cancel-button]:hidden",
+          // 16 px hasta `md`: iOS Safari amplía la página al enfocar un campo de menos.
+          "w-full pr-8 pl-8 text-campo md:text-control placeholder:text-muted-foreground/70 [&::-webkit-search-cancel-button]:hidden",
           className,
         )}
         {...props}

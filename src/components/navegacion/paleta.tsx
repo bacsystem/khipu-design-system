@@ -103,7 +103,7 @@ export function Paleta({
             onKeyDown={teclas}
             placeholder={placeholder}
             aria-label={placeholder}
-            className="h-11 w-full bg-transparent text-control text-foreground outline-none placeholder:text-muted-foreground/70"
+            className="h-11 w-full bg-transparent text-campo md:text-control text-foreground outline-none placeholder:text-muted-foreground/70"
           />
           <Kbd className="bg-muted shadow-none">Esc</Kbd>
         </div>

@@ -19,6 +19,12 @@ test("los campos de texto usan text-campo hasta md y text-control desde md", () 
     assert.match(linea, /text-campo md:text-control/, `${receta} debe llevar text-campo md:text-control`);
   }
   assert.match(leer("src/components/ui/input.tsx"), /text-campo md:text-control/);
+  // Los campos que no pasan por CAMPO tienen su propia letra: la del buscador, la del stepper y la de la paleta de comandos.
+  for (const ruta of ["src/components/formularios/buscador.tsx", "src/components/formularios/stepper-numerico.tsx", "src/components/navegacion/paleta.tsx"]) {
+    assert.match(leer(ruta), /text-campo md:text-control/, `${ruta} debe llevar text-campo md:text-control`);
+  }
+  // El monto hereda la de CAMPO: un `text-control` propio la pisaba en el teléfono.
+  assert.doesNotMatch(leer("src/components/formularios/entrada-monto.tsx"), /cn\(CAMPO, "[^"]*text-control/);
 });
 
 // El kit fijaba en castellano los nombres de sus landmarks: ahora son propiedades con ese mismo valor por defecto.

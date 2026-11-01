@@ -7,6 +7,8 @@ test("cn conserva el tamaño de la escala junto a un color de texto", () => {
   assert.equal(cn("text-etiqueta text-muted-foreground"), "text-etiqueta text-muted-foreground");
   assert.equal(cn("bg-codigo text-codigo-foreground text-control"), "bg-codigo text-codigo-foreground text-control");
   assert.equal(cn("text-metrica text-destructive-texto"), "text-metrica text-destructive-texto");
+  // El tamaño de un campo en pantallas táctiles (16 px) y el de escritorio van juntos con el color del texto.
+  assert.equal(cn("text-campo md:text-control text-foreground"), "text-campo md:text-control text-foreground");
 });
 
 test("cn sigue resolviendo conflictos dentro de cada grupo", () => {
