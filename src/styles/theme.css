@@ -60,6 +60,23 @@
   --color-brand-foreground: var(--brand-foreground);
   --color-codigo: var(--codigo);
   --color-codigo-foreground: var(--codigo-foreground);
+  --color-acento: var(--acento);
+  --color-acento-texto: var(--acento-texto);
+  --color-acento-2: var(--acento-2);
+  --color-acento-2-texto: var(--acento-2-texto);
+  --color-acento-3: var(--acento-3);
+  --color-acento-suave: var(--acento-suave);
+  --color-acento-2-suave: var(--acento-2-suave);
+  --color-acento-3-suave: var(--acento-3-suave);
+  --color-acento-superficie: var(--acento-superficie);
+  --color-acento-superficie-texto: var(--acento-superficie-texto);
+  --color-acento-borde: var(--acento-borde);
+  --color-texto-terciario: var(--texto-terciario);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-chart-base: var(--chart-base);
+  --color-chart-destacado: var(--chart-destacado);
+  --color-borde-tarjeta: var(--borde-tarjeta);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -72,17 +89,29 @@
   --shadow-sm: var(--sombra-sm);
   --shadow-md: var(--sombra-md);
   --shadow-lg: var(--sombra-lg);
+  --shadow-tarjeta: var(--brillo-tarjeta);
+  --shadow-elevada: var(--sombra-elevada);
+  /* Altura única de control (docs/design-system.md §4): 34 px. `h-control`, `size-control`, `min-h-control`. */
+  --spacing-control: 2.125rem;
   /* Escala tipográfica con nombre (docs/design-system.md §3). `npm run check:tipografia` prohíbe los tamaños sueltos. */
-  --text-etiqueta: 0.75rem;
+  --text-etiqueta: 0.71875rem;
   --text-etiqueta--line-height: 1rem;
   --text-control: 0.8125rem;
   --text-control--line-height: 1.25rem;
-  --text-cuerpo: 0.875rem;
+  --text-cuerpo: 0.8125rem;
   --text-cuerpo--line-height: 1.25rem;
-  --text-metrica: 1.5rem;
+  --text-titulo: 0.90625rem;
+  --text-titulo--line-height: 1.25rem;
+  --text-titulo--letter-spacing: -0.014em;
+  --text-titulo--font-weight: 620;
+  --text-titulo-pagina: 1.3125rem;
+  --text-titulo-pagina--line-height: 1.5rem;
+  --text-titulo-pagina--letter-spacing: -0.028em;
+  --text-titulo-pagina--font-weight: 650;
+  --text-metrica: 1.625rem;
   --text-metrica--line-height: 1.75rem;
-  --text-metrica--letter-spacing: -0.02em;
-  --text-metrica--font-weight: 600;
+  --text-metrica--letter-spacing: -0.035em;
+  --text-metrica--font-weight: 650;
   /* Curva de salida única. Debe coincidir con CURVA_SALIDA de src/lib/movimiento.ts. */
   --ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
   /* Barrido de la barra de progreso indeterminada (`ProgresoLineal` sin `valor`). */
@@ -120,6 +149,15 @@
   }
   body {
     @apply bg-background text-cuerpo text-foreground;
+    /* Inter: 1 con base, a de un piso y dígitos abiertos (los rasgos que usa IntelliJ). */
+    font-feature-settings: "cv11", "ss01", "ss03";
+  }
+  /* Oscuro: dos resplandores tenues de la paleta desde arriba; el lienzo deja de ser un negro plano. */
+  .dark body {
+    background-image:
+      radial-gradient(900px 380px at 55% -160px, color-mix(in srgb, var(--acento) 9%, transparent), transparent 70%),
+      radial-gradient(700px 300px at 100% 0, color-mix(in srgb, var(--acento-2) 6%, transparent), transparent 70%);
+    background-attachment: fixed;
   }
   html {
     @apply font-sans;

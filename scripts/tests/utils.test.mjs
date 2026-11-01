@@ -13,3 +13,9 @@ test("cn sigue resolviendo conflictos dentro de cada grupo", () => {
   assert.equal(cn("text-control text-cuerpo"), "text-cuerpo");
   assert.equal(cn("text-foreground text-muted-foreground"), "text-muted-foreground");
 });
+
+test("cn trata text-titulo y text-titulo-pagina como tamaño, no como color", () => {
+  assert.equal(cn("text-titulo text-muted-foreground"), "text-titulo text-muted-foreground");
+  assert.equal(cn("text-titulo-pagina text-foreground"), "text-titulo-pagina text-foreground");
+  assert.equal(cn("text-cuerpo", "text-titulo"), "text-titulo");
+});
