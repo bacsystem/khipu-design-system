@@ -28,6 +28,7 @@ import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/e
 import { GrupoOpciones } from "@/components/formularios/opciones";
 import { StepperNumerico } from "@/components/formularios/stepper-numerico";
 import { ZonaArchivos } from "@/components/formularios/zona-archivos";
+import { SelectorApariencia } from "@/components/nav/selector-apariencia";
 import { SelectorDiseno } from "@/components/nav/selector-diseno";
 import { Acordeon } from "@/components/navegacion/acordeon";
 import { DialogoConfirmacion } from "@/components/navegacion/dialogo-confirmacion";
@@ -122,10 +123,12 @@ export function Galeria() {
     <>
       {/* ── Diseño, botones y tarjetas destacadas ─────────────────── */}
       <section className={SECCION} style={pasoEntrada(5)}>
-        <CabeceraSeccion icon={PaletteIcon} titulo="Diseño, botones y tarjetas destacadas" subtitulo="selector de diseño · button · tarjeta destacada" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PaletteIcon} titulo="Diseño, botones y tarjetas destacadas" subtitulo="selector de diseño · paleta y tono oscuro · button · tarjeta destacada" conBorde={false} className="px-0 py-0" />
         <div className="grid max-w-xs gap-1.5">
           <span className="text-etiqueta font-medium text-muted-foreground">Diseño</span>
           <SelectorDiseno />
+          <span className="text-etiqueta font-medium text-muted-foreground">Apariencia</span>
+          <SelectorApariencia />
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button>Default</Button>
