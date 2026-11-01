@@ -91,8 +91,8 @@
   --shadow-lg: var(--sombra-lg);
   --shadow-tarjeta: var(--brillo-tarjeta);
   --shadow-elevada: var(--sombra-elevada);
-  /* Altura única de control (docs/design-system.md §4): 34 px. `h-control`, `size-control`, `min-h-control`. */
-  --spacing-control: 2.125rem;
+  /* Altura única de control (docs/design-system.md §4): 32 px. `h-control`, `size-control`, `min-h-control`. */
+  --spacing-control: 2rem;
   /* Escala tipográfica con nombre (docs/design-system.md §3). `npm run check:tipografia` prohíbe los tamaños sueltos. */
   --text-etiqueta: 0.71875rem;
   --text-etiqueta--line-height: 1rem;
@@ -111,10 +111,15 @@
   --text-titulo-pagina--line-height: 1.5rem;
   --text-titulo-pagina--letter-spacing: -0.028em;
   --text-titulo-pagina--font-weight: 650;
-  --text-metrica: 1.625rem;
-  --text-metrica--line-height: 1.75rem;
+  --text-metrica: 1.375rem;
+  --text-metrica--line-height: 1.625rem;
   --text-metrica--letter-spacing: -0.035em;
   --text-metrica--font-weight: 650;
+  /* Valor de métrica que es una palabra (un estado, un código) y no un número: 18 px. */
+  --text-metrica-texto: 1.125rem;
+  --text-metrica-texto--line-height: 1.625rem;
+  --text-metrica-texto--letter-spacing: -0.02em;
+  --text-metrica-texto--font-weight: 620;
   /* Curva de salida única. Debe coincidir con CURVA_SALIDA de src/lib/movimiento.ts. */
   --ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
   /* Barrido de la barra de progreso indeterminada (`ProgresoLineal` sin `valor`). */

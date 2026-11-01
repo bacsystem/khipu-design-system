@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.3] - 2026-11-01
+
+### Changed
+- Denser UI (the portal looked oversized): the single control height `h-control` is 32 px (was 34), metric values are 22 px (`text-metrica`, was 26), field labels (`ETIQUETA_CAMPO`, `ui/Label`) are `text-etiqueta` (was `text-control`), and the floating sidebar is 248 px (was 216: it cut the company name and the e-mail). The phone drawer is 248 px too, at most 85 % of the screen.
+
+### Added
+- `text-metrica-texto` (18 px) and `Metrica texto`: a metric whose value is a word (a state, an environment, a code) instead of a number; at metric size a long word dominated the card. `cn` knows the new size.
+- `FilaVacia` (`patrones/pie-tabla`): the empty/loading row of a table, spanning every column without the cells' grey band, which made a 14-line message look like a loose grey block inside the card. `TablaVacia`'s `icon` is optional.
+
 ## [0.5.2] - 2026-11-01
 
 ### Fixed

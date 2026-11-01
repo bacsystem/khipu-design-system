@@ -55,7 +55,7 @@ export const CAMPO =
   "h-control w-full rounded-lg border border-input bg-card px-3 text-campo md:text-control text-foreground transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none placeholder:text-texto-terciario focus:border-acento-texto focus:ring-3 focus:ring-acento/55 dark:focus:border-acento dark:focus:ring-acento/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 disabled:cursor-not-allowed disabled:opacity-60";
 /** @deprecated Desde 0.2.0 todos los campos miden lo mismo: usa `CAMPO`. Se conserva para no romper imports. */
 export const CAMPO_FILTRO = CAMPO;
-export const ETIQUETA_CAMPO = "text-control font-medium text-foreground";
+export const ETIQUETA_CAMPO = "text-etiqueta font-medium text-foreground";
 export const AYUDA_CAMPO = "text-etiqueta text-muted-foreground";
 /** `<select>` nativo con el aspecto de `CAMPO`: para formularios que no usan `ui/select` (p. ej. hechos con react-hook-form). */
 export const SELECT_NATIVO =

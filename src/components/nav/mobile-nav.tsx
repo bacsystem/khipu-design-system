@@ -24,7 +24,7 @@ export function MobileNav({ children, etiqueta = "Abrir menú" }: { children: Re
         <ListIcon weight="bold" className="size-5" />
         <span className="sr-only">{etiqueta}</span>
       </SheetTrigger>
-      <SheetContent side="left" showCloseButton={false} className="w-60 bg-sidebar p-0 text-sidebar-foreground">
+      <SheetContent side="left" showCloseButton={false} className="w-[248px] max-w-[85vw] bg-sidebar p-0 text-sidebar-foreground">
         {/* `SidebarContent` es `h-full overflow-hidden`: se le da un contenedor que se desplaza y se lo deja crecer al contenido. */}
         <div className="h-full overflow-y-auto [&>div]:h-auto [&>div]:min-h-full [&>div]:overflow-visible">{children}</div>
       </SheetContent>
