@@ -236,15 +236,12 @@ De arriba abajo:
 3. **Navegación** (`nav/sidebar-nav.tsx`): grupos con etiqueta `text-etiqueta font-medium text-muted-foreground` en tipo oración ("Emisión & SUNAT", "Configuración"). Ítem: píldora `rounded-full px-3 py-[7px] text-control`, icono Phosphor 18 px duotono. Estados: activo → píldora `bg-sidebar-primary text-sidebar-primary-foreground` (el acento de la paleta; en oscuro, superficie teñida con borde `acento-borde`) que se desliza entre ítems, icono relleno (`fill`); hover → `bg-sidebar-accent`; **pendiente** → texto `muted-foreground/50`, `cursor-not-allowed`, chip «Pronto» (`text-etiqueta font-medium`, `bg-secondary`, en tipo oración).
 4. **Pie (`border-t p-3`)**: tarjeta "Plan y consumo" deshabilitada (barra de progreso vacía, `— / —`, `opacity-60`, `title` próximamente) y el **menú de usuario** (§7).
 
-## 7. Menú de usuario (`nav/perfil-usuario.tsx` + `ui/menu.tsx`)
+## 7. Menú de usuario (`nav/menu-usuario.tsx` + `ui/menu.tsx`)
 
-- **Disparador**: misma tarjeta que el selector de empresa (avatar 24 px `bg-primary` con iniciales del correo, nombre `text-control`, correo `font-mono text-etiqueta`, `ChevronsUpDown`; `data-popup-open:bg-secondary`).
-- **Popup** (`side="top"`, ancho = disparador, `min-w-0`): 
-  - "Tu cuenta" + fila resaltada `bg-accent/70` con avatar, nombre, correo completo (mono, `break-all`) y rol en su propia línea (`Administrador` / `Emisor` / `Solo lectura`), icono `ShieldCheck` en primary.
-  - "Tema" + `ThemeToggle conTexto`: control segmentado a todo el ancho, tres opciones con icono 12 px + etiqueta `text-etiqueta` (**Claro · Oscuro · Sistema**), activa con `bg-card shadow-xs`.
-  - Ítems: `Cambiar contraseña` (abre diálogo que envía el enlace de restablecimiento al correo de la sesión), `Documentación API` (`/developers`, pestaña nueva).
-  - `Cerrar sesión` en variante `destructive` (`text-destructive-texto`, resaltado `bg-destructive-suave`).
-- **`ui/menu.tsx`** (wrapper de base-ui `Menu`): `MenuContent` (`rounded-lg bg-popover p-1 shadow-md ring-1 ring-border`, animación scale/opacity 150 ms), `MenuItem` (`rounded-md px-2 py-1.5 text-control font-medium`, iconos `size-3.5 text-muted-foreground`, highlight `bg-accent/70`), `MenuLinkItem`, `MenuRadioGroup`/`MenuRadioItem` (check a la derecha), `MenuGroupLabel` (`text-etiqueta font-medium text-muted-foreground`), `MenuSeparator` (`-mx-1 my-1 h-px bg-border/70`). Es el menú a reutilizar para "más acciones" (⋯) de tablas.
+- **Disparador**: tarjeta `rounded-xl bg-secondary` con avatar redondo en el acento (`bg-acento text-acento-texto`), nombre y correo, y `CaretUpDown` en bold.
+- **Popup** (`side="top"`, **ancho = disparador**, nunca más ancho que el sidebar): cuenta (fila `bg-accent` con avatar, nombre, correo, rol y `ShieldCheck`), **Tema** en la misma fila que su rótulo con `ThemeToggle` **solo iconos** (sol, luna, monitor; nombre en `title` y `aria-label`), **«Apariencia…»** (abre `PanelApariencia`), acciones propias y `Cerrar sesión` en `destructive`.
+- **`PanelApariencia`** (`nav/panel-apariencia.tsx`): panel derecho de 384 px con Tema (con texto), Paleta, Tono oscuro, Tipografía (con una frase de ejemplo) y Diseño, en muestras grandes. Cada cambio se aplica al instante; la página de atrás cambia en vivo. Ver «Apariencia» en §20.
+- **`ui/menu.tsx`** (base-ui `Menu`): `MenuContent` radio 18 (`rounded-xl p-1.5`), `MenuItem` radio 12 con icono duotono, `MenuSeparator` fino. Es el menú de «⋯» de tablas.
 
 ---
 
@@ -383,10 +380,10 @@ Toda función visible en el diseño de Stitch que el backend aún no soporta se 
 
 **Un clic fuera no cierra un diálogo** (`Dialog` trae `disablePointerDismissal` por defecto): un clic perdido no debe tirar lo escrito ni lo que se muestra una sola vez. Se cierra con la X, Escape o los botones del pie. Vale para todo lo que se arma sobre `Dialog` (`DialogoConfirmacion`, `Paleta`); los paneles laterales (`Sheet`, `PanelLateral`, `Drawer`) sí se cierran con un clic fuera.
 
-Estructura fija: `DialogContent className="gap-0 p-0"` →
-- **Cabecera** `border-b border-border/60 px-5 py-4 pr-14`: icono en caja `size-8 rounded-lg bg-accent text-primary` + `DialogTitle` (`text-base font-medium`) + `DialogDescription` (`text-sm text-muted-foreground`).
-- **Cuerpo** `px-5 py-4` (formularios: `grid gap-4`; referencias: `@container bg-muted/40` con `grid @3xl:grid-cols-2`).
-- **Pie** `border-t border-border/60 px-5 py-3 flex justify-end gap-2` (o `justify-between` si lleva un enlace a la izquierda).
+Estructura fija: `DialogContent className="gap-0 p-0"` (radio 22, velo `--overlay` con 2 px de desenfoque, cerrar en botón redondo) →
+- **Cabecera** `CabeceraDialogo` (`px-5 pt-5 pb-3`, **sin línea debajo**): icono de 22 px en un círculo de 40 px del `tono` (`neutro` acento suave, `peligro`, `aviso`, `ok`; la única excepción a «icono sin fondo»: es la cara del diálogo) + `DialogTitle` (`text-titulo`) + `DialogDescription` (`text-control`).
+- **Cuerpo** `px-5 pb-2` (formularios: `grid gap-4`).
+- **Pie** `PieDialogo` (`px-5 pt-3 pb-5`, **sin línea encima**, `justify-end gap-2`, o `justify-between` con un enlace a la izquierda). `DialogoConfirmacion` usa `tono="peligro"` cuando la acción es destructiva.
 
 Tres familias:
 1. **Formulario** (Nueva serie, Nueva empresa): campos con las recetas de §10; `Cancelar` secundario + primario `h-control`.
@@ -419,8 +416,8 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 - **Tema**: `next-themes` con `class` en `<html>`; opciones Claro / Oscuro / Sistema en el menú de usuario. Componentes que dependen del tema en cliente (`ThemeToggle`) pintan sin selección hasta montar para no romper la hidratación.
 - **Diseño**: select «Diseño» en el menú de usuario, justo debajo de Tema (`nav/selector-diseno.tsx`). Es independiente del tema: el diseño va en `<html data-diseno>` y claro/oscuro en la clase `.dark`, así que cada diseño existe en los dos modos. Ver «Diseños» en §20.
-- **Apariencia**: «Paleta» y «Oscuro» en el menú de usuario, bajo Tema (`nav/selector-apariencia.tsx`). Ver «Apariencia» en §20.
-- **Iconos**: Phosphor duotono, sin fondo. Ver «Iconos» en §20.
+- **Apariencia**: «Apariencia…» en el menú de usuario abre `PanelApariencia` (paleta, tono oscuro, tipografía, diseño). Ver «Apariencia» en §20.
+- **Iconos**: Phosphor; semánticos en duotono, funcionales en bold, nunca con fondo. Ver «Iconos» en §20.
 - **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
 - **Accesibilidad**: todo disparador de menú/diálogo con `aria-label`; controles segmentados como `radiogroup`; `sr-only` para etiquetas de iconos; foco visible con `ring-ring`.
 
@@ -532,20 +529,20 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 
 ### Apariencia
 
-La **paleta** (los tres acentos) y el **tono del modo oscuro** son preferencias de cada usuario, independientes del tema (claro/oscuro/sistema, de next-themes) y del diseño. Se eligen en el menú de usuario, bajo Tema, y se guardan en `localStorage` (`khipu-paleta`, `khipu-oscuro`). Mismo patrón que los diseños, con un solo proveedor para las dos preferencias:
+La **paleta** (los tres acentos), el **tono del modo oscuro** y la **tipografía** son preferencias de cada usuario, independientes del tema (claro/oscuro/sistema, de next-themes) y del diseño. Se eligen en `PanelApariencia` («Apariencia…» del menú de usuario) y se guardan en `localStorage` (`khipu-paleta`, `khipu-oscuro`, `khipu-fuente`). Mismo patrón que los diseños, con un solo proveedor para las tres preferencias:
 
 | Pieza | Qué hace |
 |---|---|
-| `components/apariencia-opciones.ts` | `PALETAS` (`lima` por defecto, `indigo`, `oceano`, `coral`, `violeta`; cada una con `valor`, `etiqueta` y `muestra` de 3 colores), `TONOS_OSCURO` (`medianoche` por defecto, `grafito`, `tintado`), `PALETA_POR_DEFECTO`, `TONO_OSCURO_POR_DEFECTO`, `CLAVE_PALETA`, `CLAVE_TONO_OSCURO`. No importa nada: lo usan el servidor, el cliente y los tests |
-| `components/apariencia.tsx` | `AparienciaProvider({ paletas?, tonosOscuro?, inicial?, onCambio? })` escribe `data-paleta` y `data-oscuro` en `<html>` y en `localStorage`. `useApariencia()` devuelve `{ paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro }`; sin proveedor, listas vacías y no falla |
-| `components/script-diseno.tsx` | `ScriptDiseno` acepta `paletas`, `tonosOscuro` e `inicial` y aplica `data-paleta` y `data-oscuro` antes del primer pintado, sin parpadeo. Un valor guardado que no está en la lista se ignora |
-| `components/nav/selector-apariencia.tsx` | `SelectorApariencia`: dos grupos, «Paleta» (círculos con la muestra de 3 colores) y «Oscuro» (las tres tarjetas del tono con su nombre). Cada grupo es un `role="radiogroup"` con flechas, `aria-label` y tooltip. `SelectorPaleta` y `SelectorTonoOscuro` se exportan por separado para pantallas de configuración |
-| `MenuUsuario` | Muestra el selector bajo Tema; `mostrarApariencia={false}` lo oculta. No aparece con el diseño «papel» ni con una sola paleta |
+| `components/apariencia-opciones.ts` | `PALETAS` (`lima` por defecto, `indigo`, `oceano`, `coral`, `violeta`; cada una con `valor`, `etiqueta` y `muestra` de 3 colores), `TONOS_OSCURO` (`medianoche` por defecto, `grafito`, `tintado`; `muestra` y `lienzo`), `FUENTES` (`inter` por defecto, `jakarta`, `manrope`, `dmsans`, `figtree`; cada una con su `familia` CSS), `PALETA_POR_DEFECTO`, `TONO_OSCURO_POR_DEFECTO`, `CLAVE_PALETA`, `CLAVE_TONO_OSCURO`. No importa nada: lo usan el servidor, el cliente y los tests |
+| `components/apariencia.tsx` | `AparienciaProvider({ paletas?, tonosOscuro?, fuentes?, inicial?, onCambio? })` escribe `data-paleta`, `data-oscuro` y `data-fuente` en `<html>` y en `localStorage`. `useApariencia()` devuelve `{ paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro, fuente, setFuente, fuentes }`; sin proveedor, listas vacías y no falla |
+| `components/script-diseno.tsx` | `ScriptDiseno` acepta `paletas`, `tonosOscuro`, `fuentes` e `inicial` y aplica `data-paleta`, `data-oscuro` y `data-fuente` antes del primer pintado, sin parpadeo. Un valor guardado que no está en la lista se ignora |
+| `components/nav/selector-apariencia.tsx` | `SelectorPaleta` (círculos con la muestra de 3 colores), `SelectorTonoOscuro` (mini pantalla: lienzo, tarjeta y acento, con el nombre), `SelectorTipografia` («Aa» dibujado en cada fuente) y `SelectorApariencia` (los tres juntos). Cada grupo es un `role="radiogroup"` con flechas, `aria-label` y tooltip; `grande` agranda las muestras |
+| `components/nav/panel-apariencia.tsx` | `PanelApariencia({ open, onOpenChange })`: panel derecho con Tema, Paleta, Tono oscuro, Tipografía y Diseño. Lo abre «Apariencia…» de `MenuUsuario` (`mostrarApariencia={false}` lo quita). No muestra las preferencias con el diseño «papel» |
 | `Providers` | Ya incluye `AparienciaProvider`; la prop `apariencia` le pasa `inicial`, `onCambio` y las listas |
 
 El tono oscuro se aplica siempre al atributo, pero solo tiene efecto con `.dark`: se puede elegir estando en claro. Los bloques de paleta y tono van acotados con `html:not([data-diseno="papel"])`, así que «papel» no los usa.
 
-**Guardarlo por usuario.** `inicial` (p. ej. leído del perfil en el servidor) gana sobre `localStorage`; `onCambio` recibe `{ paleta, tonoOscuro }` en cada cambio. Pasa el mismo `inicial` a `ScriptDiseno` para que el primer pintado ya sea el del usuario:
+**Guardarlo por usuario.** `inicial` (p. ej. leído del perfil en el servidor) gana sobre `localStorage`; `onCambio` recibe `{ paleta, tonoOscuro, fuente }` en cada cambio. Pasa el mismo `inicial` a `ScriptDiseno` para que el primer pintado ya sea el del usuario:
 
 ```tsx
 // app/layout.tsx — Server Component
@@ -554,7 +551,7 @@ import { ScriptDiseno } from "@/components/script-diseno";
 import { guardarApariencia, leerApariencia } from "./apariencia-acciones"; // "use server": lee y guarda en tu backend
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const inicial = await leerApariencia(); // { paleta?: string; tonoOscuro?: string }
+  const inicial = await leerApariencia(); // { paleta?: string; tonoOscuro?: string; fuente?: string }
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
@@ -568,14 +565,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 ```
 
+**Tipografía.** Inter es la fuente de la app (`--font-sans`). Las otras las carga la app con `next/font` en `--fuente-<valor>` y `preload: false` (solo se descargan si alguien las elige), y `html[data-fuente="<valor>"]` las pone en `--font-sans`. Los datos (correlativos, ids, código) siguen en JetBrains Mono. Inter se carga una sola vez: Turbopack rechaza dos llamadas a la misma fuente de `next/font/google`.
+
 **Agregar una paleta:** (1) un bloque `html:not([data-diseno="papel"])[data-paleta="…"]` en `src/styles/tokens.css` que redefina solo `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto` y `--acento-3`; (2) su entrada en `PALETAS` (la `muestra` con los mismos hex); (3) su nombre en `PALETAS` de `scripts/verificar-contraste.mjs`, para que `npm run check:contraste` la mida en claro y en los tres tonos oscuros.
 
 ### Iconos
 
-- **Phosphor** (`@phosphor-icons/react`, dependencia del paquete). Peso por defecto **duotono** (`PESO_ICONO`); el estado activo o destacado (ítem del sidebar, métrica destacada, tab activa) va en **relleno** (`PESO_ICONO_ACTIVO`, `fill`). En cliente, el `IconContext` de `Providers` fija el duotono; en un Server Component se importa de `@phosphor-icons/react/dist/ssr` con `weight` explícito.
+- **Phosphor** (`@phosphor-icons/react`, dependencia del paquete). Dos reglas por tipo. **Funcionales** (caret, check, cerrar, más/menos, flechas, ⋯, lupa, copiar, refrescar, spinner, hamburguesa): **bold** siempre (`PESO_ICONO_FUNCIONAL`); en un glifo de un trazo el relleno suave se veía como un triángulo o una mancha, y `scripts/iconos-funcionales.mjs` agrega `weight="bold"` a los que falten.
+- **Semánticos** (menú, encabezados, tarjetas, estados, avisos): **duotono** (`PESO_ICONO`); el estado activo o destacado (ítem del sidebar, métrica destacada, tab activa) va en **relleno** (`PESO_ICONO_ACTIVO`, `fill`). En cliente, el `IconContext` de `Providers` fija el duotono; en un Server Component se importa de `@phosphor-icons/react/dist/ssr` con `weight` explícito.
 - **Nunca con fondo ni contenedor**: nada de cajas teñidas detrás de un icono. El color dice el significado: `success-foreground` / `warning-foreground` / `destructive-texto` para estados, `muted-foreground` para lo neutro, `acento-2-texto` para categorías.
 - **Tamaños:** 18 px en el menú y el sidebar, 16 px en encabezados de tarjeta y controles, 19 px para el tipo de documento en tablas, 18 px en actividad, 15 px dentro de botones.
 - **Tipo de prop:** las props `icon`/`icono` del kit son `IconoComponente` (`lib/iconos.ts`), que acepta componentes de Phosphor y de Lucide (Lucide ignora `weight`). Quien ya pasaba iconos de `lucide-react` no tiene que cambiar nada; `lucide-react` es peer opcional. `scripts/tests/iconos-tipo.test.mjs` verifica que ambos sigan siendo asignables.
+
+### Fechas
+
+`EntradaFecha` abre un **calendario propio** en un popover (`formularios/calendario.tsx`), no el selector nativo del navegador, que no se puede estilizar y cambiaba con cada sistema. El disparador es un `CAMPO` con icono de calendario, la fecha como «15 Set 2026» (o el `placeholder`) y un caret que gira. El valor sigue siendo ISO `YYYY-MM-DD`, con las mismas props; `conVistaPrevia` queda sin efecto.
+
+- **Calendario:** mes en español («Setiembre 2026»), semana de lunes a domingo, días de 36 px en círculo. Hoy va en el acento suave; el elegido, en `primary`. Los días fuera de `min`/`max` quedan deshabilitados. Botón «Hoy» al pie.
+- **Teclado** (patrón de grilla de fechas de WAI-ARIA): al abrir, el foco va al día elegido o a hoy. Flechas por día o semana, RePág/AvPág por mes (con Shift, por año), Inicio/Fin al comienzo o fin de la semana, Enter o Espacio para elegir. Al elegir, el foco vuelve al disparador.
+- **Fechas sin zona horaria:** `lib/calendario.ts` arma todo en hora local al mediodía. `new Date("2026-09-01")` es UTC y en Lima mostraba el día anterior.
 
 ### Tarjetas de métrica
 

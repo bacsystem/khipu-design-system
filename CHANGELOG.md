@@ -18,14 +18,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Acción principal casi negra (`#16181d`) en claro y casi blanca (`#f4f5f7`) en oscuro (`--primary`); el anillo de foco es `--acento-texto` (≥ 8:1 sobre tarjeta).
 - `FilaMetricas` pasa de una tarjeta dividida a una grilla de tarjetas separadas con gap 12 (mismo export, mismas props).
 - `lucide-react` deja de usarse en los componentes y pasa a peer **opcional**; las props de icono aceptan Phosphor y Lucide.
+- Iconos funcionales (caret, check, cerrar, ±, flechas, ⋯, lupa, copiar, refrescar, spinner) en **bold**; el duotono queda para los semánticos (`PESO_ICONO_FUNCIONAL`).
+- `EntradaFecha` usa un calendario propio en un popover (`Calendario`) en lugar del selector nativo del navegador: mismo valor ISO y mismas props (`conVistaPrevia` queda sin efecto). Teclado: flechas, RePág/AvPág (Shift: año), Inicio/Fin, Enter.
+- Select: lista de radio 16 con hover suave, check en círculo de acento y caret que gira. Campos: foco con el anillo del acento (`FOCO_CAMPO`), error con anillo rojo tenue. Checks de 18 px (radio 6), switch más fino, opciones en tarjeta teñidas con el acento. Stepper en píldora, slider más fino.
+- Diálogos de radio 22 sin líneas entre cabecera y pie, con el icono en un círculo del tono (`CabeceraDialogo` `tono`) y velo más suave (2 px de desenfoque). Panel lateral flotante (12 px de margen, radio 20). Avisos sin borde. Tabs con contador en píldora; acordeón sobre superficie suave.
+- Gráficos: barras de radio 9, leyenda en píldoras junto al título, el viewBox sigue el ancho real (las etiquetas quedan en 10 px a cualquier tamaño).
+- `MenuUsuario` es compacto: cuenta, tema solo con iconos, «Apariencia…» y cerrar sesión. Las preferencias (paleta, tono oscuro, tipografía, diseño) van en `PanelApariencia`, un panel a la derecha con vista previa en vivo.
 - Ninguna prop ni export se quitó ni cambió de nombre.
 
 ### Added
-- **Apariencia elegible por el usuario**: `AparienciaProvider`, `useApariencia`, `SelectorApariencia`, `SelectorPaleta` y `SelectorTonoOscuro` (`nav/selector-apariencia`), `PALETAS` y `TONOS_OSCURO` (`apariencia-opciones`). Cinco paletas (Lima por defecto, Índigo, Océano, Coral, Violeta) en `html[data-paleta]` y tres tonos oscuros (Medianoche por defecto, Grafito, Tintado) en `.dark[data-oscuro]`, guardados en `localStorage` (`khipu-paleta`, `khipu-oscuro`). `MenuUsuario` muestra el selector bajo Tema (`mostrarApariencia`, por defecto `true`); no aparece con el diseño «papel».
-- `ScriptDiseno` acepta `paletas`, `tonosOscuro` e `inicial` y aplica `data-paleta` y `data-oscuro` antes del primer pintado. `Providers` acepta `apariencia` (`inicial`, `onCambio`…), que pasa a `AparienciaProvider`.
+- **Apariencia elegible por el usuario**: `AparienciaProvider`, `useApariencia`, `PanelApariencia`, `SelectorApariencia`, `SelectorPaleta`, `SelectorTonoOscuro` y `SelectorTipografia` (`nav/selector-apariencia`), `PALETAS`, `TONOS_OSCURO` y `FUENTES` (`apariencia-opciones`). Cinco paletas (Lima por defecto, Índigo, Océano, Coral, Violeta) en `html[data-paleta]`, tres tonos oscuros (Medianoche por defecto, Grafito, Tintado) en `.dark[data-oscuro]` y cinco tipografías (Inter por defecto, Plus Jakarta Sans, Manrope, DM Sans, Figtree) en `html[data-fuente]`, guardados en `localStorage` (`khipu-paleta`, `khipu-oscuro`, `khipu-fuente`). No aplican con el diseño «papel».
+- `ScriptDiseno` acepta `paletas`, `tonosOscuro`, `fuentes` e `inicial` y aplica `data-paleta`, `data-oscuro` y `data-fuente` antes del primer pintado. `Providers` acepta `apariencia` (`inicial`, `onCambio`…), que pasa a `AparienciaProvider`.
 - `Metrica` y `Kpi`: `icono`, `tono` (`ok | aviso | error | neutro | acento`), `visual` (`barra` o `puntos`), `destacada` y `acciones`. Piezas sueltas: `TarjetaMetrica`, `VisualDeMetrica`, `ChipVariacion`.
-- `GraficoBarras` `destacado`: índice de la barra que va en el acento de la paleta (con una serie).
-- `IconoComponente`, `PESO_ICONO` y `PESO_ICONO_ACTIVO` (`lib/iconos`); recetas `ROTULO` y `TARJETA_ELEVABLE` (`lib/estilos`).
+- `GraficoBarras` `destacado`: índice de la barra que va en el acento de la paleta (con una serie). `GraficoAnillos`: anillos concéntricos con la paleta y su leyenda.
+- `Calendario` (`formularios/calendario`) y `lib/calendario` (fechas ISO sin desfase de zona horaria).
+- `IconoComponente`, `PESO_ICONO`, `PESO_ICONO_ACTIVO` y `PESO_ICONO_FUNCIONAL` (`lib/iconos`); recetas `ROTULO`, `TARJETA_ELEVABLE`, `FOCO_CAMPO`, `FOCO_CAMPO_VISIBLE` y `ERROR_CAMPO` (`lib/estilos`). `TonoOscuro` acepta `lienzo` (muestra de dos tonos).
 - Tokens `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto`, `--acento-3`, `--acento-suave`, `--acento-2-suave`, `--acento-3-suave`, `--acento-superficie`, `--acento-superficie-texto`, `--acento-borde`, `--texto-terciario`, `--info` / `--info-foreground`, `--chart-base`, `--chart-destacado`, `--borde-tarjeta`, `--brillo-tarjeta`, `--sombra-elevada`; utilidades `text-titulo`, `text-titulo-pagina` y `h-control`.
 - Subrutas del paquete `khipu-design-system/apariencia` y `khipu-design-system/apariencia-opciones`.
 - `npm run check:contraste` mide las 20 combinaciones (5 paletas × claro + 3 tonos oscuros).
@@ -33,9 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Upgrading from 0.4.x
 1. Vuelve a pegar `src/styles/tokens.css` y `src/styles/theme.css` (o sube el tag del paquete a `#v0.5.0`, cuyo `styles.css` ya los trae): hay tokens nuevos obligatorios (`--acento*`, `--texto-terciario`, `--info*`, `--chart-base`, `--chart-destacado`, `--borde-tarjeta`, `--brillo-tarjeta`, `--sombra-elevada`, `--spacing-control`, `--text-titulo*`) y los bloques de paleta y de tono oscuro.
 2. Instala `@phosphor-icons/react`. `lucide-react` es opcional: si ya pasas iconos de Lucide a `icon`/`icono`, siguen funcionando (ignoran `weight`).
-3. Cambia `next/font` a `Inter` + `JetBrains_Mono` en `--font-sans` / `--font-mono`, como en `src/app/layout.tsx`.
+3. Cambia `next/font` a `Inter` + `JetBrains_Mono` en `--font-sans` / `--font-mono`, como en `src/app/layout.tsx`. Para ofrecer las otras tipografías, cárgalas en `--fuente-jakarta`, `--fuente-manrope`, `--fuente-dmsans` y `--fuente-figtree` con `preload: false`.
 4. Los controles miden 34 px: cualquier `h-9` escrito a mano junto a un control del kit pasa a `h-control` (y `size-9` a `size-control`).
-5. Para guardar la paleta y el tono oscuro por usuario, pasa `inicial` (leído del perfil en el servidor) y `onCambio` a `Providers` (`apariencia`) y el mismo `inicial` a `ScriptDiseno`.
+5. Para guardar la paleta, el tono oscuro y la tipografía por usuario, pasa `inicial` (leído del perfil en el servidor) y `onCambio` a `Providers` (`apariencia`) y el mismo `inicial` a `ScriptDiseno`.
 
 ## [0.4.0] - 2026-10-31
 
