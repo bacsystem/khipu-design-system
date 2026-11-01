@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { cn } from "../../src/lib/utils.ts";
 
-// La escala tipográfica con nombre (globals.css @theme) es de tamaño, no de color: cn no debe tratarla como color.
+// La escala tipográfica con nombre (src/styles/theme.css @theme) es de tamaño, no de color: cn no debe tratarla como color.
 test("cn conserva el tamaño de la escala junto a un color de texto", () => {
   assert.equal(cn("text-etiqueta text-muted-foreground"), "text-etiqueta text-muted-foreground");
   assert.equal(cn("bg-codigo text-codigo-foreground text-control"), "bg-codigo text-codigo-foreground text-control");

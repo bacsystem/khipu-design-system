@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0] - 2026-10-31
+## [0.4.0] - 2026-10-31
 
 ### Changed
 - Diseño base «khipu» al estilo Linear/Vercel: neutros zinc, acento índigo `#5b5bd6` / `#8585f2`, sombras en capas (en oscuro con brillo interior), tarjetas de 12 px, sidebar del color del fondo.
@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pills sin borde; bloque de código sobre el token `codigo`; anillo de foco único (`FOCO`).
 - Transiciones con una curva (`ease-salida`) y tres duraciones (`--duracion-rapida/media/lenta`); con «reducir movimiento» los diálogos, popups, sheets y drawers dejan de desplazarse y escalar.
 - `cn` se importa siempre desde `@/lib/utils`, que lo configura con la escala tipográfica: el paquete `cn` solo trataba `text-etiqueta` y compañía como colores y borraba el tamaño o el color al combinarlos.
+- `BotonCopiar`, `PieTabla`, `CABECERA_TABLA` y `SELECT_NATIVO` (de 0.3.1) pasan a la escala con nombre y a las sombras nuevas; `BotonCopiar` anima el cambio a check también con `etiqueta`.
 - Ninguna prop ni export se quitó ni cambió de nombre. Sí cambian los valores de todos los tokens.
 
 ### Added
@@ -22,11 +23,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `NumeroAnimado`, `TrazoAnimado`, recetas `FOCO` y `SEGMENTO_BASE`, tokens `destructive-suave` / `destructive-texto` (el rojo sobre rojo tenue no llegaba a 4.5), `codigo` / `codigo-foreground`, `--sombra-*` y `--duracion-*`.
 - `npm run check:tipografia` y `npm run check:contraste` (en `npm run lint`), `npm test`.
 
-### Upgrading from 0.2.0
-1. Vuelve a pegar en tu `globals.css` los bloques de `src/app/globals.css`: hay tokens nuevos obligatorios (`--destructive-suave`, `--destructive-texto`, `--codigo*`, `--sombra-*`, `--duracion-*`, la escala `--text-*` y `--ease-salida` en `@theme`, y la regla de «reducir movimiento»).
+### Upgrading from 0.3.x
+**Como paquete:** sube el tag (`#v0.4.0`). `motion` llega como dependencia; `styles.css` ya trae los tokens nuevos. Carga Geist y Geist Mono en `--font-sans` / `--font-mono` y, si no usas `Providers` tal cual, agrega `ProveedorMovimiento` y `DisenoProvider`, y `ScriptDiseno` en el `<head>` (ver `src/app/layout.tsx`).
+
+**Copiando archivos:**
+1. Vuelve a pegar `src/styles/tokens.css` y `src/styles/theme.css`: hay tokens nuevos obligatorios (`--destructive-suave`, `--destructive-texto`, `--codigo*`, `--sombra-*`, `--duracion-*`, la escala `--text-*` y `--ease-salida` en `@theme`, los diseños `html[data-diseno]` y la regla de «reducir movimiento»).
 2. Instala `motion`. Si no usas `Providers` tal cual, agrega `ProveedorMovimiento` y `DisenoProvider`, y `ScriptDiseno` en el `<head>` (ver `src/app/layout.tsx`).
 3. Carga Geist y Geist Mono en lugar de Inter y JetBrains Mono (`src/app/layout.tsx`).
 4. Copia también `src/lib/utils.ts` y cambia cualquier `import { cn } from "cn"` por `@/lib/utils`.
+
+## [0.3.1] - 2026-10-20
+
+### Added
+- `BotonCopiar` (`patrones/boton-copiar`) accepts `etiqueta`: with it the button shows the text «Copiar» / «Copiado» next to the icon, and the check turns `text-success-foreground`, for action bars. Without it the button is the icon alone, as before (table cells). Brought up from the khipu portal, which had grown it in its own copy.
+- `PieTabla` (`patrones/pie-tabla`) accepts `hrefPagina(p)`: with it, Anterior / Siguiente and the page numbers are `next/link` links, so the page lives in the URL and ⌘/Ctrl/Shift/middle-click opens it in another tab; a plain click still calls `onPagina`. A link with no page to go to gets `aria-disabled` and leaves the tab order. Without `hrefPagina` they stay buttons with the same markup and classes as before. Also from the khipu portal.
+- `lib/navegacion` with `esClickSimple(e)`: true for a left click with no modifier, the check `PieTabla` uses to tell a client-side navigation from «open in a new tab».
+- `SELECT_NATIVO` in `lib/estilos`: a native `<select>` with the look of `ui/Input` (`h-9`), for forms that do not use `ui/select`.
+
+### Changed
+- `CABECERA_TABLA` moved to `lib/estilos` with the rest of the recipes. `patrones/pie-tabla` re-exports it (as it already did with `CONTROL_FILTRO`), so existing imports keep working; `TablaVacia` and `CONTENEDOR_TABLA` stay in `patrones/pie-tabla`.
+
+## [0.3.0] - 2026-10-20
+
+### Added
+- **Installable package.** `npm install github:bacsystem/khipu-design-system#v0.3.0` builds the design system (`prepare`) into ESM + `.d.ts`, with one subpath per component (`khipu-design-system/ui/button`, `/feedback/alerta`, `/formularios/*`, `/navegacion/*`, `/datos/*`, `/patrones/*`, `/lib/*`, `/utils`, `/providers`) and the CSS in `khipu-design-system/styles.css` (also `tokens.css` and `theme.css`). Every `"use client"` directive is kept, so Server Components can render the components that do not need one. The router-bound shell components are a separate `nav/*` export. No `transpilePackages` needed. See README §Instalarlo como paquete and `docs/adopcion-en-el-portal.md`.
+- `npm run build:paquete` and `npm run verify:paquete` (fails if a component has no public subpath, a subpath does not resolve to its `.js` and `.d.ts`, a module does not load or the CSS points at a missing file).
+
+### Changed
+- Tokens and the Tailwind theme moved from `src/app/globals.css` to `src/styles/tokens.css` and `src/styles/theme.css`, which `globals.css` imports. The compiled CSS of the demo is the same.
+- `react`, `react-dom`, `next`, `next-themes`, `@base-ui/react` and `lucide-react` are now peerDependencies (and devDependencies for the demo), so a consumer never gets a second copy of a React context. The CLI reads their versions from `peerDependencies`; `cli add` works as before.
 
 ## [0.2.0] - 2026-10-08
 

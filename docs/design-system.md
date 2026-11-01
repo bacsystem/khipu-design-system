@@ -103,7 +103,7 @@ Definidos como variables CSS en `:root` (claro) y `.dark` (oscuro) y expuestos a
 
 El sidebar comparte el color del fondo, como en Linear: lo separa el borde y no un bloque blanco.
 
-Contraste WCAG calculado en el comentario de `:root` de globals.css; `npm run check:contraste` falla si un par baja de 4.5.
+Contraste WCAG calculado en el comentario de `:root` de `src/styles/tokens.css`; `npm run check:contraste` falla si un par baja de 4.5.
 
 Regla de tonos para estado: **verde** = aceptado/activo, **ámbar** = provisional/BETA/observado, **rojo** = error/rechazo/acción destructiva, **neutro** (`secondary` + `muted-foreground`) = en proceso, inactivo, revocado. El rojo de pills, chips y avisos usa `bg-destructive-suave` + `text-destructive-texto`: `text-destructive` sobre un rojo tenue no llega a 4.5.
 
@@ -264,7 +264,7 @@ Tamaños: `default`, `sm` y `lg` miden `h-9` (cambian padding y texto); iconos `
 `inline-flex h-9 rounded-lg px-2.5 text-control font-medium` + icono 14 px: neutras en `text-muted-foreground`, destructivas en `text-destructive-texto hover:bg-destructive-suave`, separadas por `|` (`text-border`). Iconos-botón de fila y menú «⋯»: `size-9`, visibles al 80 % y al 100 % en hover de la fila (`group-hover`). La fila crece hasta la altura del control: una acción de fila mide lo mismo que el botón o el filtro de arriba de la tabla.
 
 ### Botón copiar (`comprobantes/boton-copiar.tsx`)
-Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg-secondary`; en filas aparece con `opacity-0 group-hover:opacity-100`.
+Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg-secondary`; en filas aparece con `opacity-0 group-hover:opacity-100`. Con `etiqueta` (barras de acciones) muestra además el texto «Copiar» → «Copiado», `inline-flex gap-1.5 rounded-md text-muted-foreground`, y el check pasa a `text-success-foreground` (`patrones/boton-copiar.tsx`).
 
 ### Botón deshabilitado + hover (regla obligatoria)
 Toda receta que combine un `hover:` con `disabled:opacity-*` **debe** incluir también `disabled:pointer-events-none` (como ya hace `ui/button.tsx`). Sin eso, si el mouse queda sobre el botón cuando pasa a deshabilitado (el caso típico: usuario hace click y el botón se deshabilita bajo el cursor), el `:hover` y el `:disabled` empatan en especificidad y cuál gana depende del orden de generación del CSS — a veces el botón se ve casi sin atenuar aunque esté deshabilitado. `pointer-events-none` corta el `:hover` de raíz. Ya aplicado en `BOTON_PRIMARIO`/`BOTON_SECUNDARIO`, `ACCION_PRINCIPAL`/`ACCION_SECUNDARIA`, tabs, `ConfirmacionEnLinea`, `DialogoConfirmacion` y `SelectorContexto`.
@@ -442,7 +442,7 @@ Un diseño es un conjunto de tokens que cambia el aspecto de toda la interfaz si
 
 Para adoptarlo en una app: envuelve con `DisenoProvider` (dentro de `ThemeProvider`) y pon `<ScriptDiseno />` dentro de `<head>` en `app/layout.tsx`. Sin eso, `MenuUsuario` se ve exactamente como antes.
 
-**Agregar un diseño:** (1) un bloque en `globals.css` que sobrescriba solo los tokens que cambian; (2) su entrada en `DISENOS`; (3) el contraste de cada par de texto afectado, calculado y no estimado.
+**Agregar un diseño:** (1) un bloque en `src/styles/tokens.css` que sobrescriba solo los tokens que cambian; (2) su entrada en `DISENOS`; (3) el contraste de cada par de texto afectado, calculado y no estimado.
 
 ```css
 html[data-diseno="papel"]:not(.dark) { --background: #f6f5f4; --primary: #0075de; /* … */ }
@@ -464,7 +464,7 @@ Excepciones de `papel`: el azul `#0075de` sobre el lienzo da 4.19 (sobre card, 4
 
 El movimiento confirma una acción, muestra un cambio de estado o introduce contenido; nunca decora. Tiene dos capas que comparten valores: CSS para lo que debe funcionar en Server Components y en los primitivos de base-ui, y [Motion](https://motion.dev) para lo que CSS no hace bien (layout, trazos, contadores, entradas y salidas de React).
 
-| Valor | CSS (`globals.css`) | Motion (`lib/movimiento.ts`) |
+| Valor | CSS (`src/styles/`) | Motion (`lib/movimiento.ts`) |
 |---|---|---|
 | Curva | `ease-salida` = `cubic-bezier(0.16, 1, 0.3, 1)` | `CURVA_SALIDA` |
 | Duraciones | `duration-(--duracion-rapida)` 120 ms · `media` 200 ms · `lenta` 320 ms | `DURACION.rapida/media/lenta` (+ `trazo` 0.6 s, `contador` 0.8 s) |
@@ -487,7 +487,7 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 **Reglas:**
 - Solo valores de la tabla de arriba; nunca duraciones ni curvas sueltas: en CSS, `duration-(--duracion-*)` y `ease-salida`.
 - Los componentes importan `m` (no `motion`) de `motion/react`: `LazyMotion strict` falla en desarrollo si se cuela un `motion.*`.
-- Con «reducir movimiento» nada se desplaza, escala ni se dibuja: `MotionConfig reducedMotion="user"` anula transformaciones y layout, los efectos que no lo son (trazos, contador, altura, anillo) consultan `useReducedMotion()`, y el CSS va bajo `motion-safe:`/`motion-reduce:`. Las transiciones de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú, select, tooltip, toast, acordeón, indicador de `Tabs`) las acorta a 1 ms la regla `@media (prefers-reduced-motion: reduce)` de `globals.css`; los spinners y el progreso indeterminado siguen girando porque indican carga. Solo quedan fundidos de opacidad.
+- Con «reducir movimiento» nada se desplaza, escala ni se dibuja: `MotionConfig reducedMotion="user"` anula transformaciones y layout, los efectos que no lo son (trazos, contador, altura, anillo) consultan `useReducedMotion()`, y el CSS va bajo `motion-safe:`/`motion-reduce:`. Las transiciones de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú, select, tooltip, toast, acordeón, indicador de `Tabs`) las acorta a 1 ms la regla `@media (prefers-reduced-motion: reduce)` de `src/styles/theme.css`; los spinners y el progreso indeterminado siguen girando porque indican carga. Solo quedan fundidos de opacidad.
 - Toasts: siguen con la transición CSS de base-ui; `AnimatePresence` competiría con su cierre por tiempo y por gesto.
 - El diseño `papel` fija las transiciones por defecto en 200 ms (`--default-transition-duration`, §Diseños).
 

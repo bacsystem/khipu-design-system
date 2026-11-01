@@ -1,13 +1,13 @@
 /**
  * Fuente única del movimiento con Motion (docs/design-system.md «Movimiento»). Los primitivos de base-ui animan con CSS
- * usando los mismos valores, declarados en src/app/globals.css: `--ease-salida` = CURVA_SALIDA y `--duracion-*` = DURACION.
+ * usando los mismos valores, declarados en src/styles/ (tokens.css y theme.css): `--ease-salida` = CURVA_SALIDA y `--duracion-*` = DURACION.
  * Si cambias uno, cambia el otro. Los resortes están críticamente amortiguados (ζ ≥ 1): llegan sin rebote.
  */
 
 /** Curva de salida (rápida al inicio, suave al final). Igual a `--ease-salida`. */
 export const CURVA_SALIDA: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-/** Duraciones en segundos. `rapida`/`media`/`lenta` = `--duracion-*` de globals.css. */
+/** Duraciones en segundos. `rapida`/`media`/`lenta` = `--duracion-*` de src/styles/tokens.css. */
 export const DURACION = { rapida: 0.12, media: 0.2, lenta: 0.32, trazo: 0.6, contador: 0.8 } as const;
 
 /** Resorte de indicadores y piezas que se desplazan (ζ = 1). */

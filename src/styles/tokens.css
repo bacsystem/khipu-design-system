@@ -1,0 +1,216 @@
+/*
+ * khipu design system: color, radius, chart, shadow and motion tokens (light in :root, dark in .dark) and the selectable designs (html[data-diseno]).
+ * Plain CSS, no Tailwind directives. Override any of them after importing this file to rebrand an app.
+ * Source of truth for both the demo app (src/app/globals.css) and the package (khipu-design-system/tokens.css).
+ */
+
+/*
+ * Diseño base «khipu» (0.3.0): estilo Linear/Vercel. Neutros zinc casi monocromos y un solo acento índigo.
+ * Contraste WCAG calculado (claro · oscuro), verificado por `npm run check:contraste`:
+ * foreground/background 17.13 · 16.81 · muted-foreground/background 5.09 · 7.14 · /card 5.26 · 6.73 · /secondary 4.79 · 6.16
+ * primary-foreground/primary 5.37 · 6.21 · accent-foreground/accent 6.30 · 8.42 · destructive-texto/destructive-suave 5.67 · 6.11
+ * success 4.93 · 7.96 · warning 4.90 · 9.19 · sidebar-primary 7.31 · 8.42 · codigo 15.08.
+ * Las duraciones deben coincidir con DURACION de src/lib/movimiento.ts.
+ */
+:root {
+  --duracion-rapida: 120ms;
+  --duracion-media: 200ms;
+  --duracion-lenta: 320ms;
+  --background: #fbfbfc;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --primary: #5b5bd6;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f7f7f8;
+  --muted-foreground: #6b6b76;
+  --accent: #f0f0fd;
+  --accent-foreground: #4747c2;
+  --destructive: #dc2547;
+  --destructive-foreground: #ffffff;
+  --destructive-suave: #fdeef1;
+  --destructive-texto: #b91c3c;
+  --border: #e8e8ec;
+  --input: #dedee3;
+  --ring: #5b5bd6;
+  --success: #edfaf3;
+  --success-foreground: #0f7b4f;
+  --success-border: rgba(15, 123, 79, 0.18);
+  --success-solid: #16a34a;
+  --warning: #fef8ec;
+  --warning-foreground: #a15c07;
+  --warning-border: rgba(161, 92, 7, 0.18);
+  --warning-solid: #f59e0b;
+  --destructive-border: rgba(220, 37, 71, 0.2);
+  --accent-border: rgba(91, 91, 214, 0.22);
+  --primary-light: #7373e0;
+  --overlay: rgba(10, 10, 15, 0.32);
+  --brand: #5b5bd6;
+  --brand-foreground: #ffffff;
+  --codigo: #0f0f14;
+  --codigo-foreground: #e4e4e9;
+  --chart-1: #5b5bd6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #e11d48;
+  --chart-5: #0ea5e9;
+  --radius: 0.5rem;
+  --sidebar: #fbfbfc;
+  --sidebar-foreground: #3f3f46;
+  --sidebar-primary: #ededf5;
+  --sidebar-primary-foreground: #3c3cb0;
+  --sidebar-accent: #f2f2f4;
+  --sidebar-accent-foreground: #18181b;
+  --sidebar-border: #e8e8ec;
+  --sidebar-ring: #5b5bd6;
+  --sombra-xs: 0 1px 2px rgba(16, 16, 24, 0.05);
+  --sombra-sm: 0 1px 2px rgba(16, 16, 24, 0.06), 0 1px 3px rgba(16, 16, 24, 0.04);
+  --sombra-md: 0 4px 12px -2px rgba(16, 16, 24, 0.08), 0 2px 4px -2px rgba(16, 16, 24, 0.05);
+  --sombra-lg: 0 16px 40px -8px rgba(16, 16, 24, 0.16), 0 4px 12px -4px rgba(16, 16, 24, 0.08);
+}
+
+.dark {
+  --background: #0b0b0f;
+  --foreground: #ededf0;
+  --card: #131318;
+  --card-foreground: #ededf0;
+  --popover: #18181e;
+  --popover-foreground: #ededf0;
+  --primary: #8585f2;
+  --primary-foreground: #0b0b0f;
+  --secondary: #1c1c22;
+  --secondary-foreground: #ededf0;
+  --muted: #16161b;
+  --muted-foreground: #9b9ba6;
+  --accent: #1e1e33;
+  --accent-foreground: #b4b4fa;
+  --destructive: #fb6f8a;
+  --destructive-foreground: #0b0b0f;
+  --destructive-suave: #2a1a20;
+  --destructive-texto: #fb6f8a;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #8585f2;
+  --success: #0f2a1f;
+  --success-foreground: #4fd19a;
+  --success-border: rgba(79, 209, 154, 0.25);
+  --success-solid: #34d399;
+  --warning: #2e2410;
+  --warning-foreground: #f2c25c;
+  --warning-border: rgba(242, 194, 92, 0.25);
+  --warning-solid: #fbbf24;
+  --destructive-border: rgba(251, 111, 138, 0.3);
+  --accent-border: rgba(133, 133, 242, 0.28);
+  --primary-light: #a3a3f7;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --brand: #8585f2;
+  --brand-foreground: #0b0b0f;
+  /* Marcas de gráfico en oscuro: pasos más saturados y menos claros que los semánticos (validados para CVD y contraste sobre #111827). */
+  --chart-1: #7b72f0;
+  --chart-2: #27a070;
+  --chart-3: #bf8a26;
+  --chart-4: #dc4a68;
+  --chart-5: #3a88c6;
+  --sidebar: #0b0b0f;
+  --sidebar-foreground: #c4c4cc;
+  --sidebar-primary: #1e1e33;
+  --sidebar-primary-foreground: #b4b4fa;
+  --sidebar-accent: #16161b;
+  --sidebar-accent-foreground: #ededf0;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #8585f2;
+  --sombra-xs: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sombra-sm: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 3px rgba(0, 0, 0, 0.45);
+  --sombra-md: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+  --sombra-lg: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+}
+
+/*
+ * Diseños: bloques que sobrescriben solo los tokens que cambian, activados con <html data-diseno="…"> (components/diseno.tsx).
+ * El diseño base «khipu» no tiene bloque: son los tokens de :root y .dark. Cada bloque va acotado con :not(.dark) o .dark
+ * para que sus valores claros no le ganen al modo oscuro por especificidad. Heredan del base la tipografía, las sombras,
+ * los radios, el movimiento y los tokens que no redefinen (destructive-suave/-texto, codigo).
+ *
+ * «papel» — derivado del estilo Notion de Refero (https://styles.refero.design/style/2bf4c61f-de10-4614-ba1b-20c0453bd2a9):
+ * lienzo cálido con tarjetas blancas encima, bordes de 1 px en vez de sombras, un solo azul de acción y transiciones de 200 ms.
+ * Contraste (WCAG, calculado): foreground/background 17.34, muted-foreground/background 5.99, /card 6.53, /secondary 5.63,
+ * primary-foreground/primary 4.57, accent-foreground/accent 6.04. Excepción: el azul #0075de de la referencia sobre el lienzo
+ * da 4.19 (sobre card, 4.57), por eso el texto sobre fondo de acento usa #005bab; un enlace text-primary sobre el lienzo queda bajo 4.5.
+ * Los radios (12 px tarjetas, 8 px botones) ya son los de khipu. --chart-1 no cambia: un segundo azul
+ * se confundiría con --chart-5. Los valores de secondary, muted, sidebar y todo el oscuro no vienen de la referencia: Notion
+ * no define modo oscuro ni esas superficies, se derivaron del mismo matiz cálido.
+ */
+html[data-diseno="papel"] {
+  /* Las recetas usan duration-(--duracion-*) explícito: papel fija sus 200 ms aquí, no solo en el default de Tailwind. */
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: ease;
+  --duracion-rapida: 200ms;
+  --duracion-media: 200ms;
+  --duracion-lenta: 200ms;
+}
+
+html[data-diseno="papel"]:not(.dark) {
+  --background: #f6f5f4;
+  --sidebar: #f6f5f4;
+  --foreground: #111111;
+  --card-foreground: #111111;
+  --popover-foreground: #111111;
+  --primary: #0075de;
+  --primary-foreground: #ffffff;
+  --primary-light: #097fe8;
+  --brand: #0075de;
+  --brand-foreground: #ffffff;
+  --ring: #0075de;
+  --secondary: #efeeec;
+  --secondary-foreground: #111111;
+  --muted: #faf9f8;
+  --muted-foreground: #615d59;
+  --accent: #e6f3fe;
+  --accent-foreground: #005bab;
+  --accent-border: rgba(0, 117, 222, 0.25);
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.08);
+  --sidebar-foreground: #37332f;
+  --sidebar-primary: #e6f3fe;
+  --sidebar-primary-foreground: #005bab;
+  --sidebar-accent: #f1efee;
+  --sidebar-accent-foreground: #111111;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --sidebar-ring: #0075de;
+}
+
+html[data-diseno="papel"].dark {
+  --background: #191817;
+  --foreground: #f6f5f4;
+  --card: #211f1e;
+  --card-foreground: #f6f5f4;
+  --popover: #211f1e;
+  --popover-foreground: #f6f5f4;
+  --primary: #62aef0;
+  --primary-foreground: #111111;
+  --primary-light: #8cc4f4;
+  --brand: #62aef0;
+  --brand-foreground: #111111;
+  --ring: #62aef0;
+  --secondary: #2b2927;
+  --secondary-foreground: #f6f5f4;
+  --muted: #242220;
+  --muted-foreground: #a8a29e;
+  --accent: #0f2a45;
+  --accent-foreground: #9fd0f7;
+  --accent-border: rgba(98, 174, 240, 0.3);
+  --border: rgba(246, 245, 244, 0.12);
+  --input: rgba(246, 245, 244, 0.16);
+  --sidebar: #1c1a19;
+  --sidebar-foreground: #d6d3d1;
+  --sidebar-primary: #0f2a45;
+  --sidebar-primary-foreground: #9fd0f7;
+  --sidebar-accent: #2b2927;
+  --sidebar-accent-foreground: #f6f5f4;
+  --sidebar-border: rgba(246, 245, 244, 0.12);
+  --sidebar-ring: #62aef0;
+}

@@ -123,7 +123,8 @@ function comandoAdd(nombres, { force }) {
 
   if (dependenciasNpm.size) {
     const conVersion = [...dependenciasNpm].sort().map((dep) => {
-      const version = pkgKhipu.dependencies?.[dep];
+      // React, Next, base-ui, lucide y next-themes son peerDependencies desde que el repo también es un paquete (0.3.0).
+      const version = pkgKhipu.dependencies?.[dep] ?? pkgKhipu.peerDependencies?.[dep];
       return version ? `${dep}@${version}` : dep;
     });
     console.log(`\nInstala las dependencias de npm que falten:\n  npm i ${conVersion.join(" ")}`);
@@ -131,7 +132,7 @@ function comandoAdd(nombres, { force }) {
 
   console.log(
     "\nRecuerda (una sola vez por proyecto, ver README §Usarlo en tu proyecto):" +
-      "\n  1. Pega en tu globals.css los bloques de tokens de src/app/globals.css." +
+      "\n  1. Pega en tu globals.css (después de @import \"tailwindcss\") src/styles/tokens.css y src/styles/theme.css." +
       "\n  2. Envuelve la app con <Providers> y carga las fuentes como en src/app/layout.tsx." +
       '\n  3. Alias "@/*": ["./src/*"] en tsconfig.json.',
   );

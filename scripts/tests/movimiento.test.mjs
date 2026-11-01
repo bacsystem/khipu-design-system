@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { CURVA_SALIDA, DURACION, RESORTE, RESORTE_SUAVE, textoContador } from "../../src/lib/movimiento.ts";
 
@@ -10,11 +11,16 @@ test("los resortes no rebotan", () => {
   assert.ok(amortiguamiento(RESORTE_SUAVE) >= 1, `RESORTE_SUAVE ζ=${amortiguamiento(RESORTE_SUAVE)}`);
 });
 
-test("curva y duraciones coinciden con globals.css", () => {
-  assert.deepEqual(CURVA_SALIDA, [0.16, 1, 0.3, 1]);
-  assert.equal(DURACION.rapida, 0.12);
-  assert.equal(DURACION.media, 0.2);
-  assert.equal(DURACION.lenta, 0.32);
+// Lee los valores del CSS: si alguien cambia uno de los dos lados, la prueba lo detecta.
+const css = ["tokens.css", "theme.css"].map((f) => readFileSync(new URL(`../../src/styles/${f}`, import.meta.url), "utf8")).join("\n");
+// La primera aparición: el diseño base (:root / @theme). «papel» redefine las duraciones más abajo.
+const valor = (nombre) => css.match(new RegExp(`${nombre}:\\s*([^;]+);`))?.[1].trim();
+
+test("curva y duraciones coinciden con src/styles", () => {
+  assert.equal(valor("--ease-salida"), `cubic-bezier(${CURVA_SALIDA.join(", ")})`);
+  assert.equal(valor("--duracion-rapida"), `${DURACION.rapida * 1000}ms`);
+  assert.equal(valor("--duracion-media"), `${DURACION.media * 1000}ms`);
+  assert.equal(valor("--duracion-lenta"), `${DURACION.lenta * 1000}ms`);
 });
 
 test("textoContador formatea como formato.ts (en-US)", () => {

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Falla si algún par texto/fondo del diseño base (bloques `:root` y `.dark` de src/app/globals.css) baja de 4.5 (WCAG AA),
+// Falla si algún par texto/fondo del diseño base (bloques `:root` y `.dark` de src/styles/tokens.css) baja de 4.5 (WCAG AA),
 // o si el acento no es el del rediseño 0.3.0. Los diseños alternativos («papel») documentan su contraste en su comentario.
 
 import { readFileSync } from "node:fs";
@@ -59,7 +59,7 @@ export function leerBloque(css, selector) {
 }
 
 function principal() {
-  const css = readFileSync(join(ROOT, "src", "app", "globals.css"), "utf8");
+  const css = readFileSync(join(ROOT, "src", "styles", "tokens.css"), "utf8");
   const raiz = leerBloque(css, ":root");
   const errores = [];
   for (const selector of [":root", ".dark"]) {

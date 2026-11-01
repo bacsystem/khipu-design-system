@@ -7,8 +7,21 @@ import { MovimientoLocal } from "@/components/movimiento";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
-/** Copia `texto` al portapapeles; el icono gira a un check durante 1.5 s. `className` ajusta tamaño y radio (p. ej. `size-9 rounded-lg`). */
-export function BotonCopiar({ texto, titulo = "Copiar", className }: { texto: string; titulo?: string; className?: string }) {
+/**
+ * Copia `texto` al portapapeles; el icono gira a un check durante 1.5 s. `className` ajusta tamaño y radio (p. ej. `size-9 rounded-lg`).
+ * Sin `etiqueta` es solo el icono (celdas de tabla); con ella muestra "Copiar" / "Copiado" (barras de acciones).
+ */
+export function BotonCopiar({
+  texto,
+  titulo = "Copiar",
+  etiqueta = false,
+  className,
+}: {
+  texto: string;
+  titulo?: string;
+  etiqueta?: boolean;
+  className?: string;
+}) {
   const [copiado, setCopiado] = useState(false);
 
   return (
@@ -23,11 +36,12 @@ export function BotonCopiar({ texto, titulo = "Copiar", className }: { texto: st
           setCopiado(true);
           setTimeout(() => setCopiado(false), 1500);
         } catch {
-          // el navegador puede denegar el acceso al portapapeles; no hay nada más que hacer
+          // el navegador puede denegar el acceso al portapapeles; el contenido sigue seleccionable
         }
       }}
       className={cn(
-        "inline-flex items-center justify-center rounded-md p-0.5 text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida hover:bg-secondary hover:text-foreground",
+        "inline-flex items-center justify-center rounded-md text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida hover:bg-secondary hover:text-foreground",
+        etiqueta ? "gap-1.5" : "p-0.5",
         className,
       )}
     >
@@ -43,6 +57,7 @@ export function BotonCopiar({ texto, titulo = "Copiar", className }: { texto: st
           {copiado ? <CheckIcon className="size-3.5 text-success-foreground" /> : <CopyIcon className="size-3.5" />}
         </m.span>
       </AnimatePresence></MovimientoLocal>
+      {etiqueta ? (copiado ? "Copiado" : "Copiar") : null}
     </button>
   );
 }
