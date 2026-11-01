@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20",
+  "generatedAt": "2026-11-01",
   "items": {
     "components/datos/grafico": {
       "name": "grafico",
@@ -8,8 +8,13 @@
       "files": [
         "src/components/datos/grafico.tsx"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "motion"
+      ],
       "registryDependencies": [
+        "components/datos/trazo-animado",
+        "components/movimiento",
+        "lib/movimiento",
         "lib/utils"
       ]
     },
@@ -24,6 +29,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "components/datos/trazo-animado",
         "lib/utils"
       ]
     },
@@ -48,12 +54,15 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "lucide-react"
+        "lucide-react",
+        "motion"
       ],
       "registryDependencies": [
         "components/feedback/skeleton",
+        "components/movimiento",
         "components/patrones/pie-tabla",
         "components/ui/table",
+        "lib/movimiento",
         "lib/paginacion",
         "lib/utils"
       ]
@@ -70,6 +79,43 @@
         "components/patrones/metricas",
         "lib/utils"
       ]
+    },
+    "components/datos/trazo-animado": {
+      "name": "trazo-animado",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/trazo-animado.tsx"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "components/movimiento",
+        "lib/movimiento"
+      ]
+    },
+    "components/diseno": {
+      "name": "diseno",
+      "type": "component",
+      "category": "diseno",
+      "files": [
+        "src/components/diseno.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/disenos"
+      ]
+    },
+    "components/disenos": {
+      "name": "disenos",
+      "type": "component",
+      "category": "disenos",
+      "files": [
+        "src/components/disenos.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
     },
     "components/feedback/alerta": {
       "name": "alerta",
@@ -121,9 +167,12 @@
         "src/components/feedback/progreso.tsx"
       ],
       "dependencies": [
-        "@base-ui/react"
+        "@base-ui/react",
+        "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
+        "lib/movimiento",
         "lib/utils"
       ]
     },
@@ -374,6 +423,18 @@
         "lib/utils"
       ]
     },
+    "components/movimiento": {
+      "name": "movimiento",
+      "type": "component",
+      "category": "movimiento",
+      "files": [
+        "src/components/movimiento.tsx"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": []
+    },
     "components/nav/logo": {
       "name": "logo",
       "type": "component",
@@ -395,6 +456,8 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "components/diseno",
+        "components/nav/selector-diseno",
         "components/nav/theme-toggle",
         "components/ui/menu",
         "lib/utils"
@@ -431,6 +494,20 @@
         "lib/utils"
       ]
     },
+    "components/nav/selector-diseno": {
+      "name": "selector-diseno",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/selector-diseno.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/diseno",
+        "components/ui/select",
+        "lib/utils"
+      ]
+    },
     "components/nav/shell": {
       "name": "shell",
       "type": "component",
@@ -449,9 +526,11 @@
         "src/components/nav/sidebar-nav.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "motion"
       ],
       "registryDependencies": [
+        "lib/movimiento",
         "lib/utils"
       ]
     },
@@ -610,10 +689,9 @@
       "files": [
         "src/components/patrones/bloque-codigo.tsx"
       ],
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": [],
       "registryDependencies": [
+        "components/patrones/boton-copiar",
         "lib/utils"
       ]
     },
@@ -637,9 +715,12 @@
         "src/components/patrones/boton-copiar.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
+        "lib/movimiento",
         "lib/utils"
       ]
     },
@@ -680,9 +761,12 @@
         "src/components/patrones/confirmacion-en-linea.tsx"
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
+        "lib/movimiento",
         "lib/utils"
       ]
     },
@@ -696,6 +780,20 @@
       "dependencies": [],
       "registryDependencies": [
         "lib/utils"
+      ]
+    },
+    "components/patrones/numero-animado": {
+      "name": "numero-animado",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/numero-animado.tsx"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "lib/movimiento"
       ]
     },
     "components/patrones/pie-tabla": {
@@ -728,6 +826,20 @@
         "lib/utils"
       ]
     },
+    "components/patrones/tarjeta-destacada": {
+      "name": "tarjeta-destacada",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/tarjeta-destacada.tsx"
+      ],
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "lib/utils"
+      ]
+    },
     "components/providers": {
       "name": "providers",
       "type": "component",
@@ -739,8 +851,22 @@
         "next-themes"
       ],
       "registryDependencies": [
+        "components/diseno",
         "components/feedback/toast",
-        "components/feedback/tooltip"
+        "components/feedback/tooltip",
+        "components/movimiento"
+      ]
+    },
+    "components/script-diseno": {
+      "name": "script-diseno",
+      "type": "component",
+      "category": "script-diseno",
+      "files": [
+        "src/components/script-diseno.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/disenos"
       ]
     },
     "components/ui/avatar": {
@@ -766,10 +892,11 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "class-variance-authority",
-        "cn"
+        "class-variance-authority"
       ],
-      "registryDependencies": []
+      "registryDependencies": [
+        "lib/utils"
+      ]
     },
     "components/ui/button": {
       "name": "button",
@@ -780,10 +907,11 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "class-variance-authority",
-        "cn"
+        "class-variance-authority"
       ],
-      "registryDependencies": []
+      "registryDependencies": [
+        "lib/utils"
+      ]
     },
     "components/ui/card": {
       "name": "card",
@@ -792,10 +920,10 @@
       "files": [
         "src/components/ui/card.tsx"
       ],
-      "dependencies": [
-        "cn"
-      ],
-      "registryDependencies": []
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
     },
     "components/ui/dialog": {
       "name": "dialog",
@@ -806,11 +934,11 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "cn",
         "lucide-react"
       ],
       "registryDependencies": [
-        "components/ui/button"
+        "components/ui/button",
+        "lib/utils"
       ]
     },
     "components/ui/drawer": {
@@ -864,10 +992,11 @@
         "src/components/ui/input.tsx"
       ],
       "dependencies": [
-        "@base-ui/react",
-        "cn"
+        "@base-ui/react"
       ],
-      "registryDependencies": []
+      "registryDependencies": [
+        "lib/utils"
+      ]
     },
     "components/ui/kbd": {
       "name": "kbd",
@@ -888,10 +1017,10 @@
       "files": [
         "src/components/ui/label.tsx"
       ],
-      "dependencies": [
-        "cn"
-      ],
-      "registryDependencies": []
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
     },
     "components/ui/menu": {
       "name": "menu",
@@ -916,11 +1045,11 @@
         "src/components/ui/pagination.tsx"
       ],
       "dependencies": [
-        "cn",
         "lucide-react"
       ],
       "registryDependencies": [
-        "components/ui/button"
+        "components/ui/button",
+        "lib/utils"
       ]
     },
     "components/ui/popover": {
@@ -962,11 +1091,11 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "cn",
         "lucide-react"
       ],
       "registryDependencies": [
-        "lib/estilos"
+        "lib/estilos",
+        "lib/utils"
       ]
     },
     "components/ui/selector-por-pagina": {
@@ -1005,11 +1134,11 @@
       ],
       "dependencies": [
         "@base-ui/react",
-        "cn",
         "lucide-react"
       ],
       "registryDependencies": [
-        "components/ui/button"
+        "components/ui/button",
+        "lib/utils"
       ]
     },
     "components/ui/table": {
@@ -1019,10 +1148,10 @@
       "files": [
         "src/components/ui/table.tsx"
       ],
-      "dependencies": [
-        "cn"
-      ],
-      "registryDependencies": []
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/utils"
+      ]
     },
     "components/ui/toolbar": {
       "name": "toolbar",
@@ -1086,6 +1215,16 @@
       "category": "lib",
       "files": [
         "src/lib/navegacion.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/movimiento": {
+      "name": "movimiento",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/movimiento.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

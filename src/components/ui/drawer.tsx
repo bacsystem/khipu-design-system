@@ -29,7 +29,7 @@ function DrawerOverlay({ className, ...props }: DrawerPrimitive.Backdrop.Props) 
     <DrawerPrimitive.Backdrop
       data-slot="drawer-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-overlay/60 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-backdrop-filter:backdrop-blur-xs",
+        "fixed inset-0 z-50 bg-overlay/60 transition-opacity duration-(--duracion-rapida) data-ending-style:opacity-0 data-starting-style:opacity-0 supports-backdrop-filter:backdrop-blur-xs",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ function DrawerContent({ className, children, ...props }: DrawerPrimitive.Popup.
         <DrawerPrimitive.Popup
           data-slot="drawer-content"
           className={cn(
-            "flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-xl border-t border-border bg-popover bg-clip-padding pb-[env(safe-area-inset-bottom)] text-sm text-popover-foreground shadow-lg transition-transform duration-200 ease-in-out data-ending-style:translate-y-full data-starting-style:translate-y-full sm:max-w-sm",
+            "flex max-h-[85vh] w-full flex-col gap-4 overflow-y-auto rounded-t-xl border-t border-border bg-popover bg-clip-padding pb-[env(safe-area-inset-bottom)] text-sm text-popover-foreground shadow-lg transition-transform duration-(--duracion-media) ease-in-out data-ending-style:translate-y-full data-starting-style:translate-y-full sm:max-w-sm",
             className,
           )}
           {...props}

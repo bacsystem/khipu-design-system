@@ -30,6 +30,8 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-suave: var(--destructive-suave);
+  --color-destructive-texto: var(--destructive-texto);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -56,15 +58,50 @@
   --color-overlay: var(--overlay);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-codigo: var(--codigo);
+  --color-codigo-foreground: var(--codigo-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-xl: calc(var(--radius) * 1.5);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* Sombras en capas: cambian con el modo (en oscuro llevan un brillo interior de 1 px arriba). */
+  --shadow-xs: var(--sombra-xs);
+  --shadow-sm: var(--sombra-sm);
+  --shadow-md: var(--sombra-md);
+  --shadow-lg: var(--sombra-lg);
+  /* Escala tipográfica con nombre (docs/design-system.md §3). `npm run check:tipografia` prohíbe los tamaños sueltos. */
+  --text-etiqueta: 0.75rem;
+  --text-etiqueta--line-height: 1rem;
+  --text-control: 0.8125rem;
+  --text-control--line-height: 1.25rem;
+  --text-cuerpo: 0.875rem;
+  --text-cuerpo--line-height: 1.25rem;
+  --text-metrica: 1.5rem;
+  --text-metrica--line-height: 1.75rem;
+  --text-metrica--letter-spacing: -0.02em;
+  --text-metrica--font-weight: 600;
+  /* Curva de salida única. Debe coincidir con CURVA_SALIDA de src/lib/movimiento.ts. */
+  --ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
   /* Barrido de la barra de progreso indeterminada (`ProgresoLineal` sin `valor`). */
   --animate-progreso-indeterminado: progreso-indeterminado 1.4s ease-in-out infinite;
+  /* Entrada de contenido: fundido + 8 px hacia arriba. Se usa con `ENTRADA` (lib/estilos.ts), que la protege con `motion-safe:`. */
+  /* El retraso (40 ms por posición `--i`) va dentro del atajo: un `animation-delay` aparte lo pisaría este mismo atajo. */
+  /* `backwards` y no `both`: al terminar suelta el transform, que si no dejaría un contexto de apilamiento permanente. */
+  --animate-entrada: entrada 240ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 40ms) backwards;
+}
+
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes progreso-indeterminado {
@@ -82,7 +119,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-cuerpo text-foreground;
   }
   html {
     @apply font-sans;
@@ -91,5 +128,27 @@
   h2,
   h3 {
     @apply font-heading;
+  }
+}
+
+/*
+ * «Reducir movimiento» para las transiciones CSS de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú,
+ * select, tooltip, toast, acordeón, indicador de Tabs): nada se desplaza ni escala, el cambio es inmediato.
+ * 1 ms y no 0: base-ui espera el `transitionend`/`animationend` para desmontar el popup al cerrarlo.
+ * Las animaciones en bucle (spinner, progreso indeterminado) no se tocan: indican que algo está cargando.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+  [data-open],
+  [data-closed],
+  [data-starting-style],
+  [data-ending-style] {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
   }
 }

@@ -82,9 +82,9 @@ export function Contrasena({
       {conFuerza && valor ? (
         <Meter.Root value={fuerza.puntaje} getAriaValueText={() => fuerza.etiqueta} className="flex items-center gap-2">
           <Meter.Track className="h-1 flex-1 overflow-hidden rounded-full bg-secondary">
-            <Meter.Indicator className={cn("block h-full rounded-full transition-[width] duration-300", COLOR_TONO[fuerza.tono])} />
+            <Meter.Indicator className={cn("block h-full rounded-full transition-[width] duration-(--duracion-lenta)", COLOR_TONO[fuerza.tono])} />
           </Meter.Track>
-          <span className="text-[11px] font-medium text-muted-foreground">{fuerza.etiqueta}</span>
+          <span className="text-etiqueta font-medium text-muted-foreground">{fuerza.etiqueta}</span>
         </Meter.Root>
       ) : null}
     </div>

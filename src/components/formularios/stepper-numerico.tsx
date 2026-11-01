@@ -46,7 +46,7 @@ export function StepperNumerico({
   const t = TAMANOS[variante];
   return (
     <NumberField.Root id={id} value={valor} onValueChange={onCambio} min={min} max={max} step={paso} disabled={disabled}>
-      <NumberField.Group className={cn("inline-flex w-fit items-stretch overflow-hidden rounded-lg border border-border bg-card shadow-2xs", t.grupo, className)}>
+      <NumberField.Group className={cn("inline-flex w-fit items-stretch overflow-hidden rounded-lg border border-border bg-card shadow-xs", t.grupo, className)}>
         <NumberField.Decrement
           aria-label="Disminuir"
           className={cn(
@@ -57,7 +57,7 @@ export function StepperNumerico({
           <MinusIcon className="size-3.5" />
         </NumberField.Decrement>
         <NumberField.Input
-          className="w-14 border-x border-border bg-transparent text-center font-mono text-[13px] text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-14 border-x border-border bg-transparent text-center font-mono text-control text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
         <NumberField.Increment
           aria-label="Aumentar"

@@ -4,52 +4,52 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>khipu Design System</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
 <style>
   :root {
-    --background: #fafafc; --foreground: #0f172a;
-    --card: #ffffff; --muted: #f8fafc; --muted-foreground: #64748b;
-    --secondary: #f1f5f9; --border: #e2e8f0;
-    --primary: #4f46e5; --primary-light: #6366f1; --primary-foreground: #ffffff;
-    --accent: #eef2ff; --accent-foreground: #4338ca; --accent-border: rgba(199,210,254,.7);
-    --success: #ecfdf5; --success-foreground: #047857; --success-border: rgba(167,243,208,.7); --success-solid: #10b981;
-    --warning: #fffbeb; --warning-foreground: #b45309; --warning-border: rgba(253,230,138,.7); --warning-solid: #f59e0b;
-    --destructive: #e11d48; --destructive-soft: rgba(225,29,72,.1); --destructive-border: rgba(254,205,211,.7);
-    --overlay: rgba(15,23,42,.2); --ring: #4f46e5;
-    --sidebar: #ffffff; --sidebar-foreground: #334155; --sidebar-primary: #eef2ff; --sidebar-primary-foreground: #4338ca; --sidebar-accent: #f8fafc;
-    --code-bg: oklch(0.18 0.02 265); --code-fg: oklch(0.9 0.01 265);
-    --shadow-2xs: 0 1px 0 rgba(15,23,42,.04); --shadow-xs: 0 1px 2px rgba(15,23,42,.06); --shadow-md: 0 4px 6px -1px rgba(15,23,42,.08), 0 2px 4px -2px rgba(15,23,42,.04);
+    --background: #fbfbfc; --foreground: #18181b;
+    --card: #ffffff; --muted: #f7f7f8; --muted-foreground: #6b6b76;
+    --secondary: #f4f4f5; --border: #e8e8ec;
+    --primary: #5b5bd6; --primary-light: #7373e0; --primary-foreground: #ffffff;
+    --accent: #f0f0fd; --accent-foreground: #4747c2; --accent-border: rgba(91,91,214,.22);
+    --success: #edfaf3; --success-foreground: #0f7b4f; --success-border: rgba(15,123,79,.18); --success-solid: #16a34a;
+    --warning: #fef8ec; --warning-foreground: #a15c07; --warning-border: rgba(161,92,7,.18); --warning-solid: #f59e0b;
+    --destructive: #dc2547; --destructive-soft: #fdeef1; --destructive-text: #b91c3c; --destructive-border: rgba(220,37,71,.2);
+    --overlay: rgba(10,10,15,.32); --ring: #5b5bd6;
+    --sidebar: #fbfbfc; --sidebar-foreground: #3f3f46; --sidebar-primary: #ededf5; --sidebar-primary-foreground: #3c3cb0; --sidebar-accent: #f2f2f4;
+    --code-bg: #0f0f14; --code-fg: #e4e4e9;
+    --shadow-2xs: 0 1px 2px rgba(16,16,24,.05); --shadow-xs: 0 1px 2px rgba(16,16,24,.06), 0 1px 3px rgba(16,16,24,.04); --shadow-md: 0 4px 12px -2px rgba(16,16,24,.08), 0 2px 4px -2px rgba(16,16,24,.05);
     --radius: 8px;
-    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --background: #0a0e1a; --foreground: #e2e8f0;
-      --card: #111827; --muted: #161f30; --muted-foreground: #94a3b8;
-      --secondary: #1e293b; --border: rgba(226,232,240,.12);
-      --primary: #8b83ff; --primary-light: #a29dff; --primary-foreground: #0a0e1a;
-      --accent: #23294d; --accent-foreground: #c3c0ff; --accent-border: rgba(195,192,255,.3);
-      --success: #0f2e24; --success-foreground: #5fd0a5; --success-border: rgba(95,208,165,.3); --success-solid: #34d399;
-      --warning: #33270c; --warning-foreground: #f0c05a; --warning-border: rgba(240,192,90,.3); --warning-solid: #fbbf24;
-      --destructive: #fb7185; --destructive-soft: rgba(251,113,133,.12); --destructive-border: rgba(251,113,133,.35);
-      --overlay: rgba(0,0,0,.5); --ring: #8b83ff;
-      --sidebar: #0d1424; --sidebar-foreground: #c7d2e0; --sidebar-primary: #23294d; --sidebar-primary-foreground: #c3c0ff; --sidebar-accent: #1e293b;
-      --shadow-2xs: 0 1px 0 rgba(0,0,0,.3); --shadow-xs: 0 1px 2px rgba(0,0,0,.4); --shadow-md: 0 4px 6px -1px rgba(0,0,0,.5), 0 2px 4px -2px rgba(0,0,0,.4);
+      --background: #0b0b0f; --foreground: #ededf0;
+      --card: #131318; --muted: #16161b; --muted-foreground: #9b9ba6;
+      --secondary: #1c1c22; --border: rgba(255,255,255,.08);
+      --primary: #8585f2; --primary-light: #a3a3f7; --primary-foreground: #0b0b0f;
+      --accent: #1e1e33; --accent-foreground: #b4b4fa; --accent-border: rgba(133,133,242,.28);
+      --success: #0f2a1f; --success-foreground: #4fd19a; --success-border: rgba(79,209,154,.25); --success-solid: #34d399;
+      --warning: #2e2410; --warning-foreground: #f2c25c; --warning-border: rgba(242,194,92,.25); --warning-solid: #fbbf24;
+      --destructive: #fb6f8a; --destructive-soft: #2a1a20; --destructive-text: #fb6f8a; --destructive-border: rgba(251,111,138,.3);
+      --overlay: rgba(0,0,0,.6); --ring: #8585f2;
+      --sidebar: #0b0b0f; --sidebar-foreground: #c4c4cc; --sidebar-primary: #1e1e33; --sidebar-primary-foreground: #b4b4fa; --sidebar-accent: #16161b;
+      --shadow-2xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.4); --shadow-xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 3px rgba(0,0,0,.45); --shadow-md: inset 0 1px 0 rgba(255,255,255,.05), 0 8px 24px -4px rgba(0,0,0,.6);
     }
   }
   :root[data-theme="dark"] {
-    --background: #0a0e1a; --foreground: #e2e8f0;
-    --card: #111827; --muted: #161f30; --muted-foreground: #94a3b8;
-    --secondary: #1e293b; --border: rgba(226,232,240,.12);
-    --primary: #8b83ff; --primary-light: #a29dff; --primary-foreground: #0a0e1a;
-    --accent: #23294d; --accent-foreground: #c3c0ff; --accent-border: rgba(195,192,255,.3);
-    --success: #0f2e24; --success-foreground: #5fd0a5; --success-border: rgba(95,208,165,.3); --success-solid: #34d399;
-    --warning: #33270c; --warning-foreground: #f0c05a; --warning-border: rgba(240,192,90,.3); --warning-solid: #fbbf24;
-    --destructive: #fb7185; --destructive-soft: rgba(251,113,133,.12); --destructive-border: rgba(251,113,133,.35);
-    --overlay: rgba(0,0,0,.5); --ring: #8b83ff;
-    --sidebar: #0d1424; --sidebar-foreground: #c7d2e0; --sidebar-primary: #23294d; --sidebar-primary-foreground: #c3c0ff; --sidebar-accent: #1e293b;
-    --shadow-2xs: 0 1px 0 rgba(0,0,0,.3); --shadow-xs: 0 1px 2px rgba(0,0,0,.4); --shadow-md: 0 4px 6px -1px rgba(0,0,0,.5), 0 2px 4px -2px rgba(0,0,0,.4);
+    --background: #0b0b0f; --foreground: #ededf0;
+    --card: #131318; --muted: #16161b; --muted-foreground: #9b9ba6;
+    --secondary: #1c1c22; --border: rgba(255,255,255,.08);
+    --primary: #8585f2; --primary-light: #a3a3f7; --primary-foreground: #0b0b0f;
+    --accent: #1e1e33; --accent-foreground: #b4b4fa; --accent-border: rgba(133,133,242,.28);
+    --success: #0f2a1f; --success-foreground: #4fd19a; --success-border: rgba(79,209,154,.25); --success-solid: #34d399;
+    --warning: #2e2410; --warning-foreground: #f2c25c; --warning-border: rgba(242,194,92,.25); --warning-solid: #fbbf24;
+    --destructive: #fb6f8a; --destructive-soft: #2a1a20; --destructive-text: #fb6f8a; --destructive-border: rgba(251,111,138,.3);
+    --overlay: rgba(0,0,0,.6); --ring: #8585f2;
+    --sidebar: #0b0b0f; --sidebar-foreground: #c4c4cc; --sidebar-primary: #1e1e33; --sidebar-primary-foreground: #b4b4fa; --sidebar-accent: #16161b;
+    --shadow-2xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.4); --shadow-xs: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 3px rgba(0,0,0,.45); --shadow-md: inset 0 1px 0 rgba(255,255,255,.05), 0 8px 24px -4px rgba(0,0,0,.6);
   }
 
   * { box-sizing: border-box; }
@@ -63,7 +63,7 @@
   h4 { font-size: 12px; font-weight: 600; }
   p { margin: 0; max-width: 64ch; }
   .lead { color: var(--muted-foreground); font-size: 14px; margin-top: 6px; }
-  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .eyebrow { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
   code { font-family: var(--font-mono); font-size: 11px; background: var(--secondary); color: var(--accent-foreground); padding: 1px 6px; border-radius: 4px; }
   .src { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
@@ -75,13 +75,13 @@
   .brand-name b { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; }
   .brand-name span { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--primary); }
   .meta { display: flex; gap: 8px; flex-wrap: wrap; }
-  .pill { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 10px; border-radius: 999px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; border: 1px solid var(--border); background: var(--secondary); color: var(--muted-foreground); white-space: nowrap; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 0; background: var(--secondary); color: var(--muted-foreground); white-space: nowrap; }
   .pill i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .5; display: inline-block; }
   .pill.ok { background: var(--success); color: var(--success-foreground); border-color: var(--success-border); }
   .pill.ok i { background: var(--success-solid); opacity: 1; }
   .pill.warn { background: var(--warning); color: var(--warning-foreground); border-color: var(--warning-border); }
   .pill.warn i { background: var(--warning-solid); opacity: 1; }
-  .pill.bad { background: var(--destructive-soft); color: var(--destructive); border-color: var(--destructive-border); }
+  .pill.bad { background: var(--destructive-soft); color: var(--destructive-text); border-color: var(--destructive-border); }
   .pill.bad i { background: var(--destructive); opacity: 1; }
   .pill.brand { background: var(--accent); color: var(--accent-foreground); border-color: var(--accent-border); }
   .pill.dark { background: var(--foreground); color: var(--background); border-color: transparent; font-family: var(--font-sans); border-radius: 4px; }
@@ -92,7 +92,7 @@
   .chip.tipo { width: 28px; height: 28px; padding: 0; justify-content: center; border: 0; background: var(--accent); color: var(--primary); font-weight: 600; }
   .chip.serie { border: 0; background: var(--secondary); color: var(--primary); font-weight: 600; font-size: 13px; }
   .chip.serie.off { background: var(--muted); color: var(--muted-foreground); text-decoration: line-through; }
-  .chip.pronto { border: 0; background: var(--secondary); font-family: var(--font-sans); font-size: 9px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; padding: 2px 4px; }
+  .chip.pronto { border: 0; background: var(--secondary); font-family: var(--font-sans); font-size: 12px; font-weight: 500; padding: 2px 6px; }
 
   section { margin-top: 44px; }
   .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -142,6 +142,18 @@
   .btn.xs { height: 24px; padding: 0 6px; font-size: 11px; border-radius: 6px; }
   .btn.icon { width: 36px; padding: 0; justify-content: center; }
   .btn.icon.sm { width: 36px; }
+  .btn.suave { background: var(--accent); color: var(--accent-foreground); }
+  .destacada { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; padding: 24px; border-radius: 12px; }
+  .destacada .ic { flex-shrink: 0; margin-top: 2px; font-size: 18px; line-height: 1; }
+  .destacada .tx { flex: 1 1 224px; min-width: 0; }
+  .destacada .tx b { display: block; font-size: 16px; font-weight: 600; line-height: 1.35; }
+  .destacada .tx span { display: block; margin-top: 4px; font-size: 13px; line-height: 1.6; }
+  .destacada .ac { flex-shrink: 0; align-self: center; }
+  .destacada.neutro { background: var(--secondary); color: var(--foreground); }
+  .destacada.info { background: var(--accent); color: var(--accent-foreground); }
+  .destacada.ok { background: var(--success); color: var(--success-foreground); }
+  .destacada.aviso { background: var(--warning); color: var(--warning-foreground); }
+  .destacada.invertido { background: var(--foreground); color: var(--background); }
   .segment { display: inline-flex; height: 36px; padding: 4px; gap: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--secondary); }
   .segment span { display: inline-flex; align-items: center; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .segment span.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-2xs); }
@@ -157,7 +169,7 @@
   .field .help { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
   .field .error { font-size: 13px; color: var(--destructive); }
   .dato { display: grid; gap: 4px; }
-  .dato .l { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
+  .dato .l { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .dato .v { height: 36px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
   .dato .v.pend { color: var(--muted-foreground); opacity: .6; cursor: not-allowed; border-style: dashed; }
   .tt { display: inline-flex; height: 36px; padding: 2px; gap: 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); }
@@ -171,13 +183,13 @@
   /* table */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead tr { background: var(--muted); border-bottom: 1px solid var(--border); }
-  th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
+  th { text-align: left; padding: 8px 12px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tbody tr:hover { background: var(--muted); }
   tbody tr:last-child td { border-bottom: 0; }
   tbody tr.off { opacity: .8; }
   .num { font-family: var(--font-mono); font-weight: 600; letter-spacing: -0.01em; }
-  .sub { font-size: 11px; color: var(--muted-foreground); font-family: var(--font-mono); }
+  .sub { font-size: 12px; color: var(--muted-foreground); }
   .right { text-align: right; }
   .tfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 16px; background: var(--muted); border-top: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); }
   .pager { display: inline-flex; align-items: center; gap: 4px; }
@@ -222,7 +234,7 @@
   /* sidebar */
   .side { background: var(--sidebar); color: var(--sidebar-foreground); border-right: 1px solid var(--border); width: 240px; max-width: 100%; display: flex; flex-direction: column; justify-content: space-between; }
   .side .hd { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid var(--border); }
-  .side .grp { padding: 10px 10px 4px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .side .grp { padding: 10px 10px 4px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .side .it { display: flex; align-items: center; gap: 10px; margin: 2px 8px; padding: 6px 10px; border-radius: 6px; font-size: 13px; }
   .side .it svg { flex-shrink: 0; color: var(--muted-foreground); opacity: .8; }
   .side .it.on { background: var(--sidebar-primary); color: var(--sidebar-primary-foreground); font-weight: 500; }
@@ -245,7 +257,7 @@
 
   /* popup / menu */
   .popup { width: 216px; max-width: 100%; border-radius: 8px; background: var(--card); box-shadow: var(--shadow-md); border: 1px solid var(--border); padding: 4px; }
-  .popup .lab { padding: 6px 8px 4px; font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .popup .lab { padding: 6px 8px 4px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
   .popup .acct { display: flex; align-items: flex-start; gap: 10px; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 70%, transparent); color: var(--accent-foreground); }
   .popup .acct .av { width: 24px; height: 24px; border-radius: 6px; background: var(--primary); color: var(--primary-foreground); font-size: 11px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
   .popup .acct .tx { min-width: 0; display: grid; gap: 2px; }
@@ -350,38 +362,38 @@
   </header>
 
   <section>
-    <div class="section-head"><h2>Color · superficies y texto</h2><p>Neutros slate con un ligero sesgo frío; el fondo de página no es blanco puro.</p></div>
+    <div class="section-head"><h2>Color · superficies y texto</h2><p>Neutros zinc; el fondo de página no es blanco puro.</p></div>
     <div class="grid cols-6">
-      <div class="swatch"><div class="chipc" style="background:var(--background)"></div><div class="info"><span class="name">background</span><span class="val">#fafafc</span><span class="val">dark #0a0e1a</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--card)"></div><div class="info"><span class="name">card / popover</span><span class="val">#ffffff</span><span class="val">dark #111827</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--muted)"></div><div class="info"><span class="name">muted</span><span class="val">#f8fafc</span><span class="val">dark #161f30</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--secondary)"></div><div class="info"><span class="name">secondary</span><span class="val">#f1f5f9</span><span class="val">dark #1e293b</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--border)"></div><div class="info"><span class="name">border / input</span><span class="val">#e2e8f0</span><span class="val">dark rgba(226,232,240,.12)</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--foreground)"></div><div class="info"><span class="name">foreground</span><span class="val">#0f172a</span><span class="val">dark #e2e8f0</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--background)"></div><div class="info"><span class="name">background</span><span class="val">#fbfbfc</span><span class="val">dark #0b0b0f</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--card)"></div><div class="info"><span class="name">card / popover</span><span class="val">#ffffff</span><span class="val">dark #131318 / #18181e</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--muted)"></div><div class="info"><span class="name">muted</span><span class="val">#f7f7f8</span><span class="val">dark #16161b</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--secondary)"></div><div class="info"><span class="name">secondary</span><span class="val">#f4f4f5</span><span class="val">dark #1c1c22</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--border)"></div><div class="info"><span class="name">border / input</span><span class="val">#e8e8ec / #dedee3</span><span class="val">dark rgba(255,255,255,.08 / .12)</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--foreground)"></div><div class="info"><span class="name">foreground</span><span class="val">#18181b</span><span class="val">dark #ededf0</span></div></div>
     </div>
   </section>
 
   <section>
     <div class="section-head"><h2>Color · marca y semánticos</h2><p>El índigo es el único acento. Verde, ámbar y rosa son estado, no decoración.</p></div>
     <div class="grid cols-6">
-      <div class="swatch"><div class="chipc" style="background:var(--primary)"></div><div class="info"><span class="name">primary / ring</span><span class="val">#4f46e5</span><span class="val">dark #8b83ff</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:linear-gradient(135deg,var(--primary),var(--primary-light))"></div><div class="info"><span class="name">primary → primary-light</span><span class="val">#4f46e5 → #6366f1</span><span class="val">logo</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--accent);border-bottom-color:var(--accent-border)"></div><div class="info"><span class="name">accent / accent-fg</span><span class="val">#eef2ff · #4338ca</span><span class="val">nav activa, fila activa, icono de sección</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--success);display:grid;place-items:center"><span class="pill ok"><i></i>Aceptado</span></div><div class="info"><span class="name">success</span><span class="val">#ecfdf5 · #047857</span><span class="val">solid #10b981</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--warning);display:grid;place-items:center"><span class="pill warn"><i></i>Con obs.</span></div><div class="info"><span class="name">warning</span><span class="val">#fffbeb · #b45309</span><span class="val">solid #f59e0b</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--destructive-soft);display:grid;place-items:center"><span class="pill bad"><i></i>Rechazado</span></div><div class="info"><span class="name">destructive</span><span class="val">#e11d48 · fondo /10</span><span class="val">dark #fb7185</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--primary)"></div><div class="info"><span class="name">primary / ring</span><span class="val">#5b5bd6</span><span class="val">dark #8585f2</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:linear-gradient(135deg,var(--primary),var(--primary-light))"></div><div class="info"><span class="name">primary → primary-light</span><span class="val">#5b5bd6 → #7373e0</span><span class="val">logo</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--accent);border-bottom-color:var(--accent-border)"></div><div class="info"><span class="name">accent / accent-fg</span><span class="val">#f0f0fd · #4747c2</span><span class="val">nav activa, fila activa, icono de sección</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--success);display:grid;place-items:center"><span class="pill ok"><i></i>Aceptado</span></div><div class="info"><span class="name">success</span><span class="val">#edfaf3 · #0f7b4f</span><span class="val">solid #16a34a</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--warning);display:grid;place-items:center"><span class="pill warn"><i></i>Con obs.</span></div><div class="info"><span class="name">warning</span><span class="val">#fef8ec · #a15c07</span><span class="val">solid #f59e0b</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--destructive-soft);display:grid;place-items:center"><span class="pill bad"><i></i>Rechazado</span></div><div class="info"><span class="name">destructive</span><span class="val">#dc2547 · suave #fdeef1 · texto #b91c3c</span><span class="val">dark #fb6f8a</span></div></div>
     </div>
     <div class="grid cols-4" style="margin-top:12px">
-      <div class="swatch"><div class="chipc" style="background:var(--sidebar);display:grid;place-items:center;color:var(--sidebar-foreground);font-size:12px">sidebar</div><div class="info"><span class="name">sidebar / -foreground</span><span class="val">#ffffff · #334155</span><span class="val">dark #0d1424 · #c7d2e0</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--sidebar-primary);display:grid;place-items:center;color:var(--sidebar-primary-foreground);font-size:12px">ítem activo</div><div class="info"><span class="name">sidebar-primary</span><span class="val">#eef2ff · #4338ca</span><span class="val">dark #23294d · #c3c0ff</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--code-bg);display:grid;place-items:center;color:var(--code-fg);font-family:var(--font-mono);font-size:11px">"serie": "F001"</div><div class="info"><span class="name">code (fijo)</span><span class="val">oklch(.18 .02 265)</span><span class="val">igual en ambos temas</span></div></div>
-      <div class="swatch"><div class="chipc" style="background:var(--overlay);display:grid;place-items:center;font-size:12px">overlay</div><div class="info"><span class="name">overlay</span><span class="val">rgba(15,23,42,.2) + blur</span><span class="val">dark rgba(0,0,0,.5)</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--sidebar);display:grid;place-items:center;color:var(--sidebar-foreground);font-size:12px">sidebar</div><div class="info"><span class="name">sidebar / -foreground</span><span class="val">#fbfbfc · #3f3f46</span><span class="val">dark #0b0b0f · #c4c4cc</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--sidebar-primary);display:grid;place-items:center;color:var(--sidebar-primary-foreground);font-size:12px">ítem activo</div><div class="info"><span class="name">sidebar-primary</span><span class="val">#ededf5 · #3c3cb0</span><span class="val">dark #1e1e33 · #b4b4fa</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--code-bg);display:grid;place-items:center;color:var(--code-fg);font-family:var(--font-mono);font-size:11px">"serie": "F001"</div><div class="info"><span class="name">codigo (fijo)</span><span class="val">#0f0f14 · #e4e4e9</span><span class="val">igual en ambos temas</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:var(--overlay);display:grid;place-items:center;font-size:12px">overlay</div><div class="info"><span class="name">overlay</span><span class="val">rgba(10,10,15,.32)</span><span class="val">dark rgba(0,0,0,.6)</span></div></div>
     </div>
     <p class="lead" style="margin-top:10px">Cada semántico tiene fondo (<code>--success</code>), texto (<code>--success-foreground</code>), borde (<code>--success-border</code>) y sólido para puntos (<code>--success-solid</code>). Nada usa la paleta de Tailwind directamente.</p>
   </section>
 
   <section>
-    <div class="section-head"><h2>Tipografía</h2><p>Inter para interfaz, JetBrains Mono para todo dato: series, montos, fechas, ids, hashes, código.</p></div>
+    <div class="section-head"><h2>Tipografía</h2><p>Geist para interfaz, Geist Mono solo para datos: series, montos, fechas en celdas, ids, hashes, código. Escala con nombre: <code>text-etiqueta</code> 12, <code>text-control</code> 13, <code>text-cuerpo</code> 14, <code>text-base</code> 16, <code>text-metrica</code> 24.</p></div>
     <div class="card pad">
       <div class="spec"><span class="k">headline · 28/36 · 600</span><span style="font-size:28px;line-height:36px;font-weight:600;letter-spacing:-.02em">Series de facturación</span></div>
       <div class="spec"><span class="k">dialog title · 16/24 · 600</span><span style="font-size:16px;font-weight:600;letter-spacing:-.01em">Nueva serie o contingencia</span></div>
@@ -390,7 +402,7 @@
       <div class="spec"><span class="k">body · 14/21 · 400</span><span>Administración de prefijos alfanuméricos autorizados y control secuencial de correlativos tributarios.</span></div>
       <div class="spec"><span class="k">table · 13 · 400/600</span><span style="font-size:13px">Inversiones Andinas S.A.C. <span class="num">F001-00000136</span></span></div>
       <div class="spec"><span class="k">menu / control · 12 · 500</span><span style="font-size:12px;font-weight:500">Cambiar contraseña · Estado SUNAT: Todos · Serie: Todas</span></div>
-      <div class="spec"><span class="k">label · 10–11 · caps</span><span class="eyebrow">Tu cuenta · Emisión &amp; SUNAT · Cliente / Receptor</span></div>
+      <div class="spec"><span class="k">text-etiqueta · 12/16 · 500</span><span class="eyebrow">Tu cuenta · Emisión &amp; SUNAT · Cliente / Receptor</span></div>
       <div class="spec"><span class="k">metric · 18 mono · 600</span><span class="mono" style="font-size:18px;font-weight:600;letter-spacing:-.02em"><span style="color:var(--primary)">F001</span> #00000136 <span style="font-family:var(--font-sans);font-size:12px;font-weight:400;color:var(--muted-foreground)">/ 5 creadas</span></span></div>
       <div class="spec"><span class="k">mono data · 13/11</span><span class="mono"><b>S/ 2,000.01</b> &nbsp; 15 Set 2026, 10:32 &nbsp; <span class="sub">RUC 20123456789 · id: 193f4b35</span></span></div>
     </div>
@@ -414,7 +426,7 @@
   </section>
 
   <section>
-    <div class="section-head"><h2>Shell: sidebar + top bar</h2><p>Sidebar fijo de 240px (blanco / #0d1424), top bar de 56px pegajosa con blur. En móvil el sidebar vive en un Sheet lateral.</p></div>
+    <div class="section-head"><h2>Shell: sidebar + top bar</h2><p>Sidebar fijo de 240px del color del fondo (#fbfbfc / #0b0b0f), top bar de 56px pegajosa con blur. En móvil el sidebar vive en un Sheet lateral.</p></div>
     <div class="shell">
       <div class="shellbody">
         <div class="side">
@@ -488,6 +500,8 @@
           <hr>
           <div class="lab">Tema</div>
           <div style="padding:0 2px 6px"><div class="tt wide"><span class="on">☀ Claro</span><span>☾ Oscuro</span><span>▭ Sistema</span></div></div>
+          <div class="lab">Diseño</div>
+          <div style="padding:0 2px 6px"><div class="select" style="width:100%;justify-content:space-between;background:var(--muted)">khipu <span style="color:var(--muted-foreground)">▾</span></div></div>
           <hr>
           <div class="mi"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg>Cambiar contraseña</div>
           <div class="mi hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Documentación API</div>
@@ -503,7 +517,7 @@
           <dt>MenuItem</dt><dd>rounded-md · px-2 py-1.5 · 12px/500 · icono 14px muted · highlight accent/70</dd>
           <dt>variant</dt><dd><code>destructive</code>: rojo, hover destructive/10</dd>
           <dt>MenuRadioItem</dt><dd>check a la derecha (primary)</dd>
-          <dt>MenuGroupLabel</dt><dd>uppercase 10px · tracking-wider</dd>
+          <dt>MenuGroupLabel</dt><dd>text-etiqueta · tipo oración</dd>
           <dt>MenuSeparator</dt><dd>-mx-1 my-1 · h-px · border/70</dd>
         </dl>
         <p>Es el menú a reutilizar para "⋯ más acciones" de las filas de tablas.</p>
@@ -541,6 +555,7 @@
         <div class="eyebrow" style="margin-bottom:8px">ui/button · variantes cva</div>
         <div class="row">
           <button class="btn brand">default</button>
+          <button class="btn suave">suave</button>
           <button class="btn outline">outline</button>
           <button class="btn" style="background:var(--secondary)">secondary</button>
           <button class="btn ghost">ghost</button>
@@ -579,6 +594,44 @@
           <div class="tt"><span class="on">☀</span><span>☾</span><span>▭</span></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Tarjeta destacada</h2><p>Panel de color plano, sin borde ni sombra, para destacar un bloque. Cinco tonos, todos de tokens existentes. <span class="src">patrones/tarjeta-destacada.tsx</span></p></div>
+    <div class="grid cols-2">
+      <div class="destacada neutro"><span class="ic">▤</span><div class="tx"><b>Tu primer documento</b><span>Emítelo en modo de pruebas; no tiene validez tributaria.</span></div><div class="ac"><button class="btn suave">Emitir</button></div></div>
+      <div class="destacada info"><span class="ic">✦</span><div class="tx"><b>Novedad: reenvío masivo</b><span>Reenvía a SUNAT todos los comprobantes observados con un clic.</span></div><div class="ac"><button class="btn suave">Ver más</button></div></div>
+      <div class="destacada ok"><span class="ic">◈</span><div class="tx"><b>Certificado vigente</b><span>Vence en 11 meses; te avisamos con 30 días de anticipación.</span></div></div>
+      <div class="destacada aviso"><span class="ic">🔔︎</span><div class="tx"><b>Plan por vencer</b><span>Renueva antes del 30 de octubre para no interrumpir las emisiones.</span></div><div class="ac"><button class="btn outline">Renovar</button></div></div>
+    </div>
+    <div class="destacada invertido" style="margin-top:12px"><span class="ic">➚</span><div class="tx"><b>Pasa a producción</b><span>Cuando tus series estén listas, activa el entorno de producción desde Empresa.</span></div><div class="ac"><button class="btn outline">Activar producción</button></div></div>
+    <p class="lead" style="font-size:12px;margin-top:8px">Contraste del texto sobre su fondo (claro / oscuro): neutro 16.30 / 11.87 · info 7.07 / 8.23 · ok 5.21 / 7.69 · aviso 4.84 / 8.63 · invertido 17.13 / 15.62. Sobre <code>invertido</code> la acción usa <code>BOTON_SECUNDARIO</code>, no <code>ACCION_PRINCIPAL</code>.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Diseños</h2><p>Un diseño es un bloque de tokens que se activa con <code>&lt;html data-diseno="…"&gt;</code>; se elige en el menú de usuario, debajo de Tema, y convive con claro/oscuro. <span class="src">components/diseno.tsx · nav/selector-diseno.tsx · globals.css</span></p></div>
+    <div class="grid cols-6">
+      <div class="swatch"><div class="chipc" style="background:#fbfbfc"></div><div class="info"><span class="name">khipu · background</span><span class="val">#fbfbfc</span><span class="val">dark #0b0b0f</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#6b6b76"></div><div class="info"><span class="name">khipu · muted-foreground</span><span class="val">#6b6b76</span><span class="val">dark #9b9ba6</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#f6f5f4"></div><div class="info"><span class="name">papel · background</span><span class="val">#f6f5f4</span><span class="val">dark #191817</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#0075de"></div><div class="info"><span class="name">papel · primary</span><span class="val">#0075de</span><span class="val">dark #62aef0</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#e6f3fe"></div><div class="info"><span class="name">papel · accent</span><span class="val">#e6f3fe</span><span class="val">dark #0f2a45</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#111111"></div><div class="info"><span class="name">papel · foreground</span><span class="val">#111111</span><span class="val">dark #f6f5f4</span></div></div>
+      <div class="swatch"><div class="chipc" style="background:#615d59"></div><div class="info"><span class="name">papel · muted-foreground</span><span class="val">#615d59</span><span class="val">dark #a8a29e</span></div></div>
+    </div>
+    <p class="lead" style="font-size:12px;margin-top:8px"><b>Papel</b> viene del estilo Notion de Refero: lienzo cálido con tarjetas blancas, bordes de 1 px en vez de sombras, un solo azul de acción y transiciones de 200 ms. Contraste: <code>primary-foreground</code> sobre <code>primary</code> 4.57, texto de <code>accent</code> 6.04, <code>muted-foreground</code> 5.99 sobre el fondo. El azul de la referencia sobre el lienzo da 4.19, así que un enlace <code>text-primary</code> sobre el fondo queda bajo 4.5. El oscuro de Papel es derivado: Notion no define uno. El diseño base <b>khipu</b> no define bloque: son los tokens de <code>:root</code> y <code>.dark</code>.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Movimiento</h2><p>Corto y funcional: confirma una acción o introduce contenido, nunca decora. Todo va bajo <code>motion-safe:</code>, así que con «reducir movimiento» no se anima nada. <span class="src">lib/estilos.ts (PRESION, ENTRADA, pasoEntrada) · globals.css (--animate-entrada)</span></p></div>
+    <div class="card pad">
+      <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7">
+        <li><b>Al pulsar</b> (<code>PRESION</code>): el control se hunde unos 0.7 px, igual en todas las recetas de botón y de acción.</li>
+        <li><b>Al aparecer</b> (<code>ENTRADA</code> + <code>pasoEntrada(i)</code>): fundido y 8 px hacia arriba, 220 ms, con 40 ms de retraso por posición. Se activa donde la pongas; ningún componente la trae por defecto.</li>
+        <li><b>Sidebar</b>: el ítem activo muestra una barra a la izquierda y un punto que entran con un zoom de 150 ms.</li>
+        <li><b>Reglas</b>: 150–250 ms, solo <code>transform</code> y <code>opacity</code>, sin spring ni bounce en los controles.</li>
+      </ul>
     </div>
   </section>
 
@@ -856,7 +909,7 @@
     <ul class="rules">
       <li><b>Solo datos reales.</b> Lo que Stitch muestra y el backend no soporta se renderiza deshabilitado con <code>title</code> explicativo, nunca se oculta ni se simula.</li>
       <li><b>Color por token.</b> Nada de <code>emerald-500</code> ni hex en componentes; los semánticos tienen fondo, texto, borde y sólido, con variante dark.</li>
-      <li><b>Mono para datos.</b> Series, correlativos, montos, fechas, RUC, hashes y códigos SUNAT van en JetBrains Mono con <code>tabular-nums</code>.</li>
+      <li><b>Mono para datos.</b> Series, correlativos, montos, fechas, RUC, hashes y códigos SUNAT van en Geist Mono con <code>tabular-nums</code>.</li>
       <li><b>Sin desbordes.</b> Contenedores flex/grid llevan <code>min-w-0</code>; columnas <code>minmax(0,1fr)</code>; tablas dentro de <code>overflow-x-auto</code>; textos que crecen envuelven, no se recortan. La miga de la top bar lleva <code>overflow-hidden</code> para no pisar los pills.</li>
       <li><b>El TopBar es el h1.</b> Las páginas no repiten título; el breadcrumb y la acción principal contextual viven en el header. Máximo dos secundarias + una principal; el resto va en diálogos.</li>
       <li><b>Popups al ancho del disparador.</b> Selector de empresa y menú de usuario miden lo que su tarjeta (<code>w-(--anchor-width)</code>, <code>min-w-0</code>) y no invaden el contenido principal.</li>

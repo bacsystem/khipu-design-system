@@ -14,10 +14,10 @@ export function Timeline({ eventos, className }: { eventos: EventoTimeline[]; cl
             <Punto tono={e.tono ?? "neutro"} />
           </span>
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
-            <p className={cn("text-[13px] font-medium", e.actual ? "text-foreground" : "text-foreground/90")}>{e.titulo}</p>
-            <time className="font-mono text-[11px] text-muted-foreground">{e.fecha}</time>
+            <p className={cn("text-control font-medium", e.actual ? "text-foreground" : "text-foreground/90")}>{e.titulo}</p>
+            <time className="font-mono text-etiqueta text-muted-foreground">{e.fecha}</time>
           </div>
-          {e.detalle ? <p className="mt-0.5 text-[12px] leading-relaxed text-muted-foreground">{e.detalle}</p> : null}
+          {e.detalle ? <p className="mt-0.5 text-control leading-relaxed text-muted-foreground">{e.detalle}</p> : null}
         </li>
       ))}
     </ol>

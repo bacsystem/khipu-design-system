@@ -1,11 +1,14 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { AnimatePresence, m } from "motion/react";
 import { useState } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
+import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 /**
- * Copia `texto` al portapapeles y confirma con un check durante 1,5 s.
+ * Copia `texto` al portapapeles; el icono gira a un check durante 1.5 s. `className` ajusta tamaño y radio (p. ej. `size-9 rounded-lg`).
  * Sin `etiqueta` es solo el icono (celdas de tabla); con ella muestra "Copiar" / "Copiado" (barras de acciones).
  */
 export function BotonCopiar({
@@ -25,6 +28,7 @@ export function BotonCopiar({
     <button
       type="button"
       title={titulo}
+      aria-label={copiado ? "Copiado" : titulo}
       onClick={async (e) => {
         e.stopPropagation();
         try {
@@ -36,12 +40,23 @@ export function BotonCopiar({
         }
       }}
       className={cn(
-        "transition-colors hover:bg-secondary hover:text-foreground",
-        etiqueta ? "inline-flex items-center gap-1.5 rounded-md text-muted-foreground" : "rounded p-0.5 text-muted-foreground/70",
+        "inline-flex items-center justify-center rounded-md text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida hover:bg-secondary hover:text-foreground",
+        etiqueta ? "gap-1.5" : "p-0.5",
         className,
       )}
     >
-      {copiado ? <CheckIcon className={cn("size-3.5", etiqueta && "text-success-foreground")} /> : <CopyIcon className="size-3.5" />}
+      <MovimientoLocal><AnimatePresence mode="wait" initial={false}>
+        <m.span
+          key={copiado ? "copiado" : "copiar"}
+          initial={{ opacity: 0, scale: 0.6, rotate: -45 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          exit={{ opacity: 0, scale: 0.6, rotate: 45 }}
+          transition={{ duration: DURACION.rapida, ease: CURVA_SALIDA }}
+          className="inline-flex"
+        >
+          {copiado ? <CheckIcon className="size-3.5 text-success-foreground" /> : <CopyIcon className="size-3.5" />}
+        </m.span>
+      </AnimatePresence></MovimientoLocal>
       {etiqueta ? (copiado ? "Copiado" : "Copiar") : null}
     </button>
   );

@@ -19,6 +19,9 @@ const eslintConfig = [
       "build/**",
       "dist/**",
       "next-env.d.ts",
+      // Estado y worktrees del ejecutor de planes (cys): copias del repo con su propio .next.
+      ".worktrees/**",
+      ".cys/**",
     ],
   },
 ];

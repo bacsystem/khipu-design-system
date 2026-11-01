@@ -1,6 +1,10 @@
 "use client";
 
+import { m } from "motion/react";
 import { useId, useState } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
+import { TrazoAnimado } from "@/components/datos/trazo-animado";
+import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 export type Serie = { nombre: string; valores: number[] };
@@ -18,7 +22,7 @@ function escala(max: number, pasos = 4): number[] {
 function Leyenda({ series }: { series: Serie[] }) {
   if (series.length < 2) return null;
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 pt-2 text-[11px] text-muted-foreground">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 pt-2 text-etiqueta text-muted-foreground">
       {series.map((s, i) => (
         <span key={s.nombre} className="inline-flex items-center gap-1.5">
           <span className="size-2 rounded-sm" style={{ background: COLORES[i % COLORES.length] }} />
@@ -33,7 +37,7 @@ function Leyenda({ series }: { series: Serie[] }) {
 function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array<{ nombre: string; valor: string; color: string }> }) {
   return (
     <div
-      className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-[11px] text-popover-foreground shadow-md"
+      className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-etiqueta text-popover-foreground shadow-md"
       style={{ left: `clamp(4rem, ${x}%, calc(100% - 4rem))` }}
     >
       <div className="mb-0.5 font-medium">{titulo}</div>
@@ -72,50 +76,62 @@ export function GraficoBarras({
   const id = useId();
   const [hover, setHover] = useState<number | null>(null);
   const ancho = 640;
-  const m = { top: 8, right: 8, bottom: 24, left: 44 };
-  const w = ancho - m.left - m.right;
-  const h = alto - m.top - m.bottom;
+  const mg = { top: 8, right: 8, bottom: 24, left: 44 };
+  const w = ancho - mg.left - mg.right;
+  const h = alto - mg.top - mg.bottom;
   const ticks = escala(Math.max(...series.flatMap((s) => s.valores), 0));
   const max = ticks[ticks.length - 1];
   const grupo = w / categorias.length;
   const barra = Math.max(4, (grupo * 0.7 - 2 * (series.length - 1)) / series.length);
-  const y = (v: number) => m.top + h - (v / max) * h;
+  const y = (v: number) => mg.top + h - (v / max) * h;
 
   return (
-    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-2xs", className)}>
-      {titulo ? <div className="px-1 pb-2 text-[13px] font-semibold text-foreground">{titulo}</div> : null}
-      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible text-[10px]">
+    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
+      {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
+      <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={m.left} x2={ancho - m.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 3"} />
-            <text x={m.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--muted-foreground)" fontFamily="var(--font-mono)">
+            <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 3"} />
+            <text x={mg.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--muted-foreground)" fontFamily="var(--font-mono)">
               {formato(t)}
             </text>
           </g>
         ))}
         {categorias.map((c, i) => {
-          const x0 = m.left + i * grupo + (grupo - (barra * series.length + 2 * (series.length - 1))) / 2;
+          const x0 = mg.left + i * grupo + (grupo - (barra * series.length + 2 * (series.length - 1))) / 2;
           return (
             <g key={c} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-              <rect x={m.left + i * grupo} y={m.top} width={grupo} height={h} fill={hover === i ? "var(--muted)" : "transparent"} />
+              <rect x={mg.left + i * grupo} y={mg.top} width={grupo} height={h} fill={hover === i ? "var(--muted)" : "transparent"} />
               {series.map((s, j) => {
                 const v = s.valores[i] ?? 0;
                 const bx = x0 + j * (barra + 2);
                 const by = y(v);
-                const bh = Math.max(0, m.top + h - by);
-                return <path key={s.nombre} d={`M${bx},${m.top + h} v${-Math.max(0, bh - 4)} a4,4 0 0 1 4,-4 h${barra - 8} a4,4 0 0 1 4,4 v${Math.max(0, bh - 4)} z`} fill={COLORES[j % COLORES.length]} />;
+                const bh = Math.max(0, mg.top + h - by);
+                // Crece desde la línea base; cada categoría entra 30 ms después de la anterior. scaleY es una transformación:
+                // con «reducir movimiento» MotionConfig la deja en su estado final.
+                return (
+                  <m.path
+                    key={s.nombre}
+                    d={`M${bx},${mg.top + h} v${-Math.max(0, bh - 4)} a4,4 0 0 1 4,-4 h${barra - 8} a4,4 0 0 1 4,4 v${Math.max(0, bh - 4)} z`}
+                    fill={COLORES[j % COLORES.length]}
+                    style={{ originY: 1 }}
+                    initial={{ scaleY: 0 }}
+                    animate={{ scaleY: 1 }}
+                    transition={{ ...RESORTE_SUAVE, delay: i * 0.03 }}
+                  />
+                );
               })}
-              <text x={m.left + i * grupo + grupo / 2} y={alto - 8} textAnchor="middle" fill="var(--muted-foreground)">
+              <text x={mg.left + i * grupo + grupo / 2} y={alto - 8} textAnchor="middle" fill="var(--muted-foreground)">
                 {c}
               </text>
             </g>
           );
         })}
-      </svg>
+      </svg></MovimientoLocal>
       {hover != null ? (
         <Tooltip
-          x={((m.left + hover * grupo + grupo / 2) / ancho) * 100}
+          x={((mg.left + hover * grupo + grupo / 2) / ancho) * 100}
           titulo={categorias[hover]}
           filas={series.map((s, j) => ({ nombre: s.nombre, valor: formato(s.valores[hover] ?? 0), color: COLORES[j % COLORES.length] }))}
         />
@@ -144,37 +160,34 @@ export function GraficoLineas({
   const id = useId();
   const [hover, setHover] = useState<number | null>(null);
   const ancho = 640;
-  const m = { top: 8, right: 12, bottom: 24, left: 44 };
-  const w = ancho - m.left - m.right;
-  const h = alto - m.top - m.bottom;
+  const mg = { top: 8, right: 12, bottom: 24, left: 44 };
+  const w = ancho - mg.left - mg.right;
+  const h = alto - mg.top - mg.bottom;
   const ticks = escala(Math.max(...series.flatMap((s) => s.valores), 0));
   const max = ticks[ticks.length - 1];
-  const x = (i: number) => m.left + (categorias.length === 1 ? w / 2 : (i / (categorias.length - 1)) * w);
-  const y = (v: number) => m.top + h - (v / max) * h;
+  const x = (i: number) => mg.left + (categorias.length === 1 ? w / 2 : (i / (categorias.length - 1)) * w);
+  const y = (v: number) => mg.top + h - (v / max) * h;
 
   return (
-    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-2xs", className)}>
-      {titulo ? <div className="px-1 pb-2 text-[13px] font-semibold text-foreground">{titulo}</div> : null}
-      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible text-[10px]" onMouseLeave={() => setHover(null)}>
+    <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
+      {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
+      <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de líneas"}</title>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={m.left} x2={ancho - m.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 3"} />
-            <text x={m.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--muted-foreground)" fontFamily="var(--font-mono)">
+            <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 3"} />
+            <text x={mg.left - 6} y={y(t) + 3} textAnchor="end" fill="var(--muted-foreground)" fontFamily="var(--font-mono)">
               {formato(t)}
             </text>
           </g>
         ))}
-        {hover != null ? <line x1={x(hover)} x2={x(hover)} y1={m.top} y2={m.top + h} stroke="var(--muted-foreground)" strokeOpacity="0.4" /> : null}
+        {hover != null ? <line x1={x(hover)} x2={x(hover)} y1={mg.top} y2={mg.top + h} stroke="var(--muted-foreground)" strokeOpacity="0.4" /> : null}
         {series.map((s, j) => (
-          <path
+          <TrazoAnimado
             key={s.nombre}
             d={s.valores.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}
-            fill="none"
             stroke={COLORES[j % COLORES.length]}
-            strokeWidth="2"
-            strokeLinejoin="round"
-            strokeLinecap="round"
+            retraso={j * 0.08}
           />
         ))}
         {hover != null
@@ -182,13 +195,13 @@ export function GraficoLineas({
           : null}
         {categorias.map((c, i) => (
           <g key={c}>
-            <rect x={x(i) - w / categorias.length / 2} y={m.top} width={w / categorias.length} height={h} fill="transparent" onMouseEnter={() => setHover(i)} />
+            <rect x={x(i) - w / categorias.length / 2} y={mg.top} width={w / categorias.length} height={h} fill="transparent" onMouseEnter={() => setHover(i)} />
             <text x={x(i)} y={alto - 8} textAnchor="middle" fill="var(--muted-foreground)">
               {c}
             </text>
           </g>
         ))}
-      </svg>
+      </svg></MovimientoLocal>
       {hover != null ? (
         <Tooltip x={(x(hover) / ancho) * 100} titulo={categorias[hover]} filas={series.map((s, j) => ({ nombre: s.nombre, valor: formato(s.valores[hover] ?? 0), color: COLORES[j % COLORES.length] }))} />
       ) : null}

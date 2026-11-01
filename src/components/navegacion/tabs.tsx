@@ -2,10 +2,23 @@
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import type { ReactNode } from "react";
-import { SEGMENTADO, SEGMENTO } from "@/lib/estilos";
+import { SEGMENTADO, SEGMENTO_BASE } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 export type TabItem<T extends string> = { id: T; etiqueta: ReactNode; contador?: number; disabled?: boolean };
+
+// h-10 fijo (no padding vertical) para que el contador no altere la altura de la fila.
+const PESTANA_LINEA =
+  "inline-flex h-10 items-center gap-1.5 px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground";
+
+// base-ui posiciona el indicador con --active-tab-left/top/width/height; la transición CSS lo desliza entre pestañas.
+// `-z-10` dentro de una lista `isolate`: queda sobre el fondo de la lista y debajo del texto de las pestañas.
+const INDICADOR_BASE =
+  "absolute -z-10 left-(--active-tab-left) w-(--active-tab-width) transition-[left,width,top,height] duration-(--duracion-media) ease-salida motion-reduce:transition-none";
+const INDICADOR = {
+  linea: cn(INDICADOR_BASE, "-bottom-px h-0.5 rounded-full bg-foreground"),
+  segmentado: cn(INDICADOR_BASE, "top-(--active-tab-top) h-(--active-tab-height) rounded-md bg-card shadow-sm dark:bg-input"),
+};
 
 /**
  * Pestañas de página. `estilo="segmentado"` es el control en caja de las barras de filtro; `"linea"` es la pestaña subrayada para secciones de detalle.
@@ -33,25 +46,14 @@ export function Tabs<T extends string>({
 }) {
   return (
     <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => onCambio?.(v as T)} className={className}>
-      <TabsPrimitive.List
-        className={cn("relative", estilo === "linea" ? "flex items-center gap-4 border-b border-border/80" : SEGMENTADO)}
-      >
+      <TabsPrimitive.List className={cn("relative isolate", estilo === "linea" ? "flex items-center gap-4 border-b border-border" : SEGMENTADO)}>
         {items.map((t) => (
-          <TabsPrimitive.Tab
-            key={t.id}
-            value={t.id}
-            disabled={t.disabled}
-            className={
-              // h-10/h-6 fijos (no padding vertical) para que el contador no altere la altura de la fila.
-              estilo === "linea"
-                ? "-mb-px inline-flex h-10 items-center gap-1.5 border-b-2 border-transparent px-1 text-[12px] font-medium whitespace-nowrap text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:border-primary data-active:text-foreground"
-                : SEGMENTO
-            }
-          >
+          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
-            {t.contador != null ? <span className="rounded bg-secondary px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{t.contador}</span> : null}
+            {t.contador != null ? <span className="rounded-md bg-secondary px-1.5 py-0.5 font-mono text-etiqueta text-muted-foreground tabular-nums">{t.contador}</span> : null}
           </TabsPrimitive.Tab>
         ))}
+        <TabsPrimitive.Indicator className={INDICADOR[estilo]} />
       </TabsPrimitive.List>
       {items.map((t) => (
         <TabsPrimitive.Panel key={t.id} value={t.id} className="pt-4 outline-none">

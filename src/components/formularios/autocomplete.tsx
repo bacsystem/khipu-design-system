@@ -41,13 +41,13 @@ export function Autocomplete({
       <AutocompletePrimitive.Portal>
         <AutocompletePrimitive.Positioner sideOffset={6} className="isolate z-50">
           <AutocompletePrimitive.Popup className={POPUP_LISTA}>
-            <AutocompletePrimitive.Empty className="px-2 py-2 text-[12px] text-muted-foreground empty:hidden">{vacio}</AutocompletePrimitive.Empty>
+            <AutocompletePrimitive.Empty className="px-2 py-2 text-control text-muted-foreground empty:hidden">{vacio}</AutocompletePrimitive.Empty>
             <AutocompletePrimitive.List>
               {(item: string) => (
                 <AutocompletePrimitive.Item
                   key={item}
                   value={item}
-                  className="relative flex w-full cursor-default items-center rounded-md px-2 py-1.5 text-[12px] font-medium outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground"
+                  className="relative flex w-full cursor-default items-center rounded-md px-2 py-1.5 text-control font-medium outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground"
                 >
                   {item}
                 </AutocompletePrimitive.Item>

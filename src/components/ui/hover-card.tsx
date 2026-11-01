@@ -49,7 +49,7 @@ function HoverCardContent({
       <PreviewCardPrimitive.Positioner side={side} sideOffset={sideOffset} align={align} className="isolate z-50">
         <PreviewCardPrimitive.Popup
           className={cn(
-            "w-64 rounded-lg bg-popover p-3 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none",
+            "w-64 rounded-lg bg-popover p-3 text-popover-foreground shadow-md ring-1 ring-border outline-none",
             ANIMACION_POPUP,
             className,
           )}

@@ -9,11 +9,11 @@ import { paginasVisibles } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
 
 const BOTON_PAGINA =
-  "inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-[11px] font-medium text-foreground/80 shadow-2xs transition-colors hover:bg-muted";
+  "inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-etiqueta font-medium text-foreground/80 shadow-xs transition-colors hover:bg-muted";
 // Anterior/Siguiente sin página a la que ir: el botón usa `disabled`; el enlace, `aria-disabled` y esta clase (un <a> no tiene :disabled).
 const BOTON_PAGINA_DESHABILITADO = "disabled:pointer-events-none disabled:text-muted-foreground/60";
 const BOTON_PAGINA_INACTIVO = "pointer-events-none text-muted-foreground/60";
-const NUMERO_PAGINA = "flex size-9 items-center justify-center rounded-lg font-mono text-[11px] text-foreground/80 transition-colors hover:bg-secondary";
+const NUMERO_PAGINA = "flex size-9 items-center justify-center rounded-lg font-mono text-etiqueta text-foreground/80 transition-colors hover:bg-secondary";
 
 /** Un salto de página: enlace (estado en la URL) o botón (estado local), según haya `hrefPagina`. */
 function Salto({
@@ -93,7 +93,7 @@ export function PieTabla({
   const haySiguiente = pagina < ultimaPagina;
 
   return (
-    <div className="flex flex-col items-center justify-between gap-3 border-t border-border/60 bg-muted px-4 py-2 text-[12px] text-muted-foreground sm:flex-row">
+    <div className="flex flex-col items-center justify-between gap-3 border-t border-border/60 bg-muted px-4 py-2 text-control text-muted-foreground sm:flex-row">
       <div className="flex flex-wrap items-center gap-2">
         <span>
           Mostrando{" "}
@@ -107,7 +107,7 @@ export function PieTabla({
         {nota ? (
           <>
             <span className="hidden text-muted-foreground/40 xl:inline">·</span>
-            <span className="hidden text-[11px] text-muted-foreground/80 xl:inline">{nota}</span>
+            <span className="hidden text-etiqueta text-muted-foreground/80 xl:inline">{nota}</span>
           </>
         ) : null}
       </div>
@@ -118,11 +118,11 @@ export function PieTabla({
         <div className="mx-1 flex items-center gap-0.5">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>
             p === "…" ? (
-              <span key={`sep-${i}`} className="px-1 text-[11px] text-muted-foreground/60">
+              <span key={`sep-${i}`} className="px-1 text-etiqueta text-muted-foreground/60">
                 …
               </span>
             ) : p === pagina ? (
-              <span key={p} aria-current="page" className="flex size-9 items-center justify-center rounded-lg bg-foreground font-mono text-[11px] font-medium text-background shadow-2xs">
+              <span key={p} aria-current="page" className="flex size-9 items-center justify-center rounded-lg bg-foreground font-mono text-etiqueta font-medium text-background shadow-xs">
                 {p}
               </span>
             ) : (
@@ -151,6 +151,6 @@ export function TablaVacia({ icon, children }: { icon: ReactNode; children: Reac
 }
 
 /** Contenedor de la tabla estándar. */
-export const CONTENEDOR_TABLA = "min-w-0 overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs transition-opacity";
+export const CONTENEDOR_TABLA = "min-w-0 overflow-hidden rounded-xl border border-border/90 bg-card shadow-xs transition-opacity";
 // CABECERA_TABLA y CONTROL_FILTRO viven en lib/estilos.ts con el resto de las recetas; se re-exportan para no romper a quien los importa desde aquí.
 export { CABECERA_TABLA, CONTROL_FILTRO } from "@/lib/estilos";

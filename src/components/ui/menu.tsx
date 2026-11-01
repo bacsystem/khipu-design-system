@@ -24,8 +24,8 @@ function MenuContent({
         <MenuPrimitive.Popup
           data-slot="menu-content"
           className={cn(
-            "min-w-56 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-none",
-            "origin-(--transform-origin) transition-[opacity,transform] duration-150 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
+            "min-w-56 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-border outline-none",
+            "origin-(--transform-origin) transition-[opacity,transform] duration-(--duracion-rapida) data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
             className,
           )}
           {...props}
@@ -36,7 +36,7 @@ function MenuContent({
 }
 
 const ITEM =
-  "relative flex w-full cursor-default items-center gap-2 rounded-md px-2 py-1.5 text-[12px] leading-tight font-medium text-foreground outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-muted-foreground data-highlighted:[&_svg]:text-accent-foreground";
+  "relative flex w-full cursor-default items-center gap-2 rounded-md px-2 py-1.5 text-control leading-tight font-medium text-foreground outline-none select-none data-highlighted:bg-accent/70 data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-muted-foreground data-highlighted:[&_svg]:text-accent-foreground";
 
 function MenuItem({ className, variant = "default", ...props }: MenuPrimitive.Item.Props & { variant?: "default" | "destructive" }) {
   return (
@@ -45,7 +45,7 @@ function MenuItem({ className, variant = "default", ...props }: MenuPrimitive.It
       className={cn(
         ITEM,
         variant === "destructive" &&
-          "text-destructive data-highlighted:bg-destructive/10 data-highlighted:text-destructive [&_svg]:text-destructive data-highlighted:[&_svg]:text-destructive",
+          "text-destructive-texto data-highlighted:bg-destructive-suave data-highlighted:text-destructive-texto [&_svg]:text-destructive-texto data-highlighted:[&_svg]:text-destructive-texto",
         className,
       )}
       {...props}
@@ -72,7 +72,7 @@ function MenuGroupLabel({ className, ...props }: MenuPrimitive.GroupLabel.Props)
   return (
     <MenuPrimitive.GroupLabel
       data-slot="menu-group-label"
-      className={cn("px-2 pt-1.5 pb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase", className)}
+      className={cn("px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground", className)}
       {...props}
     />
   );

@@ -1,6 +1,6 @@
 # khipu design system
 
-Design system para aplicaciones de gestión: tokens (claro/oscuro), componentes base sobre [base-ui](https://base-ui.com), componentes de navegación (sidebar, top bar, selector de contexto, menú de usuario), patrones (métricas, pills, tablas, diálogos, código) y componentes de feedback, formularios, navegación y datos. Stack: **Next.js 15 · React 19 · Tailwind v4 · lucide-react**.
+Design system para aplicaciones de gestión: tokens (claro/oscuro), componentes base sobre [base-ui](https://base-ui.com), componentes de navegación (sidebar, top bar, selector de contexto, menú de usuario), patrones (métricas, pills, tablas, diálogos, código) y componentes de feedback, formularios, navegación y datos. Stack: **Next.js 15 · React 19 · Tailwind v4 · Motion · lucide-react**.
 
 Nació en el portal de facturación electrónica [khipu](https://github.com/bacsystem) y está desacoplado de él: rutas, textos, iconos y handlers entran por props.
 
@@ -36,11 +36,11 @@ npx github:bacsystem/khipu-design-system add panel-lateral # copia panel-lateral
 
 Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force` si quieres reemplazarlos). Después de copiar los componentes que necesites, una sola vez por proyecto:
 
-1. Pega en tu `globals.css` los `@import` de [`src/app/globals.css`](src/app/globals.css) y, debajo, el contenido de [`src/styles/tokens.css`](src/styles/tokens.css) (`:root` y `.dark`) y de [`src/styles/theme.css`](src/styles/theme.css) (`@custom-variant dark`, `@theme inline` y `@layer base`). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--accent-border`, `--sidebar*`, `--chart-1..5`).
+1. Pega en tu `globals.css` los `@import` de [`src/app/globals.css`](src/app/globals.css) y, debajo, el contenido de [`src/styles/tokens.css`](src/styles/tokens.css) (`:root`, `.dark` y los diseños `html[data-diseno]`) y de [`src/styles/theme.css`](src/styles/theme.css) (`@custom-variant dark`, `@theme inline`, `@layer base` y la regla de «reducir movimiento»). Los tokens se llaman como en shadcn (`--background`, `--primary`, `--muted`…) más los semánticos (`--success*`, `--warning*`, `--destructive-border`, `--destructive-suave`/`-texto`, `--accent-border`, `--codigo*`, `--sidebar*`, `--chart-1..5`, `--sombra-*`, `--duracion-*`). Si copias componentes animados (sidebar, tabla, KPI, gráficos, progreso, copiar), instala también `motion` y envuelve la app con `ProveedorMovimiento` (ya incluido en `Providers`).
 2. Envuelve la app con [`Providers`](src/components/providers.tsx) (tema + toasts + tooltips) y carga las fuentes como en [`src/app/layout.tsx`](src/app/layout.tsx).
 3. Asegura el alias `"@/*": ["./src/*"]` en `tsconfig.json`.
 
-**Alternativa manual (todo de una vez):** copia `src/components/` y `src/lib/` completos a tu `src/`, e instala tú mismo `@base-ui/react lucide-react class-variance-authority cn next-themes` (+ `tw-animate-css` como dev dependency).
+**Alternativa manual (todo de una vez):** copia `src/components/` y `src/lib/` completos a tu `src/`, e instala tú mismo `@base-ui/react lucide-react class-variance-authority cn next-themes motion` (+ `tw-animate-css` como dev dependency).
 
 El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
 
@@ -52,7 +52,7 @@ La alternativa a copiar archivos: depender del design system y recibir sus cambi
 npm install github:bacsystem/khipu-design-system#v0.3.1
 ```
 
-npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+, React 19, Tailwind v4** y los peers `@base-ui/react`, `lucide-react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos). No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
+npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+, React 19, Tailwind v4** y los peers `@base-ui/react`, `lucide-react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos). `motion` sí viene como dependencia del paquete. No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
 
 **CSS** — una sola línea en tu `globals.css`, después de Tailwind:
 
@@ -65,7 +65,7 @@ npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el 
 .dark { --primary: #5cc8c2; }
 ```
 
-`styles.css` trae `tw-animate-css`, las variantes `data-open`/`data-closed`/… de shadcn (copiadas en el build: no hace falta instalar `shadcn`), los tokens (`tokens.css`), el tema (`theme.css`) y los `@source` que hacen que **tu** Tailwind genere las clases de los componentes compilados (Tailwind no escanea `node_modules` por su cuenta). `tokens.css` y `theme.css` también se exportan sueltos. Las fuentes no van en el paquete: define `--font-sans` y `--font-mono` (p. ej. con `next/font` en `<html>`, como en [`src/app/layout.tsx`](src/app/layout.tsx)).
+`styles.css` trae `tw-animate-css`, las variantes `data-open`/`data-closed`/… de shadcn (copiadas en el build: no hace falta instalar `shadcn`), los tokens (`tokens.css`), el tema (`theme.css`) y los `@source` que hacen que **tu** Tailwind genere las clases de los componentes compilados (Tailwind no escanea `node_modules` por su cuenta). `tokens.css` y `theme.css` también se exportan sueltos. Las fuentes no van en el paquete: define `--font-sans` y `--font-mono` (p. ej. Geist y Geist Mono con `next/font` en `<html>`, como en [`src/app/layout.tsx`](src/app/layout.tsx)). Para el diseño «papel» sin parpadeo al cargar, pon `ScriptDiseno` en el `<head>`.
 
 **Imports** — un subpath por componente, igual que la carpeta en `src/components/`:
 
@@ -93,14 +93,15 @@ import { Providers } from "khipu-design-system/providers";
 ```
 src/
 ├── app/globals.css          importa Tailwind + styles/
-├── styles/tokens.css        tokens claro/oscuro (:root, .dark), CSS plano
-├── styles/theme.css         @custom-variant dark + @theme inline + @layer base (Tailwind v4)
-├── app/layout.tsx           Inter + JetBrains Mono, Providers
+├── styles/tokens.css        tokens claro/oscuro (:root, .dark) y diseños (html[data-diseno]), CSS plano
+├── styles/theme.css         @custom-variant dark + @theme inline + @layer base + «reducir movimiento» (Tailwind v4)
+├── app/layout.tsx           Geist + Geist Mono, Providers
 ├── app/ejemplo/             demo: shell completo + galería de componentes
-├── components/providers.tsx ThemeProvider + ToastProvider + TooltipProvider
+├── components/providers.tsx ThemeProvider + DisenoProvider + ProveedorMovimiento + ToastProvider + TooltipProvider
+├── components/diseno.tsx    DisenoProvider · useDiseno (+ disenos.ts, script-diseno.tsx) — ver docs/design-system.md «Diseños»
 ├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
-├── components/nav/          shell · sidebar · sidebar-nav · logo · selector-contexto · menu-usuario · theme-toggle · top-bar · mobile-nav
-├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async
+├── components/nav/          shell · sidebar · sidebar-nav · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · top-bar · mobile-nav
+├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
 ├── components/feedback/     toast (useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)

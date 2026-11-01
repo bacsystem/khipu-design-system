@@ -1,33 +1,11 @@
 "use client";
 
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { BotonCopiar } from "@/components/patrones/boton-copiar";
 import { cn } from "@/lib/utils";
 
-function BotonCopiarBloque({ texto }: { texto: string }) {
-  const [copiado, setCopiado] = useState(false);
-  return (
-    <button
-      type="button"
-      title="Copiar"
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(texto);
-          setCopiado(true);
-          setTimeout(() => setCopiado(false), 1500);
-        } catch {
-          // el navegador puede denegar el portapapeles; el bloque sigue seleccionable
-        }
-      }}
-      className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-    >
-      {copiado ? <CheckIcon className="size-3.5" /> : <CopyIcon className="size-3.5" />}
-    </button>
-  );
-}
-
 /**
- * Bloque de código con barra superior (método + URL + slot para pestañas) y cuerpo siempre oscuro.
+ * Bloque de código con barra superior (método + URL + slot para pestañas) y cuerpo en `codigo` (casi negro en los dos modos).
  * `tono="claro"` para respuestas/JSON sobre muted.
  */
 export function BloqueCodigo({
@@ -50,25 +28,26 @@ export function BloqueCodigo({
   className?: string;
 }) {
   return (
-    <div className={cn("min-w-0 overflow-hidden rounded-xl border border-border bg-card shadow-2xs", className)}>
+    <div className={cn("min-w-0 overflow-hidden rounded-xl border border-border bg-card shadow-sm", className)}>
       {metodo || url || barra ? (
-        <div className="flex flex-wrap items-center gap-2 border-b border-border/60 bg-muted px-4 py-2">
-          {metodo ? <span className="rounded bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold text-primary-foreground uppercase">{metodo}</span> : null}
-          {url ? <code className="min-w-0 flex-1 truncate font-mono text-[12px] text-foreground">{url}</code> : null}
+        <div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/60 px-4 py-2">
+          {/* El verbo HTTP es un literal: se escribe en mayúsculas con toUpperCase, no con una clase CSS de transformación. */}
+          {metodo ? <span className="rounded-md bg-accent px-1.5 py-0.5 font-mono text-etiqueta font-semibold text-accent-foreground">{metodo.toUpperCase()}</span> : null}
+          {url ? <code className="min-w-0 flex-1 truncate font-mono text-control text-foreground">{url}</code> : null}
           {barra}
-          <BotonCopiarBloque texto={codigo} />
+          <BotonCopiar texto={codigo} className="size-9 rounded-lg" />
         </div>
       ) : null}
       <pre
         style={{ maxHeight: alturaMax }}
         className={cn(
-          "overflow-auto p-4 font-mono leading-relaxed",
-          tono === "oscuro" ? "bg-[oklch(0.18_0.02_265)] text-[12px] text-[oklch(0.9_0.01_265)]" : "bg-muted/40 text-[11.5px] text-foreground",
+          "overflow-auto p-4 font-mono text-control leading-relaxed",
+          tono === "oscuro" ? "bg-codigo text-codigo-foreground" : "bg-muted/50 text-foreground",
         )}
       >
         <code>{codigo}</code>
       </pre>
-      {pie ? <div className="border-t border-border/60 px-4 py-2 text-[11px] text-muted-foreground">{pie}</div> : null}
+      {pie ? <div className="border-t border-border px-4 py-2 text-etiqueta text-muted-foreground">{pie}</div> : null}
     </div>
   );
 }
@@ -76,15 +55,15 @@ export function BloqueCodigo({
 /** Control segmentado pequeño (pestañas de lenguaje, filtros por tipo). */
 export function Segmentado<T extends string>({ opciones, valor, onCambio, className }: { opciones: Array<{ id: T; etiqueta: string }>; valor: T; onCambio: (v: T) => void; className?: string }) {
   return (
-    <div className={cn("inline-flex h-9 shrink-0 items-center gap-0.5 rounded-lg border border-border/60 bg-secondary/80 p-0.5", className)}>
+    <div className={cn("inline-flex h-9 shrink-0 items-center gap-0.5 rounded-lg bg-secondary p-0.5", className)}>
       {opciones.map((o) => (
         <button
           key={o.id}
           type="button"
           onClick={() => onCambio(o.id)}
           className={cn(
-            "h-7 rounded-md px-2.5 text-[12px] font-medium transition-colors",
-            valor === o.id ? "bg-card text-foreground shadow-2xs" : "text-muted-foreground hover:text-foreground",
+            "h-7 rounded-md px-2.5 text-control font-medium transition-colors duration-(--duracion-rapida) ease-salida",
+            valor === o.id ? "bg-card text-foreground shadow-sm dark:bg-input" : "text-muted-foreground hover:text-foreground",
           )}
         >
           {o.etiqueta}

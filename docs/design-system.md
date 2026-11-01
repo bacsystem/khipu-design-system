@@ -1,44 +1,48 @@
 ---
 name: khipu · Design System del portal
-version: 2026-09-16
+version: 2026-10-31
 colors:
-  background: '#fafafc'
-  foreground: '#0f172a'
+  background: '#fbfbfc'
+  foreground: '#18181b'
   card: '#ffffff'
   popover: '#ffffff'
-  primary: '#4f46e5'
-  primary-light: '#6366f1'
+  primary: '#5b5bd6'
+  primary-light: '#7373e0'
   on-primary: '#ffffff'
-  secondary: '#f1f5f9'
-  muted: '#f8fafc'
-  muted-foreground: '#64748b'
-  accent: '#eef2ff'
-  accent-foreground: '#4338ca'
-  accent-border: 'rgba(199, 210, 254, 0.7)'
-  border: '#e2e8f0'
-  ring: '#4f46e5'
-  success: '#ecfdf5'
-  success-foreground: '#047857'
-  success-solid: '#10b981'
-  warning: '#fffbeb'
-  warning-foreground: '#b45309'
+  secondary: '#f4f4f5'
+  muted: '#f7f7f8'
+  muted-foreground: '#6b6b76'
+  accent: '#f0f0fd'
+  accent-foreground: '#4747c2'
+  accent-border: 'rgba(91, 91, 214, 0.22)'
+  border: '#e8e8ec'
+  ring: '#5b5bd6'
+  success: '#edfaf3'
+  success-foreground: '#0f7b4f'
+  success-solid: '#16a34a'
+  warning: '#fef8ec'
+  warning-foreground: '#a15c07'
   warning-solid: '#f59e0b'
-  destructive: '#e11d48'
-  destructive-border: 'rgba(254, 205, 211, 0.7)'
-  sidebar: '#ffffff'
-  sidebar-foreground: '#334155'
-  sidebar-accent: '#f8fafc'
-  sidebar-border: '#e2e8f0'
-  overlay: 'rgba(15, 23, 42, 0.2)'
+  destructive: '#dc2547'
+  destructive-border: 'rgba(220, 37, 71, 0.2)'
+  destructive-suave: '#fdeef1'
+  destructive-texto: '#b91c3c'
+  codigo: '#0f0f14'
+  codigo-foreground: '#e4e4e9'
+  sidebar: '#fbfbfc'
+  sidebar-foreground: '#3f3f46'
+  sidebar-accent: '#f2f2f4'
+  sidebar-border: '#e8e8ec'
+  overlay: 'rgba(10, 10, 15, 0.32)'
 typography:
-  sans: Inter
-  mono: JetBrains Mono
+  sans: Geist
+  mono: Geist Mono
 rounded:
   base: 0.5rem
   sm: 0.3rem
   md: 0.4rem
   lg: 0.5rem
-  xl: 0.7rem
+  xl: 0.75rem
   full: 9999px
 ---
 
@@ -66,50 +70,65 @@ Definidos como variables CSS en `:root` (claro) y `.dark` (oscuro) y expuestos a
 
 | Token | Claro | Oscuro | Uso |
 |---|---|---|---|
-| `background` | `#fafafc` | `#0a0e1a` | Fondo de la app |
-| `foreground` | `#0f172a` | `#e2e8f0` | Texto principal |
-| `card` / `popover` | `#ffffff` | `#111827` | Tarjetas, tablas, popups |
-| `primary` | `#4f46e5` | `#8b83ff` | Acción principal, enlaces, activo |
-| `primary-light` | `#6366f1` | `#a29dff` | Gradiente del logo |
-| `primary-foreground` | `#ffffff` | `#0a0e1a` | Texto sobre primary |
-| `secondary` | `#f1f5f9` | `#1e293b` | Chips neutros, fondos de código serie |
-| `muted` | `#f8fafc` | `#161f30` | Cabeceras de tabla, inputs, pie de tabla |
-| `muted-foreground` | `#64748b` | `#94a3b8` | Texto secundario, iconos |
-| `accent` | `#eef2ff` | `#23294d` | Fila/ítem activo, icono de sección |
-| `accent-foreground` | `#4338ca` | `#c3c0ff` | Texto sobre accent |
-| `accent-border` | `rgba(199,210,254,.7)` | `rgba(195,192,255,.3)` | Borde de pills primarias |
-| `border` / `input` | `#e2e8f0` | `rgba(226,232,240,.12/.16)` | Todos los bordes |
-| `ring` | `#4f46e5` | `#8b83ff` | Anillo de foco |
-| `success` / `-foreground` / `-border` / `-solid` | `#ecfdf5` / `#047857` / `rgba(167,243,208,.7)` / `#10b981` | `#0f2e24` / `#5fd0a5` / … / `#34d399` | Aceptado, activo, OK |
-| `warning` / `-foreground` / `-border` / `-solid` | `#fffbeb` / `#b45309` / `rgba(253,230,138,.7)` / `#f59e0b` | `#33270c` / `#f0c05a` / … / `#fbbf24` | BETA, observaciones, vence pronto |
-| `destructive` / `-border` | `#e11d48` / `rgba(254,205,211,.7)` | `#fb7185` / `rgba(251,113,133,.35)` | Rechazado, error, revocar |
-| `sidebar*` | blanco / `#334155` / accent `#f8fafc` | `#0d1424` / `#c7d2e0` / accent `#1e293b` | Sidebar y AuthShell |
-| `overlay` | `rgba(15,23,42,.2)` | `rgba(0,0,0,.5)` | Fondo de diálogos/sheets |
-| `chart-1..5` | indigo, esmeralda, ámbar, rosa, cielo | variantes claras | Gráficos (futuro dashboard) |
+| `background` | `#fbfbfc` | `#0b0b0f` | Fondo de la app |
+| `foreground` | `#18181b` | `#ededf0` | Texto principal; acción principal de página (`bg-foreground`) |
+| `card` | `#ffffff` | `#131318` | Tarjetas, tablas |
+| `popover` | `#ffffff` | `#18181e` | Popups, menús |
+| `primary` | `#5b5bd6` | `#8585f2` | Enlaces, activo, confirmar formularios |
+| `primary-foreground` | `#ffffff` | `#0b0b0f` | Texto sobre primary |
+| `primary-light` | `#7373e0` | `#a3a3f7` | Solo decorativo (logo) |
+| `secondary` / `-foreground` | `#f4f4f5` / `#18181b` | `#1c1c22` / `#ededf0` | Chips neutros, hover de controles |
+| `muted` | `#f7f7f8` | `#16161b` | Cabeceras de tabla, inputs, pie de tabla |
+| `muted-foreground` | `#6b6b76` | `#9b9ba6` | Texto secundario, iconos |
+| `accent` / `-foreground` | `#f0f0fd` / `#4747c2` | `#1e1e33` / `#b4b4fa` | Fila/ítem activo, icono de sección |
+| `accent-border` | `rgba(91,91,214,.22)` | `rgba(133,133,242,.28)` | Borde de pills primarias |
+| `destructive` / `-foreground` | `#dc2547` / `#ffffff` | `#fb6f8a` / `#0b0b0f` | Botón destructivo, texto de error sobre card |
+| `destructive-border` | `rgba(220,37,71,.2)` | `rgba(251,111,138,.3)` | Borde de avisos de error |
+| `destructive-suave` / `destructive-texto` | `#fdeef1` / `#b91c3c` | `#2a1a20` / `#fb6f8a` | Fondo y texto de pills, chips y alertas de error |
+| `success` / `-foreground` / `-border` / `-solid` | `#edfaf3` / `#0f7b4f` / `rgba(15,123,79,.18)` / `#16a34a` | `#0f2a1f` / `#4fd19a` / `rgba(79,209,154,.25)` / `#34d399` | Aceptado, activo, OK |
+| `warning` / `-foreground` / `-border` / `-solid` | `#fef8ec` / `#a15c07` / `rgba(161,92,7,.18)` / `#f59e0b` | `#2e2410` / `#f2c25c` / `rgba(242,194,92,.25)` / `#fbbf24` | BETA, observaciones, vence pronto |
+| `border` | `#e8e8ec` | `rgba(255,255,255,.08)` | Todos los bordes |
+| `input` | `#dedee3` | `rgba(255,255,255,.12)` | Borde de inputs, hover de controles secundarios |
+| `ring` | `#5b5bd6` | `#8585f2` | Anillo de foco |
+| `overlay` | `rgba(10,10,15,.32)` | `rgba(0,0,0,.6)` | Fondo de diálogos/sheets |
+| `brand` / `-foreground` | `#5b5bd6` / `#ffffff` | `#8585f2` / `#0b0b0f` | Logo y marca |
+| `codigo` / `-foreground` | `#0f0f14` / `#e4e4e9` | `#0f0f14` / `#e4e4e9` | Fondo de `BloqueCodigo` en ambos modos |
+| `chart-1` | `#5b5bd6` | `#7b72f0` | Serie principal de gráficos |
+| `chart-2..5` | sin cambio | sin cambio | Series secundarias |
+| `sidebar` | `#fbfbfc` (igual al fondo) | `#0b0b0f` | Sidebar y AuthShell |
+| `sidebar-foreground` | `#3f3f46` | `#c4c4cc` | Texto del sidebar |
+| `sidebar-primary` / `-foreground` | `#ededf5` / `#3c3cb0` | `#1e1e33` / `#b4b4fa` | Ítem activo del sidebar |
+| `sidebar-accent` / `-foreground` | `#f2f2f4` / `#18181b` | `#16161b` / `#ededf0` | Hover del sidebar |
+| `sidebar-border` / `-ring` | `#e8e8ec` / `#5b5bd6` | `rgba(255,255,255,.08)` / `#8585f2` | Borde y foco del sidebar |
 
-Regla de tonos para estado: **verde** = aceptado/activo, **ámbar** = provisional/BETA/observado, **rojo** = error/rechazo/acción destructiva, **neutro** (`secondary` + `muted-foreground`) = en proceso, inactivo, revocado.
+El sidebar comparte el color del fondo, como en Linear: lo separa el borde y no un bloque blanco.
+
+Contraste WCAG calculado en el comentario de `:root` de `src/styles/tokens.css`; `npm run check:contraste` falla si un par baja de 4.5.
+
+Regla de tonos para estado: **verde** = aceptado/activo, **ámbar** = provisional/BETA/observado, **rojo** = error/rechazo/acción destructiva, **neutro** (`secondary` + `muted-foreground`) = en proceso, inactivo, revocado. El rojo de pills, chips y avisos usa `bg-destructive-suave` + `text-destructive-texto`: `text-destructive` sobre un rojo tenue no llega a 4.5.
 
 ---
 
 ## 3. Tipografía
 
-- **Inter** (`--font-sans`, también `font-heading`) para UI y títulos. **JetBrains Mono** (`--font-mono`) para todo identificador y número: series, RUC, montos, fechas en tablas, hashes, ids, prefijos de API key, rutas y código.
-- Tamaños reales en uso (no hay escala tipográfica abstracta; se usan tamaños fijos):
+- **Geist** (`--font-sans`, también `font-heading`) para UI y títulos. **Geist Mono** (`--font-mono`) solo para datos: ids, series, RUC, montos, fechas en celdas, hashes y código. Geist se usa sin conjuntos estilísticos alternativos: su diseño por defecto ya es el de Vercel.
+- Tamaños con nombre en `@theme` (utilidades de Tailwind v4 con su interlineado):
 
-| Rol | Clases | Dónde |
+| Utilidad | Tamaño / interlineado | Rol |
 |---|---|---|
-| Título de página (miga) | `font-heading font-semibold text-[13px]` | Top bar (`h1`) |
-| Título de diálogo | `text-base font-semibold tracking-tight` | `DialogTitle` |
-| Título de sección/tarjeta | `text-[13px] font-semibold text-foreground` | Cabecera de tarjeta |
-| Subtítulo de sección | `font-mono text-[11px] text-muted-foreground` | Bajo el título |
-| Etiqueta de sección | `text-[10px]/[11px] font-medium tracking-wider uppercase text-muted-foreground` | "TU CUENTA", "TEMA", grupos del sidebar, cabeceras de tabla, métricas (`TITULO_SECCION`, `ETIQUETA_DATO`) |
-| Valor de métrica | `font-mono text-lg font-semibold tracking-tight` | Fila de métricas |
-| Cuerpo de tabla | `text-[13px]`; celdas mono `text-[12px] tabular-nums` | Tablas |
-| Ítems de menú / selector / controles | `text-[12px] font-medium` | `ui/menu`, selector de empresa, botones de barra |
-| Texto de ayuda | `text-[11px] text-muted-foreground` (mono si es técnico) | Pies de tarjeta, ayudas de campo |
-| Código | `font-mono text-[12px] leading-relaxed` | Bloques `pre` |
+| `text-etiqueta` | 12 / 16 px | Ayudas, etiquetas de dato y sección, cabeceras de tabla, pills, subtítulos |
+| `text-control` | 13 / 20 px | Botones, inputs, menús, segmentos, celdas, miga del top bar |
+| `text-cuerpo` | 14 / 20 px | Texto corrido, títulos de tarjeta y sección (`font-semibold`), cuerpo de diálogo |
+| `text-base` | 16 px (de Tailwind) | Título de diálogo |
+| `text-metrica` | 24 / 28 px, `tracking-tight` | Valor de métrica y KPI |
 
-Tracking negativo (`tracking-tight`) solo en títulos y valores grandes; `tracking-wider` en etiquetas uppercase.
+Reglas:
+
+- **Sin mayúsculas en etiquetas.** `TITULO_SECCION` y `ETIQUETA_DATO` son `text-etiqueta font-medium text-muted-foreground` en tipo oración. Única excepción: el verbo HTTP de `BloqueCodigo` (`POST`), que es un literal.
+- **Mono solo para datos.** Los subtítulos de sección y las ayudas de campo no son mono salvo que muestren un dato técnico.
+- **Números:** `tabular-nums` en todo dato numérico.
+- Tracking negativo solo en `text-metrica`, que ya lo trae.
+- `npm run check:tipografia` prohíbe `text-[Npx]`, `uppercase` y `tracking-wide(r)` en `src/components`, `src/app/ejemplo` y `src/lib`. Una línea que necesite un literal en mayúsculas lleva el comentario de exención `tipografia-ok`.
 
 ---
 
@@ -117,9 +136,19 @@ Tracking negativo (`tracking-tight`) solo en títulos y valores grandes; `tracki
 
 - **Base 4 px.** Paddings habituales: `p-1` (popups), `px-2 py-1.5` (ítems), `px-3/px-4 py-2` (celdas), `px-4 py-3` (cabeceras de tarjeta), `px-5 py-4` (cabecera/cuerpo de diálogo), `p-4 md:p-6` (main).
 - **Separación entre bloques de página:** `gap-4`. Ancho máximo del contenido: `max-w-[1520px] mx-auto`.
-- **Radios** (`--radius: 0.5rem`): `rounded-md` (ítems de menú/selector, chips de serie), `rounded-lg` (botones, inputs, disparadores, iconos de sección), `rounded-xl` (tarjetas, tablas, diálogos), `rounded-full` (pills de estado, avatares de usuario, puntos).
-- **Elevación:** `shadow-2xs` en tarjetas y controles; `shadow-xs` en botón primario y avatar; `shadow-md` + `ring-1 ring-foreground/10` en popups; diálogos sobre `bg-overlay` con `backdrop-blur`. Nada más alto que eso.
-- **Bordes:** `border-border`; suavizados con `/60`–`/90` para separadores internos (`border-b border-border/60`).
+- **Radios:** `--radius` sigue en `0.5rem`; `--radius-xl` es `calc(var(--radius) * 1.5)` = 12 px. Resultado: controles `rounded-lg` 8 px, ítems `rounded-md` 6.4 px, tarjetas, tablas, diálogos y popups `rounded-xl` 12 px; `rounded-full` en pills de estado, avatares y puntos.
+- **Elevación:** variables de tema (`--sombra-*` en `:root` y `.dark`) expuestas en `@theme inline` como `--shadow-xs/sm/md/lg`, para que `shadow-sm` etc. cambien con el modo:
+
+| Nivel | Claro | Oscuro | Uso |
+|---|---|---|---|
+| `xs` | `0 1px 2px rgba(16,16,24,.05)` | `inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.4)` | Controles, botones |
+| `sm` | `0 1px 2px rgba(16,16,24,.06), 0 1px 3px rgba(16,16,24,.04)` | `inset 0 1px 0 rgba(255,255,255,.04), 0 1px 3px rgba(0,0,0,.45)` | Tarjetas, tablas |
+| `md` | `0 4px 12px -2px rgba(16,16,24,.08), 0 2px 4px -2px rgba(16,16,24,.05)` | `inset 0 1px 0 rgba(255,255,255,.05), 0 8px 24px -4px rgba(0,0,0,.6)` | Popups, menús |
+| `lg` | `0 16px 40px -8px rgba(16,16,24,.16), 0 4px 12px -4px rgba(16,16,24,.08)` | `inset 0 1px 0 rgba(255,255,255,.06), 0 24px 48px -12px rgba(0,0,0,.7)` | Diálogos, sheets, toasts |
+
+  `shadow-xs` en controles, `shadow-sm` en tarjetas, `shadow-md` + `ring-1 ring-border` en popups, `shadow-lg` en diálogos, sheets y toasts; diálogos sobre `bg-overlay`. Nada más alto que eso.
+- **Bordes:** `border-border` en contenedores y controles; solo dos opacidades, `border-border/80` en cabeceras de tabla, línea de tiempo y top bar, y `border-border/60` en divisores internos (filas, cabecera y pie de diálogo, tarjetas del sidebar). Ninguna otra.
+- **Foco:** un único anillo, la receta `FOCO` de `lib/estilos.ts` (`focus-visible:ring-2 ring-ring/50 ring-offset-2 ring-offset-background`).
 
 ### Escala de alturas
 
@@ -164,20 +193,20 @@ No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-1
 
 De arriba abajo:
 
-1. **Cabecera (h-14, `border-b`)**: `LogoMarca` (icono 32 px con gradiente `from-primary to-primary-light`, tres nudos de khipu, texto "khipu" + ".pe" en primary) y chip `UBL 2.1` (mono 10 px, `bg-secondary`).
-2. **Selector de empresa** (`nav/empresa-selector.tsx`): tarjeta `rounded-lg border-border/60 bg-muted/80 p-2`, avatar cuadrado 24 px `bg-primary` con inicial, razón social 12 px + `RUC …` mono 10 px, `ChevronsUpDown`. Popup del **mismo ancho que el disparador** (`w-(--anchor-width)`), etiqueta "CAMBIAR DE EMPRESA", filas con `data-highlighted:bg-accent/70`, check en primary a la derecha.
-3. **Navegación** (`nav/sidebar-nav.tsx`): grupos con etiqueta uppercase 10 px ("EMISIÓN & SUNAT", "CONFIGURACIÓN"). Ítem: `rounded-md px-2.5 py-1.5 text-[13px]`, icono lucide 18 px. Estados: activo → `bg-sidebar-primary text-sidebar-primary-foreground`, icono en primary y punto `size-1.5 bg-primary` a la derecha; hover → `bg-sidebar-accent`; **pendiente** → texto `muted-foreground/50`, `cursor-not-allowed`, chip `PRONTO` (9 px uppercase, `bg-secondary`).
+1. **Cabecera (h-14, `border-b`)**: `LogoMarca` (icono 32 px con gradiente `from-primary to-primary-light`, tres nudos de khipu, texto "khipu" + ".pe" en primary) y chip `UBL 2.1` (`font-mono text-etiqueta`, `bg-secondary`).
+2. **Selector de empresa** (`nav/empresa-selector.tsx`): tarjeta `rounded-lg border-border/60 bg-muted/80 p-2`, avatar cuadrado 24 px `bg-primary` con inicial, razón social `text-control font-medium` + `RUC …` `font-mono text-etiqueta`, `ChevronsUpDown`. Popup del **mismo ancho que el disparador** (`w-(--anchor-width)`), etiqueta "Cambiar de empresa" (tipo oración), filas con `data-highlighted:bg-accent/70`, check en primary a la derecha.
+3. **Navegación** (`nav/sidebar-nav.tsx`): grupos con etiqueta `text-etiqueta font-medium text-muted-foreground` en tipo oración ("Emisión & SUNAT", "Configuración"). Ítem: `rounded-md px-2.5 py-1.5 text-control`, icono lucide 18 px. Estados: activo → `bg-sidebar-primary text-sidebar-primary-foreground`, icono en primary y punto `size-1.5 bg-primary` a la derecha; hover → `bg-sidebar-accent`; **pendiente** → texto `muted-foreground/50`, `cursor-not-allowed`, chip «Pronto» (`text-etiqueta font-medium`, `bg-secondary`, en tipo oración).
 4. **Pie (`border-t p-3`)**: tarjeta "Plan y consumo" deshabilitada (barra de progreso vacía, `— / —`, `opacity-60`, `title` próximamente) y el **menú de usuario** (§7).
 
 ## 7. Menú de usuario (`nav/perfil-usuario.tsx` + `ui/menu.tsx`)
 
-- **Disparador**: misma tarjeta que el selector de empresa (avatar 24 px `bg-primary` con iniciales del correo, nombre 12 px, correo mono 10 px, `ChevronsUpDown`; `data-popup-open:bg-secondary`).
+- **Disparador**: misma tarjeta que el selector de empresa (avatar 24 px `bg-primary` con iniciales del correo, nombre `text-control`, correo `font-mono text-etiqueta`, `ChevronsUpDown`; `data-popup-open:bg-secondary`).
 - **Popup** (`side="top"`, ancho = disparador, `min-w-0`): 
-  - "TU CUENTA" + fila resaltada `bg-accent/70` con avatar, nombre, correo completo (mono, `break-all`) y rol en su propia línea (`Administrador` / `Emisor` / `Solo lectura`), icono `ShieldCheck` en primary.
-  - "TEMA" + `ThemeToggle conTexto`: control segmentado a todo el ancho, tres opciones con icono 12 px + etiqueta 12 px (**Claro · Oscuro · Sistema**), activa con `bg-card shadow-2xs`.
+  - "Tu cuenta" + fila resaltada `bg-accent/70` con avatar, nombre, correo completo (mono, `break-all`) y rol en su propia línea (`Administrador` / `Emisor` / `Solo lectura`), icono `ShieldCheck` en primary.
+  - "Tema" + `ThemeToggle conTexto`: control segmentado a todo el ancho, tres opciones con icono 12 px + etiqueta `text-etiqueta` (**Claro · Oscuro · Sistema**), activa con `bg-card shadow-xs`.
   - Ítems: `Cambiar contraseña` (abre diálogo que envía el enlace de restablecimiento al correo de la sesión), `Documentación API` (`/developers`, pestaña nueva).
-  - `Cerrar sesión` en variante `destructive` (rojo, hover `bg-destructive/10`).
-- **`ui/menu.tsx`** (wrapper de base-ui `Menu`): `MenuContent` (`rounded-lg bg-popover p-1 shadow-md ring-1 ring-foreground/10`, animación scale/opacity 150 ms), `MenuItem` (`rounded-md px-2 py-1.5 text-[12px] font-medium`, iconos `size-3.5 text-muted-foreground`, highlight `bg-accent/70`), `MenuLinkItem`, `MenuRadioGroup`/`MenuRadioItem` (check a la derecha), `MenuGroupLabel` (uppercase 10 px), `MenuSeparator` (`-mx-1 my-1 h-px bg-border/70`). Es el menú a reutilizar para "más acciones" (⋯) de tablas.
+  - `Cerrar sesión` en variante `destructive` (`text-destructive-texto`, resaltado `bg-destructive-suave`).
+- **`ui/menu.tsx`** (wrapper de base-ui `Menu`): `MenuContent` (`rounded-lg bg-popover p-1 shadow-md ring-1 ring-border`, animación scale/opacity 150 ms), `MenuItem` (`rounded-md px-2 py-1.5 text-control font-medium`, iconos `size-3.5 text-muted-foreground`, highlight `bg-accent/70`), `MenuLinkItem`, `MenuRadioGroup`/`MenuRadioItem` (check a la derecha), `MenuGroupLabel` (`text-etiqueta font-medium text-muted-foreground`), `MenuSeparator` (`-mx-1 my-1 h-px bg-border/70`). Es el menú a reutilizar para "más acciones" (⋯) de tablas.
 
 ---
 
@@ -185,7 +214,7 @@ De arriba abajo:
 
 `sticky top-0 z-20 h-14 border-b border-border/80 bg-card/80 backdrop-blur px-4 md:px-6`, dos zonas:
 
-**Izquierda** (`min-w-0`, nunca se desborda sobre el resto): hamburguesa (solo móvil) → **miga** `Sección / Página` (`text-[13px]`, sección en `muted-foreground/80`, página en `font-heading font-semibold`; `overflow-hidden` para que no pise los pills) → separador vertical `h-4 w-px bg-border` → pill **OSE** (deshabilitada, "sin monitoreo", `opacity-60`, próximamente) → pill de **entorno**: `BETA Sunat` (`border-warning-border bg-warning text-warning-foreground`, punto ámbar) o `Producción` (`bg-foreground text-background`, punto verde).
+**Izquierda** (`min-w-0`, nunca se desborda sobre el resto): hamburguesa (solo móvil) → **miga** `Sección / Página` (`text-control`, sección en `muted-foreground/80`, página en `font-heading font-semibold`; `overflow-hidden` para que no pise los pills) → separador vertical `h-4 w-px bg-border` → pill **OSE** (deshabilitada, "sin monitoreo", `opacity-60`, próximamente) → pill de **entorno**: `BETA Sunat` (`border-warning-border bg-warning text-warning-foreground`, punto ámbar) o `Producción` (`bg-foreground text-background`, punto verde).
 
 **Derecha** (`shrink-0`): buscador deshabilitado (`w-64`, `⌘K`, solo `lg+`) → separador → `Exportar` deshabilitado (`sm+`) → **acciones contextuales por ruta**:
 
@@ -199,8 +228,8 @@ De arriba abajo:
 Regla de espacio: máximo **dos secundarias + una principal**; lo que no cabe va dentro de un diálogo (p. ej. "Documentación API" vive en el pie de los diálogos de API keys). Breakpoints de ocultación: `hidden lg:inline-flex` según prioridad (no `sm`/`md`: el sidebar fijo de 240 px aparece en `md`, así que entre 768–1023 px el ancho real disponible es angosto y cualquier cosa que se revele antes de `lg` compite con la miga y puede solaparse con las acciones).
 
 Recetas (en `lib/estilos.ts`, re-exportadas desde `top-bar.tsx`; también son las de cualquier acción suelta fuera de la top bar):
-- `ACCION_PRINCIPAL`: `h-9 rounded-lg bg-foreground text-background px-3 text-[12px] font-medium shadow-xs hover:bg-foreground/90` (negro/blanco según tema; **no** primary, para no competir con los estados).
-- `ACCION_SECUNDARIA`: `h-9 rounded-lg border border-border bg-card px-2.5 text-[12px] font-medium text-foreground/80 shadow-2xs hover:bg-muted hover:text-foreground`.
+- `ACCION_PRINCIPAL`: `h-9 rounded-lg bg-foreground text-background px-3 text-control font-medium shadow-xs hover:bg-foreground/85` (negro/blanco según tema; **no** primary, para no competir con los estados).
+- `ACCION_SECUNDARIA`: `h-9 rounded-lg border border-border bg-card px-2.5 text-control font-medium text-foreground shadow-xs hover:border-input hover:bg-secondary`.
 
 El selector de tema **no** está en la top bar: vive en el menú de usuario.
 
@@ -214,23 +243,25 @@ Base: `inline-flex items-center rounded-lg text-sm font-medium transition-all fo
 | Variante | Estilo | Uso |
 |---|---|---|
 | `default` | `bg-primary text-primary-foreground hover:bg-primary/80` | CTA en formularios públicos/onboarding |
+| `suave` | `bg-accent text-accent-foreground`; hover mezcla `accent` con 8 % de `accent-foreground` | Acción secundaria con presencia, junto a una principal; contraste del texto 7.07 claro / 8.23 oscuro |
 | `outline` | `border-border bg-background hover:bg-muted` | Acciones secundarias en formularios |
 | `secondary` | `bg-secondary` | Neutro |
 | `ghost` | solo hover `bg-muted` | Iconos (hamburguesa, refrescar) |
-| `destructive` | `bg-destructive/10 text-destructive hover:bg-destructive/20` | Acciones irreversibles |
+| `destructive` | `bg-destructive-suave text-destructive-texto`; hover mezcla `destructive-suave` con 12 % de `destructive` | Acciones irreversibles |
 | `link` | `text-primary hover:underline` | Enlaces inline |
 
 Tamaños: `default`, `sm` y `lg` miden `h-9` (cambian padding y texto); iconos `icon`, `icon-sm` e `icon-lg` miden `size-9`. `xs` (h-6) e `icon-xs` (24) solo van dentro de otro control (§4).
 
 ### Recetas de `lib/estilos.ts` (formularios y diálogos)
-- `BOTON_PRIMARIO`: `h-9 rounded-lg bg-primary text-primary-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:opacity-95 active:scale-[0.99]`.
-- `BOTON_SECUNDARIO`: `h-9 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-foreground/80 shadow-2xs hover:bg-muted`.
-- `BOTON_DESTRUCTIVO`: `h-9 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-[13px] font-semibold shadow-xs hover:bg-destructive/90` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
+- `BOTON_PRIMARIO`: `h-9 rounded-lg bg-primary text-primary-foreground px-3.5 text-control font-medium shadow-xs hover:bg-primary/90` + `PRESION`.
+- `BOTON_SECUNDARIO`: `h-9 rounded-lg border border-border bg-card px-3.5 text-control font-medium text-foreground shadow-xs hover:border-input hover:bg-secondary` + `PRESION`.
+- `BOTON_DESTRUCTIVO`: `h-9 rounded-lg bg-destructive text-destructive-foreground px-3.5 text-control font-medium shadow-xs hover:bg-destructive/90` + `PRESION` (el texto va con su token, no `text-white`: en oscuro el rojo es claro y el texto oscuro).
+- `ACCION_PRINCIPAL` y `ACCION_SECUNDARIA` (top bar, filtros) también llevan `PRESION`. `PRESION` es `motion-safe:active:scale-[0.98]` (§Movimiento).
 - Pie de diálogo, `PanelLateral`, `TarjetaPaso` y `Drawer` usan las mismas; `BOTON_*_PIE` quedan como alias obsoletos (§4).
 - Cierre de diálogos informativos: botón `bg-foreground text-background` ("Entendido").
 
 ### Acciones dentro de tablas
-`inline-flex h-9 rounded-lg px-2.5 text-[12px] font-medium` + icono 14 px: neutras en `text-muted-foreground`, destructivas en `text-destructive hover:bg-destructive/10`, separadas por `|` (`text-border`). Iconos-botón de fila y menú «⋯»: `size-9`, visibles al 80 % y al 100 % en hover de la fila (`group-hover`). La fila crece hasta la altura del control: una acción de fila mide lo mismo que el botón o el filtro de arriba de la tabla.
+`inline-flex h-9 rounded-lg px-2.5 text-control font-medium` + icono 14 px: neutras en `text-muted-foreground`, destructivas en `text-destructive-texto hover:bg-destructive-suave`, separadas por `|` (`text-border`). Iconos-botón de fila y menú «⋯»: `size-9`, visibles al 80 % y al 100 % en hover de la fila (`group-hover`). La fila crece hasta la altura del control: una acción de fila mide lo mismo que el botón o el filtro de arriba de la tabla.
 
 ### Botón copiar (`comprobantes/boton-copiar.tsx`)
 Icono `Copy` → `Check` 1,5 s, `p-0.5 rounded text-muted-foreground/70 hover:bg-secondary`; en filas aparece con `opacity-0 group-hover:opacity-100`. Con `etiqueta` (barras de acciones) muestra además el texto «Copiar» → «Copiado», `inline-flex gap-1.5 rounded-md text-muted-foreground`, y el check pasa a `text-success-foreground` (`patrones/boton-copiar.tsx`).
@@ -246,9 +277,9 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 ## 10. Formularios
 
 - **Campo** (`CAMPO`): `h-9 rounded-lg border border-border bg-muted px-3 text-sm`; foco `border-ring bg-card ring-3 ring-ring/30`; deshabilitado `opacity-60 cursor-not-allowed`.
-- **Etiqueta** (`ETIQUETA_CAMPO`): `text-[12px] font-medium`. **Ayuda** (`AYUDA_CAMPO`): `font-mono text-[11px] text-muted-foreground`. Error: `text-sm text-destructive` bajo el campo.
-- **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta uppercase (`ETIQUETA_DATO`) + caja `h-9 rounded-lg border bg-muted px-3 font-mono text-[13px]`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
-- **Select** (`ui/select.tsx`, base-ui): disparador `h-9 rounded-lg border-border bg-card text-[12px] font-medium shadow-2xs` (todos los `size` miden `h-9`; `size="campo"` solo agrega el padding de `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
+- **Etiqueta** (`ETIQUETA_CAMPO`): `text-control font-medium`. **Ayuda** (`AYUDA_CAMPO`): `text-etiqueta text-muted-foreground` (mono solo si muestra un dato técnico). Error: `text-sm text-destructive` bajo el campo.
+- **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta en tipo oración (`ETIQUETA_DATO`) + caja `h-9 rounded-lg border bg-muted px-3 font-mono text-control`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
+- **Select** (`ui/select.tsx`, base-ui): disparador `h-9 rounded-lg border-border bg-card text-control font-medium shadow-xs` (todos los `size` miden `h-9`; `size="campo"` solo agrega el padding de `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
 - **Selector de filas** (`ui/selector-por-pagina.tsx`): grupo `h-9 rounded-lg border bg-card p-0.5` con `10 · 20 · 50`, activo `bg-foreground text-background`.
 - Validación con zod + react-hook-form; mensajes de error desde `lib/messages.ts` (`mensajeError(codigo)`).
 - **Archivo (.p12/.pfx)** en `/empresa`: input de archivo + clave, feedback con vigencia del certificado (pill verde/ámbar/rojo según días restantes).
@@ -257,11 +288,12 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 
 ## 11. Tarjetas y secciones
 
-- **Tarjeta** (`TARJETA`): `rounded-xl border border-border bg-card shadow-2xs`. Variante suave en diálogos: `border-border/80`.
-- **Cabecera de sección**: `flex items-center gap-2.5 px-4 py-3 border-b border-border/60` → icono en caja `size-8 rounded-lg bg-accent text-primary` (lucide 16 px) + título 13 px semibold + subtítulo mono 11 px; a la derecha, chips/contadores (`rounded border bg-muted px-2 py-0.5 font-mono text-[11px]`).
-- **Pie de tarjeta**: `border-t border-border/60 bg-muted/60 px-4 py-2 font-mono text-[11px] text-muted-foreground`, con iconos 12 px (`Lock`, `KeyRound`).
-- **Fila de métricas** (cabecera de cada página): una tarjeta `px-5 py-3 shadow-xs` con `grid grid-cols-2 lg:grid-cols-4 lg:divide-x`; cada `Metrica` = etiqueta uppercase 11 px → valor mono `text-lg font-semibold` (con sufijo `text-[12px] font-normal text-muted-foreground`, p. ej. `/ 5 creadas`) → ayuda 11 px con punto de estado (`size-1.5 rounded-full bg-success-solid|warning-solid|destructive`).
-- **Tarjeta deshabilitada / próximamente**: `opacity-60`/`70`, `cursor-not-allowed`, chip `PRÓXIMAMENTE` (mono 10 px uppercase) y `title`.
+- **Tarjeta** (`TARJETA`): `rounded-xl border border-border bg-card shadow-sm`.
+- **Cabecera de sección**: `flex items-center gap-2.5 px-4 py-3 border-b border-border/60` → icono en caja `size-8 rounded-lg bg-accent text-primary` (lucide 16 px) + título `text-cuerpo font-semibold` + subtítulo `text-etiqueta`; a la derecha, chips/contadores (`rounded-md bg-secondary px-2 py-0.5 font-mono text-etiqueta`).
+- **Pie de tarjeta**: `border-t border-border/60 bg-muted/60 px-4 py-2 text-etiqueta text-muted-foreground`, con iconos 12 px (`Lock`, `KeyRound`).
+- **Fila de métricas** (cabecera de cada página): una tarjeta `px-5 py-3 shadow-xs` con `grid grid-cols-2 lg:grid-cols-4 lg:divide-x`; cada `Metrica` = etiqueta `text-etiqueta` en tipo oración → valor `text-metrica tabular-nums` (con sufijo `text-control font-normal text-muted-foreground`, p. ej. `/ 5 creadas`) → ayuda `text-etiqueta` con punto de estado (`size-1.5 rounded-full bg-success-solid|warning-solid|destructive`).
+- **Tarjeta destacada** (`patrones/tarjeta-destacada.tsx`): panel de color plano `rounded-xl p-6`, sin borde ni sombra, para destacar un bloque (bienvenida, función nueva, plan, siguiente paso). Tonos `neutro | info | ok | aviso | invertido` con los tokens de siempre; el título y la descripción llevan el color del tono, sin opacidad, así el contraste calculado vale para ambos. No es un aviso (no anuncia nada al lector de pantalla): para eso, `Alerta`.
+- **Tarjeta deshabilitada / próximamente**: `opacity-60`/`70`, `cursor-not-allowed`, chip `Próximamente` (`text-etiqueta`) y `title`.
 
 ---
 
@@ -269,12 +301,12 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 
 Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 
-1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`SEGMENTADO` + `SEGMENTO`: caja `min-h-9 p-0.5`, segmentos `h-7`, activo `bg-card shadow-2xs` por `data-active` o `aria-current="page"`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-9 rounded-lg border bg-card text-[12px] font-medium shadow-2xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-9`, icono gira mientras `useTransition` está pendiente) — todo a `h-9` para alinear con el `Select` de la misma barra.
-2. **Contenedor**: `overflow-hidden rounded-xl border border-border/90 bg-card shadow-2xs`; `opacity-60` mientras refresca.
-3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground/80`; primera columna checkbox deshabilitado (selección múltiple próximamente).
-4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-[13px]`; celda principal con dos líneas (valor fuerte + subtítulo mono 11 px); identificadores en chip `rounded bg-secondary px-2 py-0.5 font-mono font-semibold text-primary` (inactivos: `bg-muted text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
+1. **Barra de filtros** (`flex flex-wrap justify-between gap-3`): a la izquierda pestañas segmentadas (`SEGMENTADO` + `SEGMENTO`: caja `min-h-9 p-0.5`, segmentos `h-7`, activo `bg-card shadow-sm` por `data-active` o `aria-current="page"`) o cabecera con icono; a la derecha `Select`s de filtro (`CONTROL_FILTRO`: `h-9 rounded-lg border bg-card text-control font-medium shadow-xs`), filtros aún no soportados como botones deshabilitados, y botón **refrescar** (`size-9`, icono gira mientras `useTransition` está pendiente) — todo a `h-9` para alinear con el `Select` de la misma barra.
+2. **Contenedor**: `overflow-hidden rounded-xl border border-border bg-card shadow-sm`; `opacity-60` mientras refresca.
+3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-etiqueta font-medium text-muted-foreground` en tipo oración; primera columna checkbox deshabilitado (selección múltiple próximamente).
+4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-control`; celda principal con dos líneas (valor fuerte + subtítulo `text-etiqueta`, mono si es un dato); identificadores en `ChipCodigo` (`rounded-md px-2 py-0.5 font-mono text-control font-medium bg-accent text-accent-foreground`; inactivos: `bg-secondary text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
 5. **Vacío**: fila única `py-14 text-center` con icono 24 px y mensaje ("Todavía no tienes… Crea la primera con «…»" / "No hay … con los filtros seleccionados").
-6. **Pie**: `border-t border-border/60 bg-muted px-4 py-2 text-[12px]` → "Mostrando **x–y** de **N** …" · selector de filas · nota contextual (`hidden xl:inline`) | paginación (`Anterior` / números `size-7` con actual `bg-foreground text-background` / `Siguiente`), con `paginasVisibles()` de `lib/paginacion.ts` (1, 2, …, actual±1, …, últimas 2).
+6. **Pie**: `border-t border-border/60 bg-muted px-4 py-2 text-control` → "Mostrando **x–y** de **N** …" · selector de filas · nota contextual (`hidden xl:inline`) | paginación (`Anterior` / números `size-7` con actual `bg-foreground text-background` / `Siguiente`), con `paginasVisibles()` de `lib/paginacion.ts` (1, 2, …, actual±1, …, últimas 2).
 
 Filtrado/paginación en cliente cuando la API devuelve todo (series, API keys); en servidor con `?pagina=&por_pagina=` y `x-total-count` para comprobantes.
 
@@ -282,20 +314,20 @@ Filtrado/paginación en cliente cuando la API devuelve todo (series, API keys); 
 
 ## 13. Pills, badges y estados
 
-- **Pill de estado** (`comprobantes/estado-badge.tsx` y equivalentes): `inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[11px] font-medium whitespace-nowrap` + punto `size-1.5 rounded-full`.
+- **Pill de estado** (`comprobantes/estado-badge.tsx` y equivalentes): `PillEstado` (`patrones/pill-estado.tsx`): `inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-etiqueta font-medium whitespace-nowrap`, sin borde: relleno `bg-*` + punto `size-1.5 rounded-full bg-*-solid`.
 
 | Tono | Clases | Estados SUNAT / entidades |
 |---|---|---|
-| Verde | `border-success-border bg-success text-success-foreground`, punto `bg-success-solid` | `ACEPTADO` ("Aceptado con CDR" si trae CDR), serie/llave **Activa**, credenciales OK |
-| Ámbar | `border-warning-border bg-warning text-warning-foreground`, punto `bg-warning-solid` | `ACEPTADO_CON_OBS`, BETA, certificado por vencer |
-| Rojo | `border-destructive-border bg-destructive/10 text-destructive`, punto `bg-destructive` | `RECHAZADO`, `INVALIDO`, `ERROR_ENVIO`, vencido |
-| Neutro | `border-border bg-secondary text-muted-foreground`, punto `bg-muted-foreground/50` | `RECIBIDO`, `FIRMADO`, `ENVIADO`, `PENDIENTE_AGRUPACION`, `ANULADO`, **Inactiva**, **Revocada** |
+| Verde | `bg-success text-success-foreground`, punto `bg-success-solid` | `ACEPTADO` ("Aceptado con CDR" si trae CDR), serie/llave **Activa**, credenciales OK |
+| Ámbar | `bg-warning text-warning-foreground`, punto `bg-warning-solid` | `ACEPTADO_CON_OBS`, BETA, certificado por vencer |
+| Rojo | `bg-destructive-suave text-destructive-texto`, punto `bg-destructive` | `RECHAZADO`, `INVALIDO`, `ERROR_ENVIO`, vencido |
+| Neutro | `bg-secondary text-muted-foreground`, punto `bg-muted-foreground/50` | `RECIBIDO`, `FIRMADO`, `ENVIADO`, `PENDIENTE_AGRUPACION`, `ANULADO`, **Inactiva**, **Revocada** |
 
-- **Chips informativos**: `rounded border border-border bg-muted px-2 py-0.5 font-mono text-[11px] text-muted-foreground` (contadores, "id: 193f4b35", `UBL 2.1`).
-- **Chip de tipo de comprobante**: caja `size-7 rounded bg-accent font-mono text-[11px] font-semibold text-primary` con el código (`01`, `03`, `07`, `08`).
-- **Etiqueta PRONTO / PRÓXIMAMENTE**: `rounded bg-secondary px-1 py-0.5 text-[9px]/[10px] font-medium tracking-wide uppercase`.
+- **Chips informativos**: `Chip`: `rounded-md bg-secondary px-2 py-0.5 font-mono text-etiqueta text-muted-foreground` (contadores, "id: 193f4b35", `UBL 2.1`).
+- **Chip de tipo de comprobante**: caja `size-7 rounded bg-accent font-mono text-etiqueta font-semibold text-primary` con el código (`01`, `03`, `07`, `08`).
+- **Etiqueta «Pronto» / «Próximamente»**: `rounded-md bg-secondary px-1.5 py-0.5 text-etiqueta font-medium text-muted-foreground`, en tipo oración.
 - **Entorno**: ver §8. **Rol**: texto plano bajo el correo en el menú de usuario.
-- `ui/badge.tsx` (cva: `default | secondary | destructive | outline | ghost | link`) es la base; las pills anteriores lo extienden con `gap-1.5 border px-2.5 py-1 text-[11px]`.
+- `ui/badge.tsx` (cva: `default | secondary | destructive | outline | ghost | link`) es la base; las pills anteriores lo extienden con `gap-1.5 px-2.5 py-1 text-etiqueta`, sin borde.
 
 ---
 
@@ -314,7 +346,7 @@ Toda función visible en el diseño de Stitch que el backend aún no soporta se 
 **Un clic fuera no cierra un diálogo** (`Dialog` trae `disablePointerDismissal` por defecto): un clic perdido no debe tirar lo escrito ni lo que se muestra una sola vez. Se cierra con la X, Escape o los botones del pie. Vale para todo lo que se arma sobre `Dialog` (`DialogoConfirmacion`, `Paleta`); los paneles laterales (`Sheet`, `PanelLateral`, `Drawer`) sí se cierran con un clic fuera.
 
 Estructura fija: `DialogContent className="gap-0 p-0"` →
-- **Cabecera** `border-b border-border/60 px-5 py-4 pr-14`: icono en caja `size-8 rounded-lg bg-accent text-primary` + `DialogTitle` (16 px semibold) + `DialogDescription` (13 px).
+- **Cabecera** `border-b border-border/60 px-5 py-4 pr-14`: icono en caja `size-8 rounded-lg bg-accent text-primary` + `DialogTitle` (`text-base font-medium`) + `DialogDescription` (`text-sm text-muted-foreground`).
 - **Cuerpo** `px-5 py-4` (formularios: `grid gap-4`; referencias: `@container bg-muted/40` con `grid @3xl:grid-cols-2`).
 - **Pie** `border-t border-border/60 px-5 py-3 flex justify-end gap-2` (o `justify-between` si lleva un enlace a la izquierda).
 
@@ -329,8 +361,8 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 
 ## 16. Código y datos técnicos
 
-- **Barra de endpoint**: `bg-muted border-b px-4 py-2` con chip de método (`rounded bg-primary px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-primary-foreground`), URL mono 12 px truncada, pestañas de lenguaje (`cURL · Node.js / TS · Python`, control segmentado `h-9` con segmentos `h-7`) y botón copiar.
-- **Bloque de código**: `pre` con `bg-[oklch(0.18_0.02_265)] text-[oklch(0.9_0.01_265)] p-4 font-mono text-[12px] leading-relaxed max-h-[52vh] overflow-auto` (siempre oscuro, en ambos temas). Respuestas JSON: `bg-muted/40 text-foreground`.
+- **Barra de endpoint**: `bg-muted border-b px-4 py-2` con chip de método (`rounded-md bg-accent px-1.5 py-0.5 font-mono text-etiqueta font-semibold text-accent-foreground`; el verbo es un literal, se escribe con `toUpperCase()`), URL `font-mono text-control` truncada, pestañas de lenguaje (`cURL · Node.js / TS · Python`, control segmentado `h-9` con segmentos `h-7`) y botón copiar.
+- **Bloque de código**: `pre` con `bg-codigo text-codigo-foreground p-4 font-mono text-control leading-relaxed overflow-auto` dentro de una tarjeta `border-border` (siempre casi negro, en ambos temas). Respuestas JSON: `bg-muted/40 text-foreground`.
 - **Vista previa XML/CDR** (`comprobantes/vista-previa.tsx`): pestañas XML/CDR, `formatearXml()`, botón "Descargar XML/ZIP".
 - **Hash / UUID**: mono, `truncate` con `title` completo; ids acortados a 8 caracteres en listados.
 
@@ -348,6 +380,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 ## 18. Tema, iconografía y formato
 
 - **Tema**: `next-themes` con `class` en `<html>`; opciones Claro / Oscuro / Sistema en el menú de usuario. Componentes que dependen del tema en cliente (`ThemeToggle`) pintan sin selección hasta montar para no romper la hidratación.
+- **Diseño**: select «Diseño» en el menú de usuario, justo debajo de Tema (`nav/selector-diseno.tsx`). Es independiente del tema: el diseño va en `<html data-diseno>` y claro/oscuro en la clase `.dark`, así que cada diseño existe en los dos modos. Ver «Diseños» en §20.
 - **Iconos**: lucide-react. 18 px en el sidebar, 16 px en botones y cabeceras, 14 px en acciones de fila y menús, 12 px en pies/ayudas. Color por defecto `text-muted-foreground`; primary solo para el activo o el icono de sección.
 - **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
 - **Accesibilidad**: todo disparador de menú/diálogo con `aria-label`; controles segmentados como `radiogroup`; `sr-only` para etiquetas de iconos; foco visible con `ring-ring`.
@@ -359,7 +392,7 @@ Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** de
 | Carpeta | Componentes |
 |---|---|
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
-| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `top-bar`, `mobile-nav` |
+| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
 | `components/empresa` | `certificado-form`, `credenciales-sol-form`, `nueva-empresa-dialog`, `nueva-empresa-form`, `referencia-empresa` |
@@ -393,8 +426,75 @@ Sexto lote: `HoverCard` (sobre `base-ui/preview-card`; su disparador es un `<a>`
 
 Séptimo lote: `Autocomplete` (en `formularios/`, sobre `base-ui/autocomplete`; a diferencia de `Combobox`, no fuerza a elegir un valor de la lista — `value`/`onValueChange` son el texto libre, y clic en una sugerencia solo lo rellena), `Toolbar` (sobre `base-ui/toolbar`; barra de controles agrupados con foco por flechas entre ellos — contenedor `h-9`/`p-0.5` con botones internos `size-7`, el mismo patrón de `GrupoBotones` y `Tabs estilo="segmentado"`) y `Drawer` (sobre `base-ui/drawer`; hoja inferior para móvil con arrastre nativo para cerrar, a diferencia de `Sheet` que solo anima entrada/salida sin gesto de arrastre).
 
+Octavo lote (estilo Notion de Refero): `TarjetaDestacada` (en `patrones/`; panel de color plano de cinco tonos, a diferencia de `Alerta` es contenido estático y no un aviso; a diferencia de `Card` trae tono y estructura fija de icono, título, descripción y acción), la variante `suave` de `Button` (relleno `accent`; entre `ghost`/`outline` y `default`) y el mecanismo de **diseños** descrito abajo.
+
+### Diseños
+
+Un diseño es un conjunto de tokens que cambia el aspecto de toda la interfaz sin tocar los componentes. Se elige en el menú de usuario, bajo Tema, y se guarda en `localStorage` (`khipu-diseno`).
+
+| Pieza | Qué hace |
+|---|---|
+| `components/disenos.ts` | La lista `DISENOS` (`valor` + `etiqueta`), `DISENO_POR_DEFECTO` (`"khipu"`) y la clave de localStorage |
+| `components/diseno.tsx` | `DisenoProvider` (guarda el diseño y lo pone en `<html data-diseno>`) y `useDiseno()` (sin proveedor devuelve una lista vacía y no falla) |
+| `components/script-diseno.tsx` | `ScriptDiseno`, script en línea para el `<head>` del layout raíz: aplica el diseño guardado antes del primer pintado, sin parpadeo |
+| `components/nav/selector-diseno.tsx` | `SelectorDiseno`: un `Select` de `h-9`; no pinta nada con un solo diseño o sin proveedor |
+| `MenuUsuario` | Muestra el selector bajo Tema; `mostrarDiseno={false}` lo oculta |
+
+Para adoptarlo en una app: envuelve con `DisenoProvider` (dentro de `ThemeProvider`) y pon `<ScriptDiseno />` dentro de `<head>` en `app/layout.tsx`. Sin eso, `MenuUsuario` se ve exactamente como antes.
+
+**Agregar un diseño:** (1) un bloque en `src/styles/tokens.css` que sobrescriba solo los tokens que cambian; (2) su entrada en `DISENOS`; (3) el contraste de cada par de texto afectado, calculado y no estimado.
+
+```css
+html[data-diseno="papel"]:not(.dark) { --background: #f6f5f4; --primary: #0075de; /* … */ }
+html[data-diseno="papel"].dark { --background: #191817; --primary: #62aef0; /* … */ }
+```
+
+El selector lleva `:not(.dark)` (o `.dark` para un bloque oscuro) a propósito: sin eso, los valores claros del diseño le ganarían por especificidad al modo oscuro. El diseño base `khipu` no tiene bloque: son los tokens de `:root` y `.dark`.
+
+**Diseños disponibles:**
+
+| Valor | Origen | Cambia (claro) | Oscuro |
+|---|---|---|---|
+| `khipu` | Diseño base | — | — |
+| `papel` | Estilo Notion de Refero | Lienzo `--background` `#f6f5f4` con tarjetas blancas; un solo azul de acción (`--primary` `#0075de`, `--ring`, `--brand`) y su fondo suave `--accent` `#e6f3fe` con texto `#005bab` (6.04); bordes de 1 px `rgba(0,0,0,0.08)` en vez de sombras; texto `--foreground` `#111111` (17.34) y `--muted-foreground` `#615d59` (5.99 sobre el fondo, 6.53 sobre card, 5.63 sobre secondary); `secondary`, `muted` y sidebar en tonos cálidos; transiciones de 200 ms con `ease` (`--default-transition-*`, en ambos temas) | Derivado, no de la referencia (Notion no define oscuro): superficies cálidas (`#191817`, card `#211f1e`) y el mismo azul aclarado (`--primary` `#62aef0` con texto `#111111`, 7.94) |
+
+Excepciones de `papel`: el azul `#0075de` sobre el lienzo da 4.19 (sobre card, 4.57), así que un enlace `text-primary` directamente sobre el fondo queda bajo 4.5; el texto sobre fondo de acento usa `#005bab`. `--chart-1` no cambia para que no se confunda con `--chart-5`. Los radios (12 px tarjetas, 8 px botones) ya son los de khipu; la fuente es la de khipu (Geist).
+
+### Movimiento
+
+El movimiento confirma una acción, muestra un cambio de estado o introduce contenido; nunca decora. Tiene dos capas que comparten valores: CSS para lo que debe funcionar en Server Components y en los primitivos de base-ui, y [Motion](https://motion.dev) para lo que CSS no hace bien (layout, trazos, contadores, entradas y salidas de React).
+
+| Valor | CSS (`src/styles/`) | Motion (`lib/movimiento.ts`) |
+|---|---|---|
+| Curva | `ease-salida` = `cubic-bezier(0.16, 1, 0.3, 1)` | `CURVA_SALIDA` |
+| Duraciones | `duration-(--duracion-rapida)` 120 ms · `media` 200 ms · `lenta` 320 ms | `DURACION.rapida/media/lenta` (+ `trazo` 0.6 s, `contador` 0.8 s) |
+| Resortes | — | `RESORTE` (indicadores) y `RESORTE_SUAVE` (valores), ambos con ζ ≥ 1: sin rebote |
+
+**CSS:** `PRESION` (al pulsar, `scale-[0.98]`), `ENTRADA` + `pasoEntrada(i)` (fundido + 8 px, 240 ms, 40 ms por posición), `ANIMACION_POPUP` y las transiciones de diálogo, sheet, drawer, popover, menú, select, combobox, hover-card, tooltip, acordeón y toasts. El indicador de `Tabs` lo posiciona base-ui (`Tabs.Indicator`, variables `--active-tab-*`) y lo desliza una transición CSS.
+
+**Motion** (`ProveedorMovimiento`, ya incluido en `Providers`, aporta `layoutId` y «reducir movimiento». Cada componente animado se envuelve además en `MovimientoLocal`, que carga las animaciones básicas: sin él, un `m.*` fuera de un `LazyMotion` se quedaría congelado en su estado inicial, con gráficos en blanco o una barra masiva que no aparece):
+
+| Componente | Efecto |
+|---|---|
+| `SidebarNav` | El fondo del ítem activo se desliza (`layoutId`) |
+| `TablaDatos` | La barra de acciones masivas entra y sale |
+| `NumeroAnimado` | Cuenta desde 0; úsalo como hijo de `Metrica` o `valor` de `Kpi` |
+| `Sparkline`, `GraficoLineas` (`TrazoAnimado`) | La línea se dibuja |
+| `GraficoBarras` | Las barras crecen desde la base, escalonadas |
+| `ProgresoCircular` | El anillo avanza con resorte |
+| `ConfirmacionEnLinea`, `BotonCopiar` | Cambio animado de acción a confirmación; el icono gira a un check |
+
+**Reglas:**
+- Solo valores de la tabla de arriba; nunca duraciones ni curvas sueltas: en CSS, `duration-(--duracion-*)` y `ease-salida`.
+- Los componentes importan `m` (no `motion`) de `motion/react`: `LazyMotion strict` falla en desarrollo si se cuela un `motion.*`.
+- Con «reducir movimiento» nada se desplaza, escala ni se dibuja: `MotionConfig reducedMotion="user"` anula transformaciones y layout, los efectos que no lo son (trazos, contador, altura, anillo) consultan `useReducedMotion()`, y el CSS va bajo `motion-safe:`/`motion-reduce:`. Las transiciones de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú, select, tooltip, toast, acordeón, indicador de `Tabs`) las acorta a 1 ms la regla `@media (prefers-reduced-motion: reduce)` de `src/styles/theme.css`; los spinners y el progreso indeterminado siguen girando porque indican carga. Solo quedan fundidos de opacidad.
+- Toasts: siguen con la transición CSS de base-ui; `AnimatePresence` competiría con su cierre por tiempo y por gesto.
+- El diseño `papel` fija las transiciones por defecto en 200 ms (`--default-transition-duration`, §Diseños).
+
 ### Pendientes
 
 - Adoptar en el portal los componentes del kit que reemplazan código ad hoc (tooltip real, toasts, menú ⋯ de filas, `TablaDatos`).
 - Rail colapsado de 64 px para tablet (hoy: sidebar completo en `md+`, sheet en móvil).
 - Gráficos del dashboard del portal (etapa 2) con `GraficoBarras`/`GraficoLineas`.
+- El registro tiene dos items llamados `movimiento` (`components/movimiento` y `lib/movimiento`): `add movimiento` en la CLI elige uno por nombre. Las dependencias internas usan la clave completa y no se ven afectadas.
+- `NumeroAnimado` muestra el valor del servidor, salta a 0 al hidratar y vuelve a contar desde 0 si `valor` cambia; debería contar desde el valor anterior.

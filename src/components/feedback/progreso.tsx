@@ -1,7 +1,10 @@
 "use client";
 
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
+import { m, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
+import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
 export type TonoProgreso = "primary" | "success" | "warning" | "destructive";
@@ -45,9 +48,9 @@ export function ProgresoLineal({
     <ProgressPrimitive.Root value={valor ?? null} className={cn("grid gap-1.5", className)}>
       {etiqueta || (mostrarValor && !indeterminado) ? (
         <div className="flex items-center justify-between gap-2">
-          {etiqueta ? <ProgressPrimitive.Label className="text-[12px] font-medium text-foreground">{etiqueta}</ProgressPrimitive.Label> : <span />}
+          {etiqueta ? <ProgressPrimitive.Label className="text-control font-medium text-foreground">{etiqueta}</ProgressPrimitive.Label> : <span />}
           {mostrarValor && !indeterminado ? (
-            <ProgressPrimitive.Value className="font-mono text-[11px] text-muted-foreground tabular-nums" />
+            <ProgressPrimitive.Value className="font-mono text-etiqueta text-muted-foreground tabular-nums" />
           ) : null}
         </div>
       ) : null}
@@ -55,7 +58,7 @@ export function ProgresoLineal({
         <ProgressPrimitive.Indicator
           className={cn(
             "block h-full rounded-full",
-            indeterminado ? cn("w-1/3 animate-progreso-indeterminado", TONOS[tono]) : cn("transition-[width] duration-300 ease-out", TONOS[tono]),
+            indeterminado ? cn("w-1/3 animate-progreso-indeterminado", TONOS[tono]) : cn("transition-[width] duration-(--duracion-lenta) ease-salida motion-reduce:transition-none", TONOS[tono]),
           )}
         />
       </ProgressPrimitive.Track>
@@ -93,6 +96,8 @@ export function ProgresoCircular({
   const circunferencia = 2 * Math.PI * radio;
   const indeterminado = valor == null;
   const pct = indeterminado ? 0.25 : Math.min(100, Math.max(0, valor)) / 100;
+  // strokeDashoffset no es una transformación: con «reducir movimiento» se salta aquí, no en MotionConfig.
+  const reducir = useReducedMotion();
 
   return (
     <div
@@ -103,23 +108,25 @@ export function ProgresoCircular({
       className={cn("relative inline-flex shrink-0 items-center justify-center", indeterminado && "animate-spin", className)}
       style={{ width: caja, height: caja }}
     >
-      <svg width={caja} height={caja} viewBox={`0 0 ${caja} ${caja}`} className="-rotate-90">
+      <MovimientoLocal><svg width={caja} height={caja} viewBox={`0 0 ${caja} ${caja}`} className="-rotate-90">
         <circle cx={caja / 2} cy={caja / 2} r={radio} strokeWidth={grosor} fill="none" style={{ stroke: "var(--secondary)" }} />
-        <circle
+        <m.circle
           cx={caja / 2}
           cy={caja / 2}
           r={radio}
           strokeWidth={grosor}
           strokeLinecap="round"
           strokeDasharray={circunferencia}
-          strokeDashoffset={circunferencia * (1 - pct)}
           fill="none"
-          className="transition-[stroke-dashoffset] duration-300 ease-out"
           style={{ stroke: COLOR_TRAZO[tono] }}
+          // initial={false}: el servidor ya pinta el valor; solo se anima cuando cambia.
+          initial={false}
+          animate={{ strokeDashoffset: circunferencia * (1 - pct) }}
+          transition={reducir ? { duration: 0 } : RESORTE_SUAVE}
         />
-      </svg>
+      </svg></MovimientoLocal>
       {contenido !== null ? (
-        <span className="absolute font-mono text-[11px] font-semibold text-foreground tabular-nums">
+        <span className="absolute font-mono text-etiqueta font-semibold text-foreground tabular-nums">
           {contenido ?? (indeterminado ? "" : `${Math.round(valor!)}%`)}
         </span>
       ) : null}

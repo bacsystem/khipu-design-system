@@ -28,7 +28,7 @@ export function LogoMarca({
       </div>
       <span className="flex min-w-0 items-baseline gap-0.5">
         <span className="truncate text-base font-bold tracking-tight text-foreground">{nombre}</span>
-        {sufijo ? <span className="font-mono text-[11px] font-medium text-primary">{sufijo}</span> : null}
+        {sufijo ? <span className="text-etiqueta font-medium text-muted-foreground">{sufijo}</span> : null}
       </span>
     </Link>
   );

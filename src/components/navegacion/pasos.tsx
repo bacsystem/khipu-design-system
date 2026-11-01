@@ -26,7 +26,7 @@ export function Pasos({ pasos, actual, className }: { pasos: Paso[]; actual: num
             <span
               aria-current={estado === "actual" ? "step" : undefined}
               className={cn(
-                "relative flex size-7 shrink-0 items-center justify-center rounded-full border font-mono text-[11px] font-semibold",
+                "relative flex size-7 shrink-0 items-center justify-center rounded-full border font-mono text-etiqueta font-semibold",
                 estado === "hecho" && "border-primary bg-primary text-primary-foreground",
                 estado === "actual" && "border-primary bg-accent text-primary ring-3 ring-ring/20",
                 estado === "pendiente" && "border-border bg-muted text-muted-foreground",
@@ -35,8 +35,8 @@ export function Pasos({ pasos, actual, className }: { pasos: Paso[]; actual: num
               {estado === "hecho" ? <CheckIcon className="size-3.5" strokeWidth={3} /> : i + 1}
             </span>
             <div className="min-w-0">
-              <p className={cn("text-[13px] font-medium", estado === "pendiente" ? "text-muted-foreground" : "text-foreground")}>{p.titulo}</p>
-              {p.descripcion ? <p className="hidden text-[11px] text-muted-foreground sm:block">{p.descripcion}</p> : null}
+              <p className={cn("text-control font-medium", estado === "pendiente" ? "text-muted-foreground" : "text-foreground")}>{p.titulo}</p>
+              {p.descripcion ? <p className="hidden text-etiqueta text-muted-foreground sm:block">{p.descripcion}</p> : null}
             </div>
           </li>
         );
@@ -62,9 +62,9 @@ export function TarjetaPaso({
   className?: string;
 }) {
   return (
-    <section className={cn("rounded-xl border border-border bg-card shadow-2xs", className)}>
+    <section className={cn("rounded-xl border border-border bg-card shadow-xs", className)}>
       <div className="border-b border-border/60 px-5 py-4">
-        <span className="font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
+        <span className="text-etiqueta text-muted-foreground">
           Paso {numero} de {total}
         </span>
         <h2 className="mt-0.5 text-base font-semibold tracking-tight text-foreground">{titulo}</h2>

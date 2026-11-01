@@ -67,14 +67,14 @@ export function TablaEjemplo() {
               <TableHead className={cn(CABECERA_TABLA, "pr-4 pl-2 text-right")}>Acciones</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="text-[13px]">
+          <TableBody className="text-control">
             {data.map((k) => (
               <TableRow key={k.id} className={cn("group border-b border-border/60 hover:bg-muted/80", !k.activa && "opacity-80")}>
                 <TableCell className="py-2 pr-3 pl-4">
                   <ChipCodigo inactivo={!k.activa}>{k.prefijo}</ChipCodigo>
-                  <div className="mt-0.5 font-mono text-[11px] text-muted-foreground/80">id: {k.id.slice(0, 8)}</div>
+                  <div className="mt-0.5 font-mono text-etiqueta text-muted-foreground/80">id: {k.id.slice(0, 8)}</div>
                 </TableCell>
-                <TableCell className="px-3 py-2 font-mono text-[12px] whitespace-nowrap tabular-nums">{formatearFechaHora(k.creada_en)}</TableCell>
+                <TableCell className="px-3 py-2 font-mono text-control whitespace-nowrap tabular-nums">{formatearFechaHora(k.creada_en)}</TableCell>
                 <TableCell className="px-4 py-2 whitespace-nowrap">
                   {k.activa ? <PillEstado tono="ok">Activa</PillEstado> : <PillEstado tono="neutro">Revocada</PillEstado>}
                 </TableCell>
@@ -89,7 +89,7 @@ export function TablaEjemplo() {
                       }}
                     />
                   ) : (
-                    <span className="text-[11px] text-muted-foreground/60">—</span>
+                    <span className="text-etiqueta text-muted-foreground/60">—</span>
                   )}
                 </TableCell>
               </TableRow>

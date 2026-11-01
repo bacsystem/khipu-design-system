@@ -26,7 +26,7 @@ export function AyudaMetrica({ tono, children }: { tono: Tono; children: ReactNo
         "flex min-w-0 items-center gap-1",
         tono === "ok" && "text-success-foreground",
         tono === "aviso" && "text-warning-foreground",
-        tono === "error" && "text-destructive",
+        tono === "error" && "text-destructive-texto",
       )}
     >
       <Punto tono={tono} />
@@ -35,16 +35,19 @@ export function AyudaMetrica({ tono, children }: { tono: Tono; children: ReactNo
   );
 }
 
-/** Una métrica: etiqueta uppercase, valor mono grande (con sufijo opcional) y ayuda de 11px. */
+/**
+ * Una métrica: etiqueta, valor grande (con sufijo opcional) y ayuda. Para que el valor cuente al aparecer, pásale
+ * `<NumeroAnimado valor={…} />` como hijo; un identificador (serie, correlativo) va envuelto en `font-mono`.
+ */
 export function Metrica({ etiqueta, children, sufijo, ayuda }: { etiqueta: string; children: ReactNode; sufijo?: ReactNode; ayuda: ReactNode }) {
   return (
-    <div className="flex min-w-0 flex-col gap-0.5">
-      <span className="truncate text-[11px] font-medium tracking-wider text-muted-foreground uppercase">{etiqueta}</span>
-      <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 font-mono text-lg font-semibold tracking-tight text-foreground">
+    <div className="flex min-w-0 flex-col gap-1">
+      <span className="truncate text-etiqueta font-medium text-muted-foreground">{etiqueta}</span>
+      <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 text-metrica text-foreground tabular-nums">
         {children}
-        {sufijo ? <span className="text-[12px] font-normal text-muted-foreground">{sufijo}</span> : null}
+        {sufijo ? <span className="text-control font-normal text-muted-foreground">{sufijo}</span> : null}
       </div>
-      <div className="flex min-w-0 items-center gap-1 truncate text-[11px] text-muted-foreground">{ayuda}</div>
+      <div className="flex min-w-0 items-center gap-1 truncate text-etiqueta text-muted-foreground">{ayuda}</div>
     </div>
   );
 }
@@ -54,7 +57,7 @@ export function FilaMetricas({ children, columnas = 4 }: { children: ReactNode; 
   return (
     <section
       className={cn(
-        "grid grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-border bg-card px-5 py-3 shadow-xs lg:divide-x lg:divide-border lg:[&>*:not(:first-child)]:pl-5",
+        "grid grid-cols-2 gap-x-5 gap-y-4 rounded-xl border border-border bg-card px-5 py-4 shadow-sm lg:divide-x lg:divide-border lg:[&>*:not(:first-child)]:pl-5",
         columnas === 4 && "lg:grid-cols-4",
         columnas === 3 && "lg:grid-cols-3",
         columnas === 2 && "lg:grid-cols-2",

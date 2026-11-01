@@ -28,7 +28,7 @@ function Pill({ pill }: { pill: PillEntorno }) {
     <span
       title={pill.title}
       className={cn(
-        "hidden shrink-0 items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium whitespace-nowrap lg:inline-flex",
+        "hidden shrink-0 items-center gap-1.5 rounded px-2 py-0.5 text-etiqueta font-medium whitespace-nowrap lg:inline-flex",
         tonos[pill.tono],
         pill.deshabilitado && "opacity-60",
       )}
@@ -66,7 +66,7 @@ export function TopBar({
         {menuMovil ? <div className="md:hidden">{menuMovil}</div> : null}
 
         {miga ? (
-          <nav aria-label="Ubicación" className="flex min-w-0 shrink items-center gap-1.5 overflow-hidden text-[13px] whitespace-nowrap">
+          <nav aria-label="Ubicación" className="flex min-w-0 shrink items-center gap-1.5 overflow-hidden text-control whitespace-nowrap">
             <span className="text-muted-foreground/80">{miga.seccion}</span>
             <span className="text-muted-foreground/40">/</span>
             <h1 className="truncate font-heading font-semibold text-foreground">{miga.pagina}</h1>
@@ -88,7 +88,7 @@ export function TopBar({
               disabled={!buscador.onClick}
               onClick={buscador.onClick}
               placeholder={buscador.placeholder}
-              className="h-9 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-[12px] text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
+              className="h-9 w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-control text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
             />
             {buscador.atajo ? (
               <Kbd className="absolute top-1/2 right-2 -translate-y-1/2">{buscador.atajo}</Kbd>

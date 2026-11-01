@@ -27,11 +27,11 @@ export function Campo({
     <div className={cn("grid gap-1.5", className)}>
       <label htmlFor={id} className={cn(ETIQUETA_CAMPO, "flex items-center gap-1.5")}>
         {etiqueta}
-        {opcional ? <span className="text-[11px] font-normal text-muted-foreground">(opcional)</span> : null}
+        {opcional ? <span className="text-etiqueta font-normal text-muted-foreground">(opcional)</span> : null}
       </label>
       {children}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="text-[12px] text-destructive">
+        <p id={`${id}-error`} role="alert" className="text-control text-destructive">
           {error}
         </p>
       ) : ayuda ? (
