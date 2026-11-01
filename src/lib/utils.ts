@@ -9,5 +9,7 @@ import type { CnFunction } from "cn";
  * Todo componente importa `cn` desde aquí, nunca desde el paquete "cn" directo.
  */
 export const cn: CnFunction = createCn({
-  extend: { classGroups: { "font-size": [{ text: ["etiqueta", "control", "cuerpo", "titulo", "titulo-pagina", "metrica"] }] } },
+  extend: {
+    classGroups: { "font-size": [{ text: ["etiqueta", "control", "cuerpo", "titulo", "titulo-pagina", "metrica"] }] },
+  },
 });
