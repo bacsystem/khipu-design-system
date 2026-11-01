@@ -17,12 +17,21 @@ test("cada barra expone su valor a lectores de pantalla", () => {
 
 test("las tarjetas de gráfico usan TARJETA y la escala tipográfica", () => {
   assert.equal(fuente.match(/cn\(TARJETA, "relative px-4 py-3\.5", className\)/g)?.length, 2);
-  assert.equal(fuente.match(/"px-1 pb-2 text-titulo text-foreground"/g)?.length, 2);
+  // El título va en la cabecera compartida, con la leyenda en píldoras a la derecha.
+  assert.match(fuente, /function Cabecera\(/);
+  assert.equal(fuente.match(/<Cabecera titulo=\{titulo\}/g)?.length, 2);
+  assert.match(fuente, /<div className="text-titulo text-foreground">\{titulo\}<\/div>/);
 });
 
-test("ejes sin monoespaciada, rejilla continua y esquinas de 8 px", () => {
+test("ejes sin monoespaciada, rejilla continua y esquinas de 9 px", () => {
   assert.doesNotMatch(fuente, /font-mono|--font-mono/);
   assert.doesNotMatch(fuente, /strokeDasharray/);
   assert.doesNotMatch(fuente, /fill="var\(--muted-foreground\)"/);
-  assert.match(fuente, /const r = Math\.min\(8, barra \/ 2\);/);
+  assert.match(fuente, /const r = Math\.min\(9, barra \/ 2\);/);
+});
+
+test("GraficoAnillos: un anillo por serie, valores en texto y como <title>", () => {
+  assert.match(fuente, /export function GraficoAnillos\(/);
+  assert.match(fuente, /<title id=\{`\$\{id\}-t`\}>\{anillos\.map\(\(a\) => `\$\{a\.nombre\}: \$\{a\.valor\}%`\)/);
+  assert.match(fuente, /series\.slice\(0, 5\)/);
 });

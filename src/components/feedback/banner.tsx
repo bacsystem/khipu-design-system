@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 type Tono = "info" | "ok" | "aviso" | "error";
 
 const ESTILOS: Record<Tono, { caja: string; icono: IconoComponente }> = {
-  info: { caja: "border-accent-border bg-accent text-accent-foreground", icono: InfoIcon },
-  ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircleIcon },
-  aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: WarningIcon },
-  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
+  info: { caja: "bg-accent text-accent-foreground", icono: InfoIcon },
+  ok: { caja: "bg-success text-success-foreground", icono: CheckCircleIcon },
+  aviso: { caja: "bg-warning text-warning-foreground", icono: WarningIcon },
+  error: { caja: "bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
 };
 
 /**
@@ -35,7 +35,7 @@ export function Banner({
 }) {
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
-    <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 border-b px-4 py-2.5 text-control", ESTILOS[tono].caja, className)}>
+    <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 px-4 py-2.5 text-control", ESTILOS[tono].caja, className)}>
       <Icono weight={PESO_ICONO} className="size-4 shrink-0" />
       <div className="min-w-0 flex-1 leading-relaxed">{children}</div>
       {accion ? <div className="shrink-0">{accion}</div> : null}

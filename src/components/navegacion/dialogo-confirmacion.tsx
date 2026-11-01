@@ -53,11 +53,11 @@ export function DialogoConfirmacion({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-0 p-0 sm:max-w-md">
-        <CabeceraDialogo icon={icon} titulo={titulo} descripcion={descripcion} />
+        <CabeceraDialogo icon={icon} titulo={titulo} descripcion={descripcion} tono={destructiva ? "peligro" : "neutro"} />
         {children || error ? (
-          <div className="grid gap-3 px-5 py-4 text-control leading-relaxed text-muted-foreground">
+          <div className="grid gap-3 px-5 pb-2 text-control leading-relaxed text-muted-foreground">
             {children}
-            {error ? <p className="text-destructive">{error}</p> : null}
+            {error ? <p className="text-destructive-texto">{error}</p> : null}
           </div>
         ) : null}
         <PieDialogo>

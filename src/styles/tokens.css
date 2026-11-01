@@ -64,7 +64,7 @@
   --destructive-border: rgba(163, 38, 60, 0.2);
   --accent-border: color-mix(in srgb, var(--acento-texto) 20%, transparent);
   --primary-light: #3a3d45;
-  --overlay: rgba(16, 17, 20, 0.32);
+  --overlay: rgba(16, 17, 20, 0.22);
   --brand: var(--acento);
   --brand-foreground: var(--acento-texto);
   --codigo: #16181d;

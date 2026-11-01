@@ -38,11 +38,11 @@ export const TONOS_OSCURO: TonoOscuro[] = [
 ];
 
 /**
- * Fuentes de interfaz. La app carga cada una con `next/font` en la variable `--fuente-<valor>` (ver src/app/layout.tsx)
- * y `html[data-fuente="<valor>"]` la pone en `--font-sans`. Los datos siguen en JetBrains Mono (`--font-mono`).
+ * Fuentes de interfaz. Inter es la fuente de la app (`--font-sans`); las demás las carga la app con `next/font` en
+ * `--fuente-<valor>` (ver src/app/layout.tsx) y `html[data-fuente="<valor>"]` la pone en `--font-sans`. Los datos siguen en JetBrains Mono (`--font-mono`).
  */
 export const FUENTES: Fuente[] = [
-  { valor: "inter", etiqueta: "Inter", familia: "var(--fuente-inter), Inter, sans-serif" },
+  { valor: "inter", etiqueta: "Inter", familia: "Inter, 'Inter Fallback', sans-serif" },
   { valor: "jakarta", etiqueta: "Plus Jakarta Sans", familia: "var(--fuente-jakarta), 'Plus Jakarta Sans', sans-serif" },
   { valor: "manrope", etiqueta: "Manrope", familia: "var(--fuente-manrope), Manrope, sans-serif" },
   { valor: "dmsans", etiqueta: "DM Sans", familia: "var(--fuente-dmsans), 'DM Sans', sans-serif" },

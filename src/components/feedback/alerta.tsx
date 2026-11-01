@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 type Tono = "info" | "ok" | "aviso" | "error";
 
 const ESTILOS: Record<Tono, { caja: string; icono: IconoComponente }> = {
-  info: { caja: "border-accent-border bg-accent text-accent-foreground", icono: InfoIcon },
-  ok: { caja: "border-success-border bg-success text-success-foreground", icono: CheckCircleIcon },
-  aviso: { caja: "border-warning-border bg-warning text-warning-foreground", icono: WarningIcon },
-  error: { caja: "border-destructive-border bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
+  info: { caja: "bg-accent text-accent-foreground", icono: InfoIcon },
+  ok: { caja: "bg-success text-success-foreground", icono: CheckCircleIcon },
+  aviso: { caja: "bg-warning text-warning-foreground", icono: WarningIcon },
+  error: { caja: "bg-destructive-suave text-destructive-texto", icono: WarningCircleIcon },
 };
 
 /**
@@ -33,7 +33,7 @@ export function Alerta({
 }) {
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
-    <div role={tono === "error" ? "alert" : "status"} className={cn("flex flex-wrap items-start gap-3 rounded-xl border px-4 py-3", ESTILOS[tono].caja, className)}>
+    <div role={tono === "error" ? "alert" : "status"} className={cn("flex flex-wrap items-start gap-3 rounded-[14px] px-4 py-3", ESTILOS[tono].caja, className)}>
       <Icono weight={PESO_ICONO} className="mt-0.5 size-4 shrink-0" />
       <div className="min-w-0 flex-1 basis-56 text-control leading-relaxed">
         {titulo ? <p className="font-semibold">{titulo}</p> : null}

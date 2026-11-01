@@ -486,6 +486,7 @@
         "components/nav/selector-diseno",
         "components/nav/theme-toggle",
         "components/ui/menu",
+        "lib/estilos",
         "lib/iconos",
         "lib/utils"
       ]
@@ -599,6 +600,7 @@
         "next-themes"
       ],
       "registryDependencies": [
+        "lib/iconos",
         "lib/utils"
       ]
     },

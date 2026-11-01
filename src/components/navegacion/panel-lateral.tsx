@@ -36,18 +36,18 @@ export function PanelLateral({
     <Sheet open={open} onOpenChange={onOpenChange}>
       {trigger ? <SheetTrigger render={<span />}>{trigger}</SheetTrigger> : null}
       <SheetContent side="right" showCloseButton={false} className={cn("w-full gap-0 p-0", ancho)}>
-        <div className="flex items-center gap-2.5 border-b border-border/60 px-5 py-4">
+        <div className="flex items-start gap-2.5 px-5 pt-5 pb-3">
           <IconoSeccion icon={icon} />
           <div className="min-w-0 flex-1">
             <h2 className="text-titulo text-foreground">{titulo}</h2>
             {descripcion ? <p className="text-control text-muted-foreground">{descripcion}</p> : null}
           </div>
-          <SheetClose aria-label="Cerrar" className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
+          <SheetClose aria-label="Cerrar" className="-mt-1 -mr-1 grid size-8 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground">
             <XIcon weight="bold" className="size-4" />
           </SheetClose>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
-        {pie ? <div className="flex items-center justify-end gap-2 border-t border-border/60 px-5 py-3">{pie}</div> : null}
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-2">{children}</div>
+        {pie ? <div className="flex items-center justify-end gap-2 px-5 pt-3 pb-5">{pie}</div> : null}
       </SheetContent>
     </Sheet>
   );

@@ -127,7 +127,6 @@ export function Galeria() {
         <div className="grid max-w-xs gap-1.5">
           <span className="text-etiqueta font-medium text-muted-foreground">Diseño</span>
           <SelectorDiseno />
-          <span className="text-etiqueta font-medium text-muted-foreground">Apariencia</span>
           <SelectorApariencia />
         </div>
         <div className="flex flex-wrap items-center gap-2">

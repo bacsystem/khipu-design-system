@@ -10,14 +10,14 @@ export type ItemAcordeon = { id: string; titulo: ReactNode; detalle?: ReactNode;
 /** Acordeón de secciones plegables (FAQ, configuración avanzada, historial). Varios abiertos a la vez con `multiple`. */
 export function Acordeon({ items, defaultAbiertos = [], multiple = false, className }: { items: ItemAcordeon[]; defaultAbiertos?: string[]; multiple?: boolean; className?: string }) {
   return (
-    <AccordionPrimitive.Root defaultValue={defaultAbiertos} multiple={multiple} className={cn("divide-y divide-border/60 rounded-xl border border-border bg-card shadow-xs", className)}>
+    <AccordionPrimitive.Root defaultValue={defaultAbiertos} multiple={multiple} className={cn("divide-y divide-border rounded-[14px] bg-secondary", className)}>
       {items.map((it) => (
         <AccordionPrimitive.Item key={it.id} value={it.id}>
           <AccordionPrimitive.Header>
-            <AccordionPrimitive.Trigger className="group flex w-full items-center gap-3 px-4 py-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
+            <AccordionPrimitive.Trigger className="group flex w-full items-center gap-3 px-4 py-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-acento/55">
               <span className="min-w-0 flex-1">
                 <span className="block text-cuerpo font-semibold text-foreground">{it.titulo}</span>
-                {it.detalle ? <span className="block font-mono text-etiqueta text-muted-foreground">{it.detalle}</span> : null}
+                {it.detalle ? <span className="block text-etiqueta text-texto-terciario">{it.detalle}</span> : null}
               </span>
               <CaretDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground transition-transform group-data-panel-open:rotate-180" />
             </AccordionPrimitive.Trigger>

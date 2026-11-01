@@ -1,7 +1,6 @@
 import { CheckCircleIcon, ClockIcon, KeyIcon, TrayIcon, WalletIcon, XCircleIcon } from "@phosphor-icons/react/dist/ssr";
-import { GraficoBarras } from "@/components/datos/grafico";
+import { GraficoAnillos, GraficoBarras } from "@/components/datos/grafico";
 import { Timeline } from "@/components/datos/timeline";
-import { ProgresoCircular } from "@/components/feedback/progreso";
 import { Pagina } from "@/components/nav/shell";
 import { BloqueCodigo } from "@/components/patrones/bloque-codigo";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
@@ -41,29 +40,35 @@ export default function EjemploPage() {
         </FilaMetricas>
       </div>
 
-      <div className={`${ENTRADA} grid grid-cols-1 items-start gap-3 xl:grid-cols-[1fr_300px]`} style={pasoEntrada(2)}>
+      <div className={`${ENTRADA} grid grid-cols-1 items-start gap-3 xl:grid-cols-[1fr_340px]`} style={pasoEntrada(2)}>
         <GraficoBarras
           titulo="Comprobantes emitidos"
           categorias={["1 set", "2 set", "3 set", "4 set", "5 set", "6 set", "7 set", "8 set", "9 set", "10 set", "11 set", "12 set"]}
           series={[{ nombre: "Comprobantes", valores: [18, 25, 14, 28, 22, 35, 20, 27, 17, 29, 24, 32] }]}
           destacado={5}
-          alto={190}
+          alto={300}
         />
-        <section className={`${TARJETA} grid gap-3 px-4 py-3.5`}>
-          <h2 className="text-titulo text-foreground">Estado ante SUNAT</h2>
-          <div className="flex items-center justify-around py-1">
-            <ProgresoCircular valor={95} tono="success" tamano="lg" />
-            <ProgresoCircular valor={85} tono="warning" tamano="lg" />
-            <ProgresoCircular valor={64} tono="destructive" tamano="lg" />
-          </div>
-          <Timeline
-            eventos={[
-              { id: "1", titulo: "F001-136 aceptada", detalle: "CDR recibido", fecha: "15:00", tono: "ok", actual: true },
-              { id: "2", titulo: "B001-2210 observada", detalle: "Reintento 16:00", fecha: "14:59", tono: "aviso" },
-              { id: "3", titulo: "Nueva llave de API", detalle: "por Ana", fecha: "14:52", tono: "neutro" },
+        <div className="grid gap-3">
+          <GraficoAnillos
+            titulo="Estado ante SUNAT"
+            centro="98%"
+            series={[
+              { nombre: "Facturas", valor: 95, detalle: "88 de 92 aceptadas" },
+              { nombre: "Boletas", valor: 85, detalle: "40 de 41 aceptadas" },
+              { nombre: "Notas de crédito", valor: 64, detalle: "2 de 3 aceptadas" },
             ]}
           />
-        </section>
+          <section className={`${TARJETA} grid gap-2 px-4 py-3.5`}>
+            <h2 className="text-titulo text-foreground">Actividad</h2>
+            <Timeline
+              eventos={[
+                { id: "1", titulo: "F001-136 aceptada", detalle: "CDR recibido", fecha: "15:00", tono: "ok", actual: true },
+                { id: "2", titulo: "B001-2210 observada", detalle: "Reintento 16:00", fecha: "14:59", tono: "aviso" },
+                { id: "3", titulo: "Nueva llave de API", detalle: "por Ana", fecha: "14:52", tono: "neutro" },
+              ]}
+            />
+          </section>
+        </div>
       </div>
 
       <div className={ENTRADA} style={pasoEntrada(3)}>
