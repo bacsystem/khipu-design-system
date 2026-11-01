@@ -3,6 +3,7 @@
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 import { m, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
 import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
@@ -107,7 +108,7 @@ export function ProgresoCircular({
       className={cn("relative inline-flex shrink-0 items-center justify-center", indeterminado && "animate-spin", className)}
       style={{ width: caja, height: caja }}
     >
-      <svg width={caja} height={caja} viewBox={`0 0 ${caja} ${caja}`} className="-rotate-90">
+      <MovimientoLocal><svg width={caja} height={caja} viewBox={`0 0 ${caja} ${caja}`} className="-rotate-90">
         <circle cx={caja / 2} cy={caja / 2} r={radio} strokeWidth={grosor} fill="none" style={{ stroke: "var(--secondary)" }} />
         <m.circle
           cx={caja / 2}
@@ -123,7 +124,7 @@ export function ProgresoCircular({
           animate={{ strokeDashoffset: circunferencia * (1 - pct) }}
           transition={reducir ? { duration: 0 } : RESORTE_SUAVE}
         />
-      </svg>
+      </svg></MovimientoLocal>
       {contenido !== null ? (
         <span className="absolute font-mono text-etiqueta font-semibold text-foreground tabular-nums">
           {contenido ?? (indeterminado ? "" : `${Math.round(valor!)}%`)}

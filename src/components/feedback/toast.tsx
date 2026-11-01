@@ -30,7 +30,7 @@ function Lista() {
               toast={t}
               className={cn(
                 "relative flex w-full items-start gap-2.5 rounded-xl border border-border bg-popover px-3.5 py-3 text-popover-foreground shadow-md ring-1 ring-border",
-                "transition-[opacity,transform] duration-200 data-ending-style:translate-y-2 data-ending-style:opacity-0 data-starting-style:translate-y-2 data-starting-style:opacity-0",
+                "transition-[opacity,transform] duration-(--duracion-media) data-ending-style:translate-y-2 data-ending-style:opacity-0 data-starting-style:translate-y-2 data-starting-style:opacity-0",
               )}
             >
               <Icono className={cn("mt-0.5 size-4 shrink-0", COLORES[tono])} />

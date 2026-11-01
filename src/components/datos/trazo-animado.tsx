@@ -1,6 +1,7 @@
 "use client";
 
 import { m, useReducedMotion } from "motion/react";
+import { MovimientoLocal } from "@/components/movimiento";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 
 /**
@@ -10,6 +11,7 @@ import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 export function TrazoAnimado({ d, stroke, strokeWidth = 2, retraso = 0 }: { d: string; stroke: string; strokeWidth?: number; retraso?: number }) {
   const reducir = useReducedMotion();
   return (
+    <MovimientoLocal>
     <m.path
       d={d}
       fill="none"
@@ -21,5 +23,6 @@ export function TrazoAnimado({ d, stroke, strokeWidth = 2, retraso = 0 }: { d: s
       animate={{ pathLength: 1 }}
       transition={{ duration: DURACION.trazo, ease: CURVA_SALIDA, delay: retraso }}
     />
+    </MovimientoLocal>
   );
 }

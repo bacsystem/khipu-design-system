@@ -339,3 +339,25 @@ html[data-diseno="papel"].dark {
     @apply font-heading;
   }
 }
+
+/*
+ * «Reducir movimiento» para las transiciones CSS de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú,
+ * select, tooltip, toast, acordeón, indicador de Tabs): nada se desplaza ni escala, el cambio es inmediato.
+ * 1 ms y no 0: base-ui espera el `transitionend`/`animationend` para desmontar el popup al cerrarlo.
+ * Las animaciones en bucle (spinner, progreso indeterminado) no se tocan: indican que algo está cargando.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+  [data-open],
+  [data-closed],
+  [data-starting-style],
+  [data-ending-style] {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}

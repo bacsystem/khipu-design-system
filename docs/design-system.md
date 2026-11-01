@@ -289,8 +289,8 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 ## 11. Tarjetas y secciones
 
 - **Tarjeta** (`TARJETA`): `rounded-xl border border-border bg-card shadow-sm`.
-- **Cabecera de sección**: `flex items-center gap-2.5 px-4 py-3 border-b border-border` → icono en caja `size-8 rounded-lg bg-accent text-primary` (lucide 16 px) + título `text-cuerpo font-semibold` + subtítulo `text-etiqueta`; a la derecha, chips/contadores (`rounded-md bg-secondary px-2 py-0.5 font-mono text-etiqueta`).
-- **Pie de tarjeta**: `border-t border-border bg-muted/60 px-4 py-2 text-etiqueta text-muted-foreground`, con iconos 12 px (`Lock`, `KeyRound`).
+- **Cabecera de sección**: `flex items-center gap-2.5 px-4 py-3 border-b border-border/60` → icono en caja `size-8 rounded-lg bg-accent text-primary` (lucide 16 px) + título `text-cuerpo font-semibold` + subtítulo `text-etiqueta`; a la derecha, chips/contadores (`rounded-md bg-secondary px-2 py-0.5 font-mono text-etiqueta`).
+- **Pie de tarjeta**: `border-t border-border/60 bg-muted/60 px-4 py-2 text-etiqueta text-muted-foreground`, con iconos 12 px (`Lock`, `KeyRound`).
 - **Fila de métricas** (cabecera de cada página): una tarjeta `px-5 py-3 shadow-xs` con `grid grid-cols-2 lg:grid-cols-4 lg:divide-x`; cada `Metrica` = etiqueta `text-etiqueta` en tipo oración → valor `text-metrica tabular-nums` (con sufijo `text-control font-normal text-muted-foreground`, p. ej. `/ 5 creadas`) → ayuda `text-etiqueta` con punto de estado (`size-1.5 rounded-full bg-success-solid|warning-solid|destructive`).
 - **Tarjeta destacada** (`patrones/tarjeta-destacada.tsx`): panel de color plano `rounded-xl p-6`, sin borde ni sombra, para destacar un bloque (bienvenida, función nueva, plan, siguiente paso). Tonos `neutro | info | ok | aviso | invertido` con los tokens de siempre; el título y la descripción llevan el color del tono, sin opacidad, así el contraste calculado vale para ambos. No es un aviso (no anuncia nada al lector de pantalla): para eso, `Alerta`.
 - **Tarjeta deshabilitada / próximamente**: `opacity-60`/`70`, `cursor-not-allowed`, chip `Próximamente` (`text-etiqueta`) y `title`.
@@ -306,7 +306,7 @@ Todas las listas (comprobantes, series, API keys) siguen el mismo esqueleto:
 3. **Cabecera**: `bg-muted border-b border-border/80`, celdas `px-3 py-2 text-etiqueta font-medium text-muted-foreground` en tipo oración; primera columna checkbox deshabilitado (selección múltiple próximamente).
 4. **Filas**: `group border-b border-border/60 hover:bg-muted/80`, `text-control`; celda principal con dos líneas (valor fuerte + subtítulo `text-etiqueta`, mono si es un dato); identificadores en `ChipCodigo` (`rounded-md px-2 py-0.5 font-mono text-control font-medium bg-accent text-accent-foreground`; inactivos: `bg-secondary text-muted-foreground line-through`); numéricos a la derecha con `tabular-nums`; estado con pill (§13); acciones a la derecha.
 5. **Vacío**: fila única `py-14 text-center` con icono 24 px y mensaje ("Todavía no tienes… Crea la primera con «…»" / "No hay … con los filtros seleccionados").
-6. **Pie**: `border-t border-border bg-muted px-4 py-2 text-etiqueta` → "Mostrando **x–y** de **N** …" · selector de filas · nota contextual (`hidden xl:inline`) | paginación (`Anterior` / números `size-7` con actual `bg-foreground text-background` / `Siguiente`), con `paginasVisibles()` de `lib/paginacion.ts` (1, 2, …, actual±1, …, últimas 2).
+6. **Pie**: `border-t border-border/60 bg-muted px-4 py-2 text-control` → "Mostrando **x–y** de **N** …" · selector de filas · nota contextual (`hidden xl:inline`) | paginación (`Anterior` / números `size-7` con actual `bg-foreground text-background` / `Siguiente`), con `paginasVisibles()` de `lib/paginacion.ts` (1, 2, …, actual±1, …, últimas 2).
 
 Filtrado/paginación en cliente cuando la API devuelve todo (series, API keys); en servidor con `?pagina=&por_pagina=` y `x-total-count` para comprobantes.
 
@@ -472,7 +472,7 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 
 **CSS:** `PRESION` (al pulsar, `scale-[0.98]`), `ENTRADA` + `pasoEntrada(i)` (fundido + 8 px, 240 ms, 40 ms por posición), `ANIMACION_POPUP` y las transiciones de diálogo, sheet, drawer, popover, menú, select, combobox, hover-card, tooltip, acordeón y toasts. El indicador de `Tabs` lo posiciona base-ui (`Tabs.Indicator`, variables `--active-tab-*`) y lo desliza una transición CSS.
 
-**Motion** (requiere `ProveedorMovimiento`, ya incluido en `Providers`; fuera de él los componentes se ven bien pero no animan):
+**Motion** (`ProveedorMovimiento`, ya incluido en `Providers`, aporta `layoutId` y «reducir movimiento». Cada componente animado se envuelve además en `MovimientoLocal`, que carga las animaciones básicas: sin él, un `m.*` fuera de un `LazyMotion` se quedaría congelado en su estado inicial, con gráficos en blanco o una barra masiva que no aparece):
 
 | Componente | Efecto |
 |---|---|
@@ -485,9 +485,9 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 | `ConfirmacionEnLinea`, `BotonCopiar` | Cambio animado de acción a confirmación; el icono gira a un check |
 
 **Reglas:**
-- Solo valores de la tabla de arriba; nunca duraciones ni curvas sueltas.
+- Solo valores de la tabla de arriba; nunca duraciones ni curvas sueltas: en CSS, `duration-(--duracion-*)` y `ease-salida`.
 - Los componentes importan `m` (no `motion`) de `motion/react`: `LazyMotion strict` falla en desarrollo si se cuela un `motion.*`.
-- Con «reducir movimiento» nada se desplaza, escala ni se dibuja: `MotionConfig reducedMotion="user"` anula transformaciones y layout, los efectos que no lo son (trazos, contador, altura, anillo) consultan `useReducedMotion()`, y el CSS va bajo `motion-safe:`/`motion-reduce:`. Solo quedan fundidos de opacidad.
+- Con «reducir movimiento» nada se desplaza, escala ni se dibuja: `MotionConfig reducedMotion="user"` anula transformaciones y layout, los efectos que no lo son (trazos, contador, altura, anillo) consultan `useReducedMotion()`, y el CSS va bajo `motion-safe:`/`motion-reduce:`. Las transiciones de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú, select, tooltip, toast, acordeón, indicador de `Tabs`) las acorta a 1 ms la regla `@media (prefers-reduced-motion: reduce)` de `globals.css`; los spinners y el progreso indeterminado siguen girando porque indican carga. Solo quedan fundidos de opacidad.
 - Toasts: siguen con la transición CSS de base-ui; `AnimatePresence` competiría con su cierre por tiempo y por gesto.
 - El diseño `papel` fija las transiciones por defecto en 200 ms (`--default-transition-duration`, §Diseños).
 
@@ -496,3 +496,5 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 - Adoptar en el portal los componentes del kit que reemplazan código ad hoc (tooltip real, toasts, menú ⋯ de filas, `TablaDatos`).
 - Rail colapsado de 64 px para tablet (hoy: sidebar completo en `md+`, sheet en móvil).
 - Gráficos del dashboard del portal (etapa 2) con `GraficoBarras`/`GraficoLineas`.
+- El registro tiene dos items llamados `movimiento` (`components/movimiento` y `lib/movimiento`): `add movimiento` en la CLI elige uno por nombre. Las dependencias internas usan la clave completa y no se ven afectadas.
+- `NumeroAnimado` muestra el valor del servidor, salta a 0 al hidratar y vuelve a contar desde 0 si `valor` cambia; debería contar desde el valor anterior.

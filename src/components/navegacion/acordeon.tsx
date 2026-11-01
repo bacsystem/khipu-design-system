@@ -22,7 +22,7 @@ export function Acordeon({ items, defaultAbiertos = [], multiple = false, classN
               <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-data-panel-open:rotate-180" />
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
-          <AccordionPrimitive.Panel className="h-(--accordion-panel-height) overflow-hidden text-control text-muted-foreground transition-[height] duration-200 data-ending-style:h-0 data-starting-style:h-0">
+          <AccordionPrimitive.Panel className="h-(--accordion-panel-height) overflow-hidden text-control text-muted-foreground transition-[height] duration-(--duracion-media) data-ending-style:h-0 data-starting-style:h-0">
             <div className="px-4 pb-4">{it.contenido}</div>
           </AccordionPrimitive.Panel>
         </AccordionPrimitive.Item>

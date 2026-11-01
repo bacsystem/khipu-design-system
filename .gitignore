@@ -13,3 +13,7 @@ yarn-error.log*
 .env.*.local
 next-env.d.ts
 *.tsbuildinfo
+
+# Estado y worktrees del ejecutor de planes (cys)
+.cys/
+.worktrees/

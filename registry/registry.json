@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31",
+  "generatedAt": "2026-11-01",
   "items": {
     "components/datos/grafico": {
       "name": "grafico",
@@ -13,6 +13,7 @@
       ],
       "registryDependencies": [
         "components/datos/trazo-animado",
+        "components/movimiento",
         "lib/movimiento",
         "lib/utils"
       ]
@@ -58,6 +59,7 @@
       ],
       "registryDependencies": [
         "components/feedback/skeleton",
+        "components/movimiento",
         "components/patrones/pie-tabla",
         "components/ui/table",
         "lib/movimiento",
@@ -89,6 +91,7 @@
         "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
         "lib/movimiento"
       ]
     },
@@ -168,6 +171,7 @@
         "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
         "lib/movimiento",
         "lib/utils"
       ]
@@ -715,6 +719,7 @@
         "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
         "lib/movimiento",
         "lib/utils"
       ]
@@ -760,6 +765,7 @@
         "motion"
       ],
       "registryDependencies": [
+        "components/movimiento",
         "lib/movimiento",
         "lib/utils"
       ]

@@ -2,6 +2,7 @@
 
 import { m } from "motion/react";
 import { useId, useState } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
 import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
@@ -87,7 +88,7 @@ export function GraficoBarras({
   return (
     <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
       {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
-      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }}>
+      <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
         {ticks.map((t) => (
           <g key={t}>
@@ -127,7 +128,7 @@ export function GraficoBarras({
             </g>
           );
         })}
-      </svg>
+      </svg></MovimientoLocal>
       {hover != null ? (
         <Tooltip
           x={((mg.left + hover * grupo + grupo / 2) / ancho) * 100}
@@ -170,7 +171,7 @@ export function GraficoLineas({
   return (
     <div className={cn("relative rounded-xl border border-border bg-card px-3 py-3 shadow-xs", className)}>
       {titulo ? <div className="px-1 pb-2 text-cuerpo font-semibold text-foreground">{titulo}</div> : null}
-      <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
+      <MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby={`${id}-t`} className="h-auto w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
         <title id={`${id}-t`}>{titulo ?? "Gráfico de líneas"}</title>
         {ticks.map((t) => (
           <g key={t}>
@@ -200,7 +201,7 @@ export function GraficoLineas({
             </text>
           </g>
         ))}
-      </svg>
+      </svg></MovimientoLocal>
       {hover != null ? (
         <Tooltip x={(x(hover) / ancho) * 100} titulo={categorias[hover]} filas={series.map((s, j) => ({ nombre: s.nombre, valor: formato(s.valores[hover] ?? 0), color: COLORES[j % COLORES.length] }))} />
       ) : null}

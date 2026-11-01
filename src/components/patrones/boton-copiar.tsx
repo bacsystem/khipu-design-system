@@ -3,6 +3,7 @@
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useState } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +31,7 @@ export function BotonCopiar({ texto, titulo = "Copiar", className }: { texto: st
         className,
       )}
     >
-      <AnimatePresence mode="wait" initial={false}>
+      <MovimientoLocal><AnimatePresence mode="wait" initial={false}>
         <m.span
           key={copiado ? "copiado" : "copiar"}
           initial={{ opacity: 0, scale: 0.6, rotate: -45 }}
@@ -41,7 +42,7 @@ export function BotonCopiar({ texto, titulo = "Copiar", className }: { texto: st
         >
           {copiado ? <CheckIcon className="size-3.5 text-success-foreground" /> : <CopyIcon className="size-3.5" />}
         </m.span>
-      </AnimatePresence>
+      </AnimatePresence></MovimientoLocal>
     </button>
   );
 }

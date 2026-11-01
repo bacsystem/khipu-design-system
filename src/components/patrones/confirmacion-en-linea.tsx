@@ -3,6 +3,7 @@
 import { BanIcon, RefreshCwIcon, type LucideIcon } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useState, useTransition } from "react";
+import { MovimientoLocal } from "@/components/movimiento";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +55,7 @@ export function ConfirmacionEnLinea({
     <div className="flex flex-col items-end gap-1">
       {/* `relative`: `popLayout` saca de flujo el bloque que sale y lo posiciona contra este contenedor. */}
       <div className="relative flex items-center justify-end">
-        <AnimatePresence mode="popLayout" initial={false}>
+        <MovimientoLocal><AnimatePresence mode="popLayout" initial={false}>
           {abierto ? (
             <m.div key="confirmar" {...CAMBIO} className="flex items-center justify-end gap-1">
               <span className="mr-1 text-etiqueta text-muted-foreground">{pregunta}</span>
@@ -74,7 +75,7 @@ export function ConfirmacionEnLinea({
               </button>
             </m.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence></MovimientoLocal>
       </div>
       {error ? <span className="text-etiqueta text-destructive-texto">{error}</span> : null}
     </div>

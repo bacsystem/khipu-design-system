@@ -5,6 +5,7 @@ import { ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, CheckIcon, InboxIcon, Minu
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
+import { MovimientoLocal } from "@/components/movimiento";
 import { CABECERA_TABLA, CONTENEDOR_TABLA, PieTabla, TablaVacia } from "@/components/patrones/pie-tabla";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
@@ -140,7 +141,7 @@ export function TablaDatos<T>({
 
   return (
     <div className={cn(CONTENEDOR_TABLA, className)}>
-      <AnimatePresence initial={false}>
+      <MovimientoLocal><AnimatePresence initial={false}>
       {seleccion && seleccionados.length > 0 ? (
         <m.div
           key="barra-masiva"
@@ -163,7 +164,7 @@ export function TablaDatos<T>({
         </div>
         </m.div>
       ) : null}
-      </AnimatePresence>
+      </AnimatePresence></MovimientoLocal>
       <Table>
         <TableHeader>
           <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">

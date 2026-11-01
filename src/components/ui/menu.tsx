@@ -25,7 +25,7 @@ function MenuContent({
           data-slot="menu-content"
           className={cn(
             "min-w-56 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-border outline-none",
-            "origin-(--transform-origin) transition-[opacity,transform] duration-150 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
+            "origin-(--transform-origin) transition-[opacity,transform] duration-(--duracion-rapida) data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
             className,
           )}
           {...props}
