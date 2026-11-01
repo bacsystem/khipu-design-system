@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarIcon } from "lucide-react";
+import { CalendarBlankIcon } from "@phosphor-icons/react";
 import { CAMPO } from "@/lib/estilos";
 import { formatearFecha } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -29,13 +29,13 @@ export function EntradaFecha({
    * `EntradaRangoFechas`, a `w-40`) no cabe junto al valor nativo del input y ambos textos quedan superpuestos.
    * Desactívala con `false` en esos casos. */
   conVistaPrevia?: boolean;
-  /** Las dos variantes miden h-9 (altura única de control); se conserva por compatibilidad. Igual que StepperNumerico. */
+  /** Las dos variantes miden h-control (altura única de control); se conserva por compatibilidad. Igual que StepperNumerico. */
   variante?: "filtro" | "campo";
   className?: string;
 }) {
   return (
     <div className={cn("relative flex items-center", className)}>
-      <CalendarIcon className="pointer-events-none absolute left-3 size-4 text-muted-foreground/70" />
+      <CalendarBlankIcon className="pointer-events-none absolute left-3 size-4 text-muted-foreground/70" />
       <input
         id={id}
         type="date"

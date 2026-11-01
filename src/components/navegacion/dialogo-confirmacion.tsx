@@ -1,6 +1,7 @@
 "use client";
 
-import { TriangleAlertIcon, type LucideIcon } from "lucide-react";
+import { WarningIcon } from "@phosphor-icons/react";
+import type { IconoComponente } from "@/lib/iconos";
 import { useState, type ReactNode } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CabeceraDialogo, PieDialogo } from "@/components/patrones/cabecera-dialogo";
@@ -13,7 +14,7 @@ import { BOTON_DESTRUCTIVO, BOTON_PRIMARIO, BOTON_SECUNDARIO } from "@/lib/estil
 export function DialogoConfirmacion({
   open,
   onOpenChange,
-  icon = TriangleAlertIcon,
+  icon = WarningIcon,
   titulo,
   descripcion,
   children,
@@ -23,7 +24,7 @@ export function DialogoConfirmacion({
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  icon?: LucideIcon;
+  icon?: IconoComponente;
   titulo: ReactNode;
   descripcion?: ReactNode;
   children?: ReactNode;

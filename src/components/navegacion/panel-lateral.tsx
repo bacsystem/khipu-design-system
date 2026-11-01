@@ -1,6 +1,7 @@
 "use client";
 
-import { XIcon, type LucideIcon } from "lucide-react";
+import { XIcon } from "@phosphor-icons/react";
+import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { IconoSeccion } from "@/components/patrones/cabecera-seccion";
@@ -24,7 +25,7 @@ export function PanelLateral({
   trigger?: ReactNode;
   open?: boolean;
   onOpenChange?: (v: boolean) => void;
-  icon: LucideIcon;
+  icon: IconoComponente;
   titulo: ReactNode;
   descripcion?: ReactNode;
   children: ReactNode;

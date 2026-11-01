@@ -1,19 +1,19 @@
 "use client";
 
 import { NumberField } from "@base-ui/react/number-field";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-// Las dos variantes miden h-9 (altura única de control); `variante` se conserva por compatibilidad.
+// Las dos variantes miden h-control (altura única de control); `variante` se conserva por compatibilidad.
 const TAMANOS = {
-  filtro: { grupo: "h-9", boton: "size-9" },
-  campo: { grupo: "h-9", boton: "size-9" },
+  filtro: { grupo: "h-control", boton: "size-control" },
+  campo: { grupo: "h-control", boton: "size-control" },
 } as const;
 
 /**
  * Cantidad numérica con +/− (ítems de una línea, plazos en días, cupos). El valor se escribe directo o se pisa
  * con las flechas; `min`/`max` deshabilitan el botón correspondiente al llegar al límite (los pinta base-ui solo).
- * Mide h-9 como cualquier otro control; `variante` ya no cambia la altura.
+ * Mide h-control como cualquier otro control; `variante` ya no cambia la altura.
  */
 export function StepperNumerico({
   id,

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SelectorPorPagina } from "@/components/ui/selector-por-pagina";
@@ -9,11 +9,11 @@ import { paginasVisibles } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
 
 const BOTON_PAGINA =
-  "inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-etiqueta font-medium text-foreground/80 shadow-xs transition-colors hover:bg-muted";
+  "inline-flex h-control items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-etiqueta font-medium text-foreground/80 shadow-xs transition-colors hover:bg-muted";
 // Anterior/Siguiente sin página a la que ir: el botón usa `disabled`; el enlace, `aria-disabled` y esta clase (un <a> no tiene :disabled).
 const BOTON_PAGINA_DESHABILITADO = "disabled:pointer-events-none disabled:text-muted-foreground/60";
 const BOTON_PAGINA_INACTIVO = "pointer-events-none text-muted-foreground/60";
-const NUMERO_PAGINA = "flex size-9 items-center justify-center rounded-lg font-mono text-etiqueta text-foreground/80 transition-colors hover:bg-secondary";
+const NUMERO_PAGINA = "flex size-control items-center justify-center rounded-lg font-mono text-etiqueta text-foreground/80 transition-colors hover:bg-secondary";
 
 /** Un salto de página: enlace (estado en la URL) o botón (estado local), según haya `hrefPagina`. */
 function Salto({
@@ -113,7 +113,7 @@ export function PieTabla({
       </div>
       <div className="flex items-center gap-1">
         <Salto a={pagina - 1} habilitado={hayAnterior} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
-          <ChevronLeftIcon className="size-3.5" /> Anterior
+          <CaretLeftIcon className="size-3.5" /> Anterior
         </Salto>
         <div className="mx-1 flex items-center gap-0.5">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>
@@ -122,7 +122,7 @@ export function PieTabla({
                 …
               </span>
             ) : p === pagina ? (
-              <span key={p} aria-current="page" className="flex size-9 items-center justify-center rounded-lg bg-foreground font-mono text-etiqueta font-medium text-background shadow-xs">
+              <span key={p} aria-current="page" className="flex size-control items-center justify-center rounded-lg bg-foreground font-mono text-etiqueta font-medium text-background shadow-xs">
                 {p}
               </span>
             ) : (
@@ -133,7 +133,7 @@ export function PieTabla({
           )}
         </div>
         <Salto a={pagina + 1} habilitado={haySiguiente} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
-          Siguiente <ChevronRightIcon className="size-3.5" />
+          Siguiente <CaretRightIcon className="size-3.5" />
         </Salto>
       </div>
     </div>

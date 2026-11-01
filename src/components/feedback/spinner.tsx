@@ -1,4 +1,4 @@
-import { LoaderCircleIcon } from "lucide-react";
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +24,7 @@ export function Spinner({
   className?: string;
 } & Omit<SVGProps<SVGSVGElement>, "className">) {
   return (
-    <LoaderCircleIcon
+    <CircleNotchIcon
       role="status"
       aria-label="Cargando"
       className={cn("animate-spin text-current", TAMANOS[tamano], className)}

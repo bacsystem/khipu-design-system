@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenIcon, PlusIcon } from "lucide-react";
+import { BookOpenIcon, PlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CabeceraDialogo, PieDialogo } from "@/components/patrones/cabecera-dialogo";

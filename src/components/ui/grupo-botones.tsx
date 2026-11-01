@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 
 export type OpcionSegmentada<T extends string> = { valor: T; etiqueta: ReactNode; icon?: ReactNode; disabled?: boolean };
 
-// Los dos miden h-9 por fuera (altura única de control); `sm` solo es más compacto de texto y padding.
+// Los dos miden h-control por fuera (altura única de control); `sm` solo es más compacto de texto y padding.
 const TAMANOS = {
-  sm: { grupo: "h-9 p-0.5", boton: "h-7 px-2 text-etiqueta" },
-  default: { grupo: "h-9 p-0.5", boton: "h-7 px-3 text-control" },
+  sm: { grupo: "h-control p-0.5", boton: "h-7 px-2 text-etiqueta" },
+  default: { grupo: "h-control p-0.5", boton: "h-7 px-3 text-control" },
 } as const;
 
 /**

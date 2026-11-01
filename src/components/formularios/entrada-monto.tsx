@@ -27,7 +27,7 @@ export function EntradaMonto({
   moneda?: string;
   monedas?: string[];
   onMoneda?: (m: string) => void;
-  /** Las dos variantes miden h-9 (altura única de control); se conserva por compatibilidad. Igual que StepperNumerico. */
+  /** Las dos variantes miden h-control (altura única de control); se conserva por compatibilidad. Igual que StepperNumerico. */
   variante?: "filtro" | "campo";
   disabled?: boolean;
   className?: string;

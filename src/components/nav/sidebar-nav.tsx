@@ -1,6 +1,6 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
+import type { IconoComponente } from "@/lib/iconos";
 import { m } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,7 +12,7 @@ export type ItemNav = {
   /** Sin `href` el ítem se muestra deshabilitado con la etiqueta `pendiente` (patrón "próximamente"). */
   href?: string;
   label: string;
-  icon: LucideIcon;
+  icon: IconoComponente;
   /** Texto del chip cuando no hay href (por defecto "Pronto"). */
   pendiente?: string;
   /** Tooltip explicando por qué todavía no está disponible. */

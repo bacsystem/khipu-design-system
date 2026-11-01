@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { XIcon } from "lucide-react";
+import { XIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { ANIMACION_POPUP } from "@/lib/estilos";
 import { cn } from "@/lib/utils";

@@ -1,7 +1,7 @@
 "use client";
 
 import { Meter } from "@base-ui/react/meter";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 import { CAMPO } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
@@ -76,7 +76,7 @@ export function Contrasena({
           aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
           className="absolute right-2.5 rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-60"
         >
-          {visible ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+          {visible ? <EyeSlashIcon className="size-4" /> : <EyeIcon className="size-4" />}
         </button>
       </div>
       {conFuerza && valor ? (

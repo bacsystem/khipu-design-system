@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ export function EstadoVacio({
   accion,
   className,
 }: {
-  icon: LucideIcon;
+  icon: IconoComponente;
   titulo: ReactNode;
   children?: ReactNode;
   accion?: ReactNode;

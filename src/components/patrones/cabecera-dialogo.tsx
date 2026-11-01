@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,7 @@ import { IconoSeccion } from "./cabecera-seccion";
  * Cabecera estándar de diálogo: icono en accent + título 16px + descripción 13px.
  * Úsala dentro de `<DialogContent className="gap-0 p-0">`; el cuerpo va en `px-5 py-4` y el pie en `PieDialogo`.
  */
-export function CabeceraDialogo({ icon, titulo, descripcion }: { icon: LucideIcon; titulo: ReactNode; descripcion?: ReactNode }) {
+export function CabeceraDialogo({ icon, titulo, descripcion }: { icon: IconoComponente; titulo: ReactNode; descripcion?: ReactNode }) {
   return (
     <DialogHeader className="border-b border-border/60 px-5 py-4 pr-14">
       <div className="flex items-center gap-2.5">
@@ -33,7 +33,7 @@ export function PieDialogo({ children, izquierda, className }: { children: React
 }
 
 /** Aviso dentro de un diálogo o formulario (ámbar para advertencias, verde para confirmaciones). */
-export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok"; icon: LucideIcon; children: ReactNode }) {
+export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok"; icon: IconoComponente; children: ReactNode }) {
   return (
     <div
       className={cn(

@@ -1,4 +1,4 @@
-import { InboxIcon, KeyRoundIcon } from "lucide-react";
+import { KeyIcon, TrayIcon } from "@phosphor-icons/react";
 import { Pagina } from "@/components/nav/shell";
 import { BloqueCodigo } from "@/components/patrones/bloque-codigo";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
@@ -37,7 +37,7 @@ export default function EjemploPage() {
       </div>
 
       <section className={`${ENTRADA} rounded-xl border border-border bg-card shadow-xs`} style={pasoEntrada(2)}>
-        <CabeceraSeccion icon={KeyRoundIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · neutro" derecha={<Chip>4 tonos</Chip>} />
+        <CabeceraSeccion icon={KeyIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · neutro" derecha={<Chip>4 tonos</Chip>} />
         <div className="flex flex-wrap items-center gap-2 px-4 py-3">
           <PillEstado tono="ok">Aceptado</PillEstado>
           <PillEstado tono="aviso">Con observaciones</PillEstado>
@@ -60,7 +60,7 @@ export default function EjemploPage() {
       </div>
 
       <section className={`${ENTRADA} rounded-xl border border-border bg-card shadow-xs`} style={pasoEntrada(4)}>
-        <TablaVacia icon={<InboxIcon className="size-6" />}>Todavía no hay documentos. Crea el primero con «Nuevo documento».</TablaVacia>
+        <TablaVacia icon={<TrayIcon className="size-6" />}>Todavía no hay documentos. Crea el primero con «Nuevo documento».</TablaVacia>
       </section>
 
       <Galeria />

@@ -1,9 +1,9 @@
-import type { LucideIcon } from "lucide-react";
+import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /** Caja de icono en accent, usada en cabeceras de sección y de diálogo. */
-export function IconoSeccion({ icon: Icon, className }: { icon: LucideIcon; className?: string }) {
+export function IconoSeccion({ icon: Icon, className }: { icon: IconoComponente; className?: string }) {
   return (
     <div className={cn("flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent text-primary", className)}>
       <Icon className="size-4" />
@@ -20,7 +20,7 @@ export function CabeceraSeccion({
   conBorde = true,
   className,
 }: {
-  icon: LucideIcon;
+  icon: IconoComponente;
   titulo: ReactNode;
   subtitulo?: ReactNode;
   derecha?: ReactNode;

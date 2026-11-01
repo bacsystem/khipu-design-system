@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronsUpDownIcon, LogOutIcon, ShieldCheckIcon, type LucideIcon } from "lucide-react";
+import { CaretUpDownIcon, ShieldCheckIcon, SignOutIcon } from "@phosphor-icons/react";
+import type { IconoComponente } from "@/lib/iconos";
 import { useState } from "react";
 import { Menu, MenuContent, MenuItem, MenuLinkItem, MenuSeparator, MenuTrigger } from "@/components/ui/menu";
 import { useDiseno } from "@/components/diseno";
@@ -18,7 +19,7 @@ export type UsuarioMenu = {
 
 export type AccionMenu = {
   label: string;
-  icon: LucideIcon;
+  icon: IconoComponente;
   /** Con `href` se renderiza como enlace (abre en pestaña nueva si `externo`). */
   href?: string;
   externo?: boolean;
@@ -84,7 +85,7 @@ export function MenuUsuario({
             <p className="truncate text-etiqueta leading-tight text-muted-foreground">{usuario.email}</p>
           </div>
         </div>
-        <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
+        <CaretUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
       </MenuTrigger>
 
       {/* Mismo ancho y alineación que el disparador: no invade el contenido principal. */}
@@ -144,7 +145,7 @@ export function MenuUsuario({
 
         <MenuSeparator />
         <MenuItem variant="destructive" disabled={saliendo} onClick={salir}>
-          <LogOutIcon />
+          <SignOutIcon />
           {textoCerrarSesion}
         </MenuItem>
       </MenuContent>

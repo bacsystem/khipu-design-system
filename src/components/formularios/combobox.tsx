@@ -1,7 +1,7 @@
 "use client";
 
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { CAMPO, POPUP_LISTA } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +41,7 @@ export function Combobox({
       <div className="relative">
         <ComboboxPrimitive.Input id={id} placeholder={placeholder} className={cn(CAMPO, "pr-9", className)} />
         <ComboboxPrimitive.Trigger aria-label="Abrir opciones" className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5 text-muted-foreground/70 hover:text-foreground">
-          <ChevronDownIcon className="size-4" />
+          <CaretDownIcon className="size-4" />
         </ComboboxPrimitive.Trigger>
       </div>
       <ComboboxPrimitive.Portal>

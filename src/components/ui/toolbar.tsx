@@ -14,7 +14,7 @@ function Toolbar({ className, orientation = "horizontal", ...props }: ToolbarPri
       data-slot="toolbar"
       orientation={orientation}
       className={cn(
-        "flex h-9 items-center gap-1 rounded-lg border border-border/60 bg-secondary/80 p-0.5",
+        "flex h-control items-center gap-1 rounded-lg border border-border/60 bg-secondary/80 p-0.5",
         orientation === "vertical" && "h-fit w-9 flex-col",
         className,
       )}

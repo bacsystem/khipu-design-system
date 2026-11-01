@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenIcon, KeyRoundIcon, ListOrderedIcon, PackageIcon, ReceiptTextIcon, ShieldCheckIcon } from "lucide-react";
+import { BookOpenIcon, KeyIcon, ListNumbersIcon, PackageIcon, ReceiptIcon, ShieldCheckIcon } from "@phosphor-icons/react";
 import { LogoMarca } from "@/components/nav/logo";
 import { MenuUsuario } from "@/components/nav/menu-usuario";
 import { SelectorContexto } from "@/components/nav/selector-contexto";
@@ -13,16 +13,16 @@ const GRUPOS: GrupoNav[] = [
   {
     titulo: "Operación",
     items: [
-      { href: "/ejemplo", label: "Documentos", icon: ReceiptTextIcon },
+      { href: "/ejemplo", label: "Documentos", icon: ReceiptIcon },
       { label: "Emitir", icon: PackageIcon },
-      { href: "/ejemplo/series", label: "Series", icon: ListOrderedIcon },
+      { href: "/ejemplo/series", label: "Series", icon: ListNumbersIcon },
     ],
   },
   {
     titulo: "Configuración",
     items: [
       { href: "/ejemplo/empresa", label: "Empresa", icon: ShieldCheckIcon },
-      { href: "/ejemplo/api-keys", label: "API keys", icon: KeyRoundIcon },
+      { href: "/ejemplo/api-keys", label: "API keys", icon: KeyIcon },
     ],
   },
 ];

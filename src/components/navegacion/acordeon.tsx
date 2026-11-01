@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
-import { ChevronDownIcon } from "lucide-react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ export function Acordeon({ items, defaultAbiertos = [], multiple = false, classN
                 <span className="block text-cuerpo font-semibold text-foreground">{it.titulo}</span>
                 {it.detalle ? <span className="block font-mono text-etiqueta text-muted-foreground">{it.detalle}</span> : null}
               </span>
-              <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-data-panel-open:rotate-180" />
+              <CaretDownIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-data-panel-open:rotate-180" />
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
           <AccordionPrimitive.Panel className="h-(--accordion-panel-height) overflow-hidden text-control text-muted-foreground transition-[height] duration-(--duracion-media) data-ending-style:h-0 data-starting-style:h-0">

@@ -1,7 +1,7 @@
 "use client";
 
 import { Select as SelectPrimitive } from "@base-ui/react/select";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { CaretUpDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { useTransition } from "react";
 import { SelectContent } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -72,7 +72,7 @@ export function SelectorContexto({
             {activo?.detalle ? <p className="truncate font-mono text-etiqueta leading-tight text-muted-foreground">{activo.detalle}</p> : null}
           </div>
         </div>
-        <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
+        <CaretUpDownIcon className="size-4 shrink-0 text-muted-foreground/70" />
       </SelectPrimitive.Trigger>
 
       <SelectContent align="start" alignItemWithTrigger={false} sideOffset={6} className="w-(--anchor-width) min-w-0 p-1">
