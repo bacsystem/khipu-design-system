@@ -1,5 +1,5 @@
 import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon } from "@phosphor-icons/react/dist/ssr";
-import type { IconoComponente } from "@/lib/iconos";
+import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,7 @@ export function Alerta({
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
     <div role={tono === "error" ? "alert" : "status"} className={cn("flex flex-wrap items-start gap-3 rounded-xl border px-4 py-3", ESTILOS[tono].caja, className)}>
-      <Icono className="mt-0.5 size-4 shrink-0" />
+      <Icono weight={PESO_ICONO} className="mt-0.5 size-4 shrink-0" />
       <div className="min-w-0 flex-1 basis-56 text-control leading-relaxed">
         {titulo ? <p className="font-semibold">{titulo}</p> : null}
         <div className={cn(titulo && "mt-0.5 opacity-90")}>{children}</div>

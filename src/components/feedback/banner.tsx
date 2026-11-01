@@ -1,5 +1,5 @@
 import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
-import type { IconoComponente } from "@/lib/iconos";
+import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -36,12 +36,12 @@ export function Banner({
   const Icono = icon ?? ESTILOS[tono].icono;
   return (
     <div role={tono === "error" ? "alert" : "status"} className={cn("flex items-center gap-3 border-b px-4 py-2.5 text-control", ESTILOS[tono].caja, className)}>
-      <Icono className="size-4 shrink-0" />
+      <Icono weight={PESO_ICONO} className="size-4 shrink-0" />
       <div className="min-w-0 flex-1 leading-relaxed">{children}</div>
       {accion ? <div className="shrink-0">{accion}</div> : null}
       {onCerrar ? (
         <button type="button" onClick={onCerrar} aria-label="Cerrar aviso" className="shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100">
-          <XIcon className="size-3.5" />
+          <XIcon weight="bold" className="size-3.5" />
         </button>
       ) : null}
     </div>
