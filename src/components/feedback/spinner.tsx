@@ -1,4 +1,4 @@
-import { CircleNotchIcon } from "@phosphor-icons/react";
+import { CircleNotchIcon } from "@phosphor-icons/react/dist/ssr";
 import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 

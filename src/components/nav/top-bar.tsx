@@ -18,9 +18,9 @@ export { ACCION_PRINCIPAL, ACCION_SECUNDARIA } from "@/lib/estilos";
 
 function Pill({ pill }: { pill: PillEntorno }) {
   const tonos = {
-    ok: "border border-success-border bg-success text-success-foreground",
-    aviso: "border border-warning-border bg-warning text-warning-foreground",
-    neutro: "border border-border/80 bg-muted text-muted-foreground",
+    ok: "bg-success text-success-foreground",
+    aviso: "bg-warning text-warning-foreground",
+    neutro: "bg-card text-muted-foreground",
     oscuro: "bg-foreground text-background",
   } as const;
   const puntos = { ok: "bg-success-solid", aviso: "bg-warning-solid", neutro: "bg-muted-foreground/40", oscuro: "bg-success-solid" } as const;
@@ -28,7 +28,7 @@ function Pill({ pill }: { pill: PillEntorno }) {
     <span
       title={pill.title}
       className={cn(
-        "hidden shrink-0 items-center gap-1.5 rounded px-2 py-0.5 text-etiqueta font-medium whitespace-nowrap lg:inline-flex",
+        "hidden shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-etiqueta font-semibold whitespace-nowrap lg:inline-flex",
         tonos[pill.tono],
         pill.deshabilitado && "opacity-60",
       )}
@@ -61,42 +61,40 @@ export function TopBar({
   const miga = migas.find((m) => pathname.startsWith(m.prefijo));
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border/80 bg-card/80 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-3 bg-background/80 px-3 backdrop-blur md:px-4">
       <div className="flex min-w-0 items-center gap-3">
         {menuMovil ? <div className="md:hidden">{menuMovil}</div> : null}
 
         {miga ? (
           <nav aria-label="Ubicación" className="flex min-w-0 shrink items-center gap-1.5 overflow-hidden text-control whitespace-nowrap">
-            <span className="text-muted-foreground/80">{miga.seccion}</span>
-            <span className="text-muted-foreground/40">/</span>
-            <h1 className="truncate font-heading font-semibold text-foreground">{miga.pagina}</h1>
+            <span className="text-texto-terciario">{miga.seccion}</span>
+            <span className="text-texto-terciario/50">/</span>
+            <h1 className="truncate font-heading text-titulo text-foreground">{miga.pagina}</h1>
           </nav>
         ) : null}
 
-        {pills.length > 0 ? <div className="hidden h-4 w-px shrink-0 bg-border lg:block" /> : null}
-        {pills.map((p) => (
+                {pills.map((p) => (
           <Pill key={p.texto} pill={p} />
         ))}
       </div>
 
       <div className="flex shrink-0 items-center gap-2.5">
         {buscador ? (
-          <div className="relative hidden w-64 lg:block" title={buscador.title}>
-            <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground/70" />
+          <div className="relative hidden w-72 lg:block" title={buscador.title}>
+            <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-texto-terciario" />
             <input
               readOnly
               disabled={!buscador.onClick}
               onClick={buscador.onClick}
               placeholder={buscador.placeholder}
-              className="h-control w-full rounded-lg border border-border bg-muted pr-12 pl-8 text-control text-foreground placeholder:text-muted-foreground/70 disabled:cursor-not-allowed"
+              className="h-control w-full rounded-full bg-card pr-12 pl-9 text-control text-foreground ring-1 ring-border placeholder:text-texto-terciario disabled:cursor-not-allowed"
             />
             {buscador.atajo ? (
               <Kbd className="absolute top-1/2 right-2 -translate-y-1/2">{buscador.atajo}</Kbd>
             ) : null}
           </div>
         ) : null}
-        {buscador && acciones ? <div className="hidden h-4 w-px bg-border lg:block" /> : null}
-        {/*
+                {/*
           `contents` (no un `{acciones}` suelto) a propósito: si `acciones` es un elemento de un componente
           cliente creado por un Server Component padre (el caso de la demo, ver ejemplo/layout.tsx) y queda
           como uno más de los hijos estáticos de este div, React 19 en dev tira "Each child in a list should
