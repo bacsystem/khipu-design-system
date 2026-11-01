@@ -194,8 +194,8 @@ export function TablaDatos<T>({
               <TableRow
                 key={id}
                 onClick={onFila ? () => onFila(f) : undefined}
-                data-selected={seleccion?.seleccionados.includes(id) || undefined}
-                className={cn("group border-b border-border/60 hover:bg-muted/80 data-selected:bg-accent/40", onFila && "cursor-pointer")}
+                data-state={seleccion?.seleccionados.includes(id) ? "selected" : undefined}
+                className={cn("group", onFila && "cursor-pointer")}
               >
                 {seleccion ? (
                   <TableCell className="w-10 pl-4">
