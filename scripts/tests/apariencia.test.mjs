@@ -56,3 +56,24 @@ test("el script sobrevive a un localStorage bloqueado", () => {
   new Function("document", "localStorage", codigoScriptApariencia())(documento, bloqueado);
   assert.deepEqual(documento.documentElement.dataset, { paleta: "lima", oscuro: "medianoche" });
 });
+
+test("un `inicial` desconocido se descarta y cae a lo guardado", () => {
+  const codigo = codigoScriptApariencia({ inicial: { paleta: "x", tonoOscuro: "y" } });
+  assert.deepEqual(ejecutar(codigo, { [CLAVE_PALETA]: "coral", [CLAVE_TONO_OSCURO]: "grafito" }), { paleta: "coral", oscuro: "grafito" });
+  assert.deepEqual(ejecutar(codigo, {}), { paleta: "lima", oscuro: "medianoche" });
+});
+
+test("un `inicial` con </script> no llega al código generado", () => {
+  const malicioso = "</script><script>alert(1)</script>";
+  const codigo = codigoScriptApariencia({ inicial: { paleta: malicioso, tonoOscuro: malicioso } });
+  assert.ok(!codigo.includes("<"), codigo);
+  assert.ok(!codigo.includes("alert"), codigo);
+  assert.deepEqual(ejecutar(codigo, {}), { paleta: "lima", oscuro: "medianoche" });
+});
+
+test("las opciones propias con < se escapan dentro del script", () => {
+  const paletas = [{ valor: "</script>", etiqueta: "X", muestra: ["#000000", "#000000", "#000000"] }];
+  const codigo = codigoScriptApariencia({ paletas, inicial: { paleta: "</script>" } });
+  assert.ok(!codigo.includes("<"), codigo);
+  assert.equal(ejecutar(codigo, {}).paleta, "</script>");
+});

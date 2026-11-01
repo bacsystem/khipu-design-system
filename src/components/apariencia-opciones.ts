@@ -37,22 +37,29 @@ export function valorValido(valor: string | null | undefined, opciones: Readonly
   return valor != null && opciones.some((o) => o.valor === valor) ? valor : porDefecto;
 }
 
+/** JSON seguro dentro de `<script>`: escapa `<` para que ningún valor pueda cerrar la etiqueta. */
+function jsonEnScript(valor: unknown): string {
+  return JSON.stringify(valor).replace(/</g, "\\u003c");
+}
+
 /**
  * Código en línea para el `<head>`: pone `data-paleta` y `data-oscuro` en `<html>` antes del primer pintado.
- * `inicial` (p. ej. leído del perfil del usuario en el servidor) gana sobre localStorage; un valor desconocido cae al por defecto.
+ * `inicial` (p. ej. leído del perfil del usuario en el servidor) gana sobre localStorage; un valor desconocido se
+ * descarta y se usa lo guardado o, si tampoco vale, el por defecto.
  */
 export function codigoScriptApariencia({
   paletas = PALETAS,
   tonosOscuro = TONOS_OSCURO,
   inicial,
 }: { paletas?: Paleta[]; tonosOscuro?: TonoOscuro[]; inicial?: Partial<PreferenciasApariencia> } = {}): string {
-  const lista = (opciones: ReadonlyArray<{ valor: string }>) => JSON.stringify(opciones.map((o) => o.valor));
+  const lista = (opciones: ReadonlyArray<{ valor: string }>) => jsonEnScript(opciones.map((o) => o.valor));
+  const conocido = (valor: string | undefined, opciones: ReadonlyArray<{ valor: string }>) => valorValido(valor, opciones, "") || null;
   const paletaPorDefecto = valorValido(PALETA_POR_DEFECTO, paletas, paletas[0]?.valor ?? PALETA_POR_DEFECTO);
   const tonoPorDefecto = valorValido(TONO_OSCURO_POR_DEFECTO, tonosOscuro, tonosOscuro[0]?.valor ?? TONO_OSCURO_POR_DEFECTO);
   return (
     `(function(){var d=document.documentElement.dataset;` +
     `function v(c,l,p,i){var x=i;if(!x){try{x=localStorage.getItem(c)}catch(e){}}return l.indexOf(x)>-1?x:p}` +
-    `d.paleta=v(${JSON.stringify(CLAVE_PALETA)},${lista(paletas)},${JSON.stringify(paletaPorDefecto)},${JSON.stringify(inicial?.paleta ?? null)});` +
-    `d.oscuro=v(${JSON.stringify(CLAVE_TONO_OSCURO)},${lista(tonosOscuro)},${JSON.stringify(tonoPorDefecto)},${JSON.stringify(inicial?.tonoOscuro ?? null)})})()`
+    `d.paleta=v(${jsonEnScript(CLAVE_PALETA)},${lista(paletas)},${jsonEnScript(paletaPorDefecto)},${jsonEnScript(conocido(inicial?.paleta, paletas))});` +
+    `d.oscuro=v(${jsonEnScript(CLAVE_TONO_OSCURO)},${lista(tonosOscuro)},${jsonEnScript(tonoPorDefecto)},${jsonEnScript(conocido(inicial?.tonoOscuro, tonosOscuro))})})()`
   );
 }
