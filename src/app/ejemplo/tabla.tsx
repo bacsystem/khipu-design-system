@@ -60,7 +60,7 @@ export function TablaEjemplo() {
       <div className={CONTENEDOR_TABLA}>
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-border/80 bg-muted hover:bg-muted">
+            <TableRow className="hover:bg-transparent">
               <TableHead className={cn(CABECERA_TABLA, "pl-4")}>Llave</TableHead>
               <TableHead className={CABECERA_TABLA}>Creada</TableHead>
               <TableHead className={cn(CABECERA_TABLA, "px-4")}>Estado</TableHead>
@@ -69,7 +69,7 @@ export function TablaEjemplo() {
           </TableHeader>
           <TableBody className="text-control">
             {data.map((k) => (
-              <TableRow key={k.id} className={cn("group border-b border-border/60 hover:bg-muted/80", !k.activa && "opacity-80")}>
+              <TableRow key={k.id} className={cn("group", !k.activa && "opacity-80")}>
                 <TableCell className="py-2 pr-3 pl-4">
                   <ChipCodigo inactivo={!k.activa}>{k.prefijo}</ChipCodigo>
                   <div className="mt-0.5 font-mono text-etiqueta text-muted-foreground/80">id: {k.id.slice(0, 8)}</div>

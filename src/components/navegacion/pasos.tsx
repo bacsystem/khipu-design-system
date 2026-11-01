@@ -67,7 +67,7 @@ export function TarjetaPaso({
         <span className="text-etiqueta text-muted-foreground">
           Paso {numero} de {total}
         </span>
-        <h2 className="mt-0.5 text-base font-semibold tracking-tight text-foreground">{titulo}</h2>
+        <h2 className="mt-0.5 text-titulo text-foreground">{titulo}</h2>
       </div>
       <div className="grid gap-4 px-5 py-4">{children}</div>
       {pie ? <div className="flex items-center justify-end gap-2 border-t border-border/60 px-5 py-3">{pie}</div> : null}

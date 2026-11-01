@@ -39,7 +39,7 @@ export function PanelLateral({
         <div className="flex items-center gap-2.5 border-b border-border/60 px-5 py-4">
           <IconoSeccion icon={icon} />
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-semibold tracking-tight text-foreground">{titulo}</h2>
+            <h2 className="text-titulo text-foreground">{titulo}</h2>
             {descripcion ? <p className="text-control text-muted-foreground">{descripcion}</p> : null}
           </div>
           <SheetClose aria-label="Cerrar" className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">

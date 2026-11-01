@@ -31,7 +31,7 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
-            "w-72 rounded-lg bg-popover p-3.5 text-popover-foreground shadow-md ring-1 ring-border outline-none",
+            "w-72 rounded-xl bg-popover p-3.5 text-popover-foreground shadow-md ring-1 ring-border outline-none",
             ANIMACION_POPUP,
             className,
           )}

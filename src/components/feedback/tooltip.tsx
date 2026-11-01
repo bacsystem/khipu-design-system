@@ -26,7 +26,7 @@ export function Tooltip({
         <TooltipPrimitive.Positioner side={lado} sideOffset={6} className="isolate z-50">
           <TooltipPrimitive.Popup
             className={cn(
-              "max-w-64 rounded-md bg-foreground px-2.5 py-1.5 text-etiqueta leading-snug text-background shadow-md",
+              "max-w-64 rounded-lg bg-foreground px-2.5 py-1.5 text-etiqueta leading-snug text-background shadow-md",
               "origin-(--transform-origin) transition-[opacity,transform] duration-(--duracion-rapida) data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
               className,
             )}
