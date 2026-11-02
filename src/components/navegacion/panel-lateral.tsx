@@ -35,7 +35,8 @@ export function PanelLateral({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       {trigger ? <SheetTrigger render={<span />}>{trigger}</SheetTrigger> : null}
-      <SheetContent side="right" showCloseButton={false} className={cn("w-full gap-0 p-0", ancho)}>
+      {/* En un teléfono el 75 % del cajón dejaba ~280 px y el contenido no entraba: el panel ocupa el ancho menos los márgenes; desde `sm`, su `ancho`. */}
+      <SheetContent side="right" showCloseButton={false} className={cn("w-full gap-0 p-0 data-[side=right]:w-[calc(100%-1.5rem)]", ancho)}>
         <div className="flex items-start gap-2.5 px-5 pt-5 pb-3">
           <IconoSeccion icon={icon} />
           <div className="min-w-0 flex-1">

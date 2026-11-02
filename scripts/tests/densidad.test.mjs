@@ -48,3 +48,14 @@ test("la fila de pestañas subrayadas se desplaza a lo ancho y su indicador no q
   assert.match(tabs, /linea: cn\(INDICADOR_BASE, "bottom-0 h-0\.5/);
   assert.doesNotMatch(tabs, /"flex items-center gap-4 border-b border-border"/);
 });
+
+test("el panel lateral ocupa el ancho del teléfono y las filas de muestras encogen", () => {
+  assert.match(leer("src/components/navegacion/panel-lateral.tsx"), /data-\[side=right\]:w-\[calc\(100%-1\.5rem\)\]/);
+  assert.match(leer("src/components/nav/selector-apariencia.tsx"), /gridTemplateColumns: `repeat\(\$\{opciones\.length\}, minmax\(0, 1fr\)\)`/);
+});
+
+test("ya no existe el diseño «papel»", () => {
+  assert.doesNotMatch(leer("src/components/disenos.ts"), /papel/);
+  assert.doesNotMatch(leer("src/styles/tokens.css"), /papel/);
+  assert.doesNotMatch(leer("src/styles/theme.css"), /papel/);
+});

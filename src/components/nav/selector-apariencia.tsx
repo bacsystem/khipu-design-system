@@ -2,7 +2,6 @@
 
 import { useRef, type CSSProperties, type ReactNode } from "react";
 import { useApariencia } from "@/components/apariencia";
-import { useDiseno } from "@/components/diseno";
 import { FOCO, ROTULO } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
@@ -39,7 +38,13 @@ function GrupoMuestras({
 
   return (
     <div className={cn("grid", grande ? "gap-2" : "gap-1.5")}>
-      <div role="radiogroup" aria-label={etiqueta} className={cn("flex items-center", grande ? "gap-2.5" : "gap-1.5", forma === "circulo" && "flex-wrap")}>
+      <div
+        role="radiogroup"
+        aria-label={etiqueta}
+        // Tarjetas y «Aa» en columnas iguales que encogen (minmax(0, 1fr)): en flex, Safari no achicaba los botones y la fila se salía del panel en un teléfono.
+        style={forma === "circulo" ? undefined : { gridTemplateColumns: `repeat(${opciones.length}, minmax(0, 1fr))` }}
+        className={cn(forma === "circulo" ? "flex flex-wrap items-center" : "grid", grande ? "gap-2.5" : "gap-1.5")}
+      >
         {opciones.map((o, i) => {
           const activa = o.valor === valor;
           return (
@@ -68,9 +73,9 @@ function GrupoMuestras({
               className={cn(
                 "shrink-0 cursor-pointer transition-shadow duration-(--duracion-rapida) ease-salida",
                 forma === "circulo" && (grande ? "size-9 rounded-full" : "size-5 rounded-full"),
-                forma === "tarjeta" && (grande ? "h-14 min-w-0 flex-1 rounded-xl" : "h-7 min-w-0 flex-1 rounded-lg"),
+                forma === "tarjeta" && (grande ? "h-14 min-w-0 rounded-xl" : "h-7 min-w-0 rounded-lg"),
                 forma === "texto" &&
-                  cn("grid min-w-0 flex-1 place-items-center bg-secondary font-semibold text-foreground", grande ? "h-12 rounded-xl text-titulo-pagina" : "h-8 rounded-lg text-cuerpo"),
+                  cn("grid min-w-0 place-items-center bg-secondary font-semibold text-foreground", grande ? "h-12 rounded-xl text-titulo-pagina" : "h-8 rounded-lg text-cuerpo"),
                 activa
                   ? cn("ring-2 ring-foreground ring-offset-2 ring-offset-popover", forma === "texto" && "bg-popover")
                   : forma !== "texto" && "ring-1 ring-border",
@@ -89,11 +94,10 @@ function GrupoMuestras({
   );
 }
 
-/** Muestras de las paletas (acento, acento 2 y acento 3 en un círculo). No pinta nada sin `AparienciaProvider` ni con «papel». */
+/** Muestras de las paletas (acento, acento 2 y acento 3 en un círculo). No pinta nada sin `AparienciaProvider`. */
 export function SelectorPaleta({ className, grande }: { className?: string; grande?: boolean }) {
   const { paleta, setPaleta, paletas } = useApariencia();
-  const { diseno } = useDiseno();
-  if (paletas.length < 2 || diseno === "papel") return null;
+  if (paletas.length < 2) return null;
   const opciones = paletas.map((p) => ({
     valor: p.valor,
     etiqueta: p.etiqueta,
@@ -112,8 +116,7 @@ export function SelectorPaleta({ className, grande }: { className?: string; gran
  */
 export function SelectorTonoOscuro({ className, grande }: { className?: string; grande?: boolean }) {
   const { tonoOscuro, setTonoOscuro, tonosOscuro } = useApariencia();
-  const { diseno } = useDiseno();
-  if (tonosOscuro.length < 2 || diseno === "papel") return null;
+  if (tonosOscuro.length < 2) return null;
   const opciones = tonosOscuro.map((t) => ({
     valor: t.valor,
     etiqueta: t.etiqueta,
@@ -129,8 +132,7 @@ export function SelectorTonoOscuro({ className, grande }: { className?: string; 
 /** Tipografías de interfaz: un «Aa» dibujado en cada fuente. Los datos siguen en JetBrains Mono. */
 export function SelectorTipografia({ className, grande }: { className?: string; grande?: boolean }) {
   const { fuente, setFuente, fuentes } = useApariencia();
-  const { diseno } = useDiseno();
-  if (fuentes.length < 2 || diseno === "papel") return null;
+  if (fuentes.length < 2) return null;
   const opciones = fuentes.map((f) => ({ valor: f.valor, etiqueta: f.etiqueta, estilo: { fontFamily: f.familia }, contenido: "Aa" }));
   return (
     <div className={className}>
@@ -142,8 +144,7 @@ export function SelectorTipografia({ className, grande }: { className?: string; 
 /** Paleta, tono oscuro y tipografía con su rótulo. Va en el menú de usuario bajo el tema. */
 export function SelectorApariencia({ className }: { className?: string }) {
   const { paletas } = useApariencia();
-  const { diseno } = useDiseno();
-  if (paletas.length < 2 || diseno === "papel") return null;
+  if (paletas.length < 2) return null;
   return (
     <div className={cn("grid gap-3", className)}>
       <div className="flex items-center justify-between gap-3">

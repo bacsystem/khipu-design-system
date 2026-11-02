@@ -61,10 +61,10 @@ export function MenuUsuario({
 }) {
   const [saliendo, setSaliendo] = useState(false);
   const [panelAbierto, setPanelAbierto] = useState(false);
-  const { diseno, disenos } = useDiseno();
+  const { disenos } = useDiseno();
   const conDiseno = mostrarDiseno && disenos.length > 1;
   const { paletas } = useApariencia();
-  const conApariencia = mostrarApariencia && paletas.length > 1 && diseno !== "papel";
+  const conApariencia = mostrarApariencia && paletas.length > 1;
   const nombre = usuario.nombre ?? usuario.email.split("@")[0] ?? usuario.email;
 
   async function salir() {

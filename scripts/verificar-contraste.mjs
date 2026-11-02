@@ -2,7 +2,6 @@
 // Falla si algún par texto/fondo baja de 4.5 (WCAG AA) o un indicador no textual (anillo de foco) baja de 3, en las
 // 20 combinaciones de apariencia: 5 paletas × (claro + 3 tonos oscuros) de src/styles/tokens.css. Resuelve var() y
 // color-mix(in srgb, …) igual que el navegador; un color translúcido se compone sobre su fondo antes de medir.
-// «papel» documenta su contraste en su comentario.
 
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -14,8 +13,8 @@ const MINIMO_NO_TEXTO = 3;
 
 export const PALETAS = ["lima", "indigo", "oceano", "coral", "violeta"];
 export const TONOS = ["medianoche", "grafito", "tintado"];
-const selectorPaleta = (p) => `html:not([data-diseno="papel"])[data-paleta="${p}"]`;
-const selectorTono = (t) => `html:not([data-diseno="papel"]).dark[data-oscuro="${t}"]`;
+const selectorPaleta = (p) => `html:root[data-paleta="${p}"]`;
+const selectorTono = (t) => `html:root.dark[data-oscuro="${t}"]`;
 
 export const PARES = [
   ["--foreground", "--background"],

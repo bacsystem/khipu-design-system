@@ -13,7 +13,7 @@ test("los resortes no rebotan", () => {
 
 // Lee los valores del CSS: si alguien cambia uno de los dos lados, la prueba lo detecta.
 const css = ["tokens.css", "theme.css"].map((f) => readFileSync(new URL(`../../src/styles/${f}`, import.meta.url), "utf8")).join("\n");
-// La primera aparición: el diseño base (:root / @theme). «papel» redefine las duraciones más abajo.
+// La primera aparición: el diseño base (:root / @theme).
 const valor = (nombre) => css.match(new RegExp(`${nombre}:\\s*([^;]+);`))?.[1].trim();
 
 test("curva y duraciones coinciden con src/styles", () => {
