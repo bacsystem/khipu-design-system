@@ -837,6 +837,22 @@
         "lib/utils"
       ]
     },
+    "components/patrones/cabecera-pagina": {
+      "name": "cabecera-pagina",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/cabecera-pagina.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/iconos",
+        "lib/utils"
+      ]
+    },
     "components/patrones/cabecera-seccion": {
       "name": "cabecera-seccion",
       "type": "component",

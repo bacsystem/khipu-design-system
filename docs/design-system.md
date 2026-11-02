@@ -174,7 +174,7 @@ Reglas:
 ## 4. Espaciado, radios y elevación
 
 - **Base 4 px.** Paddings habituales: `p-1` (popups), `px-2 py-1.5` (ítems), `px-3/px-4 py-2` (celdas), `px-4 py-3` (cabeceras de tarjeta), `px-5 py-4` (cabecera/cuerpo de diálogo), `p-4 md:p-6` (main).
-- **Separación entre bloques de página:** `gap-3` (12 px); padding de tarjeta 13–15 px. Ancho máximo del contenido: `max-w-[1520px] mx-auto`.
+- **Separación entre bloques de página:** `gap-3` (12 px); padding de tarjeta 13–15 px. Ancho máximo del contenido: `max-w-[1520px] mx-auto`. Las dos cosas juntas son la receta `CONTENEDOR_PAGINA`; la cabecera de una página sin título en la barra superior es `CabeceraPagina` (con `EnlaceVolver` en un detalle).
 - **Radios:** `--radius: 0.75rem`. `rounded-lg` = 12 px en campos, selects, textareas y bandas de tabla; `rounded-xl` = `calc(var(--radius) * 1.5)` = 18 px en tarjetas, tablas, popovers, menús, diálogos y toasts. Botones, chips, pills de estado, segmentados, ítems de menú, ítems del sidebar y paginación son **píldora** (`rounded-full`), igual que avatares y puntos.
 - **Elevación:** variables de tema (`--sombra-*` en `:root` y `.dark`) expuestas en `@theme inline` como `--shadow-xs/sm/md/lg`, para que `shadow-sm` etc. cambien con el modo:
 

@@ -95,6 +95,8 @@ export const TARJETA =
   "rounded-xl border border-borde-tarjeta bg-card shadow-tarjeta dark:bg-[linear-gradient(180deg,color-mix(in_srgb,#fff_2.5%,var(--card)),var(--card)_120px)]";
 /** Tarjeta que se eleva 2 px al pasar el mouse (métricas). Con «reducir movimiento» solo cambia la sombra. */
 export const TARJETA_ELEVABLE = `${TARJETA} transition-[transform,box-shadow,border-color] duration-(--duracion-media) ease-salida hover:shadow-elevada motion-safe:hover:-translate-y-0.5`;
+/** Contenedor de una página (lista o detalle): el ancho máximo del contenido y la separación entre bloques del §4. Todas las páginas lo usan, así ningún detalle queda más angosto o más suelto que otro. */
+export const CONTENEDOR_PAGINA = "mx-auto flex w-full max-w-[1520px] min-w-0 flex-col gap-3";
 export const TITULO_SECCION = "flex items-center gap-1.5 text-etiqueta font-medium text-muted-foreground";
 export const ETIQUETA_DATO = "block text-etiqueta font-medium text-muted-foreground";
 

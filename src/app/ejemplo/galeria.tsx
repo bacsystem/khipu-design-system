@@ -39,6 +39,7 @@ import { PanelLateral } from "@/components/navegacion/panel-lateral";
 import { Pasos, TarjetaPaso } from "@/components/navegacion/pasos";
 import { Tabs } from "@/components/navegacion/tabs";
 import { BotonAsync } from "@/components/patrones/boton-async";
+import { CabeceraPagina, EnlaceVolver } from "@/components/patrones/cabecera-pagina";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
 import { PillEstado } from "@/components/patrones/pill-estado";
 import { NumeroAnimado } from "@/components/patrones/numero-animado";
@@ -229,6 +230,12 @@ export function Galeria() {
         <EstadoVacio icon={TrayIcon} titulo="Sin documentos todavía" accion={<button type="button" className={BOTON_PRIMARIO}>Nuevo documento</button>}>
           Cuando emitas el primero aparecerá aquí con su estado en SUNAT.
         </EstadoVacio>
+        <CabeceraPagina
+          volver={<EnlaceVolver href="/ejemplo">Cuentas</EnlaceVolver>}
+          titulo="Comercial Andina S.A.C."
+          descripcion="Cabecera de una página sin título en la barra superior (backoffice, detalle): volver, título, descripción y acciones."
+          acciones={<button type="button" className={ACCION_SECUNDARIA}>Suspender</button>}
+        />
       </section>
 
       {/* ── Formularios ─────────────────────────────────────────── */}

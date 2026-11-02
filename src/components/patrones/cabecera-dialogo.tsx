@@ -55,7 +55,8 @@ export function PieDialogo({ children, izquierda, className }: { children: React
 }
 
 /** Aviso dentro de un diálogo o formulario (ámbar para advertencias, verde para confirmaciones). */
-export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok"; icon: IconoComponente; children: ReactNode }) {
+/** Aviso dentro de un diálogo. `peligro`: lo que una acción destructiva va a hacer (dar de baja, anular), en el tinte de error de `Alerta`. */
+export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok" | "peligro"; icon: IconoComponente; children: ReactNode }) {
   return (
     <div
       className={cn(
