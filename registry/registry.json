@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-01",
+  "generatedAt": "2026-11-02",
   "items": {
     "components/apariencia-opciones": {
       "name": "apariencia-opciones",
@@ -437,6 +437,19 @@
         "lib/utils"
       ]
     },
+    "components/formularios/select-campo": {
+      "name": "select-campo",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/select-campo.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "components/ui/select",
+        "lib/utils"
+      ]
+    },
     "components/formularios/stepper-numerico": {
       "name": "stepper-numerico",
       "type": "component",
@@ -554,7 +567,6 @@
       "dependencies": [],
       "registryDependencies": [
         "components/apariencia",
-        "components/diseno",
         "lib/estilos",
         "lib/utils"
       ]
@@ -898,6 +910,7 @@
       ],
       "registryDependencies": [
         "components/ui/selector-por-pagina",
+        "components/ui/table",
         "lib/estilos",
         "lib/navegacion",
         "lib/paginacion",

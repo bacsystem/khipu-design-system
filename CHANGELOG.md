@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.7] - 2026-11-02
+
+### Added
+- `SelectCampo` (`formularios/select-campo`): the form combo. It is the `Select` (rounded list with the check) with the look of `CAMPO` at the field's full width, and it speaks in strings like a `<select>` (`""` shows the `placeholder` unless an option has `value: ""`). Options with the same `grupo` go under that heading, like an `<optgroup>`. `id` goes on the trigger, so a `<label htmlFor>` names it; `nombre`/`required` feed base-ui's hidden input; `invalido`/`describidoPor`, `mono` and `etiqueta` (an accessible name with no label). It replaces the native `<select>` + `SELECT_NATIVO`, which the operating system draws its own way.
+- `Combobox` `invalido`, `describidoPor` and `etiquetaAbrir` (the open button's name, until now fixed in Spanish).
+
+### Deprecated
+- `SELECT_NATIVO`: use `SelectCampo`. Kept so imports do not break.
+
 ## [0.5.6] - 2026-11-01
 
 ### Added
