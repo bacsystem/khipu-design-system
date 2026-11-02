@@ -14,7 +14,10 @@ const COLOR_TONO: Record<TonoFuerza, string> = {
 };
 
 /** Heurística simple (longitud + variedad de caracteres) solo para dar una pista visual; valida de verdad en el backend. */
-function calcularFuerza(valor: string): { puntaje: number; etiqueta: string; tono: TonoFuerza } {
+export type EtiquetasFuerza = { debil: string; media: string; fuerte: string };
+const FUERZA_ES: EtiquetasFuerza = { debil: "Débil", media: "Media", fuerte: "Fuerte" };
+
+function calcularFuerza(valor: string, e: EtiquetasFuerza): { puntaje: number; etiqueta: string; tono: TonoFuerza } {
   let p = 0;
   if (valor.length >= 8) p++;
   if (valor.length >= 12) p++;
@@ -22,9 +25,9 @@ function calcularFuerza(valor: string): { puntaje: number; etiqueta: string; ton
   if (/\d/.test(valor)) p++;
   if (/[^A-Za-z0-9]/.test(valor)) p++;
   const puntaje = Math.round((p / 5) * 100);
-  if (p <= 1) return { puntaje, etiqueta: "Débil", tono: "destructive" };
-  if (p <= 3) return { puntaje, etiqueta: "Media", tono: "warning" };
-  return { puntaje, etiqueta: "Fuerte", tono: "success" };
+  if (p <= 1) return { puntaje, etiqueta: e.debil, tono: "destructive" };
+  if (p <= 3) return { puntaje, etiqueta: e.media, tono: "warning" };
+  return { puntaje, etiqueta: e.fuerte, tono: "success" };
 }
 
 /**
@@ -40,6 +43,10 @@ export function Contrasena({
   invalido,
   disabled,
   autoComplete,
+  etiquetaMostrar = "Mostrar contraseña",
+  etiquetaOcultar = "Ocultar contraseña",
+  describidoPor,
+  etiquetasFuerza = FUERZA_ES,
   className,
 }: {
   id: string;
@@ -50,10 +57,17 @@ export function Contrasena({
   invalido?: boolean;
   disabled?: boolean;
   autoComplete?: string;
+  /** Nombre accesible del botón del ojo, para traducirlo (por defecto en castellano). */
+  etiquetaMostrar?: string;
+  etiquetaOcultar?: string;
+  /** `aria-describedby` del campo: el id de su ayuda o de su error. */
+  describidoPor?: string;
+  /** Textos del medidor de `conFuerza`, para traducirlo. */
+  etiquetasFuerza?: EtiquetasFuerza;
   className?: string;
 }) {
   const [visible, setVisible] = useState(false);
-  const fuerza = useMemo(() => calcularFuerza(valor), [valor]);
+  const fuerza = useMemo(() => calcularFuerza(valor, etiquetasFuerza), [valor, etiquetasFuerza]);
 
   return (
     <div className={cn("grid gap-1.5", className)}>
@@ -67,13 +81,14 @@ export function Contrasena({
           disabled={disabled}
           autoComplete={autoComplete}
           aria-invalid={invalido || undefined}
+          aria-describedby={describidoPor}
           className={cn(CAMPO, "pr-9", invalido && "border-destructive focus:border-destructive focus:ring-destructive/20")}
         />
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
           disabled={disabled}
-          aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+          aria-label={visible ? etiquetaOcultar : etiquetaMostrar}
           className="absolute right-2.5 rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-60"
         >
           {visible ? <EyeSlashIcon className="size-4" /> : <EyeIcon className="size-4" />}

@@ -6,7 +6,10 @@ import { CheckIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** Checkbox con etiqueta y descripción opcional. */
+/**
+ * Checkbox con etiqueta y descripción opcional. `invalido` y `describidoPor` (el id del error) para una casilla obligatoria de un formulario (p. ej. aceptar
+ * los términos); `name` y `required` para que un `<form>` nativo la envíe y la exija.
+ */
 export function Casilla({
   id,
   etiqueta,
@@ -15,6 +18,10 @@ export function Casilla({
   defaultChecked,
   onCheckedChange,
   disabled,
+  invalido,
+  describidoPor,
+  name,
+  required,
   className,
 }: {
   id: string;
@@ -24,6 +31,10 @@ export function Casilla({
   defaultChecked?: boolean;
   onCheckedChange?: (v: boolean) => void;
   disabled?: boolean;
+  invalido?: boolean;
+  describidoPor?: string;
+  name?: string;
+  required?: boolean;
   className?: string;
 }) {
   return (
@@ -34,7 +45,11 @@ export function Casilla({
         defaultChecked={defaultChecked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
-        className="mt-px flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border-[1.5px] border-input bg-card transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:border-primary data-checked:bg-primary"
+        name={name}
+        required={required}
+        aria-invalid={invalido || undefined}
+        aria-describedby={describidoPor}
+        className="mt-px flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border-[1.5px] border-input bg-card aria-invalid:border-destructive transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:border-primary data-checked:bg-primary"
       >
         <CheckboxPrimitive.Indicator className="text-primary-foreground">
           <CheckIcon className="size-3" weight="bold" />

@@ -77,3 +77,18 @@ test("en el teléfono la miga muestra solo la página", () => {
   const barra = leer("src/components/nav/top-bar.tsx");
   assert.match(barra, /<span className="hidden text-texto-terciario sm:inline">\{miga\.seccion\}<\/span>/);
 });
+
+// 0.5.6: los controles de formulario se traducen y dicen su error, como los nativos que reemplazan en el portal.
+test("Contrasena, ZonaArchivos, Casilla y EntradaFecha reciben sus textos y su estado de error", () => {
+  const clave = leer("src/components/formularios/contrasena.tsx");
+  assert.match(clave, /aria-label=\{visible \? etiquetaOcultar : etiquetaMostrar\}/);
+  assert.match(clave, /aria-describedby=\{describidoPor\}/);
+  assert.match(clave, /calcularFuerza\(valor, etiquetasFuerza\)/);
+  assert.match(leer("src/components/formularios/zona-archivos.tsx"), /aria-label=\{etiquetaQuitar\}/);
+  const casilla = leer("src/components/formularios/casilla.tsx");
+  assert.match(casilla, /aria-invalid=\{invalido \|\| undefined\}/);
+  assert.match(casilla, /aria-describedby=\{describidoPor\}/);
+  assert.match(casilla, /name=\{name\}/);
+  const fecha = leer("src/components/formularios/entrada-fecha.tsx");
+  assert.match(fecha, /aria-invalid=\{invalido \|\| undefined\}/);
+});

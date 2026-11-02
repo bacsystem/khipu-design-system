@@ -30,6 +30,8 @@ export function EntradaFecha({
   etiquetaLimpiar = "Quitar la fecha",
   nombre,
   enBarra = false,
+  invalido,
+  describidoPor,
   className,
 }: {
   id: string;
@@ -51,6 +53,9 @@ export function EntradaFecha({
   variante?: "filtro" | "campo";
   /** Píldora de barra de filtros (`CONTROL_FILTRO`) en vez del campo de formulario (`CAMPO`). */
   enBarra?: boolean;
+  /** Marca el campo con error (`aria-invalid`, borde rojo de `CAMPO`) y lo une a su mensaje (`aria-describedby`). */
+  invalido?: boolean;
+  describidoPor?: string;
   className?: string;
 }) {
   const [abierto, setAbierto] = useState(false);
@@ -65,6 +70,8 @@ export function EntradaFecha({
         <PopoverTrigger
           id={id}
           disabled={disabled}
+          aria-invalid={invalido || undefined}
+          aria-describedby={describidoPor}
           render={<button type="button" />}
           className={cn(
             enBarra ? cn(CONTROL_FILTRO, "px-3") : CAMPO,
