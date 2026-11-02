@@ -26,6 +26,7 @@ import { EntradaFecha } from "@/components/formularios/entrada-fecha";
 import { EntradaMonto } from "@/components/formularios/entrada-monto";
 import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/entrada-rango-fechas";
 import { GrupoOpciones } from "@/components/formularios/opciones";
+import { SelectCampo } from "@/components/formularios/select-campo";
 import { StepperNumerico } from "@/components/formularios/stepper-numerico";
 import { ZonaArchivos } from "@/components/formularios/zona-archivos";
 import { SelectorApariencia } from "@/components/nav/selector-apariencia";
@@ -109,6 +110,8 @@ export function Galeria() {
   const [descuento, setDescuento] = useState(15);
   const [rangoMonto, setRangoMonto] = useState<[number, number]>([200, 1500]);
   const [producto, setProducto] = useState("");
+  const [operacion, setOperacion] = useState("0101");
+  const [incoterm, setIncoterm] = useState("");
   const [drawer, setDrawer] = useState(false);
   const [negrita, setNegrita] = useState(false);
   const [cursiva, setCursiva] = useState(false);
@@ -264,6 +267,22 @@ export function Galeria() {
               placeholder="Escribe o elige uno…"
               items={["Servicio de consultoría", "Licencia de software anual", "Papel bond A4 (millar)", "Tóner para impresora", "Servicio de mantenimiento"]}
             />
+          </Campo>
+          <Campo id="g-operacion" etiqueta="Tipo de operación" ayuda="SelectCampo: el combo de formulario, con grupos">
+            <SelectCampo
+              id="g-operacion"
+              valor={operacion}
+              onCambio={setOperacion}
+              opciones={[
+                { value: "0101", label: "0101 · Venta interna", grupo: "Venta interna" },
+                { value: "0112", label: "0112 · Venta interna, sustenta gastos deducibles", grupo: "Venta interna" },
+                { value: "0200", label: "0200 · Exportación de bienes", grupo: "Exportación" },
+                { value: "0401", label: "0401 · Ventas no domiciliados", grupo: "Exportación" },
+              ]}
+            />
+          </Campo>
+          <Campo id="g-incoterm" etiqueta="Incoterm" opcional ayuda="Sin elegir muestra el placeholder">
+            <SelectCampo id="g-incoterm" valor={incoterm} onCambio={setIncoterm} placeholder="Sin incoterm" mono opciones={["EXW", "FOB", "CIF", "DAP"].map((i) => ({ value: i, label: i }))} />
           </Campo>
           <Campo id="g-fecha" etiqueta="Fecha de emisión">
             <EntradaFecha id="g-fecha" valor={fecha} onCambio={setFecha} />

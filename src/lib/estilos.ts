@@ -57,7 +57,7 @@ export const CAMPO =
 export const CAMPO_FILTRO = CAMPO;
 export const ETIQUETA_CAMPO = "text-etiqueta font-medium text-foreground";
 export const AYUDA_CAMPO = "text-etiqueta text-muted-foreground";
-/** `<select>` nativo con el aspecto de `CAMPO`: para formularios que no usan `ui/select` (p. ej. hechos con react-hook-form). */
+/** @deprecated Desde 0.5.7 usa `SelectCampo` (`formularios/select-campo`): el `<select>` nativo lo dibuja el sistema operativo y no sigue la plantilla. Se conserva para no romper imports. */
 export const SELECT_NATIVO =
   "h-control rounded-lg border border-input bg-card px-2.5 text-campo md:text-control text-foreground transition-[border-color,box-shadow] duration-(--duracion-rapida) ease-salida outline-none focus:border-acento-texto focus:ring-3 focus:ring-acento/55 dark:focus:border-acento dark:focus:ring-acento/25 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 disabled:cursor-not-allowed disabled:opacity-60";
 

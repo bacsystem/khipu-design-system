@@ -18,6 +18,9 @@ export function Combobox({
   placeholder = "Buscar…",
   vacio = "Sin resultados",
   disabled,
+  invalido,
+  describidoPor,
+  etiquetaAbrir = "Abrir opciones",
   className,
 }: {
   id: string;
@@ -27,6 +30,11 @@ export function Combobox({
   placeholder?: string;
   vacio?: string;
   disabled?: boolean;
+  /** Marca el campo con error (`aria-invalid`, borde rojo de `CAMPO`) y lo une a su mensaje (`aria-describedby`). */
+  invalido?: boolean;
+  describidoPor?: string;
+  /** Nombre accesible del botón que abre la lista. */
+  etiquetaAbrir?: string;
   className?: string;
 }) {
   const seleccionado = items.find((i) => i.value === valor) ?? null;
@@ -39,8 +47,14 @@ export function Combobox({
       disabled={disabled}
     >
       <div className="relative">
-        <ComboboxPrimitive.Input id={id} placeholder={placeholder} className={cn(CAMPO, "pr-9", className)} />
-        <ComboboxPrimitive.Trigger aria-label="Abrir opciones" className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5 text-muted-foreground/70 hover:text-foreground">
+        <ComboboxPrimitive.Input
+          id={id}
+          placeholder={placeholder}
+          aria-invalid={invalido || undefined}
+          aria-describedby={describidoPor}
+          className={cn(CAMPO, "pr-9", className)}
+        />
+        <ComboboxPrimitive.Trigger aria-label={etiquetaAbrir} className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5 text-muted-foreground/70 hover:text-foreground">
           <CaretDownIcon weight="bold" className="size-4" />
         </ComboboxPrimitive.Trigger>
       </div>
