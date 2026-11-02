@@ -21,6 +21,7 @@ export function ZonaArchivos({
   accept,
   titulo = "Arrastra un archivo o haz clic para elegirlo",
   ayuda,
+  etiquetaQuitar = "Quitar archivo",
   disabled,
   className,
 }: {
@@ -30,6 +31,8 @@ export function ZonaArchivos({
   accept?: string;
   titulo?: string;
   ayuda?: string;
+  /** Nombre accesible del botón que quita el archivo, para traducirlo. */
+  etiquetaQuitar?: string;
   disabled?: boolean;
   className?: string;
 }) {
@@ -56,7 +59,7 @@ export function ZonaArchivos({
         </div>
         <button
           type="button"
-          aria-label="Quitar archivo"
+          aria-label={etiquetaQuitar}
           disabled={disabled}
           onClick={() => onCambio(null)}
           className="rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"

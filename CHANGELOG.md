@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.6] - 2026-11-01
+
+### Added
+- Form controls take their texts and error state as props, like the native ones they replace: `Contrasena` `etiquetaMostrar`/`etiquetaOcultar`, `etiquetasFuerza`, `describidoPor`; `ZonaArchivos` `etiquetaQuitar`; `Casilla` `invalido`, `describidoPor`, `name`, `required`; `EntradaFecha` `invalido` (`aria-invalid`, the field's red border) and `describidoPor`. Defaults stay in Spanish.
+
 ## [0.5.5] - 2026-11-01
 
 ### Added
