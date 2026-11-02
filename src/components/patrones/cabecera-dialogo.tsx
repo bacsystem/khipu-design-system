@@ -54,15 +54,19 @@ export function PieDialogo({ children, izquierda, className }: { children: React
   );
 }
 
-/** Aviso dentro de un diálogo o formulario (ámbar para advertencias, verde para confirmaciones). */
-/** Aviso dentro de un diálogo. `peligro`: lo que una acción destructiva va a hacer (dar de baja, anular), en el tinte de error de `Alerta`. */
-export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok" | "peligro"; icon: IconoComponente; children: ReactNode }) {
+/**
+ * Aviso dentro de un diálogo o formulario: ámbar para advertencias, verde para confirmaciones, `peligro` para lo que una acción destructiva va a hacer
+ * (dar de baja, anular; el tinte de error de `Alerta`) y `neutro` para un efecto que no alarma (la vista previa de un cambio).
+ */
+export function Aviso({ tono, icon: Icon, children }: { tono: "aviso" | "ok" | "peligro" | "neutro"; icon: IconoComponente; children: ReactNode }) {
   return (
     <div
       className={cn(
         "flex items-start gap-2.5 rounded-[14px] px-3 py-2.5 text-control leading-relaxed",
         tono === "aviso" && "bg-warning text-warning-foreground",
         tono === "ok" && "bg-success text-success-foreground",
+        tono === "peligro" && "bg-destructive-suave text-destructive-texto",
+        tono === "neutro" && "bg-secondary text-foreground",
       )}
     >
       <Icon aria-hidden weight={PESO_ICONO} className="mt-0.5 size-4 shrink-0" />
