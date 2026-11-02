@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.9] - 2026-11-02
+
+### Added
+- `GraficoBarras` can go inside another card and name itself from it: `plano` (no card or padding of its own), `etiquetadoPor` (the id of the heading that names it), `etiqueta` (an accessible name when there is no title, translated by the caller) and `descripcion` (a summary for screen readers, in `<desc>`).
+- `GraficoBarras` `rotuloVisible(i)` (which categories get an axis label; with the 31 days of a month they do not fit on a phone), `tituloDeCategoria(i)` (the text of each category in its `<title>` and in the tooltip) and `propiedadesDeCategoria(i)` (extra `data-*` attributes on each category's group).
+
+### Fixed
+- `GraficoBarras` drew a small bump above the baseline for a value of 0 (the rounded cap of an empty bar), and a bar lower than its corner radius stuck out above its value. A 0 now draws no mark, and the radius never exceeds the bar's height.
+
 ## [0.5.8] - 2026-11-02
 
 ### Added
