@@ -914,6 +914,22 @@
         "lib/movimiento"
       ]
     },
+    "components/patrones/panel-quitable": {
+      "name": "panel-quitable",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/panel-quitable.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/ui/button",
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
     "components/patrones/pie-tabla": {
       "name": "pie-tabla",
       "type": "component",

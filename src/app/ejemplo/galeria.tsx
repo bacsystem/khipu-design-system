@@ -41,6 +41,7 @@ import { Tabs } from "@/components/navegacion/tabs";
 import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraPagina, EnlaceVolver } from "@/components/patrones/cabecera-pagina";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
+import { PanelQuitable } from "@/components/patrones/panel-quitable";
 import { PillEstado } from "@/components/patrones/pill-estado";
 import { NumeroAnimado } from "@/components/patrones/numero-animado";
 import { TarjetaDestacada } from "@/components/patrones/tarjeta-destacada";
@@ -236,6 +237,9 @@ export function Galeria() {
           descripcion="Cabecera de una página sin título en la barra superior (backoffice, detalle): volver, título, descripción y acciones."
           acciones={<button type="button" className={ACCION_SECUNDARIA}>Suspender</button>}
         />
+        <PanelQuitable titulo="Al crédito (cuotas)" etiquetaQuitar="Quitar crédito" onQuitar={() => undefined}>
+          <p className="text-control text-muted-foreground">Lo que el usuario agregó con «+ Crédito»; la ✕ lo quita y limpia sus datos.</p>
+        </PanelQuitable>
       </section>
 
       {/* ── Formularios ─────────────────────────────────────────── */}
