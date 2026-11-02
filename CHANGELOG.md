@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.8] - 2026-11-02
+
+### Added
+- `CabeceraPagina` and `EnlaceVolver` (`patrones/cabecera-pagina`): the header of a page that has no title in the top bar (backoffice, record detail): an optional «back» link (the secondary action with the caret, the same everywhere), an `h1`, a description and actions on the right.
+- `CONTENEDOR_PAGINA`: the page container (`max-w-[1520px]`, `gap-3` between blocks, §4), so no detail page is narrower or looser than another.
+- `Aviso` `tono="peligro"`: what a destructive action will do, in a dialog, with the error tint of `Alerta`.
+
 ## [0.5.7] - 2026-11-02
 
 ### Added
