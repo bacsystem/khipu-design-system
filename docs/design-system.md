@@ -482,8 +482,8 @@ Para adoptarlo en una app: envuelve con `DisenoProvider` (dentro de `ThemeProvid
 **Agregar un diseño:** (1) un bloque en `src/styles/tokens.css` que sobrescriba solo los tokens que cambian; (2) su entrada en `DISENOS`; (3) el contraste de cada par de texto afectado, calculado y no estimado.
 
 ```css
-html[data-diseno="papel"]:not(.dark) { --background: #f6f5f4; --primary: #0075de; /* … */ }
-html[data-diseno="papel"].dark { --background: #191817; --primary: #62aef0; /* … */ }
+html[data-diseno="nuevo"]:not(.dark) { --background: #f6f5f4; --primary: #0075de; /* … */ }
+html[data-diseno="nuevo"].dark { --background: #191817; --primary: #62aef0; /* … */ }
 ```
 
 El selector lleva `:not(.dark)` (o `.dark` para un bloque oscuro) a propósito: sin eso, los valores claros del diseño le ganarían por especificidad al modo oscuro. El diseño base `khipu` no tiene bloque: son los tokens de `:root` y `.dark`.
@@ -493,9 +493,9 @@ El selector lleva `:not(.dark)` (o `.dark` para un bloque oscuro) a propósito: 
 | Valor | Origen | Cambia (claro) | Oscuro |
 |---|---|---|---|
 | `khipu` | Diseño base | — | — |
-| `papel` | Estilo Notion de Refero | Lienzo `--background` `#f6f5f4` con tarjetas blancas; un solo azul de acción (`--primary` `#0075de`, `--ring`, `--brand`) y su fondo suave `--accent` `#e6f3fe` con texto `#005bab` (6.04); bordes de 1 px `rgba(0,0,0,0.08)` en vez de sombras; texto `--foreground` `#111111` (17.34) y `--muted-foreground` `#615d59` (5.99 sobre el fondo, 6.53 sobre card, 5.63 sobre secondary); `secondary`, `muted` y sidebar en tonos cálidos; transiciones de 200 ms con `ease` (`--default-transition-*`, en ambos temas) | Derivado, no de la referencia (Notion no define oscuro): superficies cálidas (`#191817`, card `#211f1e`) y el mismo azul aclarado (`--primary` `#62aef0` con texto `#111111`, 7.94) |
 
-Excepciones de `papel`: el azul `#0075de` sobre el lienzo da 4.19 (sobre card, 4.57), así que un enlace `text-primary` directamente sobre el fondo queda bajo 4.5; el texto sobre fondo de acento usa `#005bab`. `--chart-1` no cambia para que no se confunda con `--chart-5`. Hereda de khipu la tipografía (Inter + JetBrains Mono), los iconos, los radios y la escala; no usa paletas ni tonos oscuros (los bloques `html:not([data-diseno="papel"])[data-paleta]` no aplican) y el selector de apariencia no se muestra.
+Hoy `khipu` es el único (`papel` se quitó en 0.5.4), así que el panel «Apariencia» no muestra la sección «Diseño». La maquinaria queda para sumar uno.
+
 
 ### Movimiento
 
@@ -526,7 +526,6 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 - Los componentes importan `m` (no `motion`) de `motion/react`: `LazyMotion strict` falla en desarrollo si se cuela un `motion.*`.
 - Con «reducir movimiento» nada se desplaza, escala ni se dibuja: `MotionConfig reducedMotion="user"` anula transformaciones y layout, los efectos que no lo son (trazos, contador, altura, anillo) consultan `useReducedMotion()`, y el CSS va bajo `motion-safe:`/`motion-reduce:`. Las transiciones de los primitivos de base-ui (diálogo, sheet, drawer, popover, menú, select, tooltip, toast, acordeón, indicador de `Tabs`) las acorta a 1 ms la regla `@media (prefers-reduced-motion: reduce)` de `src/styles/theme.css`; los spinners y el progreso indeterminado siguen girando porque indican carga. Solo quedan fundidos de opacidad.
 - Toasts: siguen con la transición CSS de base-ui; `AnimatePresence` competiría con su cierre por tiempo y por gesto.
-- El diseño `papel` fija las transiciones por defecto en 200 ms (`--default-transition-duration`, §Diseños).
 
 ### Apariencia
 
@@ -538,10 +537,10 @@ La **paleta** (los tres acentos), el **tono del modo oscuro** y la **tipografía
 | `components/apariencia.tsx` | `AparienciaProvider({ paletas?, tonosOscuro?, fuentes?, inicial?, onCambio? })` escribe `data-paleta`, `data-oscuro` y `data-fuente` en `<html>` y en `localStorage`. `useApariencia()` devuelve `{ paleta, setPaleta, paletas, tonoOscuro, setTonoOscuro, tonosOscuro, fuente, setFuente, fuentes }`; sin proveedor, listas vacías y no falla |
 | `components/script-diseno.tsx` | `ScriptDiseno` acepta `paletas`, `tonosOscuro`, `fuentes` e `inicial` y aplica `data-paleta`, `data-oscuro` y `data-fuente` antes del primer pintado, sin parpadeo. Un valor guardado que no está en la lista se ignora |
 | `components/nav/selector-apariencia.tsx` | `SelectorPaleta` (círculos con la muestra de 3 colores), `SelectorTonoOscuro` (mini pantalla: lienzo, tarjeta y acento, con el nombre), `SelectorTipografia` («Aa» dibujado en cada fuente) y `SelectorApariencia` (los tres juntos). Cada grupo es un `role="radiogroup"` con flechas, `aria-label` y tooltip; `grande` agranda las muestras |
-| `components/nav/panel-apariencia.tsx` | `PanelApariencia({ open, onOpenChange })`: panel derecho con Tema, Paleta, Tono oscuro, Tipografía y Diseño. Lo abre «Apariencia…» de `MenuUsuario` (`mostrarApariencia={false}` lo quita). No muestra las preferencias con el diseño «papel» |
+| `components/nav/panel-apariencia.tsx` | `PanelApariencia({ open, onOpenChange })`: panel derecho con Tema, Paleta, Tono oscuro, Tipografía y Diseño. Lo abre «Apariencia…» de `MenuUsuario` (`mostrarApariencia={false}` lo quita). |
 | `Providers` | Ya incluye `AparienciaProvider`; la prop `apariencia` le pasa `inicial`, `onCambio` y las listas |
 
-El tono oscuro se aplica siempre al atributo, pero solo tiene efecto con `.dark`: se puede elegir estando en claro. Los bloques de paleta y tono van acotados con `html:not([data-diseno="papel"])`, así que «papel» no los usa.
+El tono oscuro se aplica siempre al atributo, pero solo tiene efecto con `.dark`: se puede elegir estando en claro. Los bloques de paleta, tono y fuente van en `html:root[…]`: la misma especificidad les gana a `:root` y a `.dark` sin depender del orden.
 
 **Guardarlo por usuario.** `inicial` (p. ej. leído del perfil en el servidor) gana sobre `localStorage`; `onCambio` recibe `{ paleta, tonoOscuro, fuente }` en cada cambio. Pasa el mismo `inicial` a `ScriptDiseno` para que el primer pintado ya sea el del usuario:
 
@@ -568,7 +567,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 **Tipografía.** Inter es la fuente de la app (`--font-sans`). Las otras las carga la app con `next/font` en `--fuente-<valor>` y `preload: false` (solo se descargan si alguien las elige), y `html[data-fuente="<valor>"]` las pone en `--font-sans`. Los datos (correlativos, ids, código) siguen en JetBrains Mono. Inter se carga una sola vez: Turbopack rechaza dos llamadas a la misma fuente de `next/font/google`.
 
-**Agregar una paleta:** (1) un bloque `html:not([data-diseno="papel"])[data-paleta="…"]` en `src/styles/tokens.css` que redefina solo `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto` y `--acento-3`; (2) su entrada en `PALETAS` (la `muestra` con los mismos hex); (3) su nombre en `PALETAS` de `scripts/verificar-contraste.mjs`, para que `npm run check:contraste` la mida en claro y en los tres tonos oscuros.
+**Agregar una paleta:** (1) un bloque `html:root[data-paleta="…"]` en `src/styles/tokens.css` que redefina solo `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto` y `--acento-3`; (2) su entrada en `PALETAS` (la `muestra` con los mismos hex); (3) su nombre en `PALETAS` de `scripts/verificar-contraste.mjs`, para que `npm run check:contraste` la mida en claro y en los tres tonos oscuros.
 
 ### Iconos
 

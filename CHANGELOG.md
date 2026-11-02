@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Underlined `Tabs` (`estilo="linea"`) scroll horizontally when they do not fit, with no visible scrollbar: on a phone five tabs were wider than the screen and pushed the whole page sideways. The base line is an inset shadow and the indicator sits at `bottom-0`, so the scroll container does not clip it.
+- `PanelLateral` on a phone takes the screen width minus its margins (it was 75 %, ~280 px, and the «Apariencia» panel did not fit); from `sm` it keeps its `ancho`. The dark-tone and typography swatches are a grid of equal shrinking columns: in flex, Safari did not shrink them and the rows went past the panel's edge.
+
+### Removed
+- The «papel» design: its token blocks, its entry in `DISENOS` and every `diseno !== "papel"` exclusion. With a single design the «Diseño» section of the panel is not shown. Palette, dark-tone and font blocks use `html:root` (the same specificity the `:not([data-diseno="papel"])` gave them).
 
 ## [0.5.3] - 2026-11-01
 

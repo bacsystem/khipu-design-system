@@ -160,9 +160,8 @@
     /* Inter: 1 con base, a de un piso y dígitos abiertos (los rasgos que usa IntelliJ). */
     font-feature-settings: "cv11", "ss01", "ss03";
   }
-  /* Oscuro: dos resplandores tenues de la paleta desde arriba; el lienzo deja de ser un negro plano.
-     «papel» no tiene paleta (hereda el acento lima de :root), así que queda fuera. */
-  html:not([data-diseno="papel"]).dark body {
+  /* Oscuro: dos resplandores tenues de la paleta desde arriba; el lienzo deja de ser un negro plano. */
+  html:root.dark body {
     background-image:
       radial-gradient(900px 380px at 55% -160px, color-mix(in srgb, var(--acento) 9%, transparent), transparent 70%),
       radial-gradient(700px 300px at 100% 0, color-mix(in srgb, var(--acento-2) 6%, transparent), transparent 70%);

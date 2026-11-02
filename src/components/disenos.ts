@@ -13,5 +13,4 @@ export const DISENO_POR_DEFECTO = "khipu";
 
 export const DISENOS: Diseno[] = [
   { valor: "khipu", etiqueta: "khipu" },
-  { valor: "papel", etiqueta: "Papel" },
 ];

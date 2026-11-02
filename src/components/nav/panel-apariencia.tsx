@@ -25,12 +25,11 @@ function Seccion({ titulo, ayuda, children }: { titulo: string; ayuda?: string; 
 /**
  * Panel derecho con las preferencias de apariencia del usuario: tema, paleta, tono oscuro, tipografía y diseño. Cada
  * cambio se aplica al instante (la página de atrás cambia en vivo) y se guarda como el resto de las preferencias.
- * Lo abre «Apariencia…» del menú de usuario; las secciones sin opciones (sin proveedor, o con «papel») no se muestran.
+ * Lo abre «Apariencia…» del menú de usuario; las secciones sin opciones (sin proveedor) no se muestran.
  */
 export function PanelApariencia({ open, onOpenChange }: { open: boolean; onOpenChange: (abierto: boolean) => void }) {
   const { paletas, tonosOscuro, fuentes } = useApariencia();
-  const { diseno, disenos } = useDiseno();
-  const conPreferencias = diseno !== "papel";
+  const { disenos } = useDiseno();
 
   return (
     <PanelLateral
@@ -45,17 +44,17 @@ export function PanelApariencia({ open, onOpenChange }: { open: boolean; onOpenC
         <Seccion titulo="Tema">
           <ThemeToggle conTexto />
         </Seccion>
-        {conPreferencias && paletas.length > 1 ? (
+        {paletas.length > 1 ? (
           <Seccion titulo="Paleta" ayuda="El color de acento: ítem activo, métricas destacadas y gráficos.">
             <SelectorPaleta grande />
           </Seccion>
         ) : null}
-        {conPreferencias && tonosOscuro.length > 1 ? (
+        {tonosOscuro.length > 1 ? (
           <Seccion titulo="Tono oscuro" ayuda="Se usa cuando el tema es oscuro.">
             <SelectorTonoOscuro grande />
           </Seccion>
         ) : null}
-        {conPreferencias && fuentes.length > 1 ? (
+        {fuentes.length > 1 ? (
           <Seccion titulo="Tipografía" ayuda="Los datos (correlativos, ids) siguen en JetBrains Mono.">
             <SelectorTipografia grande />
             <p className="rounded-xl bg-secondary px-3 py-2.5 text-cuerpo text-foreground">
