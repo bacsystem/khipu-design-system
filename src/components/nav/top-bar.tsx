@@ -70,8 +70,9 @@ export function TopBar({
 
         {miga ? (
           <nav aria-label={etiquetaUbicacion} className="flex min-w-0 shrink items-center gap-1.5 overflow-hidden text-control whitespace-nowrap">
-            <span className="text-texto-terciario">{miga.seccion}</span>
-            <span className="text-texto-terciario/50">/</span>
+            {/* En el teléfono solo la página: la sección y la página no entraban junto a la acción principal y la página quedaba en «C…». */}
+            <span className="hidden text-texto-terciario sm:inline">{miga.seccion}</span>
+            <span className="hidden text-texto-terciario/50 sm:inline">/</span>
             <h1 className="truncate font-heading text-titulo text-foreground">{miga.pagina}</h1>
           </nav>
         ) : null}

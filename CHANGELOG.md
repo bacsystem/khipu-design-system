@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-11-01
+
+### Added
+- `EntradaFecha` `limpiable` (a ✕ that calls `onCambio("")`, what an optional filter needs), `nombre` (a hidden input with the ISO value for a native form) and `enBarra` (the filter-bar pill, `CONTROL_FILTRO`, next to the bar's `Select`s). Closes #31's first part.
+
+### Fixed
+- `Select` popups are at least as wide as their longest option (and the trigger, and 9rem) and at most the screen minus 1.5rem: they were fixed to the trigger's width, so long options were cut («Liquidación de c…») and the check covered the text.
+- `TopBar` on a phone shows only the page in the breadcrumb: section and page did not fit next to the main action and the page ended as «C…».
+
 ## [0.5.4] - 2026-11-01
 
 ### Fixed
