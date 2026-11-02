@@ -65,6 +65,9 @@ const DOCS: Doc[] = [
   { id: "2", numero: "F001-00000135", cliente: "María Quispe Huamán", total: 850, estado: "aviso" },
   { id: "3", numero: "F001-00000134", cliente: "Comercial Wari E.I.R.L.", total: 120, estado: "error" },
 ];
+/** Un mes de emisión para el gráfico por día: días en 0, un pico el 18 y hoy (el 31) al final. */
+const DIAS_DEL_MES = [0, 2, 3, 0, 1, 4, 2, 0, 3, 5, 2, 1, 0, 3, 4, 2, 6, 9, 3, 0, 2, 4, 1, 0, 3, 5, 2, 0, 1, 4, 3].map((emitidos, i) => ({ dia: i + 1, emitidos }));
+
 const COLUMNAS: Columna<Doc>[] = [
   { id: "numero", titulo: "Documento", ordenable: true, className: "font-mono font-semibold" },
   { id: "cliente", titulo: "Cliente", ordenable: true },
@@ -519,6 +522,23 @@ export function Galeria() {
         <div className="grid gap-3 lg:grid-cols-2">
           <GraficoBarras titulo="Documentos por mes" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] }, { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] }]} />
           <GraficoLineas titulo="Facturado (S/ miles)" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "PEN", valores: [82, 95, 91, 110, 121, 128] }]} formato={(v) => `${v}k`} />
+        </div>
+        {/* Los días de un mes dentro de otra tarjeta: `plano`, rótulo cada cinco días, sin marca los días en 0 y hoy (el último) destacado. */}
+        <div className={cn(TARJETA, "grid gap-2 p-4")}>
+          <h3 id="galeria-dias-titulo" className="text-titulo text-foreground">
+            Emitidos por día
+          </h3>
+          <GraficoBarras
+            plano
+            etiquetadoPor="galeria-dias-titulo"
+            descripcion="75 comprobantes en 31 días; el pico, el día 18 con 9."
+            categorias={DIAS_DEL_MES.map((d) => String(d.dia))}
+            series={[{ nombre: "Emitidos", valores: DIAS_DEL_MES.map((d) => d.emitidos) }]}
+            destacado={DIAS_DEL_MES.length - 1}
+            rotuloVisible={(i) => i === 0 || i === DIAS_DEL_MES.length - 1 || DIAS_DEL_MES[i].dia % 5 === 0}
+            tituloDeCategoria={(i) => `${DIAS_DEL_MES[i].dia} oct: ${DIAS_DEL_MES[i].emitidos} comprobantes`}
+            alto={160}
+          />
         </div>
         <TablaDatos
           columnas={COLUMNAS}

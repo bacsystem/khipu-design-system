@@ -600,6 +600,7 @@ Props nuevas, todas opcionales: `icono`, `tono` (`ok | aviso | error | neutro | 
 ### Gráficos
 
 - Con una serie, `GraficoBarras` pinta las barras en `--chart-base` (el `acento-2` de la paleta; en oscuro al 38 %) y la barra `destacado` (índice) en `--chart-destacado`, el `acento` pleno. Con varias series usa `--chart-1..5` en orden fijo. `GraficoLineas` y `Sparkline` usan `--chart-1`.
+- Dentro de otra tarjeta (la sección del panel), `GraficoBarras plano` y `etiquetadoPor` con el id del título de la sección; `descripcion` resume el gráfico para un lector de pantalla y `tituloDeCategoria` da el texto de cada barra (title y tooltip). Con muchas categorías (los días de un mes), `rotuloVisible` deja rótulo solo en algunas. Un valor 0 no dibuja barra.
 - **Accesibilidad (WCAG 1.4.11):** el relleno pastel no llega a 3:1 sobre la tarjeta en claro, así que cada barra (y cada muestra de la leyenda) lleva un borde de 1 px en `--chart-trazo-*` (`base`, `destacado`, `3`, `4`, `5`), que sí supera 3:1 en las 5 paletas y los 3 tonos oscuros; `npm run check:contraste` lo comprueba. `GraficoLineas` con varias series usa esos mismos colores de trazo. Además, el valor de cada barra va en su `<title>` y en el tooltip: ningún dato se comunica solo por el color.
 - Rejilla recesiva, etiquetas de eje en texto terciario, leyenda solo con ≥ 2 series, máximo 5 series.
 

@@ -98,6 +98,8 @@ function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array
 /**
  * Barras verticales (una o varias series agrupadas): marcas finas con extremo redondeado sobre la línea base, hueco de 2px,
  * rejilla recesiva, etiquetas de eje con la escala real y tooltip por marca. Leyenda solo con ≥ 2 series. Máximo 5 series.
+ * Un valor 0 no dibuja marca (solo la franja que responde al cursor). `plano` lo deja sin tarjeta propia, para ir dentro de
+ * una sección que ya la tiene; entonces el nombre accesible lo da el título de esa sección (`etiquetadoPor`).
  */
 export function GraficoBarras({
   categorias,
@@ -106,6 +108,13 @@ export function GraficoBarras({
   alto = 200,
   titulo,
   destacado,
+  plano = false,
+  etiquetadoPor,
+  etiqueta,
+  descripcion,
+  rotuloVisible,
+  tituloDeCategoria,
+  propiedadesDeCategoria,
   className,
 }: {
   categorias: string[];
@@ -115,6 +124,20 @@ export function GraficoBarras({
   titulo?: string;
   /** Índice de la categoría a resaltar con el acento de la paleta (solo con una serie). */
   destacado?: number;
+  /** Sin tarjeta ni relleno propios: para un gráfico dentro de otra tarjeta. */
+  plano?: boolean;
+  /** `id` del elemento que nombra al gráfico (el título de la sección que lo contiene). */
+  etiquetadoPor?: string;
+  /** Nombre accesible cuando no hay `titulo` ni `etiquetadoPor` (traducido por quien lo usa). */
+  etiqueta?: string;
+  /** Resumen para lectores de pantalla («120 comprobantes en 30 días; el pico, el 12»): va en `<desc>`. */
+  descripcion?: string;
+  /** Qué categorías llevan rótulo en el eje; por defecto, todas. Con muchas (los días de un mes) no caben en un teléfono. */
+  rotuloVisible?: (indice: number) => boolean;
+  /** El texto de cada categoría en su `<title>` y en el tooltip («5 oct: 3 comprobantes · S/ 1,180.00»); por defecto, la categoría. */
+  tituloDeCategoria?: (indice: number) => string;
+  /** Atributos extra del grupo de cada categoría (`data-*`, para pruebas o analítica). */
+  propiedadesDeCategoria?: (indice: number) => Record<`data-${string}`, string | number>;
   className?: string;
 }) {
   const id = useId();
@@ -128,12 +151,15 @@ export function GraficoBarras({
   const grupo = w / categorias.length;
   const barra = Math.max(4, (grupo * 0.62 - 4 * (series.length - 1)) / series.length);
   const y = (v: number) => mg.top + h - (v / max) * h;
+  const nombreDe = (i: number) => tituloDeCategoria?.(i) ?? categorias[i];
+  const nombrado = etiquetadoPor ?? `${id}-t`;
 
   return (
-    <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
+    <div className={cn(!plano && cn(TARJETA, "px-4 py-3.5"), "relative", className)}>
       <Cabecera titulo={titulo} leyenda={<Leyenda series={series} colores={COLORES_BARRAS} trazos={TRAZOS} />} />
-      <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={`${id}-t`} className="block max-w-full overflow-visible" style={{ fontSize: 10 }}>
-        <title id={`${id}-t`}>{titulo ?? "Gráfico de barras"}</title>
+      <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={nombrado} aria-describedby={descripcion ? `${id}-d` : undefined} className="block max-w-full overflow-visible" style={{ fontSize: 10 }}>
+        {etiquetadoPor ? null : <title id={`${id}-t`}>{titulo ?? etiqueta ?? "Gráfico de barras"}</title>}
+        {descripcion ? <desc id={`${id}-d`}>{descripcion}</desc> : null}
         {ticks.map((t) => (
           <g key={t}>
             <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" />
@@ -145,14 +171,18 @@ export function GraficoBarras({
         {categorias.map((c, i) => {
           const x0 = mg.left + i * grupo + (grupo - (barra * series.length + 4 * (series.length - 1))) / 2;
           return (
-            <g key={c} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
+            <g key={c} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)} {...propiedadesDeCategoria?.(i)}>
+              {tituloDeCategoria ? <title>{nombreDe(i)}</title> : null}
               <rect x={mg.left + i * grupo} y={mg.top} width={grupo} height={h} fill={hover === i ? "var(--muted)" : "transparent"} />
               {series.map((s, j) => {
                 const v = s.valores[i] ?? 0;
+                // Sin valor no hay marca: el extremo redondeado dejaba una joroba sobre la línea base.
+                if (v <= 0) return null;
                 const bx = x0 + j * (barra + 4);
                 const by = y(v);
                 const bh = Math.max(0, mg.top + h - by);
-                const r = Math.min(9, barra / 2);
+                // El radio no pasa del alto de la barra: una barra baja no asoma por encima de su valor.
+                const r = Math.min(9, barra / 2, bh);
                 // Crece desde la línea base; cada categoría entra 30 ms después de la anterior. scaleY es una transformación:
                 // con «reducir movimiento» MotionConfig la deja en su estado final.
                 return (
@@ -167,13 +197,15 @@ export function GraficoBarras({
                     animate={{ scaleY: 1 }}
                     transition={{ ...RESORTE_SUAVE, delay: i * 0.03 }}
                   >
-                    <title>{`${c}: ${formato(v)}`}</title>
+                    {tituloDeCategoria ? null : <title>{`${c}: ${formato(v)}`}</title>}
                   </m.path>
                 );
               })}
-              <text x={mg.left + i * grupo + grupo / 2} y={alto - 8} textAnchor="middle" fill="var(--texto-terciario)">
-                {c}
-              </text>
+              {rotuloVisible && !rotuloVisible(i) ? null : (
+                <text x={mg.left + i * grupo + grupo / 2} y={alto - 8} textAnchor="middle" fill="var(--texto-terciario)">
+                  {c}
+                </text>
+              )}
             </g>
           );
         })}
@@ -181,7 +213,7 @@ export function GraficoBarras({
       {hover != null ? (
         <Tooltip
           x={((mg.left + hover * grupo + grupo / 2) / ancho) * 100}
-          titulo={categorias[hover]}
+          titulo={nombreDe(hover)}
           filas={series.map((s, j) => ({
             nombre: s.nombre,
             valor: formato(s.valores[hover] ?? 0),
