@@ -85,7 +85,7 @@ function SelectContent({
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
           className={cn(
-            "relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 overflow-x-hidden overflow-y-auto rounded-[16px] bg-popover p-1.5 text-popover-foreground shadow-lg ring-1 ring-border data-[align-trigger=true]:animate-none",
+            "relative isolate z-50 max-h-(--available-height) w-max min-w-[max(9rem,var(--anchor-width))] max-w-[calc(100vw-1.5rem)] overflow-x-hidden overflow-y-auto rounded-[16px] bg-popover p-1.5 text-popover-foreground shadow-lg ring-1 ring-border data-[align-trigger=true]:animate-none",
             ANIMACION_POPUP,
             className
           )}

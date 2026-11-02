@@ -59,3 +59,21 @@ test("ya no existe el diseño «papel»", () => {
   assert.doesNotMatch(leer("src/styles/tokens.css"), /papel/);
   assert.doesNotMatch(leer("src/styles/theme.css"), /papel/);
 });
+
+// 0.5.5: lo que pidió el dueño desde el iPhone.
+test("EntradaFecha se puede limpiar, se envía en un formulario y tiene el aspecto de la barra de filtros", () => {
+  const fecha = leer("src/components/formularios/entrada-fecha.tsx");
+  assert.match(fecha, /const conLimpiar = limpiable && conValor && !disabled;/);
+  assert.match(fecha, /onClick=\{\(\) => onCambio\?\.\(""\)\}/);
+  assert.match(fecha, /<input type="hidden" name=\{nombre\} value=\{valor \?\? ""\} \/>/);
+  assert.match(fecha, /enBarra \? cn\(CONTROL_FILTRO, "px-3"\) : CAMPO/);
+});
+
+test("el menú de un Select mide al menos lo que su texto, sin pasarse de la pantalla", () => {
+  assert.match(leer("src/components/ui/select.tsx"), /w-max min-w-\[max\(9rem,var\(--anchor-width\)\)\] max-w-\[calc\(100vw-1\.5rem\)\]/);
+});
+
+test("en el teléfono la miga muestra solo la página", () => {
+  const barra = leer("src/components/nav/top-bar.tsx");
+  assert.match(barra, /<span className="hidden text-texto-terciario sm:inline">\{miga\.seccion\}<\/span>/);
+});
