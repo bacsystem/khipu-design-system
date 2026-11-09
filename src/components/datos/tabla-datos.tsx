@@ -8,6 +8,7 @@ import { SkeletonTabla } from "@/components/feedback/skeleton";
 import { MovimientoLocal } from "@/components/movimiento";
 import { CABECERA_TABLA, CONTENEDOR_TABLA, PieTabla, TablaVacia } from "@/components/patrones/pie-tabla";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ordenarFilas, type OrdenTabla } from "@/lib/ordenar";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { POR_PAGINA_DEFECTO } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
@@ -57,21 +58,7 @@ export type Columna<T> = {
   ancho?: string;
 };
 
-export type OrdenTabla = { id: string; dir: "asc" | "desc" } | null;
-
-/** Ordena las filas como lo hace la tabla; quien exporta lo reutiliza para respetar el orden que se ve en pantalla. */
-export function ordenarFilas<T>(filas: T[], columnas: Columna<T>[], orden: OrdenTabla): T[] {
-  if (!orden) return filas;
-  const col = columnas.find((c) => c.id === orden.id);
-  if (!col) return filas;
-  const v = col.valor ?? ((f: T) => (f as Record<string, unknown>)[col.id] as string | number | null | undefined);
-  return [...filas].sort((a, b) => {
-    const x = v(a) ?? "";
-    const y = v(b) ?? "";
-    const r = typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y), "es");
-    return orden.dir === "asc" ? r : -r;
-  });
-}
+export { ordenarFilas, type OrdenTabla } from "@/lib/ordenar";
 
 /**
  * Tabla genérica tipada: columnas declarativas, orden por columna, paginación en cliente, estados vacío y cargando.
@@ -89,6 +76,7 @@ export function TablaDatos<T>({
   nota,
   onFila,
   onOrdenCambio,
+  reinicioPagina,
   seleccion,
   className,
 }: {
@@ -102,8 +90,10 @@ export function TablaDatos<T>({
   porPaginaInicial?: number;
   nota?: ReactNode;
   onFila?: (fila: T) => void;
-  /** Avisa el orden elegido por el usuario (p. ej. para exportar en el mismo orden). */
+  /** Avisa cada orden que elige el usuario (p. ej. para exportar en el mismo orden). No se llama con `ordenInicial`. */
   onOrdenCambio?: (orden: OrdenTabla) => void;
+  /** Cuando cambia este valor (p. ej. el texto de búsqueda o un filtro), la tabla vuelve a la página 1. */
+  reinicioPagina?: unknown;
   /** Activa la columna de checkboxes y la barra de acciones masivas. "Seleccionar todo" opera solo sobre la página visible. */
   seleccion?: {
     seleccionados: string[];
@@ -113,13 +103,15 @@ export function TablaDatos<T>({
   };
   className?: string;
 }) {
-  const [orden, setOrdenInterno] = useState<OrdenTabla>(ordenInicial ?? null);
-  const setOrden = (fn: (o: OrdenTabla) => OrdenTabla) => {
-    const nuevo = fn(orden);
-    setOrdenInterno(nuevo);
-    onOrdenCambio?.(nuevo);
-  };
+  const [orden, setOrden] = useState<OrdenTabla>(ordenInicial ?? null);
   const [pagina, setPagina] = useState(1);
+  // Volver a la página 1 cuando cambia `reinicioPagina` (la búsqueda, un filtro): si no, el usuario se queda en la
+  // página 3 de un resultado nuevo y no ve sus primeras filas. Se ajusta durante el render, sin efecto.
+  const [reinicioPrevio, setReinicioPrevio] = useState(reinicioPagina);
+  if (!Object.is(reinicioPagina, reinicioPrevio)) {
+    setReinicioPrevio(reinicioPagina);
+    setPagina(1);
+  }
   const [porPagina, setPorPagina] = useState(porPaginaInicial);
 
   const ordenadas = useMemo(() => ordenarFilas(filas, columnas, orden), [filas, columnas, orden]);
@@ -129,7 +121,9 @@ export function TablaDatos<T>({
   const visibles = ordenadas.slice((paginaActual - 1) * porPagina, paginaActual * porPagina);
 
   function alternar(id: string) {
-    setOrden((o) => (o?.id === id ? (o.dir === "asc" ? { id, dir: "desc" } : null) : { id, dir: "asc" }));
+    const nuevo: OrdenTabla = orden?.id === id ? (orden.dir === "asc" ? { id, dir: "desc" } : null) : { id, dir: "asc" };
+    setOrden(nuevo);
+    onOrdenCambio?.(nuevo);
     setPagina(1);
   }
 

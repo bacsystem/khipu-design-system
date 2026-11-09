@@ -86,6 +86,7 @@
         "components/patrones/pie-tabla",
         "components/ui/table",
         "lib/movimiento",
+        "lib/ordenar",
         "lib/paginacion",
         "lib/utils"
       ]
@@ -1386,6 +1387,16 @@
       "category": "lib",
       "files": [
         "src/lib/calendario.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/ordenar": {
+      "name": "ordenar",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/ordenar.ts"
       ],
       "dependencies": [],
       "registryDependencies": []
