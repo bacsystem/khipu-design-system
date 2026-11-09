@@ -4,9 +4,12 @@ export type ColumnaExportable<T> = {
   valor: (fila: T) => string | number | null | undefined;
 };
 
+/** Un número negativo, con o sin separador de miles (`-3`, `-12.5`, `-1,234.56`, `-1.234,56`): no es una fórmula. */
+const NEGATIVO = /^-(?:\d+|\d{1,3}(?:[.,\s]\d{3})+)(?:[.,]\d+)?$/;
+
 /** Excel ejecuta como fórmula la celda que empieza con = + - @ (o tab/CR): se antepone ' para que quede como texto. */
 function neutralizarFormula(s: string): string {
-  return /^[=+\-@\t\r]/.test(s) && !/^-?\d+([.,]\d+)?$/.test(s) ? `'${s}` : s;
+  return /^[=+\-@\t\r]/.test(s) && !NEGATIVO.test(s) ? `'${s}` : s;
 }
 
 export function celdaCsv(v: string | number | null | undefined): string {
@@ -14,11 +17,7 @@ export function celdaCsv(v: string | number | null | undefined): string {
   return /[",;\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-export function descargarCsv<T>(
-  nombre: string,
-  columnas: ColumnaExportable<T>[],
-  filas: T[],
-) {
+export function descargarCsv<T>(nombre: string, columnas: ColumnaExportable<T>[], filas: T[]) {
   const lineas = [
     columnas.map((c) => celdaCsv(c.titulo)).join(","),
     ...filas.map((f) => columnas.map((c) => celdaCsv(c.valor(f))).join(",")),
@@ -38,33 +37,20 @@ export function descargarCsv<T>(
 function escaparHtml(s: string): string {
   return s.replace(
     /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ] as string,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string,
   );
 }
 
-/** Abre una ventana con el listado como tabla simple y lanza el diálogo de impresión del navegador. */
-export function imprimirTabla<T>(
-  titulo: string,
-  columnas: ColumnaExportable<T>[],
-  filas: T[],
-) {
-  const ventana = window.open(
-    "",
-    "_blank",
-    "noopener=no,width=1024,height=768",
-  );
-  if (!ventana) return;
-  const cabecera = columnas
-    .map((c) => `<th>${escaparHtml(c.titulo)}</th>`)
-    .join("");
+/**
+ * Abre una ventana con el listado y lanza el diálogo de impresión. Devuelve `false` si el navegador bloqueó la ventana,
+ * para que quien llama avise (p. ej. con un toast).
+ */
+export function imprimirTabla<T>(titulo: string, columnas: ColumnaExportable<T>[], filas: T[]): boolean {
+  const ventana = window.open("", "_blank", "noopener=no,width=1024,height=768");
+  if (!ventana) return false;
+  const cabecera = columnas.map((c) => `<th>${escaparHtml(c.titulo)}</th>`).join("");
   const cuerpo = filas
-    .map(
-      (f) =>
-        `<tr>${columnas.map((c) => `<td>${escaparHtml(String(c.valor(f) ?? ""))}</td>`).join("")}</tr>`,
-    )
+    .map((f) => `<tr>${columnas.map((c) => `<td>${escaparHtml(String(c.valor(f) ?? ""))}</td>`).join("")}</tr>`)
     .join("");
   // Colores fijos a propósito: se imprime sobre papel blanco aunque la app esté en modo oscuro (los tokens darían texto claro).
   ventana.document
@@ -76,4 +62,5 @@ th{font-size:12px;font-weight:600;color:#5d6170}</style></head>
   ventana.document.close();
   ventana.focus();
   ventana.print();
+  return true;
 }
