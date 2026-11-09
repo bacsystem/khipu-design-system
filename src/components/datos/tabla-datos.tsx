@@ -92,7 +92,11 @@ export function TablaDatos<T>({
   onFila?: (fila: T) => void;
   /** Avisa cada orden que elige el usuario (p. ej. para exportar en el mismo orden). No se llama con `ordenInicial`. */
   onOrdenCambio?: (orden: OrdenTabla) => void;
-  /** Cuando cambia este valor (p. ej. el texto de búsqueda o un filtro), la tabla vuelve a la página 1. */
+  /**
+   * Cuando cambia este valor (p. ej. el texto de búsqueda o un filtro), la tabla vuelve a la página 1. Se compara por
+   * identidad (`Object.is`): pasa un primitivo o un valor memoizado, no un objeto escrito en línea (que cambia en cada
+   * render del padre y devolvería a la página 1 siempre).
+   */
   reinicioPagina?: unknown;
   /** Activa la columna de checkboxes y la barra de acciones masivas. "Seleccionar todo" opera solo sobre la página visible. */
   seleccion?: {

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `TablaDatos` `onOrdenCambio(orden)`: tells the caller each column order the user picks (it is not called with `ordenInicial`), so an export or a print can list the rows in the order shown. The sort itself is `lib/ordenar` (`ordenarFilas(filas, columnas, orden)` and `OrdenTabla`, also re-exported from `tabla-datos`), so the caller sorts exactly like the table.
-- `TablaDatos` `reinicioPagina`: when this value changes (the search text, a filter), the table goes back to page 1 instead of staying on a page of the new result.
+- `TablaDatos` `reinicioPagina`: when this value changes (the search text, a filter), the table goes back to page 1 instead of staying on a page of the new result. It is compared with `Object.is`, so pass a primitive or a memoized value.
 - `Contrasena` `onBlur`: runs when the field loses focus (e.g. to mark it touched in a form library), without wrapping the component in a `div` with `onBlur`.
 - `DialogoConfirmacion` `textoCancelar` and `textoPendiente`: the cancel button and the pending label («Cancelar», «Procesando…» by default) can be translated, like `textoConfirmar`.
 
