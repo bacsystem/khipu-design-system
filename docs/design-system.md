@@ -242,7 +242,7 @@ De arriba abajo:
 - **Disparador**: tarjeta `rounded-xl bg-secondary` con avatar redondo en el acento (`bg-acento text-acento-texto`), nombre y correo, y `CaretUpDown` en bold.
 - **Popup** (`side="top"`, **ancho = disparador**, nunca más ancho que el sidebar): cuenta (fila `bg-accent` con avatar, nombre, correo, rol y `ShieldCheck`), **Tema** en la misma fila que su rótulo con `ThemeToggle` **solo iconos** (sol, luna, monitor; nombre en `title` y `aria-label`), **«Apariencia…»** (abre `PanelApariencia`), acciones propias y `Cerrar sesión` en `destructive`.
 - **`PanelApariencia`** (`nav/panel-apariencia.tsx`): panel derecho de 384 px con Tema (con texto), Paleta, Tono oscuro, Tipografía (con una frase de ejemplo) y Diseño, en muestras grandes. Cada cambio se aplica al instante; la página de atrás cambia en vivo. Ver «Apariencia» en §20.
-- **`ui/menu.tsx`** (base-ui `Menu`): `MenuContent` radio 18 (`rounded-xl p-1.5`), `MenuItem` radio 12 con icono duotono, `MenuSeparator` fino. Es el menú de «⋯» de tablas.
+- **`ui/menu.tsx`** (base-ui `Menu`): `MenuContent` radio 18 (`rounded-xl p-1.5`), `MenuItem` radio 12 con icono duotono, `MenuSeparator` fino, `MenuRadioItem` y `MenuCheckboxItem` (se marca sin cerrar el menú; `menuitemcheckbox` con `aria-checked`, p. ej. las columnas visibles de `TablaListado`). Es el menú de «⋯» de tablas. `lib/ordenar` (`ordenarFilas`) es código común: impórtalo desde ahí en el servidor, no desde `tabla-datos` (archivo de cliente).
 
 ---
 

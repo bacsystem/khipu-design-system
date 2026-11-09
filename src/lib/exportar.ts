@@ -4,8 +4,8 @@ export type ColumnaExportable<T> = {
   valor: (fila: T) => string | number | null | undefined;
 };
 
-/** Un número negativo, con o sin separador de miles (`-3`, `-12.5`, `-1,234.56`, `-1.234,56`): no es una fórmula. */
-const NEGATIVO = /^-(?:\d+|\d{1,3}(?:[.,\s]\d{3})+)(?:[.,]\d+)?$/;
+/** Un número negativo, con o sin separador de miles (punto, coma, espacio o espacio duro: `-3`, `-12.5`, `-1,234.56`, `-1 234`): no es una fórmula. */
+const NEGATIVO = /^-(?:\d+|\d{1,3}(?:[., \u00a0]\d{3})+)(?:[.,]\d+)?$/;
 
 /** Excel ejecuta como fórmula la celda que empieza con = + - @ (o tab/CR): se antepone ' para que quede como texto. */
 function neutralizarFormula(s: string): string {
