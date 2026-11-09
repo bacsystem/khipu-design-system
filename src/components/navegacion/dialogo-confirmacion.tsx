@@ -19,6 +19,8 @@ export function DialogoConfirmacion({
   descripcion,
   children,
   textoConfirmar = "Confirmar",
+  textoCancelar = "Cancelar",
+  textoPendiente = "Procesando…",
   destructiva = true,
   onConfirmar,
 }: {
@@ -29,6 +31,9 @@ export function DialogoConfirmacion({
   descripcion?: ReactNode;
   children?: ReactNode;
   textoConfirmar?: string;
+  /** Textos del botón de cancelar y del estado pendiente, para traducirlos (por defecto en castellano). */
+  textoCancelar?: string;
+  textoPendiente?: string;
   destructiva?: boolean;
   onConfirmar: () => Promise<string | null | void> | string | null | void;
 }) {
@@ -62,10 +67,10 @@ export function DialogoConfirmacion({
         ) : null}
         <PieDialogo>
           <button type="button" disabled={pendiente} onClick={() => onOpenChange(false)} className={BOTON_SECUNDARIO}>
-            Cancelar
+            {textoCancelar}
           </button>
           <button type="button" disabled={pendiente} onClick={confirmar} className={destructiva ? BOTON_DESTRUCTIVO : BOTON_PRIMARIO}>
-            {pendiente ? "Procesando…" : textoConfirmar}
+            {pendiente ? textoPendiente : textoConfirmar}
           </button>
         </PieDialogo>
       </DialogContent>

@@ -38,6 +38,7 @@ export function Contrasena({
   id,
   valor,
   onCambio,
+  onBlur,
   conFuerza = false,
   placeholder,
   invalido,
@@ -52,6 +53,8 @@ export function Contrasena({
   id: string;
   valor: string;
   onCambio: (v: string) => void;
+  /** Al salir del campo (p. ej. marcarlo como tocado). El botón del ojo no lo dispara: no le quita el foco. */
+  onBlur?: () => void;
   conFuerza?: boolean;
   placeholder?: string;
   invalido?: boolean;
@@ -77,6 +80,7 @@ export function Contrasena({
           type={visible ? "text" : "password"}
           value={valor}
           onChange={(e) => onCambio(e.target.value)}
+          onBlur={onBlur}
           placeholder={placeholder}
           disabled={disabled}
           autoComplete={autoComplete}
@@ -86,6 +90,8 @@ export function Contrasena({
         />
         <button
           type="button"
+          // Evita que el clic le quite el foco al campo (y dispare su onBlur / validación).
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => setVisible((v) => !v)}
           disabled={disabled}
           aria-label={visible ? etiquetaOcultar : etiquetaMostrar}
