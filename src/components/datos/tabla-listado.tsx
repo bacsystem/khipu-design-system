@@ -1,16 +1,12 @@
 "use client";
 
-import { type ReactNode, useMemo, useState } from "react";
-
-import {
-  type Columna,
-  ordenarFilas,
-  type OrdenTabla,
-  TablaDatos,
-} from "@/components/datos/tabla-datos";
+import { ColumnsIcon, DownloadSimpleIcon, FileCsvIcon, PrinterIcon } from "@phosphor-icons/react";
+import { useMemo, useState, type ReactNode } from "react";
+import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { Buscador } from "@/components/formularios/buscador";
 import {
   Menu,
+  MenuCheckboxItem,
   MenuContent,
   MenuGroup,
   MenuGroupLabel,
@@ -18,45 +14,46 @@ import {
   MenuTrigger,
 } from "@/components/ui/menu";
 import { ACCION_SECUNDARIA } from "@/lib/estilos";
-import {
-  type ColumnaExportable,
-  descargarCsv,
-  imprimirTabla,
-} from "@/lib/exportar";
-import { cn } from "@/lib/utils";
-import {
-  CheckIcon,
-  ColumnsIcon,
-  DownloadSimpleIcon,
-  FileCsvIcon,
-  PrinterIcon,
-} from "@phosphor-icons/react";
+import { descargarCsv, imprimirTabla, type ColumnaExportable } from "@/lib/exportar";
+import { ordenarFilas, type OrdenTabla } from "@/lib/ordenar";
 
 /**
- * Columna de un listado: la de `TablaDatos` más cómo se busca y exporta. `texto` es el valor plano de la celda
- * (búsqueda, CSV e impresión); por defecto `valor` o `fila[id]`. `exportable: false` la saca del CSV (p. ej. acciones).
+ * Columna de un listado: la de `TablaDatos` más cómo se busca y se exporta.
+ * - `texto`: el valor plano de la celda para buscar, exportar e imprimir. Sin él se usa `valor` o `fila[id]`, **no** lo
+ *   que dibuja `render`: una columna con `render` (un estado como píldora, un monto con formato) debe dar su `texto`
+ *   para que se busque y se exporte lo mismo que se ve.
+ * - `tituloTexto`: el nombre de la columna en el CSV, la impresión y el selector cuando `titulo` no es un texto (un
+ *   icono, un nodo). Sin un nombre de texto, la columna no se exporta ni se puede ocultar.
+ * - `exportable: false` la saca del CSV y de la impresión (p. ej. acciones); `ocultable: false` la deja siempre visible.
  */
 export type ColumnaListado<T> = Columna<T> & {
   texto?: (fila: T) => string | number | null | undefined;
+  tituloTexto?: string;
   exportable?: boolean;
   /** `false`: no aparece en el selector de columnas (siempre visible). */
   ocultable?: boolean;
-  /** Oculta la columna al inicio (el usuario puede mostrarla). */
+  /** Oculta la columna al inicio (el usuario puede mostrarla). Solo vale para columnas que se pueden ocultar. */
   ocultaInicial?: boolean;
 };
 
-function textoDe<T>(
-  c: ColumnaListado<T>,
-  f: T,
-): string | number | null | undefined {
+function textoDe<T>(c: ColumnaListado<T>, f: T): string | number | null | undefined {
   if (c.texto) return c.texto(f);
   if (c.valor) return c.valor(f);
   const v = (f as Record<string, unknown>)[c.id];
-  return typeof v === "string" || typeof v === "number"
-    ? v
-    : v == null
-      ? ""
-      : String(v);
+  return typeof v === "string" || typeof v === "number" ? v : v == null ? "" : String(v);
+}
+
+function nombreDe<T>(c: ColumnaListado<T>): string | null {
+  if (c.tituloTexto) return c.tituloTexto;
+  return typeof c.titulo === "string" && c.titulo !== "" ? c.titulo : null;
+}
+
+/** Minúsculas y sin tildes: «jose» encuentra «José». */
+function normalizar(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase("es");
 }
 
 /** Textos de la barra del listado, para traducirlos (por defecto en castellano). */
@@ -79,9 +76,12 @@ const TEXTOS_ES: TextosTablaListado = {
 };
 
 /**
- * Listado completo en cliente sobre `TablaDatos`: buscador, selector de columnas, exportar CSV e imprimir,
- * con orden y paginación de la tabla. `filtros` va debajo del buscador (tabs, selects); `acciones` a la derecha.
- * La barra y los filtros llevan `data-sin-imprimir`, para ocultarlos con `@media print` si se imprime la página entera.
+ * Listado completo en cliente sobre `TablaDatos`: buscador (sin distinguir mayúsculas ni tildes), selector de columnas
+ * visibles, exportar CSV e imprimir —en el orden que se ve en pantalla y con las columnas visibles—, más el orden y la
+ * paginación de la tabla (que vuelve a la página 1 al buscar). `filtros` va debajo del buscador (tabs, selects);
+ * `acciones` a la derecha. La barra y los filtros llevan `data-sin-imprimir`, para ocultarlos con `@media print` si se
+ * imprime la página entera. Si el navegador bloquea la ventana de impresión se llama a `onImpresionBloqueada` (p. ej.
+ * para avisar con un toast).
  */
 export function TablaListado<T>({
   columnas,
@@ -94,6 +94,7 @@ export function TablaListado<T>({
   filtros,
   acciones,
   textos: textosParciales,
+  onImpresionBloqueada,
   ...resto
 }: {
   columnas: ColumnaListado<T>[];
@@ -107,52 +108,35 @@ export function TablaListado<T>({
   filtros?: ReactNode;
   acciones?: ReactNode;
   textos?: Partial<TextosTablaListado>;
-} & Omit<
-  React.ComponentProps<typeof TablaDatos<T>>,
-  "columnas" | "filas" | "clave"
->) {
+  onImpresionBloqueada?: () => void;
+} & Omit<React.ComponentProps<typeof TablaDatos<T>>, "columnas" | "filas" | "clave">) {
   const textos = { ...TEXTOS_ES, ...textosParciales };
   const textoBusqueda = placeholderBusqueda ?? textos.buscar;
   const [busqueda, setBusqueda] = useState("");
   const [orden, setOrden] = useState<OrdenTabla>(resto.ordenInicial ?? null);
-  const [ocultas, setOcultas] = useState<string[]>(() =>
-    columnas.filter((c) => c.ocultaInicial).map((c) => c.id),
-  );
 
-  const visibles = useMemo(
-    () => columnas.filter((c) => !ocultas.includes(c.id)),
-    [columnas, ocultas],
-  );
+  const ocultables = columnas.filter((c) => c.ocultable !== false && nombreDe(c) !== null);
+  const [ocultas, setOcultas] = useState<string[]>(() => ocultables.filter((c) => c.ocultaInicial).map((c) => c.id));
+
+  const visibles = useMemo(() => columnas.filter((c) => !ocultas.includes(c.id)), [columnas, ocultas]);
 
   const filtradas = useMemo(() => {
-    const q = busqueda.trim().toLocaleLowerCase("es");
+    const q = normalizar(busqueda.trim());
     if (!q) return filas;
-    return filas.filter((f) =>
-      columnas.some((c) =>
-        String(textoDe(c, f) ?? "")
-          .toLocaleLowerCase("es")
-          .includes(q),
-      ),
-    );
+    return filas.filter((f) => columnas.some((c) => normalizar(String(textoDe(c, f) ?? "")).includes(q)));
   }, [filas, columnas, busqueda]);
 
-  // Exportar e imprimir respetan el orden elegido en pantalla, no el de la API.
-  const paraExportar = useMemo(
-    () => ordenarFilas(filtradas, columnas, orden),
-    [filtradas, columnas, orden],
-  );
+  // Con las columnas visibles, como la tabla: si se ocultó la columna del orden, en pantalla ya no se ordena por ella.
+  const paraExportar = useMemo(() => ordenarFilas(filtradas, visibles, orden), [filtradas, visibles, orden]);
 
-  const exportables: ColumnaExportable<T>[] = visibles
-    .filter((c) => c.exportable !== false && typeof c.titulo === "string")
-    .map((c) => ({
-      titulo: c.titulo as string,
-      valor: (f: T) => textoDe(c, f),
-    }));
+  const exportables: ColumnaExportable<T>[] = visibles.flatMap((c) => {
+    const nombre = nombreDe(c);
+    return c.exportable !== false && nombre !== null ? [{ titulo: nombre, valor: (f: T) => textoDe(c, f) }] : [];
+  });
 
-  const ocultables = columnas.filter(
-    (c) =>
-      c.ocultable !== false && typeof c.titulo === "string" && c.titulo !== "",
-  );
+  function imprimir() {
+    if (!imprimirTabla(titulo, exportables, paraExportar)) onImpresionBloqueada?.();
+  }
 
   return (
     <div className="flex min-w-0 flex-col gap-3">
@@ -160,79 +144,47 @@ export function TablaListado<T>({
         <div className="flex flex-wrap items-center gap-2" data-sin-imprimir>
           {buscar ? (
             <div className="min-w-56 flex-1">
-              <Buscador
-                etiqueta={textoBusqueda}
-                placeholder={textoBusqueda}
-                valor={busqueda}
-                onCambio={setBusqueda}
-              />
+              <Buscador etiqueta={textoBusqueda} placeholder={textoBusqueda} valor={busqueda} onCambio={setBusqueda} />
             </div>
           ) : (
             <div className="flex-1" />
           )}
           {ocultables.length > 0 ? (
             <Menu>
-              <MenuTrigger
-                className={ACCION_SECUNDARIA}
-                aria-label={textos.columnas}
-                title={textos.columnas}
-              >
+              <MenuTrigger className={ACCION_SECUNDARIA} aria-label={textos.columnas} title={textos.columnas}>
                 <ColumnsIcon className="size-4" />
                 <span className="max-sm:sr-only">{textos.columnas}</span>
               </MenuTrigger>
               <MenuContent align="end" className="min-w-48">
                 <MenuGroup>
                   <MenuGroupLabel>{textos.columnasVisibles}</MenuGroupLabel>
-                  {ocultables.map((c) => {
-                    const visible = !ocultas.includes(c.id);
-                    return (
-                      <MenuItem
-                        key={c.id}
-                        closeOnClick={false}
-                        onClick={() =>
-                          setOcultas((o) =>
-                            visible
-                              ? [...o, c.id]
-                              : o.filter((x) => x !== c.id),
-                          )
-                        }
-                      >
-                        <CheckIcon
-                          weight="bold"
-                          className={cn("size-3.5", !visible && "invisible")}
-                        />
-                        {c.titulo}
-                      </MenuItem>
-                    );
-                  })}
+                  {ocultables.map((c) => (
+                    <MenuCheckboxItem
+                      key={c.id}
+                      checked={!ocultas.includes(c.id)}
+                      onCheckedChange={(visible) =>
+                        setOcultas((o) => (visible ? o.filter((x) => x !== c.id) : [...o, c.id]))
+                      }
+                    >
+                      {nombreDe(c)}
+                    </MenuCheckboxItem>
+                  ))}
                 </MenuGroup>
               </MenuContent>
             </Menu>
           ) : null}
           {exportar ? (
             <Menu>
-              <MenuTrigger
-                className={ACCION_SECUNDARIA}
-                aria-label={textos.exportar}
-                title={textos.exportar}
-              >
+              <MenuTrigger className={ACCION_SECUNDARIA} aria-label={textos.exportar} title={textos.exportar}>
                 <DownloadSimpleIcon className="size-4" />
                 <span className="max-sm:sr-only">{textos.exportar}</span>
               </MenuTrigger>
               <MenuContent align="end" className="min-w-44">
-                <MenuItem
-                  onClick={() =>
-                    descargarCsv(titulo, exportables, paraExportar)
-                  }
-                >
+                <MenuItem onClick={() => descargarCsv(titulo, exportables, paraExportar)}>
                   <FileCsvIcon className="size-4" />
                   {textos.exportarCsv}
                 </MenuItem>
-                <MenuItem
-                  onClick={() =>
-                    imprimirTabla(titulo, exportables, paraExportar)
-                  }
-                >
+                <MenuItem onClick={imprimir}>
                   <PrinterIcon className="size-4" />
                   {textos.imprimir}
                 </MenuItem>
@@ -251,6 +203,7 @@ export function TablaListado<T>({
         columnas={visibles}
         filas={filtradas}
         clave={clave}
+        reinicioPagina={busqueda}
         {...resto}
         onOrdenCambio={(o) => {
           setOrden(o);

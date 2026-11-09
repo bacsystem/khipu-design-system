@@ -107,7 +107,7 @@
         "components/ui/menu",
         "lib/estilos",
         "lib/exportar",
-        "lib/utils"
+        "lib/ordenar"
       ]
     },
     "components/datos/timeline": {
@@ -1416,6 +1416,16 @@
       "category": "lib",
       "files": [
         "src/lib/ordenar.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/exportar": {
+      "name": "exportar",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/exportar.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

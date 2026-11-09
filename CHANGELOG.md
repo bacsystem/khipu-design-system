@@ -10,8 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.11] - 2026-11-09
 
 ### Added
-- `TablaListado<T>` (`datos/tabla-listado`): a full client-side list on top of `TablaDatos` with a search box, a visible-columns menu and an export menu (CSV and print) that follow the order shown on screen. Columns add `texto` (the plain value used to search and export), `exportable`, `ocultable` and `ocultaInicial`; `filtros` goes under the search box and `acciones` on its right. Its labels come in Spanish and are translated with `textos`.
-- `lib/exportar`: `descargarCsv(nombre, columnas, filas)` (UTF-8 with BOM so Excel reads accents; a cell that starts with `= + - @` gets a `'` so a spreadsheet does not run it as a formula) and `imprimirTabla(titulo, columnas, filas)`.
+- `TablaListado<T>` (`datos/tabla-listado`): a full client-side list on top of `TablaDatos` with a search box (ignores case and accents: «jose» finds «José»), a visible-columns menu and an export menu (CSV and print) that use the columns and the order shown on screen. Searching goes back to page 1. Columns add `texto` (the plain value used to search and export; without it the raw `valor`/`fila[id]` is used, not what `render` draws), `tituloTexto` (the name to export and list a column whose `titulo` is not text), `exportable`, `ocultable` and `ocultaInicial`; `filtros` goes under the search box and `acciones` on its right. Its labels come in Spanish and are translated with `textos`; `onImpresionBloqueada` runs when the browser blocks the print window.
+- `MenuCheckboxItem` (`ui/menu`): an option that is checked and unchecked without closing the menu (`role="menuitemcheckbox"` with `aria-checked`), used by the visible-columns menu.
+- `lib/exportar`: `descargarCsv(nombre, columnas, filas)` (UTF-8 with BOM so Excel reads accents; a cell that starts with `= + - @` gets a `'` so a spreadsheet does not run it as a formula, while negative numbers such as `-3` or `-1,234.56` are left alone) and `imprimirTabla(titulo, columnas, filas)`, which returns `false` when the browser blocks its window.
 
 ## [0.5.10] - 2026-11-09
 

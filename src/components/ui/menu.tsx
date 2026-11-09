@@ -68,6 +68,18 @@ function MenuRadioItem({ className, children, ...props }: MenuPrimitive.RadioIte
   );
 }
 
+/** Opción que se marca y desmarca sin cerrar el menú (p. ej. columnas visibles): `role="menuitemcheckbox"` con `aria-checked`. */
+function MenuCheckboxItem({ className, children, closeOnClick = false, ...props }: MenuPrimitive.CheckboxItem.Props) {
+  return (
+    <MenuPrimitive.CheckboxItem data-slot="menu-checkbox-item" closeOnClick={closeOnClick} className={cn(ITEM, "pl-8", className)} {...props}>
+      <MenuPrimitive.CheckboxItemIndicator className="absolute left-2.5 flex items-center">
+        <CheckIcon weight="bold" className="size-3.5 text-foreground" />
+      </MenuPrimitive.CheckboxItemIndicator>
+      {children}
+    </MenuPrimitive.CheckboxItem>
+  );
+}
+
 function MenuGroupLabel({ className, ...props }: MenuPrimitive.GroupLabel.Props) {
   return (
     <MenuPrimitive.GroupLabel
@@ -82,4 +94,4 @@ function MenuSeparator({ className, ...props }: MenuPrimitive.Separator.Props) {
   return <MenuPrimitive.Separator data-slot="menu-separator" className={cn("-mx-1 my-1 h-px bg-border/70", className)} {...props} />;
 }
 
-export { Menu, MenuTrigger, MenuContent, MenuItem, MenuLinkItem, MenuGroup, MenuGroupLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator };
+export { Menu, MenuTrigger, MenuContent, MenuItem, MenuLinkItem, MenuGroup, MenuGroupLabel, MenuRadioGroup, MenuRadioItem, MenuCheckboxItem, MenuSeparator };

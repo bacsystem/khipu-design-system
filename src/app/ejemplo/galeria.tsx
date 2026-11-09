@@ -3,7 +3,7 @@
 import { BellIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, ListNumbersIcon, PackageIcon, PaletteIcon, PaperPlaneTiltIcon, PencilSimpleIcon, ProhibitIcon, RocketLaunchIcon, ShieldCheckIcon, SparkleIcon, TextBIcon, TextItalicIcon, TextUnderlineIcon, TrashIcon, TrayIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
-import { TablaListado } from "@/components/datos/tabla-listado";
+import { TablaListado, type ColumnaListado } from "@/components/datos/tabla-listado";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
 import { Kpi } from "@/components/datos/kpi";
 import { ListaDatos } from "@/components/datos/lista-datos";
@@ -90,6 +90,12 @@ const COLUMNAS: Columna<Doc>[] = [
     ),
   },
 ];
+
+const ESTADO_DOC = { ok: "Aceptado", aviso: "Con obs.", error: "Rechazado" } as const;
+/** Las mismas columnas para `TablaListado`: `texto` hace que se busque y exporte lo que se ve («Aceptado», «S/ 2,000.01»), no el dato crudo. */
+const COLUMNAS_LISTADO: ColumnaListado<Doc>[] = COLUMNAS.map((c) =>
+  c.id === "total" ? { ...c, texto: (d: Doc) => formatearMonto("PEN", d.total) } : c.id === "estado" ? { ...c, texto: (d: Doc) => ESTADO_DOC[d.estado] } : c,
+);
 
 const SECCION = cn(TARJETA, ENTRADA, "grid gap-4 px-5 py-4");
 export function Galeria() {
@@ -571,7 +577,7 @@ export function Galeria() {
         {/* El mismo listado completo en cliente con buscador, columnas visibles, CSV e impresión (en el orden de la tabla). */}
         <TablaListado
           titulo="Documentos"
-          columnas={COLUMNAS}
+          columnas={COLUMNAS_LISTADO}
           filas={DOCS}
           clave={(d) => d.id}
           unidad="documentos"
