@@ -53,7 +53,7 @@ export function Contrasena({
   id: string;
   valor: string;
   onCambio: (v: string) => void;
-  /** Al salir del campo (p. ej. marcarlo como tocado). El botón del ojo no lo dispara: no le quita el foco. */
+  /** Al salir del campo (p. ej. marcarlo como tocado). Hacer clic en el ojo no lo dispara (no le quita el foco); pasar al ojo con Tab sí, como cualquier salida del campo. */
   onBlur?: () => void;
   conFuerza?: boolean;
   placeholder?: string;
@@ -90,7 +90,7 @@ export function Contrasena({
         />
         <button
           type="button"
-          // Evita que el clic le quite el foco al campo (y dispare su onBlur / validación).
+          // Evita que el clic o el toque le quiten el foco al campo (y disparen su onBlur / validación); con Tab el botón sigue siendo enfocable.
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => setVisible((v) => !v)}
           disabled={disabled}
