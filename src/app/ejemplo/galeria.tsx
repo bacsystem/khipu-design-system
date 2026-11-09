@@ -3,6 +3,7 @@
 import { BellIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, ListNumbersIcon, PackageIcon, PaletteIcon, PaperPlaneTiltIcon, PencilSimpleIcon, ProhibitIcon, RocketLaunchIcon, ShieldCheckIcon, SparkleIcon, TextBIcon, TextItalicIcon, TextUnderlineIcon, TrashIcon, TrayIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
+import { TablaListado } from "@/components/datos/tabla-listado";
 import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
 import { Kpi } from "@/components/datos/kpi";
 import { ListaDatos } from "@/components/datos/lista-datos";
@@ -566,6 +567,15 @@ export function Galeria() {
               </>
             ),
           }}
+        />
+        {/* El mismo listado completo en cliente con buscador, columnas visibles, CSV e impresión (en el orden de la tabla). */}
+        <TablaListado
+          titulo="Documentos"
+          columnas={COLUMNAS}
+          filas={DOCS}
+          clave={(d) => d.id}
+          unidad="documentos"
+          placeholderBusqueda="Buscar por número o cliente…"
         />
       </section>
     </>

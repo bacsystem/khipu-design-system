@@ -91,6 +91,25 @@
         "lib/utils"
       ]
     },
+    "components/datos/tabla-listado": {
+      "name": "tabla-listado",
+      "type": "component",
+      "category": "datos",
+      "files": [
+        "src/components/datos/tabla-listado.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/datos/tabla-datos",
+        "components/formularios/buscador",
+        "components/ui/menu",
+        "lib/estilos",
+        "lib/exportar",
+        "lib/utils"
+      ]
+    },
     "components/datos/timeline": {
       "name": "timeline",
       "type": "component",

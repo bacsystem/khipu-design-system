@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.11] - 2026-11-09
+
+### Added
+- `TablaListado<T>` (`datos/tabla-listado`): a full client-side list on top of `TablaDatos` with a search box, a visible-columns menu and an export menu (CSV and print) that follow the order shown on screen. Columns add `texto` (the plain value used to search and export), `exportable`, `ocultable` and `ocultaInicial`; `filtros` goes under the search box and `acciones` on its right. Its labels come in Spanish and are translated with `textos`.
+- `lib/exportar`: `descargarCsv(nombre, columnas, filas)` (UTF-8 with BOM so Excel reads accents; a cell that starts with `= + - @` gets a `'` so a spreadsheet does not run it as a formula) and `imprimirTabla(titulo, columnas, filas)`.
+
 ## [0.5.10] - 2026-11-09
 
 ### Added
