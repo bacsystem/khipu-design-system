@@ -22,6 +22,10 @@ test("celdaCsv: los números negativos, con o sin separador de miles, no se toca
   assert.equal(celdaCsv(-12.5), "-12.5");
   assert.equal(celdaCsv("-1,234.56"), '"-1,234.56"');
   assert.equal(celdaCsv("-1.234,56"), '"-1.234,56"');
+  assert.equal(celdaCsv("-1 234"), "-1 234");
+  assert.equal(celdaCsv("-1\u00a0234"), "-1\u00a0234");
+  // Un salto de línea no es un separador de miles: la celda queda neutralizada (y entre comillas).
+  assert.equal(celdaCsv("-1\n234"), `"'-1\n234"`);
 });
 
 const fuente = readFileSync(new URL("../../src/components/datos/tabla-listado.tsx", import.meta.url), "utf8");
@@ -33,8 +37,11 @@ test("TablaListado exporta en el orden de pantalla y solo con las columnas visib
 });
 
 test("TablaListado busca sin tildes ni mayúsculas y vuelve a la página 1 al buscar", () => {
-  assert.match(fuente, /normalize\("NFD"\)\s*\.replace\(\/\\p\{Diacritic\}\/gu, ""\)/);
-  assert.match(fuente, /reinicioPagina=\{busqueda\}/);
+  assert.match(fuente, /normalize\("NFD"\)\s*\.replace\(\/\\p\{M\}\/gu, ""\)/);
+  // El reinicio combina la búsqueda con el `reinicioPagina` de quien llama, y va después de {...resto} para que no lo pise.
+  assert.match(fuente, /useMemo\(\(\) => \[busqueda, reinicioPropio\]/);
+  assert.match(fuente, /\{\.\.\.resto\}\s*reinicioPagina=\{reinicio\}/);
+  assert.match(fuente, /visibles\.some\(\(c\) => normalizar/);
 });
 
 test("TablaListado: el selector de columnas anuncia su estado y una columna con título no textual usa tituloTexto", () => {

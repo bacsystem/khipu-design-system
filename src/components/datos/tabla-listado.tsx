@@ -48,11 +48,11 @@ function nombreDe<T>(c: ColumnaListado<T>): string | null {
   return typeof c.titulo === "string" && c.titulo !== "" ? c.titulo : null;
 }
 
-/** Minúsculas y sin tildes: «jose» encuentra «José». */
+/** Minúsculas y sin marcas diacríticas (tildes, diéresis; la ñ queda n): «jose» encuentra «José». */
 function normalizar(s: string): string {
   return s
     .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
+    .replace(/\p{M}/gu, "")
     .toLocaleLowerCase("es");
 }
 
@@ -123,8 +123,13 @@ export function TablaListado<T>({
   const filtradas = useMemo(() => {
     const q = normalizar(busqueda.trim());
     if (!q) return filas;
-    return filas.filter((f) => columnas.some((c) => normalizar(String(textoDe(c, f) ?? "")).includes(q)));
-  }, [filas, columnas, busqueda]);
+    // Solo en lo que el usuario ve: una fila no debe aparecer por un dato de una columna oculta.
+    return filas.filter((f) => visibles.some((c) => normalizar(String(textoDe(c, f) ?? "")).includes(q)));
+  }, [filas, visibles, busqueda]);
+
+  // Volver a la página 1 al buscar, y también cuando cambia el `reinicioPagina` propio de quien llama (sus filtros).
+  const reinicioPropio = resto.reinicioPagina;
+  const reinicio = useMemo(() => [busqueda, reinicioPropio], [busqueda, reinicioPropio]);
 
   // Con las columnas visibles, como la tabla: si se ocultó la columna del orden, en pantalla ya no se ordena por ella.
   const paraExportar = useMemo(() => ordenarFilas(filtradas, visibles, orden), [filtradas, visibles, orden]);
@@ -203,8 +208,8 @@ export function TablaListado<T>({
         columnas={visibles}
         filas={filtradas}
         clave={clave}
-        reinicioPagina={busqueda}
         {...resto}
+        reinicioPagina={reinicio}
         onOrdenCambio={(o) => {
           setOrden(o);
           resto.onOrdenCambio?.(o);
