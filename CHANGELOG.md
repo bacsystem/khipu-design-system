@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.10] - 2026-11-09
+
+### Added
+- `TablaDatos` `onOrdenCambio(orden)`: tells the caller which column order the user picked, so an export or a print can list the rows in the order shown. The sort itself is exported as `ordenarFilas(filas, columnas, orden)` (with its `OrdenTabla` type), so the caller sorts exactly like the table.
+- `Contrasena` `onBlur`: runs when the field loses focus (e.g. to mark it touched in a form library), without wrapping the component in a `div` with `onBlur`.
+- `DialogoConfirmacion` `textoCancelar` and `textoPendiente`: the cancel button and the pending label («Cancelar», «Procesando…» by default) can be translated, like `textoConfirmar`.
+
+### Fixed
+- `Contrasena`: clicking the eye took focus away from the field, so a form that validates on blur showed its error («too short») while the user was still typing. The button no longer takes focus.
+
 ## [0.5.9] - 2026-11-02
 
 ### Added

@@ -57,6 +57,22 @@ export type Columna<T> = {
   ancho?: string;
 };
 
+export type OrdenTabla = { id: string; dir: "asc" | "desc" } | null;
+
+/** Ordena las filas como lo hace la tabla; quien exporta lo reutiliza para respetar el orden que se ve en pantalla. */
+export function ordenarFilas<T>(filas: T[], columnas: Columna<T>[], orden: OrdenTabla): T[] {
+  if (!orden) return filas;
+  const col = columnas.find((c) => c.id === orden.id);
+  if (!col) return filas;
+  const v = col.valor ?? ((f: T) => (f as Record<string, unknown>)[col.id] as string | number | null | undefined);
+  return [...filas].sort((a, b) => {
+    const x = v(a) ?? "";
+    const y = v(b) ?? "";
+    const r = typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y), "es");
+    return orden.dir === "asc" ? r : -r;
+  });
+}
+
 /**
  * Tabla genérica tipada: columnas declarativas, orden por columna, paginación en cliente, estados vacío y cargando.
  * Para listas grandes paginadas en servidor usa `Table` + `PieTabla` directamente.
@@ -72,6 +88,7 @@ export function TablaDatos<T>({
   porPaginaInicial = POR_PAGINA_DEFECTO,
   nota,
   onFila,
+  onOrdenCambio,
   seleccion,
   className,
 }: {
@@ -85,6 +102,8 @@ export function TablaDatos<T>({
   porPaginaInicial?: number;
   nota?: ReactNode;
   onFila?: (fila: T) => void;
+  /** Avisa el orden elegido por el usuario (p. ej. para exportar en el mismo orden). */
+  onOrdenCambio?: (orden: OrdenTabla) => void;
   /** Activa la columna de checkboxes y la barra de acciones masivas. "Seleccionar todo" opera solo sobre la página visible. */
   seleccion?: {
     seleccionados: string[];
@@ -94,22 +113,16 @@ export function TablaDatos<T>({
   };
   className?: string;
 }) {
-  const [orden, setOrden] = useState(ordenInicial ?? null);
+  const [orden, setOrdenInterno] = useState<OrdenTabla>(ordenInicial ?? null);
+  const setOrden = (fn: (o: OrdenTabla) => OrdenTabla) => {
+    const nuevo = fn(orden);
+    setOrdenInterno(nuevo);
+    onOrdenCambio?.(nuevo);
+  };
   const [pagina, setPagina] = useState(1);
   const [porPagina, setPorPagina] = useState(porPaginaInicial);
 
-  const ordenadas = useMemo(() => {
-    if (!orden) return filas;
-    const col = columnas.find((c) => c.id === orden.id);
-    if (!col) return filas;
-    const v = col.valor ?? ((f: T) => (f as Record<string, unknown>)[col.id] as string | number | null | undefined);
-    return [...filas].sort((a, b) => {
-      const x = v(a) ?? "";
-      const y = v(b) ?? "";
-      const r = typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y), "es");
-      return orden.dir === "asc" ? r : -r;
-    });
-  }, [filas, columnas, orden]);
+  const ordenadas = useMemo(() => ordenarFilas(filas, columnas, orden), [filas, columnas, orden]);
 
   const ultimaPagina = Math.max(1, Math.ceil(ordenadas.length / porPagina));
   const paginaActual = Math.min(pagina, ultimaPagina);
