@@ -447,7 +447,7 @@ Todo lo anterior es este mismo repo (`khipu-design-system`), pensado para copiar
 | `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Banner`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
 | `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `SelectCampo`, `Combobox`, `Autocomplete`, `Contrasena`, `Deslizador`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
 | `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯), `DialogoConfirmacion`, `Paleta` (⌘K) |
-| `datos/` | `TablaDatos<T>`, `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
+| `datos/` | `TablaDatos<T>`, `TablaListado<T>` (buscador, columnas visibles, CSV e impresión), `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
 Los gráficos usan `--chart-1..5` (ver «Gráficos» más abajo); en oscuro los pasos semánticos son `#27a070 #bf8a26 #dc4a68 #3a88c6`, validados para daltonismo y contraste, y `--chart-1` es el `acento-2` de la paleta.
 
