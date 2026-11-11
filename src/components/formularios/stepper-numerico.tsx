@@ -24,6 +24,8 @@ export function StepperNumerico({
   paso = 1,
   disabled,
   variante = "campo",
+  etiquetaDisminuir = "Disminuir",
+  etiquetaAumentar = "Aumentar",
   className,
 }: {
   id?: string;
@@ -41,6 +43,9 @@ export function StepperNumerico({
   paso?: number | "any";
   disabled?: boolean;
   variante?: "filtro" | "campo";
+  /** Nombres de los botones − y + para el lector de pantalla, para traducirlos (por defecto «Disminuir» y «Aumentar»). */
+  etiquetaDisminuir?: string;
+  etiquetaAumentar?: string;
   className?: string;
 }) {
   const t = TAMANOS[variante];
@@ -48,7 +53,7 @@ export function StepperNumerico({
     <NumberField.Root id={id} value={valor} onValueChange={onCambio} min={min} max={max} step={paso} disabled={disabled}>
       <NumberField.Group className={cn("inline-flex w-fit items-stretch overflow-hidden rounded-full border border-input bg-card focus-within:border-acento-texto focus-within:ring-3 focus-within:ring-acento/55 dark:focus-within:border-acento dark:focus-within:ring-acento/25", t.grupo, className)}>
         <NumberField.Decrement
-          aria-label="Disminuir"
+          aria-label={etiquetaDisminuir}
           className={cn(
             "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:bg-secondary disabled:pointer-events-none disabled:opacity-40",
             t.boton,
@@ -60,7 +65,7 @@ export function StepperNumerico({
           className="w-12 bg-transparent text-center text-campo md:text-control font-semibold text-foreground tabular-nums outline-none disabled:cursor-not-allowed disabled:opacity-60"
         />
         <NumberField.Increment
-          aria-label="Aumentar"
+          aria-label={etiquetaAumentar}
           className={cn(
             "flex shrink-0 items-center justify-center text-muted-foreground transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:bg-secondary disabled:pointer-events-none disabled:opacity-40",
             t.boton,

@@ -60,6 +60,28 @@ function Salto({
 }
 
 /**
+ * Textos del pie, para traducirlos (por defecto en castellano). La frase es «{mostrando} x–y {de} N {unidad}»: el orden es fijo
+ * y los números llevan su estilo. `filas` y `filasPorPagina` son el rótulo y el nombre accesible del selector de filas.
+ */
+export type TextosPieTabla = {
+  mostrando: string;
+  de: string;
+  anterior: string;
+  siguiente: string;
+  filas: string;
+  filasPorPagina: string;
+};
+
+const TEXTOS_PIE_ES: TextosPieTabla = {
+  mostrando: "Mostrando",
+  de: "de",
+  anterior: "Anterior",
+  siguiente: "Siguiente",
+  filas: "Filas",
+  filasPorPagina: "Filas por página",
+};
+
+/**
  * Pie de tabla estándar: "Mostrando x–y de N <unidad>", selector de filas, nota opcional y paginación numerada.
  * Sin `hrefPagina` las páginas son botones y el estado vive en el componente (`pagina`, `ultimaPagina`, `onPagina`).
  * Con `hrefPagina` son enlaces reales (estado en la URL, navegables con ⌘-clic o en otra pestaña); un clic simple
@@ -77,6 +99,7 @@ export function PieTabla({
   onPagina,
   hrefPagina,
   nota,
+  textos: textosParciales,
 }: {
   desde: number;
   hasta: number;
@@ -89,7 +112,9 @@ export function PieTabla({
   onPagina: (p: number) => void;
   hrefPagina?: (p: number) => string;
   nota?: ReactNode;
+  textos?: Partial<TextosPieTabla>;
 }) {
+  const textos = { ...TEXTOS_PIE_ES, ...textosParciales };
   const hayAnterior = pagina > 1;
   const haySiguiente = pagina < ultimaPagina;
 
@@ -97,14 +122,14 @@ export function PieTabla({
     <div className="flex flex-col items-center justify-between gap-3 bg-transparent px-4 py-2 text-control text-muted-foreground sm:flex-row">
       <div className="flex flex-wrap items-center gap-2">
         <span>
-          Mostrando{" "}
+          {textos.mostrando}{" "}
           <span className="font-mono font-semibold text-foreground">
             {desde}–{hasta}
           </span>{" "}
-          de <span className="font-mono font-semibold text-foreground">{total}</span> {unidad}
+          {textos.de} <span className="font-mono font-semibold text-foreground">{total}</span> {unidad}
         </span>
         <span className="text-muted-foreground/40">·</span>
-        <SelectorPorPagina valor={porPagina} onCambio={onPorPagina} />
+        <SelectorPorPagina valor={porPagina} onCambio={onPorPagina} etiqueta={textos.filasPorPagina} textoFilas={textos.filas} />
         {nota ? (
           <>
             <span className="hidden text-muted-foreground/40 xl:inline">·</span>
@@ -114,7 +139,7 @@ export function PieTabla({
       </div>
       <div className="flex items-center gap-1">
         <Salto a={pagina - 1} habilitado={hayAnterior} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
-          <CaretLeftIcon weight="bold" className="size-3.5" /> Anterior
+          <CaretLeftIcon weight="bold" className="size-3.5" /> {textos.anterior}
         </Salto>
         <div className="mx-1 flex items-center gap-0.5">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>
@@ -134,7 +159,7 @@ export function PieTabla({
           )}
         </div>
         <Salto a={pagina + 1} habilitado={haySiguiente} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
-          Siguiente <CaretRightIcon weight="bold" className="size-3.5" />
+          {textos.siguiente} <CaretRightIcon weight="bold" className="size-3.5" />
         </Salto>
       </div>
     </div>

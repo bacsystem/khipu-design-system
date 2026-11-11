@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.13] - 2026-11-11
+
+### Added
+- `PieTabla` `textos` (`TextosPieTabla`): «Mostrando», «de», «Anterior», «Siguiente» and the rows selector's «Filas» / «Filas por página» can be translated. The sentence keeps its order («{mostrando} x–y {de} N {unidad}»).
+- `SelectorPorPagina` `etiqueta` (the group's accessible name, «Filas por página») and `textoFilas` (the visible «Filas»).
+- `TablaDatos` `textos` (`TextosTablaDatos`): the footer texts plus the selection ones: the bar's name, «Quitar selección», «Seleccionar todo en esta página», `seleccionarFila(id)` and `seleccionados(n)` (the label next to the counter, singular or plural). They are passed on to `PieTabla`.
+- `TablaListado` `textos` also takes the `TextosTablaDatos` keys and passes them to `TablaDatos`, so a list is translated with a single object. `TextosTablaListado` itself does not change.
+- `StepperNumerico` `etiquetaDisminuir` / `etiquetaAumentar`: the accessible names of − and + («Disminuir», «Aumentar» by default).
+
 ## [0.5.12] - 2026-11-11
 
 ### Added
