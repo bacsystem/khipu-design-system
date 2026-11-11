@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.15] - 2026-11-11
+
+### Added
+- `PillEstado` `icon`: a Phosphor icon instead of the dot (`size-3.5`, `PESO_ICONO`, the tone's text color). It is decorative (`aria-hidden`); the text still says the state. Without `icon` the pill renders exactly as before. Gallery shows three pills with icons.
+
 ## [0.5.14] - 2026-11-11
 
 ### Added

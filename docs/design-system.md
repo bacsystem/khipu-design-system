@@ -362,6 +362,7 @@ Filtrado/paginación en cliente cuando la API devuelve todo (series, API keys); 
 ## 13. Pills, badges y estados
 
 - **Pill de estado** (`comprobantes/estado-badge.tsx` y equivalentes): `PillEstado` (`patrones/pill-estado.tsx`): `inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-etiqueta font-medium whitespace-nowrap`, sin borde: relleno `bg-*` + punto `size-1.5 rounded-full bg-*-solid`.
+- **Pill con icono** (`PillEstado icon={…}`): el icono Phosphor reemplaza al punto, en `size-3.5` y `PESO_ICONO`, con el color del texto del tono (`currentColor`, cuyo contraste ya verifica `check:contraste`). Es decorativo (`aria-hidden`): el estado lo dice el texto, así que nunca va una pill solo con icono. Úsala cuando el icono suma (salud de un servicio: ✓ operativo, ⚠ degradado, ✕ caído); en una tabla de estados, el punto. Sin `icon` la pill es la de siempre.
 
 | Tono | Clases | Estados SUNAT / entidades |
 |---|---|---|

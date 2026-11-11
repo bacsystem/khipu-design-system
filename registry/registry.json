@@ -984,6 +984,7 @@
       ],
       "dependencies": [],
       "registryDependencies": [
+        "lib/iconos",
         "lib/utils"
       ]
     },
