@@ -1,6 +1,7 @@
 import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
 import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
+import { OBJETIVO_TACTIL } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 type Tono = "info" | "ok" | "aviso" | "error";
@@ -40,7 +41,7 @@ export function Banner({
       <div className="min-w-0 flex-1 leading-relaxed">{children}</div>
       {accion ? <div className="shrink-0">{accion}</div> : null}
       {onCerrar ? (
-        <button type="button" onClick={onCerrar} aria-label="Cerrar aviso" className="shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100">
+        <button type="button" onClick={onCerrar} aria-label="Cerrar aviso" className={cn(OBJETIVO_TACTIL, "shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100")}>
           <XIcon weight="bold" className="size-3.5" />
         </button>
       ) : null}

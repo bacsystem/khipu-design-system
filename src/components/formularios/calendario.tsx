@@ -4,10 +4,13 @@ import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { DIAS_SEMANA, dentroDeRango, desdeIso, hoyIso, nombreMes, semanasDelMes, sumarDias, sumarMeses } from "@/lib/calendario";
 import { formatearFecha } from "@/lib/formato";
+import { OBJETIVO_TACTIL } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
-const BOTON_MES =
-  "grid size-8 place-items-center rounded-full text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-acento/55";
+const BOTON_MES = cn(
+  OBJETIVO_TACTIL,
+  "grid size-8 place-items-center rounded-full text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-acento/55",
+);
 
 /**
  * Calendario de un mes (lunes a domingo) para elegir una fecha. Valor ISO `YYYY-MM-DD`. Teclado como el patrón de

@@ -117,3 +117,28 @@ test("los botones del stepper se nombran por propiedad y la paginación acepta s
     assert.ok(etiqueta > 0 && etiqueta < cuerpo.indexOf("{...props}"), `${componente}: aria-label debe ir antes de {...props}`);
   }
 });
+
+// Con el dedo, los botones de icono sueltos aceptan el toque en 44×44 px (WCAG 2.5.5) sin cambiar lo que se ve (§4).
+test("el objetivo táctil mide 44 px y lo llevan los botones de icono sueltos", () => {
+  assert.match(leer("src/styles/theme.css"), /--spacing-objetivo-tactil:\s*2\.75rem;/);
+  const estilos = leer("src/lib/estilos.ts");
+  const receta = estilos.match(/export const OBJETIVO_TACTIL =\s*"([^"]*)"/)?.[1] ?? "";
+  for (const clase of ["relative", "pointer-coarse:after:absolute", "pointer-coarse:after:min-h-objetivo-tactil", "pointer-coarse:after:min-w-objetivo-tactil", "pointer-coarse:after:size-full"]) {
+    assert.ok(receta.split(" ").includes(clase), `OBJETIVO_TACTIL debe llevar ${clase}`);
+  }
+  // Fuera de pointer-coarse no hay halo: con mouse el área es la del botón.
+  assert.ok(receta.split(" ").every((c) => c === "relative" || c.startsWith("pointer-coarse:")));
+  for (const ruta of [
+    "src/components/ui/dialog.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/components/ui/popover.tsx",
+    "src/components/feedback/toast.tsx",
+    "src/components/feedback/banner.tsx",
+    "src/components/navegacion/panel-lateral.tsx",
+    "src/components/navegacion/menu-acciones.tsx",
+    "src/components/nav/mobile-nav.tsx",
+    "src/components/formularios/calendario.tsx",
+  ]) {
+    assert.match(leer(ruta), /cn\(\s*OBJETIVO_TACTIL,|className=\{OBJETIVO_TACTIL\}/, `${ruta} debe usar OBJETIVO_TACTIL`);
+  }
+});

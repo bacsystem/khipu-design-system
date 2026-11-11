@@ -5,6 +5,7 @@ import type { IconoComponente } from "@/lib/iconos";
 import type { ReactNode } from "react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { IconoSeccion } from "@/components/patrones/cabecera-seccion";
+import { OBJETIVO_TACTIL } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 /**
@@ -43,7 +44,7 @@ export function PanelLateral({
             <SheetTitle className="text-titulo text-foreground">{titulo}</SheetTitle>
             {descripcion ? <SheetDescription className="text-control text-muted-foreground">{descripcion}</SheetDescription> : null}
           </div>
-          <SheetClose aria-label="Cerrar" className="-mt-1 -mr-1 grid size-8 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground">
+          <SheetClose aria-label="Cerrar" className={cn(OBJETIVO_TACTIL, "-mt-1 -mr-1 grid size-8 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground")}>
             <XIcon weight="bold" className="size-4" />
           </SheetClose>
         </div>

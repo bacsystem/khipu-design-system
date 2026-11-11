@@ -21,3 +21,13 @@ test("cn trata text-titulo y text-titulo-pagina como tamaño, no como color", ()
   assert.equal(cn("text-titulo-pagina text-foreground"), "text-titulo-pagina text-foreground");
   assert.equal(cn("text-cuerpo", "text-titulo"), "text-titulo");
 });
+
+// OBJETIVO_TACTIL trae `relative`: puesta primera en `cn`, el `absolute` de la X de un diálogo la pisa y el halo `::after` se conserva.
+test("cn con OBJETIVO_TACTIL conserva un absolute propio y las clases del halo", async () => {
+  const { OBJETIVO_TACTIL } = await import("../../src/lib/estilos.ts");
+  const clases = cn(OBJETIVO_TACTIL, "absolute top-4 right-4 size-8").split(" ");
+  assert.ok(clases.includes("absolute"));
+  assert.ok(!clases.includes("relative"));
+  for (const c of OBJETIVO_TACTIL.split(" ").filter((c) => c.startsWith("pointer-coarse:after:"))) assert.ok(clases.includes(c), `falta ${c}`);
+  assert.ok(clases.includes("size-8"));
+});

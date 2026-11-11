@@ -3,7 +3,7 @@
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { XIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
-import { ANIMACION_POPUP } from "@/lib/estilos";
+import { ANIMACION_POPUP, OBJETIVO_TACTIL } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 const Popover = PopoverPrimitive.Root;
@@ -63,7 +63,7 @@ function PopoverHeader({
         {descripcion ? <PopoverPrimitive.Description className="mt-0.5 text-control text-muted-foreground">{descripcion}</PopoverPrimitive.Description> : null}
       </div>
       {conCierre ? (
-        <PopoverClose aria-label="Cerrar" className="shrink-0 rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground">
+        <PopoverClose aria-label="Cerrar" className={cn(OBJETIVO_TACTIL, "shrink-0 rounded p-0.5 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground")}>
           <XIcon weight="bold" className="size-3.5" />
         </PopoverClose>
       ) : null}

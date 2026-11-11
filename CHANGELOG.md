@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.14] - 2026-11-11
+
+### Added
+- `OBJETIVO_TACTIL` (`lib/estilos`) and the token `--spacing-objetivo-tactil` (44 px): with a coarse pointer (a finger), an invisible centered `::after` makes the tappable area at least 44×44 px (WCAG 2.5.5) without changing the visible size. It does nothing with a mouse. Use it first in `cn` on a standalone icon button (it brings `relative`, which a later `absolute` overrides).
+
+### Changed
+- Standalone icon buttons get `OBJETIVO_TACTIL` by default: the close button of `DialogContent`, `SheetContent` and `PanelLateral`, `MenuAcciones`, the `MobileNav` menu button, the close button of `Toast`, `Banner` and `PopoverHeader` (18 px, under the 24 px of WCAG 2.5.8 until now), and the month buttons of `Calendario`. Grouped or clipped controls (page numbers, segmented controls, `Toolbar`, `StepperNumerico`, buttons inside a field, the `Button` base) do not, because the larger area would cover their neighbour.
+
 ## [0.5.13] - 2026-11-11
 
 ### Added

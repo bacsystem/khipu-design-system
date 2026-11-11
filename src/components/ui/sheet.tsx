@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 import { cn } from "@/lib/utils"
+import { OBJETIVO_TACTIL } from "@/lib/estilos"
 
 import { Button } from "@/components/ui/button"
 import { XIcon } from "@phosphor-icons/react";
@@ -68,7 +69,7 @@ function SheetContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-4 right-4 size-8 text-texto-terciario hover:text-foreground"
+                className={cn(OBJETIVO_TACTIL, "absolute top-4 right-4 size-8 text-texto-terciario hover:text-foreground")}
                 size="icon-sm"
               />
             }
