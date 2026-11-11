@@ -83,7 +83,7 @@ const COLUMNAS: Columna<Doc>[] = [
         acciones={[
           { label: "Ver detalle", icon: EyeIcon, onClick: () => {} },
           { label: "Descargar XML", icon: DownloadSimpleIcon, onClick: () => {} },
-          { label: "Editar", icon: PencilSimpleIcon, disabled: true, title: "Edición: próximamente" },
+          { label: "Editar", icon: PencilSimpleIcon, disabled: true, ayuda: "Edición: próximamente" },
           { label: "Eliminar", icon: TrashIcon, destructiva: true, separador: true, onClick: () => {} },
         ]}
       />

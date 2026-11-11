@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.16] - 2026-11-11
+
+### Added
+- `AccionFila.ayuda` (`MenuAcciones`): el porqué de una acción deshabilitada, como texto visible bajo el ítem y enlazado con `aria-describedby`. El `title` no basta: el ítem deshabilitado no recibe puntero (`pointer-events-none`) ni foco, y en el móvil no hay hover. Exporta `AyudaAccion`. La galería usa `ayuda` en «Editar».
+
 ## [0.5.15] - 2026-11-11
 
 ### Added
