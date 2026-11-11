@@ -74,3 +74,46 @@ test("el texto de opcional del campo y el nombre de la X del diálogo y de la ho
   assert.match(confirmacion, /etiquetaCerrar = "Cerrar"/);
   assert.match(confirmacion, /<DialogContent[^>]*etiquetaCerrar=\{etiquetaCerrar\}/);
 });
+
+// Los textos de la tabla estaban fijos en castellano: ahora son `textos` con ese valor por defecto, y cada nivel los pasa al de abajo.
+test("los textos del pie, la selección y el selector de filas se traducen y llegan desde TablaListado", () => {
+  const pie = leer("src/components/patrones/pie-tabla.tsx");
+  for (const [clave, valor] of [["mostrando", "Mostrando"], ["de", "de"], ["anterior", "Anterior"], ["siguiente", "Siguiente"], ["filas", "Filas"], ["filasPorPagina", "Filas por página"]]) {
+    assert.match(pie, new RegExp(`${clave}: "${valor}"`));
+    assert.match(pie, new RegExp(`\\{textos\\.${clave}\\}`), `PieTabla debe usar textos.${clave}`);
+  }
+  assert.match(pie, /<SelectorPorPagina[^>]*etiqueta=\{textos\.filasPorPagina\} textoFilas=\{textos\.filas\}/);
+  assert.doesNotMatch(pie, /> Anterior|Siguiente <|^\s*Mostrando\{/m);
+
+  const selector = leer("src/components/ui/selector-por-pagina.tsx");
+  assert.match(selector, /etiqueta = "Filas por página"/);
+  assert.match(selector, /aria-label=\{etiqueta\}/);
+  assert.match(selector, /<span>\{textoFilas\}<\/span>/);
+
+  const tabla = leer("src/components/datos/tabla-datos.tsx");
+  assert.match(tabla, /seleccionados: \(n\) => \(n === 1 \? "seleccionado" : "seleccionados"\)/);
+  assert.match(tabla, /seleccionarFila: \(id\) => `Seleccionar fila \$\{id\}`/);
+  for (const uso of [/aria-label=\{textos\.accionesSeleccion\}/, /aria-label=\{textos\.quitarSeleccion\}/, /title=\{textos\.quitarSeleccion\}/, /etiqueta=\{textos\.seleccionarTodo\}/, /etiqueta=\{textos\.seleccionarFila\(id\)\}/, /\{textos\.seleccionados\(seleccionados\.length\)\}/]) {
+    assert.match(tabla, uso);
+  }
+  assert.match(tabla, /<PieTabla[\s\S]*?textos=\{textosParciales\}[\s\S]*?\/>/);
+
+  const listado = leer("src/components/datos/tabla-listado.tsx");
+  assert.match(listado, /textos\?: Partial<TextosTablaListado & TextosTablaDatos>/);
+  assert.match(listado, /<TablaDatos[\s\S]*?textos=\{textosParciales\}[\s\S]*?\/>/);
+});
+
+test("los botones del stepper se nombran por propiedad y la paginación acepta su aria-label", () => {
+  const stepper = leer("src/components/formularios/stepper-numerico.tsx");
+  assert.match(stepper, /etiquetaDisminuir = "Disminuir"/);
+  assert.match(stepper, /etiquetaAumentar = "Aumentar"/);
+  assert.match(stepper, /aria-label=\{etiquetaDisminuir\}/);
+  assert.match(stepper, /aria-label=\{etiquetaAumentar\}/);
+  // El aria-label fijo va antes de {...props}: el que pasa quien llama lo pisa.
+  const paginacion = leer("src/components/ui/pagination.tsx");
+  for (const componente of ["Pagination", "PaginationPrevious", "PaginationNext"]) {
+    const cuerpo = paginacion.slice(paginacion.indexOf(`function ${componente}(`));
+    const etiqueta = cuerpo.indexOf("aria-label=");
+    assert.ok(etiqueta > 0 && etiqueta < cuerpo.indexOf("{...props}"), `${componente}: aria-label debe ir antes de {...props}`);
+  }
+});

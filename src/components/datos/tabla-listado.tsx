@@ -2,7 +2,7 @@
 
 import { ColumnsIcon, DownloadSimpleIcon, FileCsvIcon, PrinterIcon } from "@phosphor-icons/react";
 import { useMemo, useState, type ReactNode } from "react";
-import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
+import { TablaDatos, type Columna, type TextosTablaDatos } from "@/components/datos/tabla-datos";
 import { Buscador } from "@/components/formularios/buscador";
 import {
   Menu,
@@ -107,9 +107,10 @@ export function TablaListado<T>({
   exportar?: boolean;
   filtros?: ReactNode;
   acciones?: ReactNode;
-  textos?: Partial<TextosTablaListado>;
+  /** Textos de la barra y, además, los de la tabla (`TextosTablaDatos`), que se pasan a `TablaDatos`. */
+  textos?: Partial<TextosTablaListado & TextosTablaDatos>;
   onImpresionBloqueada?: () => void;
-} & Omit<React.ComponentProps<typeof TablaDatos<T>>, "columnas" | "filas" | "clave">) {
+} & Omit<React.ComponentProps<typeof TablaDatos<T>>, "columnas" | "filas" | "clave" | "textos">) {
   const textos = { ...TEXTOS_ES, ...textosParciales };
   const textoBusqueda = placeholderBusqueda ?? textos.buscar;
   const [busqueda, setBusqueda] = useState("");
@@ -210,6 +211,7 @@ export function TablaListado<T>({
         clave={clave}
         {...resto}
         reinicioPagina={reinicio}
+        textos={textosParciales}
         onOrdenCambio={(o) => {
           setOrden(o);
           resto.onOrdenCambio?.(o);
