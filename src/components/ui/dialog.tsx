@@ -45,8 +45,13 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  etiquetaCerrar = "Cerrar",
   ...props
-}: DialogPrimitive.Popup.Props & { showCloseButton?: boolean }) {
+}: DialogPrimitive.Popup.Props & {
+  showCloseButton?: boolean
+  /** Nombre del botón de cerrar para el lector de pantalla, para traducirlo (por defecto «Cerrar»). */
+  etiquetaCerrar?: string
+}) {
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -67,7 +72,7 @@ function DialogContent({
               render={<Button variant="ghost" className="absolute top-4 right-4 size-8 text-texto-terciario hover:text-foreground" size="icon-sm" />}
             >
               <XIcon weight="bold" />
-              <span className="sr-only">Cerrar</span>
+              <span className="sr-only">{etiquetaCerrar}</span>
             </DialogPrimitive.Close>
           )}
         </DialogPrimitive.Popup>

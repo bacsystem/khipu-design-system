@@ -21,6 +21,7 @@ export function DialogoConfirmacion({
   textoConfirmar = "Confirmar",
   textoCancelar = "Cancelar",
   textoPendiente = "Procesando…",
+  etiquetaCerrar = "Cerrar",
   destructiva = true,
   onConfirmar,
 }: {
@@ -34,6 +35,8 @@ export function DialogoConfirmacion({
   /** Textos del botón de cancelar y del estado pendiente, para traducirlos (por defecto en castellano). */
   textoCancelar?: string;
   textoPendiente?: string;
+  /** Nombre de la X para el lector de pantalla; se pasa a `DialogContent` (por defecto «Cerrar»). */
+  etiquetaCerrar?: string;
   destructiva?: boolean;
   onConfirmar: () => Promise<string | null | void> | string | null | void;
 }) {
@@ -57,7 +60,7 @@ export function DialogoConfirmacion({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-0 p-0 sm:max-w-md">
+      <DialogContent className="gap-0 p-0 sm:max-w-md" etiquetaCerrar={etiquetaCerrar}>
         <CabeceraDialogo icon={icon} titulo={titulo} descripcion={descripcion} tono={destructiva ? "peligro" : "neutro"} />
         {children || error ? (
           <div className="grid gap-3 px-5 pb-2 text-control leading-relaxed text-muted-foreground">

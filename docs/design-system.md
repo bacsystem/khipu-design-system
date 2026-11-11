@@ -313,6 +313,7 @@ Envoltorio de un `<button>` nativo para acciones que llaman a un backend: `pendi
 ## 10. Formularios
 
 - **Campo** (`CAMPO`): `h-control rounded-lg border border-input bg-card px-3 text-control` (radio 12 px), placeholder en `texto-terciario`; foco `border-ring ring-3 ring-ring/20`; deshabilitado `opacity-60 cursor-not-allowed`.
+- **Campo compuesto** (`Campo`): etiqueta + control + ayuda o error. `opcional` añade «(opcional)» junto a la etiqueta; `textoOpcional` lo traduce.
 - **Etiqueta** (`ETIQUETA_CAMPO`, y `ui/Label`): `text-etiqueta font-medium` (13 px hasta 0.5.2). **Ayuda** (`AYUDA_CAMPO`): `text-etiqueta text-muted-foreground` (mono solo si muestra un dato técnico). Error: `text-sm text-destructive` bajo el campo.
 - **Dato de solo lectura** (`Dato` en `/empresa`): etiqueta en tipo oración (`ETIQUETA_DATO`) + caja `h-control rounded-lg border bg-muted px-3 font-mono text-control`; si el dato no existe todavía, caja con `—` y `cursor-not-allowed` + `title` explicando.
 - **Select** (`ui/select.tsx`, base-ui): disparador `h-control rounded-lg border-border bg-card text-control font-medium shadow-xs` (todos los `size` miden `h-control`; `size="campo"` solo agrega el padding de `CAMPO`) con `ChevronDown`; popup alineado al disparador, ítems con check.
@@ -385,6 +386,7 @@ Estructura fija: `DialogContent className="gap-0 p-0"` (radio 22, velo `--overla
 - **Cabecera** `CabeceraDialogo` (`px-5 pt-5 pb-3`, **sin línea debajo**): icono de 22 px en un círculo de 40 px del `tono` (`neutro` acento suave, `peligro`, `aviso`, `ok`; la única excepción a «icono sin fondo»: es la cara del diálogo) + `DialogTitle` (`text-titulo`) + `DialogDescription` (`text-control`).
 - **Cuerpo** `px-5 pb-2` (formularios: `grid gap-4`).
 - **Pie** `PieDialogo` (`px-5 pt-3 pb-5`, **sin línea encima**, `justify-end gap-2`, o `justify-between` con un enlace a la izquierda). `DialogoConfirmacion` usa `tono="peligro"` cuando la acción es destructiva.
+- **Cerrar**: la X lleva el nombre «Cerrar» para el lector de pantalla; `DialogContent etiquetaCerrar` (y `DialogoConfirmacion etiquetaCerrar`, que lo pasa) lo traduce. `showCloseButton={false}` la quita. Lo mismo en `SheetContent etiquetaCerrar`.
 
 Tres familias:
 1. **Formulario** (Nueva serie, Nueva empresa): campos con las recetas de §10; `Cancelar` secundario + primario `h-control`.

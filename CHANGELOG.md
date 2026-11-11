@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.12] - 2026-11-11
+
+### Added
+- `Campo` `textoOpcional`: the «(opcional)» shown next to the label with `opcional` can be translated (default «(opcional)»).
+- `DialogContent` `etiquetaCerrar`: the screen-reader name of the close button («Cerrar» by default) can be translated. `DialogoConfirmacion` takes `etiquetaCerrar` too and passes it on, so the whole dialog can be translated like `textoConfirmar`/`textoCancelar`.
+- `SheetContent` `etiquetaCerrar`: the same for the side sheet's close button.
+
 ## [0.5.11] - 2026-11-09
 
 ### Added

@@ -57,3 +57,20 @@ test("FilaMetricas admite cinco columnas", () => {
   assert.match(metricas, /columnas\?: 2 \| 3 \| 4 \| 5/);
   assert.match(metricas, /lg:grid-cols-5/);
 });
+
+// «(opcional)» y la X de los diálogos y las hojas estaban fijos en castellano: ahora son propiedades con ese mismo valor por defecto.
+test("el texto de opcional del campo y el nombre de la X del diálogo y de la hoja son propiedades", () => {
+  const campo = leer("src/components/formularios/campo.tsx");
+  assert.match(campo, /textoOpcional = "\(opcional\)"/);
+  assert.match(campo, /\{textoOpcional\}<\/span>/);
+  assert.doesNotMatch(campo, />\(opcional\)</);
+  const dialogo = leer("src/components/ui/dialog.tsx");
+  assert.match(dialogo, /etiquetaCerrar = "Cerrar"/);
+  assert.match(dialogo, /<span className="sr-only">\{etiquetaCerrar\}<\/span>/);
+  const hoja = leer("src/components/ui/sheet.tsx");
+  assert.match(hoja, /etiquetaCerrar = "Cerrar"/);
+  assert.match(hoja, /<span className="sr-only">\{etiquetaCerrar\}<\/span>/);
+  const confirmacion = leer("src/components/navegacion/dialogo-confirmacion.tsx");
+  assert.match(confirmacion, /etiquetaCerrar = "Cerrar"/);
+  assert.match(confirmacion, /<DialogContent[^>]*etiquetaCerrar=\{etiquetaCerrar\}/);
+});
