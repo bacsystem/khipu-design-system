@@ -3,6 +3,7 @@
 import { DotsThreeIcon } from "@phosphor-icons/react";
 import type { IconoComponente } from "@/lib/iconos";
 import { Menu, MenuContent, MenuItem, MenuLinkItem, MenuSeparator, MenuTrigger } from "@/components/ui/menu";
+import { OBJETIVO_TACTIL } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 export type AccionFila = {
@@ -25,6 +26,7 @@ export function MenuAcciones({ acciones, etiqueta = "Más acciones", className }
         aria-label={etiqueta}
         title={etiqueta}
         className={cn(
+          OBJETIVO_TACTIL,
           "flex size-control items-center justify-center rounded-lg text-muted-foreground/70 transition-colors outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-secondary data-popup-open:text-foreground",
           className,
         )}

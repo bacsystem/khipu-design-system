@@ -203,6 +203,15 @@ Reglas:
 
 **Compatibilidad (0.2.0):** las variantes de altura anteriores se conservan para no romper imports, pero ya no cambian la altura: `CAMPO_FILTRO` es `CAMPO`, `BOTON_*_PIE` son `BOTON_*`, `variante="filtro"`/`"campo"` de `StepperNumerico`/`EntradaFecha`/`EntradaMonto` y `size="sm"`/`"lg"` de `Button`/`SelectTrigger` miden `h-control`. En código nuevo usa las recetas sin sufijo.
 
+### Objetivo táctil
+
+Los controles miden 32 px, que cumple WCAG 2.5.8 (AA: 24×24). Con el dedo, un botón de icono de 32 px, y más uno de 18 px como la X de un toast, es difícil de acertar. **`OBJETIVO_TACTIL`** (`lib/estilos.ts`) amplía el área que acepta el toque a **44×44 px** (`--spacing-objetivo-tactil`, WCAG 2.5.5) solo con puntero grueso (`pointer-coarse:`). Lo hace con un `::after` invisible, centrado y de al menos 44 px, así que el tamaño que se ve no cambia. Con mouse no hace nada.
+
+- **Va por defecto** en los botones de icono **sueltos**, porque ahí el halo de 6 px (13 px en la X de 18 px) no tapa a otro objetivo: la X de `DialogContent`, `SheetContent` y `PanelLateral`, `MenuAcciones` («⋯»), la hamburguesa de `MobileNav`, la X de `Toast`, `Banner` y `PopoverHeader`, y mes anterior/siguiente del `Calendario`.
+- **No va** donde los controles están juntos o recortados: los números de `PieTabla` y `Pagination` (`gap-0.5`), segmentados, `Toolbar`, `GrupoBotones`, `StepperNumerico` (el grupo es `overflow-hidden` y el halo pisaría el input), los botones dentro de un campo (limpiar, ojo de `Contrasena`) y la base de `Button`, que se usa en grupos. Ahí un halo tapa al vecino: donde se superponen, el toque se lo lleva el que va después en el DOM. La solución es separar o agrandar el control, no el halo.
+- **En un botón de icono propio**, si está suelto, `cn(OBJETIVO_TACTIL, …)`. La receta trae `relative`: ponla primera para que un `absolute` propio la pise. El halo se recorta dentro de un contenedor `overflow-hidden`.
+- **Cómo probarlo:** en Chrome DevTools, modo dispositivo con un teléfono (que emula `pointer: coarse`), toca justo fuera del borde visible del botón: también responde.
+
 No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-10`, una franja de navegación), la cabecera de `Table` (`h-10`), la entrada de la `Paleta` (`h-11`) y las piezas decorativas (avatares, iconos de sección, logo).
 
 ---

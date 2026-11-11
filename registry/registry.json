@@ -186,6 +186,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/estilos",
         "lib/iconos",
         "lib/utils"
       ]
@@ -258,6 +259,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/estilos",
         "lib/utils"
       ]
     },
@@ -318,6 +320,7 @@
       ],
       "registryDependencies": [
         "lib/calendario",
+        "lib/estilos",
         "lib/formato",
         "lib/utils"
       ]
@@ -554,7 +557,8 @@
       ],
       "registryDependencies": [
         "components/ui/button",
-        "components/ui/sheet"
+        "components/ui/sheet",
+        "lib/estilos"
       ]
     },
     "components/nav/panel-apariencia": {
@@ -734,6 +738,7 @@
       ],
       "registryDependencies": [
         "components/ui/menu",
+        "lib/estilos",
         "lib/iconos",
         "lib/utils"
       ]
@@ -768,6 +773,7 @@
       "registryDependencies": [
         "components/patrones/cabecera-seccion",
         "components/ui/sheet",
+        "lib/estilos",
         "lib/iconos",
         "lib/utils"
       ]
@@ -1097,6 +1103,7 @@
       ],
       "registryDependencies": [
         "components/ui/button",
+        "lib/estilos",
         "lib/utils"
       ]
     },
@@ -1297,6 +1304,7 @@
       ],
       "registryDependencies": [
         "components/ui/button",
+        "lib/estilos",
         "lib/utils"
       ]
     },

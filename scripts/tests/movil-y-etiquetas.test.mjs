@@ -117,3 +117,43 @@ test("los botones del stepper se nombran por propiedad y la paginación acepta s
     assert.ok(etiqueta > 0 && etiqueta < cuerpo.indexOf("{...props}"), `${componente}: aria-label debe ir antes de {...props}`);
   }
 });
+
+// Con el dedo, los botones de icono sueltos aceptan el toque en 44×44 px (WCAG 2.5.5) sin cambiar lo que se ve (§4).
+test("el objetivo táctil mide 44 px y lo llevan los botones de icono sueltos", () => {
+  assert.match(leer("src/styles/theme.css"), /--spacing-objetivo-tactil:\s*2\.75rem;/);
+  const estilos = leer("src/lib/estilos.ts");
+  const receta = estilos.match(/export const OBJETIVO_TACTIL =\s*"([^"]*)"/)?.[1] ?? "";
+  for (const clase of ["relative", "pointer-coarse:after:absolute", "pointer-coarse:after:min-h-objetivo-tactil", "pointer-coarse:after:min-w-objetivo-tactil", "pointer-coarse:after:size-full"]) {
+    assert.ok(receta.split(" ").includes(clase), `OBJETIVO_TACTIL debe llevar ${clase}`);
+  }
+  // Fuera de pointer-coarse no hay halo: con mouse el área es la del botón.
+  assert.ok(receta.split(" ").every((c) => c === "relative" || c.startsWith("pointer-coarse:")));
+  for (const ruta of [
+    "src/components/ui/dialog.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/components/ui/popover.tsx",
+    "src/components/feedback/toast.tsx",
+    "src/components/feedback/banner.tsx",
+    "src/components/navegacion/panel-lateral.tsx",
+    "src/components/navegacion/menu-acciones.tsx",
+    "src/components/nav/mobile-nav.tsx",
+    "src/components/formularios/calendario.tsx",
+  ]) {
+    assert.match(leer(ruta), /cn\(\s*OBJETIVO_TACTIL,|className=\{OBJETIVO_TACTIL\}/, `${ruta} debe usar OBJETIVO_TACTIL`);
+  }
+});
+
+// Review de #46 (H1): en el Banner con `accion` y `onCerrar`, el halo de la X (18 px → 44 px, 13 px por lado) tapaba la última columna de la
+// acción con un `gap-3` de 12 px, y ese toque cerraba el aviso. La separación entre ambos debe ser al menos lo que sobresale el halo.
+test("el halo táctil de la X del Banner no tapa la acción de al lado", () => {
+  const banner = leer("src/components/feedback/banner.tsx");
+  const px = (paso) => Number(paso) * 4;
+  const gap = px(banner.match(/role=\{tono === "error"[^>]*className=\{cn\("flex items-center gap-([\d.]+)/)?.[1]);
+  const boton = banner.match(/aria-label="Cerrar aviso" className=\{cn\(OBJETIVO_TACTIL, "([^"]*)"/)?.[1] ?? "";
+  const margen = px(boton.match(/(?:^| )ml-([\d.]+)/)?.[1] ?? 0);
+  const relleno = px(boton.match(/(?:^| )p-([\d.]+)/)?.[1]);
+  const icono = px(banner.match(/<XIcon weight="bold" className="size-([\d.]+)"/)?.[1]);
+  const objetivo = Number(leer("src/styles/theme.css").match(/--spacing-objetivo-tactil:\s*([\d.]+)rem/)?.[1]) * 16;
+  const sobresale = (objetivo - (icono + 2 * relleno)) / 2;
+  assert.ok(gap + margen >= sobresale, `separación ${gap + margen} px < halo ${sobresale} px`);
+});
