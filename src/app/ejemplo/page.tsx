@@ -1,4 +1,4 @@
-import { CheckCircleIcon, ClockIcon, KeyIcon, TrayIcon, WalletIcon, XCircleIcon } from "@phosphor-icons/react/dist/ssr";
+import { CheckCircleIcon, ClockIcon, KeyIcon, TrayIcon, WalletIcon, WarningIcon, XCircleIcon } from "@phosphor-icons/react/dist/ssr";
 import { GraficoAnillos, GraficoBarras } from "@/components/datos/grafico";
 import { Timeline } from "@/components/datos/timeline";
 import { Pagina } from "@/components/nav/shell";
@@ -76,12 +76,15 @@ export default function EjemploPage() {
       </div>
 
       <section className={`${ENTRADA} ${TARJETA}`} style={pasoEntrada(4)}>
-        <CabeceraSeccion icon={KeyIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · neutro" derecha={<Chip>4 tonos</Chip>} />
+        <CabeceraSeccion icon={KeyIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · neutro · con icono" derecha={<Chip>4 tonos</Chip>} />
         <div className="flex flex-wrap items-center gap-2 px-4 py-3">
           <PillEstado tono="ok">Aceptado</PillEstado>
           <PillEstado tono="aviso">Con observaciones</PillEstado>
           <PillEstado tono="error">Rechazado</PillEstado>
           <PillEstado tono="neutro">Enviado</PillEstado>
+          <PillEstado tono="ok" icon={CheckCircleIcon}>Operativo</PillEstado>
+          <PillEstado tono="aviso" icon={WarningIcon}>Degradado</PillEstado>
+          <PillEstado tono="error" icon={XCircleIcon}>Caído</PillEstado>
           <ChipCodigo>F001</ChipCodigo>
           <ChipCodigo inactivo>B001</ChipCodigo>
           <Chip>id: 193f4b35</Chip>
