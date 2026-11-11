@@ -29,8 +29,13 @@ const { AyudaAccion } = await cargarAyuda();
 
 test("AyudaAccion pinta el texto visible con el id que enlaza el ítem, sin la opacidad del ítem deshabilitado", () => {
   const html = renderToStaticMarkup(createElement(AyudaAccion, { id: "ayuda-1" }, "Recházala primero"));
-  assert.match(html, /^<p id="ayuda-1" class="[^"]*text-muted-foreground[^"]*">Recházala primero<\/p>$/);
+  assert.match(html, /^<p id="ayuda-1" aria-hidden="true" class="[^"]*text-muted-foreground[^"]*">Recházala primero<\/p>$/);
   assert.doesNotMatch(html, /opacity/, "el contraste del texto de ayuda no se reduce");
+});
+
+test("la ayuda va aria-hidden: dentro de role=menu no debe leerse como contenido; se anuncia por aria-describedby", () => {
+  const html = renderToStaticMarkup(createElement(AyudaAccion, { id: "a" }, "x"));
+  assert.match(html, /aria-hidden="true"/);
 });
 
 test("el ítem solo enlaza la ayuda cuando la hay, y la ayuda va fuera del ítem", () => {

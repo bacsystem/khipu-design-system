@@ -15,7 +15,7 @@ export type AccionFila = {
   destructiva?: boolean;
   disabled?: boolean;
   title?: string;
-  /** Por qué la acción está deshabilitada: texto visible bajo el ítem, enlazado con `aria-describedby`. Un `title` no sirve en un ítem deshabilitado (no recibe puntero, ni foco, y no existe en el móvil). */
+  /** Por qué la acción está deshabilitada: texto visible bajo el ítem, enlazado con `aria-describedby`. Un `title` no sirve en un ítem deshabilitado: no recibe puntero (`pointer-events-none`) y en el móvil no hay hover. Con teclado el ítem sí recibe foco (base-ui usa `focusableWhenDisabled`), y ahí `aria-describedby` anuncia la ayuda. */
   ayuda?: string;
   /** Pinta un separador antes de esta acción. */
   separador?: boolean;
@@ -24,7 +24,7 @@ export type AccionFila = {
 /** Texto de ayuda de una acción deshabilitada, fuera del ítem para que no herede su opacidad y se lea con contraste normal. */
 export function AyudaAccion({ id, children }: { id: string; children: string }) {
   return (
-    <p id={id} className="-mt-0.5 px-2.5 pb-1.5 text-etiqueta text-muted-foreground">
+    <p id={id} aria-hidden="true" className="-mt-0.5 px-2.5 pb-1.5 text-etiqueta text-muted-foreground">
       {children}
     </p>
   );
