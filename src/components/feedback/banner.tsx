@@ -41,7 +41,8 @@ export function Banner({
       <div className="min-w-0 flex-1 leading-relaxed">{children}</div>
       {accion ? <div className="shrink-0">{accion}</div> : null}
       {onCerrar ? (
-        <button type="button" onClick={onCerrar} aria-label="Cerrar aviso" className={cn(OBJETIVO_TACTIL, "shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100")}>
+        // La X mide 18 px y su halo táctil sobresale 13 px: `ml-0.5` suma 2 px al `gap-3` (12) para que el halo no tape la acción.
+        <button type="button" onClick={onCerrar} aria-label="Cerrar aviso" className={cn(OBJETIVO_TACTIL, "ml-0.5 shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100")}>
           <XIcon weight="bold" className="size-3.5" />
         </button>
       ) : null}

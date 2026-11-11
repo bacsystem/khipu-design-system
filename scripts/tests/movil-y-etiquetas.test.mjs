@@ -142,3 +142,18 @@ test("el objetivo táctil mide 44 px y lo llevan los botones de icono sueltos", 
     assert.match(leer(ruta), /cn\(\s*OBJETIVO_TACTIL,|className=\{OBJETIVO_TACTIL\}/, `${ruta} debe usar OBJETIVO_TACTIL`);
   }
 });
+
+// Review de #46 (H1): en el Banner con `accion` y `onCerrar`, el halo de la X (18 px → 44 px, 13 px por lado) tapaba la última columna de la
+// acción con un `gap-3` de 12 px, y ese toque cerraba el aviso. La separación entre ambos debe ser al menos lo que sobresale el halo.
+test("el halo táctil de la X del Banner no tapa la acción de al lado", () => {
+  const banner = leer("src/components/feedback/banner.tsx");
+  const px = (paso) => Number(paso) * 4;
+  const gap = px(banner.match(/role=\{tono === "error"[^>]*className=\{cn\("flex items-center gap-([\d.]+)/)?.[1]);
+  const boton = banner.match(/aria-label="Cerrar aviso" className=\{cn\(OBJETIVO_TACTIL, "([^"]*)"/)?.[1] ?? "";
+  const margen = px(boton.match(/(?:^| )ml-([\d.]+)/)?.[1] ?? 0);
+  const relleno = px(boton.match(/(?:^| )p-([\d.]+)/)?.[1]);
+  const icono = px(banner.match(/<XIcon weight="bold" className="size-([\d.]+)"/)?.[1]);
+  const objetivo = Number(leer("src/styles/theme.css").match(/--spacing-objetivo-tactil:\s*([\d.]+)rem/)?.[1]) * 16;
+  const sobresale = (objetivo - (icono + 2 * relleno)) / 2;
+  assert.ok(gap + margen >= sobresale, `separación ${gap + margen} px < halo ${sobresale} px`);
+});
