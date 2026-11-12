@@ -7,7 +7,7 @@ import { useDiseno } from "@/components/diseno";
 import { PanelLateral } from "@/components/navegacion/panel-lateral";
 import { SelectorPaleta, SelectorTipografia, SelectorTonoOscuro } from "@/components/nav/selector-apariencia";
 import { SelectorDiseno } from "@/components/nav/selector-diseno";
-import { ThemeToggle } from "@/components/nav/theme-toggle";
+import { type TextosThemeToggle, ThemeToggle } from "@/components/nav/theme-toggle";
 import { ROTULO } from "@/lib/estilos";
 
 function Seccion({ titulo, ayuda, children }: { titulo: string; ayuda?: string; children: ReactNode }) {
@@ -22,12 +22,59 @@ function Seccion({ titulo, ayuda, children }: { titulo: string; ayuda?: string; 
   );
 }
 
+/** Textos de `PanelApariencia` (incluye los de `ThemeToggle`): pasa los que quieras traducir, el resto queda en castellano. */
+export type TextosPanelApariencia = {
+  aparienciaTitulo: string;
+  aparienciaDescripcion: string;
+  /** Rótulo de la sección del tema claro/oscuro; el menú de usuario usa el mismo. */
+  tema: string;
+  paleta: string;
+  paletaAyuda: string;
+  tonoOscuro: string;
+  tonoOscuroAyuda: string;
+  tipografia: string;
+  tipografiaAyuda: string;
+  /** Frase de muestra bajo el selector de tipografía. */
+  tipografiaMuestra: ReactNode;
+  diseno: string;
+  /** `aria-label` del selector de diseño. */
+  disenoInterfaz: string;
+};
+
+export const TEXTOS_PANEL_APARIENCIA_ES: TextosPanelApariencia = {
+  aparienciaTitulo: "Apariencia",
+  aparienciaDescripcion: "Se aplica al instante y se guarda en este navegador.",
+  tema: "Tema",
+  paleta: "Paleta",
+  paletaAyuda: "El color de acento: ítem activo, métricas destacadas y gráficos.",
+  tonoOscuro: "Tono oscuro",
+  tonoOscuroAyuda: "Se usa cuando el tema es oscuro.",
+  tipografia: "Tipografía",
+  tipografiaAyuda: "Los datos (correlativos, ids) siguen en JetBrains Mono.",
+  tipografiaMuestra: (
+    <>
+      Factura <span className="font-mono">F001-00000136</span> · S/ 4,820.00 aceptada por SUNAT.
+    </>
+  ),
+  diseno: "Diseño",
+  disenoInterfaz: "Diseño de la interfaz",
+};
+
 /**
  * Panel derecho con las preferencias de apariencia del usuario: tema, paleta, tono oscuro, tipografía y diseño. Cada
  * cambio se aplica al instante (la página de atrás cambia en vivo) y se guarda como el resto de las preferencias.
  * Lo abre «Apariencia…» del menú de usuario; las secciones sin opciones (sin proveedor) no se muestran.
  */
-export function PanelApariencia({ open, onOpenChange }: { open: boolean; onOpenChange: (abierto: boolean) => void }) {
+export function PanelApariencia({
+  open,
+  onOpenChange,
+  textos: textosParciales,
+}: {
+  open: boolean;
+  onOpenChange: (abierto: boolean) => void;
+  textos?: Partial<TextosPanelApariencia & TextosThemeToggle>;
+}) {
+  const textos = { ...TEXTOS_PANEL_APARIENCIA_ES, ...textosParciales };
   const { paletas, tonosOscuro, fuentes } = useApariencia();
   const { disenos } = useDiseno();
 
@@ -36,35 +83,33 @@ export function PanelApariencia({ open, onOpenChange }: { open: boolean; onOpenC
       open={open}
       onOpenChange={onOpenChange}
       icon={PaletteIcon}
-      titulo="Apariencia"
-      descripcion="Se aplica al instante y se guarda en este navegador."
+      titulo={textos.aparienciaTitulo}
+      descripcion={textos.aparienciaDescripcion}
       ancho="sm:max-w-sm"
     >
       <div className="grid gap-6 pb-4">
-        <Seccion titulo="Tema">
-          <ThemeToggle conTexto />
+        <Seccion titulo={textos.tema}>
+          <ThemeToggle conTexto textos={textosParciales} />
         </Seccion>
         {paletas.length > 1 ? (
-          <Seccion titulo="Paleta" ayuda="El color de acento: ítem activo, métricas destacadas y gráficos.">
+          <Seccion titulo={textos.paleta} ayuda={textos.paletaAyuda}>
             <SelectorPaleta grande />
           </Seccion>
         ) : null}
         {tonosOscuro.length > 1 ? (
-          <Seccion titulo="Tono oscuro" ayuda="Se usa cuando el tema es oscuro.">
+          <Seccion titulo={textos.tonoOscuro} ayuda={textos.tonoOscuroAyuda}>
             <SelectorTonoOscuro grande />
           </Seccion>
         ) : null}
         {fuentes.length > 1 ? (
-          <Seccion titulo="Tipografía" ayuda="Los datos (correlativos, ids) siguen en JetBrains Mono.">
+          <Seccion titulo={textos.tipografia} ayuda={textos.tipografiaAyuda}>
             <SelectorTipografia grande />
-            <p className="rounded-xl bg-secondary px-3 py-2.5 text-cuerpo text-foreground">
-              Factura <span className="font-mono">F001-00000136</span> · S/ 4,820.00 aceptada por SUNAT.
-            </p>
+            <p className="rounded-xl bg-secondary px-3 py-2.5 text-cuerpo text-foreground">{textos.tipografiaMuestra}</p>
           </Seccion>
         ) : null}
         {disenos.length > 1 ? (
-          <Seccion titulo="Diseño">
-            <SelectorDiseno />
+          <Seccion titulo={textos.diseno}>
+            <SelectorDiseno etiqueta={textos.disenoInterfaz} />
           </Seccion>
         ) : null}
       </div>
