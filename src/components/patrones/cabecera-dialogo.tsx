@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 /** Color del círculo del icono de un diálogo. `peligro` para acciones irreversibles. */
 export type TonoDialogo = "neutro" | "peligro" | "aviso" | "ok";
 
-const CIRCULO: Record<TonoDialogo, string> = {
+/** Clases del círculo por tono; también las usa `CabeceraAviso`. */
+export const CIRCULO:Record<TonoDialogo, string> = {
   neutro: "bg-accent text-accent-foreground",
   peligro: "bg-destructive-suave text-destructive-texto",
   aviso: "bg-warning text-warning-foreground",

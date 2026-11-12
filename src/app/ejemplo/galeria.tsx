@@ -39,6 +39,7 @@ import { Paleta } from "@/components/navegacion/paleta";
 import { PanelLateral } from "@/components/navegacion/panel-lateral";
 import { Pasos, TarjetaPaso } from "@/components/navegacion/pasos";
 import { Tabs } from "@/components/navegacion/tabs";
+import { DemoAvisos } from "./demo-avisos";
 import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraPagina, EnlaceVolver } from "@/components/patrones/cabecera-pagina";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
@@ -356,7 +357,7 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION} style={pasoEntrada(8)}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · drawer · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · toolbar · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · drawer · aviso responsivo · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · toolbar · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
             <HoverCard>
@@ -483,6 +484,7 @@ export function Galeria() {
           <button type="button" className={ACCION_SECUNDARIA} onClick={() => setPaleta(true)}>
             Paleta ⌘K
           </button>
+          <DemoAvisos />
           <TarjetaPaso numero={2} total={3} titulo="Certificado digital" className="basis-full" pie={<><button type="button" className={BOTON_SECUNDARIO}>Atrás</button><button type="button" className={BOTON_PRIMARIO}>Continuar</button></>}>
             <p className="text-control text-muted-foreground">Contenido del paso (formulario del certificado).</p>
           </TarjetaPaso>

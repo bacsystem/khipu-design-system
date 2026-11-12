@@ -406,6 +406,29 @@ Tres familias:
 
 Confirmaciones irreversibles **no** usan diálogo: se confirman **en línea** dentro de la fila ("¿Revocar de forma permanente? [Sí, revocar] [Cancelar]").
 
+### Aviso responsivo (`patrones/aviso-responsivo`, `patrones/franja-cuenta-regresiva`)
+
+Para un aviso corto que pide una decisión (la sesión está por finalizar, la sesión terminó): **hoja inferior bajo `sm` (640 px)**, a todo el ancho, con las esquinas superiores redondeadas (22 px), el área segura del dispositivo (`env(safe-area-inset-bottom)`) y el botón principal arriba; **diálogo centrado desde `sm`**, como `Dialog`. Es una sola primitiva `Dialog` con clases responsivas: sin hook de `matchMedia` (no hay desajuste de hidratación ni doble montaje), sin `Drawer` ni `Sheet`.
+
+```tsx
+<AvisoResponsivo open={abierto} onOpenChange={setAbierto} initialFocus={refPrincipal}>
+  <CabeceraAviso icon={HourglassMediumIcon} tono="peligro" titulo={t.titulo} descripcion={t.descripcion} />
+  <div className="px-5 pb-2"><FranjaCuentaRegresiva segundos={segundos} etiqueta={t.cierraEn} /></div>
+  <PieAviso>
+    <button className={BOTON_SECUNDARIO}>{t.cerrarSesion}</button>   {/* secundario primero en el DOM… */}
+    <button className={BOTON_PRIMARIO} ref={refPrincipal}>{t.seguir}</button> {/* …el primario queda arriba en móvil */}
+  </PieAviso>
+</AvisoResponsivo>
+```
+
+- **`descartable`** (por defecto `true`): Escape cierra y lo informa por `onOpenChange(false)`; Escape equivale a la acción segura del aviso. Con **`descartable={false}`** no cierra Escape, ni el clic afuera, ni un arrastre, y como no hay botón de cerrar, solo se cierra cuando el consumidor cambia `open` (el diálogo «Tu sesión terminó»). El clic afuera nunca cierra, como en `Dialog`.
+- **Sin botón de cerrar** en ningún modo (la acción es siempre un botón del pie) y **sin arrastre**; así no hay texto fijo que traducir.
+- **Foco:** `initialFocus` (el mismo tipo que el de `DialogContent`: ref, función, `false`) elige el botón que se enfoca al abrir —en un aviso de decisión, el principal—; el foco queda atrapado mientras está abierto y vuelve al elemento que lo tenía al cerrar (`finalFocus` lo cambia).
+- **Accesibilidad:** `CabeceraAviso` usa `DialogTitle` y `DialogDescription`, que base-ui enlaza como `aria-labelledby` y `aria-describedby` del popup. El círculo del icono (`size-12`, tonos de `CabeceraDialogo`) es decorativo.
+- **Movimiento:** la hoja entra y sale con `translate-y-full` (`--duracion-media`, `ease-salida`) solo bajo `motion-safe:`; con «reducir movimiento» solo hay fundido de opacidad.
+- **`FranjaCuentaRegresiva`** (`segundos`, `etiqueta`, `tono` `peligro` | `aviso`): la etiqueta a la izquierda; a la derecha un reloj y `mm:ss` con `font-mono tabular-nums` (`formatearMmSs`, `lib/formato`: `65 → 01:05`, `6000 → 100:00`, negativo o no finito `00:00`). **No es una región viva** (sin `role`, `aria-live`, `aria-atomic`): un lector de pantalla no repite el tiempo en cada tic; si el plazo importa, dilo una vez en la descripción del aviso. El contraste es el de los pares `destructive-texto/destructive-suave` y `warning-foreground/warning` de `check:contraste`.
+- **Textos:** título, descripción, etiqueta de la franja y botones entran por props o `children`.
+
 ---
 
 ## 16. Código y datos técnicos
