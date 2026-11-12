@@ -66,6 +66,7 @@ test("PanelApariencia: todos sus textos por defecto son los de siempre", () => {
     paletaColor: "Paleta de color",
     tonoModoOscuro: "Tono del modo oscuro",
     tipografiaFuente: "Tipografía",
+    cerrar: "Cerrar",
   });
   assert.match(PANEL, /tipografiaMuestra: \(\s*<>\s*Factura <span className="font-mono">F001-00000136<\/span> · S\/ 4,820\.00 aceptada por SUNAT\./);
 });
@@ -83,7 +84,7 @@ test("los componentes usan los textos en vez de castellano fijo", () => {
   for (const clave of ["menu", "cuenta", "tema", "apariencia"]) {
     assert.match(MENU, new RegExp(`\\{textos\\.${clave}\\}`), `MenuUsuario debe usar textos.${clave}`);
   }
-  for (const clave of ["aparienciaTitulo", "aparienciaDescripcion", "tema", "paleta", "paletaAyuda", "tonoOscuro", "tonoOscuroAyuda", "tipografia", "tipografiaAyuda", "tipografiaMuestra", "diseno", "disenoInterfaz", "paletaColor", "tonoModoOscuro", "tipografiaFuente"]) {
+  for (const clave of ["aparienciaTitulo", "aparienciaDescripcion", "tema", "paleta", "paletaAyuda", "tonoOscuro", "tonoOscuroAyuda", "tipografia", "tipografiaAyuda", "tipografiaMuestra", "diseno", "disenoInterfaz", "paletaColor", "tonoModoOscuro", "tipografiaFuente", "cerrar"]) {
     assert.match(PANEL, new RegExp(`textos\\.${clave}`), `PanelApariencia debe usar textos.${clave}`);
   }
   // Ya no queda castellano fuera de los objetos de valores por defecto.
@@ -106,4 +107,13 @@ test("cada nivel pasa sus textos al de abajo", () => {
   }
   assert.equal(selectores.match(/etiqueta=\{etiqueta\}/g)?.length, 3);
   assert.match(leer("src/components/nav/selector-diseno.tsx"), /aria-label=\{etiqueta\}/);
+});
+
+// El botón de cerrar de `PanelLateral` tenía «Cerrar» fijo: ahora es `etiquetaCerrar`, y `PanelApariencia` la recibe en `textos.cerrar`.
+test("PanelLateral traduce su botón de cerrar y PanelApariencia se lo pasa", () => {
+  const panelLateral = leer("src/components/navegacion/panel-lateral.tsx");
+  assert.match(panelLateral, /etiquetaCerrar = "Cerrar"/);
+  assert.match(panelLateral, /<SheetClose aria-label=\{etiquetaCerrar\}/);
+  assert.doesNotMatch(panelLateral, /aria-label="Cerrar"/);
+  assert.match(PANEL, /etiquetaCerrar=\{textos\.cerrar\}/);
 });

@@ -22,6 +22,7 @@ export function PanelLateral({
   children,
   pie,
   ancho = "sm:max-w-lg",
+  etiquetaCerrar = "Cerrar",
 }: {
   trigger?: ReactNode;
   open?: boolean;
@@ -32,6 +33,8 @@ export function PanelLateral({
   children: ReactNode;
   pie?: ReactNode;
   ancho?: string;
+  /** Nombre del botón de cerrar para el lector de pantalla, para traducirlo (por defecto «Cerrar»). */
+  etiquetaCerrar?: string;
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -44,7 +47,7 @@ export function PanelLateral({
             <SheetTitle className="text-titulo text-foreground">{titulo}</SheetTitle>
             {descripcion ? <SheetDescription className="text-control text-muted-foreground">{descripcion}</SheetDescription> : null}
           </div>
-          <SheetClose aria-label="Cerrar" className={cn(OBJETIVO_TACTIL, "-mt-1 -mr-1 grid size-8 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground")}>
+          <SheetClose aria-label={etiquetaCerrar} className={cn(OBJETIVO_TACTIL, "-mt-1 -mr-1 grid size-8 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground")}>
             <XIcon weight="bold" className="size-4" />
           </SheetClose>
         </div>

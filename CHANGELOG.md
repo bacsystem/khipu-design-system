@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.18] - 2026-11-12
+
+### Added
+- `PanelLateral etiquetaCerrar`: el nombre accesible del botón de cerrar, que estaba fijo en «Cerrar» (por defecto, el mismo). `PanelApariencia` se lo pasa desde `textos.cerrar` (`TextosPanelApariencia`), así que `MenuUsuario textos` también lo traduce.
+
 ## [0.5.17] - 2026-11-12
 
 ### Added
