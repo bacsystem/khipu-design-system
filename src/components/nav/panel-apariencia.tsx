@@ -39,6 +39,10 @@ export type TextosPanelApariencia = {
   diseno: string;
   /** `aria-label` del selector de diseño. */
   disenoInterfaz: string;
+  /** `aria-label` de los grupos de muestras de paleta, de tono oscuro y de tipografía. */
+  paletaColor: string;
+  tonoModoOscuro: string;
+  tipografiaFuente: string;
 };
 
 export const TEXTOS_PANEL_APARIENCIA_ES: TextosPanelApariencia = {
@@ -58,6 +62,9 @@ export const TEXTOS_PANEL_APARIENCIA_ES: TextosPanelApariencia = {
   ),
   diseno: "Diseño",
   disenoInterfaz: "Diseño de la interfaz",
+  paletaColor: "Paleta de color",
+  tonoModoOscuro: "Tono del modo oscuro",
+  tipografiaFuente: "Tipografía",
 };
 
 /**
@@ -93,17 +100,17 @@ export function PanelApariencia({
         </Seccion>
         {paletas.length > 1 ? (
           <Seccion titulo={textos.paleta} ayuda={textos.paletaAyuda}>
-            <SelectorPaleta grande />
+            <SelectorPaleta grande etiqueta={textos.paletaColor} />
           </Seccion>
         ) : null}
         {tonosOscuro.length > 1 ? (
           <Seccion titulo={textos.tonoOscuro} ayuda={textos.tonoOscuroAyuda}>
-            <SelectorTonoOscuro grande />
+            <SelectorTonoOscuro grande etiqueta={textos.tonoModoOscuro} />
           </Seccion>
         ) : null}
         {fuentes.length > 1 ? (
           <Seccion titulo={textos.tipografia} ayuda={textos.tipografiaAyuda}>
-            <SelectorTipografia grande />
+            <SelectorTipografia grande etiqueta={textos.tipografiaFuente} />
             <p className="rounded-xl bg-secondary px-3 py-2.5 text-cuerpo text-foreground">{textos.tipografiaMuestra}</p>
           </Seccion>
         ) : null}
