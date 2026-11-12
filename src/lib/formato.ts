@@ -51,3 +51,15 @@ export function formatearFechaHora(iso: string): string {
   const v = (tipo: string) => partes.find((p) => p.type === tipo)?.value ?? "";
   return `${formatearFecha(`${v("year")}-${v("month")}-${v("day")}`)}, ${v("hour")}:${v("minute")}`;
 }
+
+const SEGUNDOS_POR_MINUTO = 60;
+
+/**
+ * Segundos a `mm:ss` (`65 → "01:05"`) para una cuenta regresiva. Los minutos no se limitan a 2 dígitos (`6000 → "100:00"`);
+ * un valor negativo o no finito (`NaN`, `Infinity`) da `00:00` y los decimales se truncan.
+ */
+export function formatearMmSs(segundos: number): string {
+  const total = Number.isFinite(segundos) && segundos > 0 ? Math.floor(segundos) : 0;
+  const dos = (n: number) => String(n).padStart(2, "0");
+  return `${dos(Math.floor(total / SEGUNDOS_POR_MINUTO))}:${dos(total % SEGUNDOS_POR_MINUTO)}`;
+}

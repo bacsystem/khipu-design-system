@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.19] - 2026-11-12
+
+### Added
+- `AvisoResponsivo` (`patrones/aviso-responsivo`): un aviso que es una hoja inferior bajo `sm` (640 px) —a todo el ancho, con las esquinas superiores redondeadas y `env(safe-area-inset-bottom)`— y un diálogo centrado desde `sm`. Es una sola primitiva `Dialog` con clases responsivas (sin hook de `matchMedia`, sin `Drawer` ni `Sheet`): el HTML del servidor y el del cliente son iguales, así que no hay desajuste de hidratación ni doble montaje. Props: `open`, `onOpenChange`, `descartable` (por defecto `true`), `initialFocus` y el resto del popup (`finalFocus`, `data-testid`…). Con `descartable={false}` no se cierra con Escape, clic afuera ni arrastre, y como no lleva botón de cerrar, solo cierra el consumidor cambiando `open`; con `descartable`, Escape lo informa por `onOpenChange(false)`. El clic afuera nunca cierra. Con «reducir movimiento» la hoja no se desliza: solo aparece y desaparece con opacidad (`motion-safe:`).
+- `CabeceraAviso` (`icon`, `titulo`, `descripcion`, `tono`): cabecera centrada con el icono en un círculo de `size-12` del tono (los de `CabeceraDialogo`), `DialogTitle` y `DialogDescription`, que son el nombre y la descripción accesibles del aviso. `PieAviso`: los hijos van en orden «secundario, primario»; bajo `sm` se apilan al revés a todo el ancho (el primario arriba) y desde `sm` van en fila a la derecha.
+- `FranjaCuentaRegresiva` (`patrones/franja-cuenta-regresiva`; `segundos`, `etiqueta`, `tono` `peligro` | `aviso`): la etiqueta a la izquierda y, a la derecha, un reloj decorativo y el tiempo en `mm:ss` con `font-mono tabular-nums`. No es una región viva (sin `role`, `aria-live` ni `aria-atomic`): el lector de pantalla no repite el tiempo en cada tic.
+- `formatearMmSs(segundos)` (`lib/formato`): `65 → "01:05"`, los minutos no se limitan a 2 dígitos (`6000 → "100:00"`), un valor negativo o no finito da `"00:00"` y los decimales se truncan.
+- Ningún texto va fijo: el título, la descripción, la etiqueta de la franja y los botones del pie entran por props o `children`. La galería (`/ejemplo`, «Navegación y estructura») trae un aviso con la franja contando y otro no descartable.
+- `DialogPortal` y `DialogOverlay` (`ui/dialog`) se exportan, y `CIRCULO` (`patrones/cabecera-dialogo`), para armar contenedores propios sobre el mismo velo y los mismos tonos.
+
 ## [0.5.18] - 2026-11-12
 
 ### Added

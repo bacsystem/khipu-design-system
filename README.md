@@ -105,7 +105,7 @@ src/
 ├── components/apariencia-opciones.ts PALETAS · TONOS_OSCURO · claves de localStorage · código del script sin parpadeo
 ├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
 ├── components/nav/          shell · sidebar · sidebar-nav · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
-├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
+├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · aviso-responsivo · franja-cuenta-regresiva · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
 ├── components/feedback/     toast (useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)

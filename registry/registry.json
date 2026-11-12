@@ -807,6 +807,23 @@
         "lib/utils"
       ]
     },
+    "components/patrones/aviso-responsivo": {
+      "name": "aviso-responsivo",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/aviso-responsivo.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "components/patrones/cabecera-dialogo",
+        "components/ui/dialog",
+        "lib/iconos",
+        "lib/utils"
+      ]
+    },
     "components/patrones/bloque-codigo": {
       "name": "bloque-codigo",
       "type": "component",
@@ -907,6 +924,22 @@
         "components/movimiento",
         "lib/iconos",
         "lib/movimiento",
+        "lib/utils"
+      ]
+    },
+    "components/patrones/franja-cuenta-regresiva": {
+      "name": "franja-cuenta-regresiva",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/franja-cuenta-regresiva.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "lib/formato",
+        "lib/iconos",
         "lib/utils"
       ]
     },
