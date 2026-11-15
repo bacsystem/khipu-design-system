@@ -549,6 +549,13 @@ export function Galeria() {
             alto={160}
           />
         </div>
+        <GraficoBarras
+          titulo="Conteos pequeños (eje entero)"
+          enteros
+          categorias={["Lun", "Mar", "Mié", "Jue"]}
+          series={[{ nombre: "Prácticas", valores: [0, 1, 1, 0] }]}
+          alto={140}
+        />
         <TablaDatos
           columnas={COLUMNAS}
           filas={DOCS}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12",
+  "generatedAt": "2026-11-15",
   "items": {
     "components/apariencia-opciones": {
       "name": "apariencia-opciones",
@@ -36,6 +36,7 @@
       "registryDependencies": [
         "components/datos/trazo-animado",
         "components/movimiento",
+        "lib/escala-grafico",
         "lib/estilos",
         "lib/movimiento",
         "lib/utils"
@@ -1468,6 +1469,16 @@
       "category": "lib",
       "files": [
         "src/lib/exportar.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/escala-grafico": {
+      "name": "escala-grafico",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/escala-grafico.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

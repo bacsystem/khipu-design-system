@@ -5,7 +5,7 @@
 // Se regenera con `node scripts/build-registry.mjs` — nunca se edita registry.json a mano, porque
 // la fuente de verdad son los imports reales del código, no una lista mantenida aparte que se desincroniza.
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { join, relative, extname, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,9 +56,9 @@ function analizarImports(contenido) {
   return { internos: [...internos].sort(), externos: [...externos].sort() };
 }
 
-function construirRegistro() {
+export function construirRegistro() {
   const items = {};
-  const archivos = listarArchivos(join(SRC, "components")).concat([join(SRC, "lib", "estilos.ts"), join(SRC, "lib", "utils.ts"), join(SRC, "lib", "formato.ts"), join(SRC, "lib", "paginacion.ts"), join(SRC, "lib", "navegacion.ts"), join(SRC, "lib", "movimiento.ts"), join(SRC, "lib", "iconos.ts"), join(SRC, "lib", "calendario.ts"), join(SRC, "lib", "ordenar.ts"), join(SRC, "lib", "exportar.ts")]);
+  const archivos = listarArchivos(join(SRC, "components")).concat([join(SRC, "lib", "estilos.ts"), join(SRC, "lib", "utils.ts"), join(SRC, "lib", "formato.ts"), join(SRC, "lib", "paginacion.ts"), join(SRC, "lib", "navegacion.ts"), join(SRC, "lib", "movimiento.ts"), join(SRC, "lib", "iconos.ts"), join(SRC, "lib", "calendario.ts"), join(SRC, "lib", "ordenar.ts"), join(SRC, "lib", "exportar.ts"), join(SRC, "lib", "escala-grafico.ts")]);
 
   for (const rutaAbs of archivos) {
     const rutaRel = relative(SRC, rutaAbs).replace(/\\/g, "/").replace(/\.tsx?$/, "");
@@ -77,10 +77,14 @@ function construirRegistro() {
   return items;
 }
 
-const registro = {
-  generatedAt: new Date().toISOString().slice(0, 10),
-  items: construirRegistro(),
-};
+// Importarlo (para probarlo) no escribe nada: solo se escribe al ejecutarlo como script.
+// `realpathSync`: ejecutado por un symlink (`node enlace.mjs`), argv[1] es el enlace y la URL del módulo, el archivo real.
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+  const registro = {
+    generatedAt: new Date().toISOString().slice(0, 10),
+    items: construirRegistro(),
+  };
 
-writeFileSync(join(ROOT, "registry", "registry.json"), JSON.stringify(registro, null, 2) + "\n");
-console.log(`registry/registry.json actualizado con ${Object.keys(registro.items).length} items.`);
+  writeFileSync(join(ROOT, "registry", "registry.json"), JSON.stringify(registro, null, 2) + "\n");
+  console.log(`registry/registry.json actualizado con ${Object.keys(registro.items).length} items.`);
+}

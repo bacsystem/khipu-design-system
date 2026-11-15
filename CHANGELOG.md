@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.21] - 2026-11-15
+
+### Added
+- `GraficoBarras enteros` y `GraficoLineas enteros`: las marcas del eje Y son enteros (paso ≥ 1) para gráficos de conteos, que con un máximo de 1 mostraban 0,25 y 0,5. Por defecto sigue la escala de siempre. La escala sale a `lib/escala-grafico` (`escalaEje`).
+
 ## [0.5.20] - 2026-11-15
 
 ### Added
