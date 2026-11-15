@@ -13,7 +13,7 @@ const leer = (ruta) => readFileSync(join(RAIZ, ruta), "utf8").replaceAll("\r\n",
 
 const { SidebarContent } = await cargarTsx("components/nav/sidebar");
 const { SidebarNav } = await cargarTsx("components/nav/sidebar-nav");
-const { leerGruposAbiertos, guardarGruposAbiertos } = await cargarTsx("lib/navegacion");
+const { leerGruposAbiertos, guardarGruposAbiertos, reducirGrupos, grupoAbierto, ESTADO_GRUPOS_INICIAL } = await cargarTsx("lib/navegacion");
 const Icono = (props) => createElement("svg", { "data-icono": "x", ...props });
 
 const item = (href, label) => ({ href, label, icon: Icono });
@@ -175,4 +175,29 @@ test("sin localStorage, con acceso bloqueado o con JSON roto no lanza", () => {
   conAlmacenamiento({ getItem: () => "{no es json", setItem() {} }, () => assert.deepEqual(leerGruposAbiertos("k"), {}));
   conAlmacenamiento({ getItem: () => '{"a":"si","b":true,"c":1}', setItem() {} }, () => assert.deepEqual(leerGruposAbiertos("k"), { b: true }));
   assert.deepEqual(leerGruposAbiertos("k"), {});
+});
+
+// ── Lo que abre la ruta no se guarda ─────────────────────────────────────────────────────────────────────────────────
+
+test("lo que abre la ruta no entra en lo que se guarda al alternar otro grupo", () => {
+  let estado = reducirGrupos(ESTADO_GRUPOS_INICIAL, { tipo: "ruta", id: "gestion" });
+  assert.equal(grupoAbierto(estado, "gestion", false), true);
+  estado = reducirGrupos(estado, { tipo: "alternar", id: "ayuda", abierto: false });
+  assert.deepEqual(estado.elegidos, { ayuda: true }, "solo la decisión del usuario");
+  assert.equal(grupoAbierto(estado, "gestion", false), true, "sigue abierto por la ruta");
+});
+
+test("la ruta abre un grupo que estaba recordado como cerrado, y el usuario puede volver a cerrarlo", () => {
+  let estado = reducirGrupos(ESTADO_GRUPOS_INICIAL, { tipo: "recordado", guardado: { gestion: false } });
+  estado = reducirGrupos(estado, { tipo: "ruta", id: "gestion" });
+  assert.equal(grupoAbierto(estado, "gestion", false), true);
+  estado = reducirGrupos(estado, { tipo: "alternar", id: "gestion", abierto: true });
+  assert.equal(grupoAbierto(estado, "gestion", false), false);
+  assert.deepEqual(estado.elegidos, { gestion: false });
+});
+
+test("lo elegido en esta visita manda sobre lo recordado", () => {
+  let estado = reducirGrupos(ESTADO_GRUPOS_INICIAL, { tipo: "alternar", id: "a", abierto: false });
+  estado = reducirGrupos(estado, { tipo: "recordado", guardado: { a: false, b: true } });
+  assert.deepEqual(estado.elegidos, { a: true, b: true });
 });

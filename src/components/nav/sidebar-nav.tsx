@@ -5,11 +5,11 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import { m } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useReducer } from "react";
 import { FOCO, ROTULO } from "@/lib/estilos";
 import { PESO_ICONO, PESO_ICONO_ACTIVO, PESO_ICONO_FUNCIONAL } from "@/lib/iconos";
 import { RESORTE } from "@/lib/movimiento";
-import { guardarGruposAbiertos, leerGruposAbiertos, type GruposAbiertos } from "@/lib/navegacion";
+import { ESTADO_GRUPOS_INICIAL, grupoAbierto, guardarGruposAbiertos, leerGruposAbiertos, reducirGrupos } from "@/lib/navegacion";
 import { cn } from "@/lib/utils";
 
 export type ItemNav = {
@@ -75,25 +75,25 @@ export function SidebarNav({
   // Un layoutId por instancia: el sidebar de escritorio y el del menú móvil no comparten indicador.
   const idIndicador = useId();
   const idBase = useId();
-  // Solo lo que el usuario (o lo recordado) ha fijado; lo demás se deriva en el render, así un grupo que aparece después también arranca bien.
-  const [fijados, setFijados] = useState<GruposAbiertos>({});
+  // Lo que el usuario eligió (se guarda) va aparte de lo que abrió la ruta (no se guarda); lo demás se deriva en el render, así un grupo que aparece después también arranca bien.
+  const [estado, despachar] = useReducer(reducirGrupos, ESTADO_GRUPOS_INICIAL);
   const grupoActivo = grupos.find((g) => g.colapsable && contieneActiva(g, pathname));
   const activo = grupoActivo ? idGrupo(grupoActivo) : undefined;
 
   // Lo recordado se lee tras montar (en el servidor no hay localStorage), una vez por clave.
   useEffect(() => {
-    setFijados((previo) => ({ ...leerGruposAbiertos(claveAlmacenamiento), ...previo }));
+    despachar({ tipo: "recordado", guardado: leerGruposAbiertos(claveAlmacenamiento) });
   }, [claveAlmacenamiento]);
 
-  // Al llegar a una ruta, su grupo se abre aunque estuviera plegado; no se guarda (es una consecuencia de navegar, no una decisión).
+  // Al llegar a una ruta, su grupo se abre aunque estuviera plegado.
   useEffect(() => {
-    if (activo) setFijados((previo) => ({ ...previo, [activo]: true }));
+    if (activo) despachar({ tipo: "ruta", id: activo });
   }, [activo]);
 
   function alternar(id: string, abierto: boolean) {
-    const siguiente = { ...fijados, [id]: !abierto };
-    setFijados(siguiente);
-    guardarGruposAbiertos(claveAlmacenamiento, siguiente);
+    const accion = { tipo: "alternar", id, abierto } as const;
+    guardarGruposAbiertos(claveAlmacenamiento, reducirGrupos(estado, accion).elegidos);
+    despachar(accion);
   }
 
   return (
@@ -109,7 +109,7 @@ export function SidebarNav({
           );
         }
         const id = idGrupo(grupo);
-        const abierto = fijados[id] ?? abiertoPorOmision(grupo, pathname);
+        const abierto = grupoAbierto(estado, id, abiertoPorOmision(grupo, pathname));
         // El id del DOM va por posición: el del grupo puede ser su título, con espacios, que romperían `aria-controls`.
         const idPanel = `${idBase}-grupo-${indice}`;
         const accion = (abierto ? textos.contraerGrupo : textos.expandirGrupo).replace("{grupo}", grupo.titulo);
