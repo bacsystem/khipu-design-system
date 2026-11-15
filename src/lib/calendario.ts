@@ -1,10 +1,10 @@
 /**
  * Aritmética de fechas para el calendario de `EntradaFecha`. Todo es ISO `YYYY-MM-DD` en hora local: una fecha de
  * calendario no tiene zona horaria, y construirla con `new Date("2026-09-01")` (UTC) la corría un día en Lima.
- * Sin dependencias: lo usan los componentes y los tests de node.
+ * Sin dependencias de ejecución (solo un tipo de `lib/formato`): lo usan los componentes y los tests de node.
  */
 
-import type { LocaleFecha } from "./formato";
+import type { LocaleFecha } from "@/lib/formato";
 
 export type DiaCalendario = { iso: string; dia: number; delMes: boolean };
 
@@ -75,11 +75,12 @@ export function dentroDeRango(iso: string, min?: string, max?: string): boolean 
   return (!min || iso >= min) && (!max || iso <= max);
 }
 
-/** «Setiembre 2026». `mes` empieza en 0. */
 const MESES_POR_LOCALE: Record<LocaleFecha, readonly string[]> = { es: MESES, en: MESES_EN };
 
+/** «Setiembre 2026» (`es`) o «September 2026» (`en`); otro idioma cae en castellano. `mes` empieza en 0. */
 export function nombreMes(anio: number, mes: number, locale: LocaleFecha = "es"): string {
-  return `${(MESES_POR_LOCALE[locale] ?? MESES)[mes]} ${anio}`;
+  const meses = Object.hasOwn(MESES_POR_LOCALE, locale) ? MESES_POR_LOCALE[locale] : MESES;
+  return `${meses[mes]} ${anio}`;
 }
 
 /** Seis semanas (lunes a domingo) que contienen el mes; los días de los meses vecinos van con `delMes: false`. */

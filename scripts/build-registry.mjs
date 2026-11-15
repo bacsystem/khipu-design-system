@@ -46,8 +46,9 @@ function analizarImports(contenido) {
     if (especificador.startsWith("@/")) {
       internos.add(especificador.slice(2));
     } else if (especificador.startsWith(".")) {
-      // No hay imports relativos entre archivos en este repo (todo usa el alias @/), pero si
-      // aparecieran no son resolubles como item de registry independiente: se ignoran.
+      // Todo usa el alias @/. Un import relativo no es resoluble como item del registro y `khipu add` dejaría un
+      // import roto en el proyecto consumidor: se rechaza en vez de ignorarlo.
+      throw new Error(`Import relativo "${especificador}": usa el alias "@/..." para que el registro lo resuelva.`);
     } else {
       const paquete = nombrePaquete(especificador);
       if (!PAQUETES_IMPLICITOS.has(paquete)) externos.add(paquete);

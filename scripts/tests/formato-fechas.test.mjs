@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { esLocaleFecha, formatearFecha, formatearFechaHora, LOCALES_FECHA } from "../../src/lib/formato.ts";
 import { nombreMes } from "../../src/lib/calendario.ts";
+import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { cargarTsx } from "./cargar-tsx.mjs";
@@ -97,5 +98,15 @@ test("EntradaFecha escribe la fecha, el placeholder y la ✕ en el idioma, y man
   assert.ok(es.includes("15 Set 2026") && es.includes('aria-label="Quitar la fecha"'));
   assert.ok(ent({}).includes("Elegir fecha"));
   assert.ok(ent({ locale: "en", placeholder: "Elegir", valor: "" }).includes("Elegir"));
+  assert.ok(ent({ valor: "2026-09-15", locale: "en", etiquetaLimpiar: "Quitar" }).includes('aria-label="Quitar"'));
   assert.equal(ent({ valor: "2026-09-15", locale: "fr" }), es);
+});
+
+test("nombreMes ignora claves heredadas del prototipo", () => {
+  assert.equal(nombreMes(2026, 8, "__proto__"), "Setiembre 2026");
+  assert.equal(nombreMes(2026, 8, "constructor"), "Setiembre 2026");
+});
+
+test("el registro rechaza un import relativo en vez de ignorarlo", () => {
+  assert.match(readFileSync(new URL("../build-registry.mjs", import.meta.url), "utf8"), /throw new Error\(`Import relativo/);
 });
