@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.20] - 2026-11-15
+
+### Added
+- `Buscador etiquetaLimpiar`: el nombre accesible del botón de limpiar, que estaba fijo en «Limpiar búsqueda» (por defecto, el mismo). `TablaListado` se lo pasa desde `textos.limpiar` (`TextosTablaListado`), así que traducir la barra del listado también traduce ese botón.
+
 ## [0.5.19] - 2026-11-12
 
 ### Added
