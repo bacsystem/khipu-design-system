@@ -55,7 +55,7 @@ test("Buscador traduce su botón de limpiar y TablaListado se lo pasa", () => {
   const buscador = readFileSync(new URL("../../src/components/formularios/buscador.tsx", import.meta.url), "utf8");
   const listado = readFileSync(new URL("../../src/components/datos/tabla-listado.tsx", import.meta.url), "utf8");
   assert.match(buscador, /etiquetaLimpiar = "Limpiar búsqueda"/);
-  assert.match(buscador, /aria-label=\{etiquetaLimpiar\}/);
+  assert.match(buscador, /<button\s+type="button"\s+aria-label=\{etiquetaLimpiar\}/);
   assert.doesNotMatch(buscador, /aria-label="Limpiar búsqueda"/);
   assert.match(listado, /limpiar: "Limpiar búsqueda"/);
   assert.match(listado, /etiquetaLimpiar=\{textos\.limpiar\}/);
