@@ -56,7 +56,7 @@ function analizarImports(contenido) {
   return { internos: [...internos].sort(), externos: [...externos].sort() };
 }
 
-function construirRegistro() {
+export function construirRegistro() {
   const items = {};
   const archivos = listarArchivos(join(SRC, "components")).concat([join(SRC, "lib", "estilos.ts"), join(SRC, "lib", "utils.ts"), join(SRC, "lib", "formato.ts"), join(SRC, "lib", "paginacion.ts"), join(SRC, "lib", "navegacion.ts"), join(SRC, "lib", "movimiento.ts"), join(SRC, "lib", "iconos.ts"), join(SRC, "lib", "calendario.ts"), join(SRC, "lib", "ordenar.ts"), join(SRC, "lib", "exportar.ts"), join(SRC, "lib", "escala-grafico.ts")]);
 
@@ -77,10 +77,13 @@ function construirRegistro() {
   return items;
 }
 
-const registro = {
-  generatedAt: new Date().toISOString().slice(0, 10),
-  items: construirRegistro(),
-};
+// Importarlo (para probarlo) no escribe nada: solo se escribe al ejecutarlo como script.
+if (process.argv[1] && join(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const registro = {
+    generatedAt: new Date().toISOString().slice(0, 10),
+    items: construirRegistro(),
+  };
 
-writeFileSync(join(ROOT, "registry", "registry.json"), JSON.stringify(registro, null, 2) + "\n");
-console.log(`registry/registry.json actualizado con ${Object.keys(registro.items).length} items.`);
+  writeFileSync(join(ROOT, "registry", "registry.json"), JSON.stringify(registro, null, 2) + "\n");
+  console.log(`registry/registry.json actualizado con ${Object.keys(registro.items).length} items.`);
+}

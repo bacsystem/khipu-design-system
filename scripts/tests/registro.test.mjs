@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
+import { construirRegistro } from "../build-registry.mjs";
 
 const raiz = new URL("../../", import.meta.url);
 const { items } = JSON.parse(readFileSync(new URL("registry/registry.json", raiz), "utf8"));
-const IMPORT_RE = /(?:import|export)\s+(?:[^'";]*?\s+from\s+)?["']([^"']+)["']/g;
 
 test("cada archivo del registro existe", () => {
   for (const [clave, item] of Object.entries(items)) {
@@ -18,11 +18,6 @@ test("toda registryDependencies resuelve a un item del registro (la CLI no deja 
   }
 });
 
-test("el registro está al día con los imports de los archivos (npm run registry:build)", () => {
-  for (const [clave, item] of Object.entries(items)) {
-    const fuente = readFileSync(new URL(item.files[0], raiz), "utf8");
-    const internos = [...fuente.matchAll(IMPORT_RE)].map((m) => m[1]).filter((e) => e.startsWith("@/")).map((e) => e.slice(2));
-    const esperadas = [...new Set(internos)].filter((i) => i !== clave).sort();
-    assert.deepEqual(item.registryDependencies, esperadas, `${clave}: registry.json desactualizado`);
-  }
+test("el registro está al día con el código: mismos items, archivos, paquetes e imports (npm run registry:build)", () => {
+  assert.deepEqual(construirRegistro(), items);
 });
