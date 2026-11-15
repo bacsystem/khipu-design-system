@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SidebarNav textos` y `SidebarContent textosNav` (`TextosSidebarNav`: `expandirGrupo`, `contraerGrupo`, con `{grupo}` por el título; por defecto «Expandir {grupo}» / «Contraer {grupo}»), el `title` del botón. Un grupo sin `colapsable` se ve y se comporta exactamente como antes.
 
 ### Changed
-- **Pie fijo.** `SidebarContent` ya no se desplaza entero: solo la navegación hace scroll (`min-h-0 flex-1 overflow-y-auto`), y la marca, el selector, el pie y el usuario (`MenuUsuario`: perfil, tema, cerrar sesión) quedan `shrink-0` y siempre a la vista, aunque el menú tenga decenas de ítems. El pie lleva `border-t border-border/60`, como decía la guía. `Shell` ya no hace scroll del contenedor del sidebar (`overflow-hidden`) y `MobileNav` ya no envuelve el contenido en un contenedor que desplaza todo: el cajón es una columna con el mismo comportamiento.
+- **Pie fijo.** `SidebarContent` ya no se desplaza entero: solo la navegación hace scroll (`min-h-0 flex-1 overflow-y-auto`), y la marca, el selector, el pie y el usuario (`MenuUsuario`: perfil, tema, cerrar sesión) quedan `shrink-0` y siempre a la vista, aunque el menú tenga decenas de ítems. El pie lleva `border-t border-border/60`, como decía la guía. `Shell` ya no hace scroll del contenedor del sidebar (`overflow-hidden`) y `MobileNav` ya no envuelve el contenido en un contenedor que desplaza todo: el cajón es una columna con el mismo comportamiento (su hijo debe ser el `SidebarContent` directo).
 - `scripts/tests/cargar-tsx.mjs` resuelve los imports `next/link` y `next/navigation` (el ESM de Node pide la extensión) para poder renderizar `SidebarNav`.
 
 ## [0.5.22] - 2026-11-15

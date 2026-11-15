@@ -29,6 +29,13 @@ const GRUPOS: GrupoNav[] = [
       { href: "/ejemplo/api-keys", label: "API keys", icon: KeyIcon },
     ],
   },
+  {
+    // Un menú largo: solo la navegación se desplaza, el usuario del pie sigue a la vista y los grupos se pliegan.
+    titulo: "Reportes",
+    colapsable: true,
+    id: "reportes",
+    items: ["Ventas", "Compras", "Impuestos", "Clientes", "Productos", "Cobranzas", "Auditoría", "Exportaciones"].map((label) => ({ label, icon: ReceiptIcon })),
+  },
 ];
 
 export function SidebarApp() {

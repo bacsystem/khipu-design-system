@@ -52,10 +52,8 @@ const idGrupo = (grupo: GrupoNav) => grupo.id ?? grupo.titulo;
 const esActivo = (item: ItemNav, pathname: string) => Boolean(item.href) && (item.exacto ? pathname === item.href : pathname.startsWith(item.href!));
 const contieneActiva = (grupo: GrupoNav, pathname: string) => grupo.items.some((item) => esActivo(item, pathname));
 
-/** Estado inicial (igual en servidor y cliente, sin hidratar mal): abierto si lo pide el grupo o si contiene la ruta activa. */
-function abiertosIniciales(grupos: GrupoNav[], pathname: string): GruposAbiertos {
-  return Object.fromEntries(grupos.filter((g) => g.colapsable).map((g) => [idGrupo(g), Boolean(g.abiertoPorDefecto) || contieneActiva(g, pathname)]));
-}
+/** Si un grupo colapsable está abierto cuando nadie lo ha plegado ni desplegado: lo pide el grupo o contiene la ruta activa. */
+const abiertoPorOmision = (grupo: GrupoNav, pathname: string) => Boolean(grupo.abiertoPorDefecto) || contieneActiva(grupo, pathname);
 
 /**
  * Navegación del sidebar por grupos; el ítem activo se detecta por prefijo de la ruta actual y su fondo se desliza al cambiar.
@@ -77,24 +75,30 @@ export function SidebarNav({
   // Un layoutId por instancia: el sidebar de escritorio y el del menú móvil no comparten indicador.
   const idIndicador = useId();
   const idBase = useId();
-  const [abiertos, setAbiertos] = useState<GruposAbiertos>(() => abiertosIniciales(grupos, pathname));
-  const idActivo = grupos.find((g) => g.colapsable && contieneActiva(g, pathname));
-  const activo = idActivo ? idGrupo(idActivo) : undefined;
+  // Solo lo que el usuario (o lo recordado) ha fijado; lo demás se deriva en el render, así un grupo que aparece después también arranca bien.
+  const [fijados, setFijados] = useState<GruposAbiertos>({});
+  const grupoActivo = grupos.find((g) => g.colapsable && contieneActiva(g, pathname));
+  const activo = grupoActivo ? idGrupo(grupoActivo) : undefined;
 
-  // Lo recordado se lee tras montar (en el servidor no hay localStorage); el grupo de la ruta activa sigue abierto.
+  // Lo recordado se lee tras montar (en el servidor no hay localStorage), una vez por clave.
   useEffect(() => {
-    setAbiertos((previo) => ({ ...previo, ...leerGruposAbiertos(claveAlmacenamiento), ...(activo ? { [activo]: true } : {}) }));
-  }, [claveAlmacenamiento, activo]);
+    setFijados((previo) => ({ ...leerGruposAbiertos(claveAlmacenamiento), ...previo }));
+  }, [claveAlmacenamiento]);
 
-  function alternar(id: string) {
-    const siguiente = { ...abiertos, [id]: !abiertos[id] };
-    setAbiertos(siguiente);
+  // Al llegar a una ruta, su grupo se abre aunque estuviera plegado; no se guarda (es una consecuencia de navegar, no una decisión).
+  useEffect(() => {
+    if (activo) setFijados((previo) => ({ ...previo, [activo]: true }));
+  }, [activo]);
+
+  function alternar(id: string, abierto: boolean) {
+    const siguiente = { ...fijados, [id]: !abierto };
+    setFijados(siguiente);
     guardarGruposAbiertos(claveAlmacenamiento, siguiente);
   }
 
   return (
     <nav aria-label={etiqueta} className="grid w-full grid-cols-1 gap-4 px-2.5 pt-2 pb-3">
-      {grupos.map((grupo) => {
+      {grupos.map((grupo, indice) => {
         const items = grupo.items.map((item) => <ItemSidebar key={item.href ?? item.label} item={item} pathname={pathname} idIndicador={idIndicador} />);
         if (!grupo.colapsable) {
           return (
@@ -105,8 +109,9 @@ export function SidebarNav({
           );
         }
         const id = idGrupo(grupo);
-        const abierto = abiertos[id] ?? false;
-        const idPanel = `${idBase}-${id}`;
+        const abierto = fijados[id] ?? abiertoPorOmision(grupo, pathname);
+        // El id del DOM va por posición: el del grupo puede ser su título, con espacios, que romperían `aria-controls`.
+        const idPanel = `${idBase}-grupo-${indice}`;
         const accion = (abierto ? textos.contraerGrupo : textos.expandirGrupo).replace("{grupo}", grupo.titulo);
         return (
           <div key={grupo.titulo} className="grid w-full grid-cols-1 gap-0.5">
@@ -115,8 +120,8 @@ export function SidebarNav({
               aria-expanded={abierto}
               aria-controls={idPanel}
               title={accion}
-              onClick={() => alternar(id)}
-              className={cn("flex w-full min-w-0 items-center justify-between gap-2 rounded-full px-3 pt-1 pb-1.5 text-left transition-colors duration-(--duracion-rapida) ease-salida hover:text-foreground", FOCO, ROTULO)}
+              onClick={() => alternar(id, abierto)}
+              className={cn("flex min-h-8 w-full min-w-0 items-center justify-between gap-2 rounded-full px-3 pt-1 pb-1.5 text-left transition-colors duration-(--duracion-rapida) ease-salida hover:text-foreground", FOCO, ROTULO)}
             >
               <span className="truncate">{grupo.titulo}</span>
               <CaretDownIcon weight={PESO_ICONO_FUNCIONAL} aria-hidden className={cn("size-3 shrink-0 motion-safe:transition-transform motion-safe:duration-(--duracion-media) motion-safe:ease-salida", abierto ? "rotate-180" : "")} />

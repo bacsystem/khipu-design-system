@@ -232,7 +232,7 @@ No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-1
 ```
 
 - **Desktop (md ≥ 768):** sidebar flotante de **248 px** (216 px hasta 0.5.2: cortaba el nombre de la empresa y el correo): tarjeta (`bg-sidebar`) con radio 18 px y 12 px de margen sobre el lienzo, `overflow-hidden`: la tarjeta no se desplaza, solo la navegación (§6).
-- **Móvil:** el sidebar se oculta; la top bar muestra un botón hamburguesa que abre el mismo `SidebarContent` en un `Sheet` lateral (`nav/mobile-nav.tsx`), con el mismo pie fijo.
+- **Móvil:** el sidebar se oculta; la top bar muestra un botón hamburguesa que abre el mismo `SidebarContent` en un `Sheet` lateral (`nav/mobile-nav.tsx`), con el mismo pie fijo (su hijo debe ser el `SidebarContent` directo: un contenedor intermedio sin altura rompe el pie fijo).
 - **Contenido:** `grid grid-cols-1 gap-3 max-w-[1520px] mx-auto min-w-0`. Las tablas pueden desbordar horizontalmente dentro de su contenedor (`overflow-hidden rounded-xl` + `Table` con scroll), la página nunca.
 
 ---

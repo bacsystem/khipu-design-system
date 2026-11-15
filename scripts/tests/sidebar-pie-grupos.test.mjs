@@ -94,6 +94,14 @@ test("un grupo colapsable tiene un botón con aria-expanded y aria-controls al p
   }
 });
 
+test("un grupo colapsable sin id y con título de varias palabras tiene un aria-controls válido", () => {
+  const grupos = [{ titulo: "Emisión & SUNAT", colapsable: true, items: [item("/e", "Emitir")] }];
+  const marcado = renderToStaticMarkup(createElement(PathnameContext.Provider, { value: "/z" }, createElement(SidebarNav, { grupos })));
+  const controla = marcado.match(/aria-controls="([^"]*)"/)?.[1];
+  assert.match(controla, /^\S+$/, "sin espacios");
+  assert.ok(marcado.includes(`id="${controla}"`), "el panel existe con ese id");
+});
+
 test("el grupo con la ruta activa arranca abierto y los demás cerrados", () => {
   const marcado = html("/g/uno");
   const estado = (titulo) => marcado.match(new RegExp(`aria-expanded="(true|false)"[^>]*>(?:(?!</button>).)*${titulo}`))?.[1] ?? marcado.match(new RegExp(`${titulo}(?:(?!<button).)*?aria-expanded="(true|false)"`))?.[1];
@@ -110,9 +118,12 @@ test("abiertoPorDefecto abre el grupo sin ruta activa; el resto sigue cerrado", 
 
 test("los ítems de un grupo cerrado no reciben foco (inert) y los del abierto sí", () => {
   const marcado = html("/a");
-  const panel = (id) => marcado.match(new RegExp(`<div[^>]*id="[^"]*${id}[^"]*"[^>]*>`))?.[0] ?? "";
-  assert.match(panel("gestion"), /inert/);
-  assert.doesNotMatch(panel("ajustes"), /inert/);
+  const panel = (titulo) => {
+    const controla = [...marcado.matchAll(/<button[^>]*>/g)].map((m) => m[0]).find((b) => b.includes(`${titulo}"`))?.match(/aria-controls="([^"]+)"/)?.[1];
+    return marcado.match(new RegExp(`<div[^>]*id="${controla}"[^>]*>`))?.[0] ?? "";
+  };
+  assert.match(panel("Gestión"), /inert/);
+  assert.doesNotMatch(panel("Ajustes"), /inert/);
 });
 
 test("el movimiento del despliegue es motion-safe", () => {
