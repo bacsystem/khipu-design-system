@@ -231,8 +231,8 @@ No son controles y conservan su altura: las pestañas subrayadas de `Tabs` (`h-1
 └──────────────┴────────────────────────────────────────────┘
 ```
 
-- **Desktop (md ≥ 768):** sidebar flotante de **248 px** (216 px hasta 0.5.2: cortaba el nombre de la empresa y el correo): tarjeta (`bg-sidebar`) con radio 18 px y 12 px de margen sobre el lienzo, `overflow-y-auto`.
-- **Móvil:** el sidebar se oculta; la top bar muestra un botón hamburguesa que abre el mismo `SidebarContent` en un `Sheet` lateral (`nav/mobile-nav.tsx`).
+- **Desktop (md ≥ 768):** sidebar flotante de **248 px** (216 px hasta 0.5.2: cortaba el nombre de la empresa y el correo): tarjeta (`bg-sidebar`) con radio 18 px y 12 px de margen sobre el lienzo, `overflow-hidden`: la tarjeta no se desplaza, solo la navegación (§6).
+- **Móvil:** el sidebar se oculta; la top bar muestra un botón hamburguesa que abre el mismo `SidebarContent` en un `Sheet` lateral (`nav/mobile-nav.tsx`), con el mismo pie fijo.
 - **Contenido:** `grid grid-cols-1 gap-3 max-w-[1520px] mx-auto min-w-0`. Las tablas pueden desbordar horizontalmente dentro de su contenedor (`overflow-hidden rounded-xl` + `Table` con scroll), la página nunca.
 
 ---
@@ -244,7 +244,8 @@ De arriba abajo:
 1. **Cabecera (h-14, `border-b`)**: `LogoMarca` (icono 32 px con gradiente `from-primary to-primary-light`, tres nudos de khipu, texto "khipu" + ".pe" en primary) y chip `UBL 2.1` (`font-mono text-etiqueta`, `bg-secondary`).
 2. **Selector de empresa** (`nav/empresa-selector.tsx`): tarjeta `rounded-lg border-border/60 bg-muted/80 p-2`, avatar cuadrado 24 px `bg-primary` con inicial, razón social `text-control font-medium` + `RUC …` `font-mono text-etiqueta`, `ChevronsUpDown`. Popup del **mismo ancho que el disparador** (`w-(--anchor-width)`), etiqueta "Cambiar de empresa" (tipo oración), filas con `data-highlighted:bg-accent/70`, check en primary a la derecha.
 3. **Navegación** (`nav/sidebar-nav.tsx`): grupos con etiqueta `text-etiqueta font-medium text-muted-foreground` en tipo oración ("Emisión & SUNAT", "Configuración"). Ítem: píldora `rounded-full px-3 py-[7px] text-control`, icono Phosphor 18 px duotono. Estados: activo → píldora `bg-sidebar-primary text-sidebar-primary-foreground` (el acento de la paleta; en oscuro, superficie teñida con borde `acento-borde`) que se desliza entre ítems, icono relleno (`fill`); hover → `bg-sidebar-accent`; **pendiente** → texto `muted-foreground/50`, `cursor-not-allowed`, chip «Pronto» (`text-etiqueta font-medium`, `bg-secondary`, en tipo oración).
-4. **Pie (`border-t p-3`)**: tarjeta "Plan y consumo" deshabilitada (barra de progreso vacía, `— / —`, `opacity-60`, `title` próximamente) y el **menú de usuario** (§7).
+   **Grupos colapsables** (`GrupoNav colapsable`, `abiertoPorDefecto`, `id`): el rótulo del grupo pasa a ser un botón (`aria-expanded`, `aria-controls`, `title` «Expandir/Contraer {grupo}», traducible con `textos`) con un caret `CaretDownIcon` bold que gira 180° al abrir. El grupo con la ruta activa se abre solo; el estado se recuerda en `localStorage` (`khipu-sidebar-grupos`, dentro de `try/catch`). El despliegue anima `grid-template-rows` con `motion-safe:` y un grupo cerrado es `inert`. Úsalos cuando el menú tenga más de ~15 ítems; un grupo sin la opción es fijo, como siempre.
+4. **Pie (`border-t p-3`, `shrink-0`)**: siempre visible, fuera del scroll de la navegación (el scroll es `min-h-0 flex-1 overflow-y-auto` y la cabecera, el selector y el pie son `shrink-0`): tarjeta "Plan y consumo" deshabilitada (barra de progreso vacía, `— / —`, `opacity-60`, `title` próximamente) y el **menú de usuario** (§7).
 
 ## 7. Menú de usuario (`nav/menu-usuario.tsx` + `ui/menu.tsx`)
 
@@ -549,7 +550,7 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 
 | Componente | Efecto |
 |---|---|
-| `SidebarNav` | El fondo del ítem activo se desliza (`layoutId`) |
+| `SidebarNav` | El fondo del ítem activo se desliza (`layoutId`); un grupo colapsable anima su altura (`grid-template-rows`, solo `motion-safe:`) y gira su caret |
 | `TablaDatos` | La barra de acciones masivas entra y sale |
 | `NumeroAnimado` | Cuenta desde 0; úsalo como hijo de `Metrica` o `valor` de `Kpi` |
 | `Sparkline`, `GraficoLineas` (`TrazoAnimado`) | La línea se dibuja |

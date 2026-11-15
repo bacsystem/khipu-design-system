@@ -20,6 +20,10 @@ const GRUPOS: GrupoNav[] = [
   },
   {
     titulo: "Configuración",
+    // Colapsable: el título es un botón; se abre solo si la ruta activa está dentro y se recuerda en localStorage.
+    colapsable: true,
+    abiertoPorDefecto: true,
+    id: "configuracion",
     items: [
       { href: "/ejemplo/empresa", label: "Empresa", icon: ShieldCheckIcon },
       { href: "/ejemplo/api-keys", label: "API keys", icon: KeyIcon },

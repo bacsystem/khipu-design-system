@@ -9,7 +9,7 @@ export function Shell({ sidebar, topBar, children }: { sidebar: ReactNode; topBa
     <div className="flex min-h-screen">
       {/* Sidebar flotante: tarjeta de 248px con 12px de margen sobre el lienzo. */}
       <aside className="hidden w-[260px] shrink-0 py-3 pl-3 md:sticky md:top-0 md:block md:h-screen">
-        <div className="h-full overflow-x-hidden overflow-y-auto rounded-xl border border-borde-tarjeta bg-sidebar text-sidebar-foreground shadow-tarjeta">
+        <div className="h-full overflow-hidden rounded-xl border border-borde-tarjeta bg-sidebar text-sidebar-foreground shadow-tarjeta">
           {sidebar}
         </div>
       </aside>

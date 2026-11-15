@@ -25,7 +25,8 @@ function compilar(ruta) {
   compilados.add(ruta);
   const js = ts
     .transpileModule(readFileSync(resolverFuente(ruta), "utf8"), { compilerOptions: OPCIONES })
-    .outputText.replace(/from "@\/([^"]+)"/g, (_, interna) => `from ${JSON.stringify(pathToFileURL(compilar(interna)).href)}`);
+    .outputText.replace(/from "(next\/[a-z-]+)"/g, 'from "$1.js"') // el ESM de Node exige la extensión en los subpaths de next
+    .replace(/from "@\/([^"]+)"/g, (_, interna) => `from ${JSON.stringify(pathToFileURL(compilar(interna)).href)}`);
   mkdirSync(dirname(destino), { recursive: true });
   writeFileSync(destino, js);
   return destino;

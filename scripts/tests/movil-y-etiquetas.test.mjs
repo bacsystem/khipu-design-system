@@ -39,11 +39,13 @@ test("los nombres accesibles del menú, la miga y el cajón son propiedades", ()
 test("un ítem del menú puede comparar su ruta de forma exacta", () => {
   const nav = leer("src/components/nav/sidebar-nav.tsx");
   assert.match(nav, /exacto\?: boolean/);
-  assert.match(nav, /item\.exacto \? pathname === item\.href : pathname\.startsWith\(item\.href\)/);
+  assert.match(nav, /item\.exacto \? pathname === item\.href : pathname\.startsWith\(item\.href!\)/);
 });
 
-test("el cajón del teléfono se desplaza", () => {
-  assert.match(leer("src/components/nav/mobile-nav.tsx"), /overflow-y-auto/);
+// El cajón no desplaza todo: solo la navegación de SidebarContent, para que el usuario del pie no se esconda (sidebar-pie-grupos.test.mjs).
+test("en el cajón del teléfono se desplaza la navegación, no el cajón entero", () => {
+  assert.match(leer("src/components/nav/sidebar.tsx"), /min-h-0[^"]*overflow-y-auto/);
+  assert.doesNotMatch(leer("src/components/nav/mobile-nav.tsx"), /overflow-y-auto/);
 });
 
 test("el panel lateral tiene nombre accesible: su título es el del diálogo", () => {
