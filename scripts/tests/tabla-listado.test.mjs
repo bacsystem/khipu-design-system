@@ -49,3 +49,14 @@ test("TablaListado: el selector de columnas anuncia su estado y una columna con 
   assert.match(fuente, /if \(c\.tituloTexto\) return c\.tituloTexto;/);
   assert.match(fuente, /ocultables\.filter\(\(c\) => c\.ocultaInicial\)/);
 });
+
+// El botón de limpiar del `Buscador` tenía «Limpiar búsqueda» fijo: ahora es `etiquetaLimpiar` y `TablaListado` la recibe en `textos.limpiar`.
+test("Buscador traduce su botón de limpiar y TablaListado se lo pasa", () => {
+  const buscador = readFileSync(new URL("../../src/components/formularios/buscador.tsx", import.meta.url), "utf8");
+  const listado = readFileSync(new URL("../../src/components/datos/tabla-listado.tsx", import.meta.url), "utf8");
+  assert.match(buscador, /etiquetaLimpiar = "Limpiar búsqueda"/);
+  assert.match(buscador, /<button\s+type="button"\s+aria-label=\{etiquetaLimpiar\}/);
+  assert.doesNotMatch(buscador, /aria-label="Limpiar búsqueda"/);
+  assert.match(listado, /limpiar: "Limpiar búsqueda"/);
+  assert.match(listado, /etiquetaLimpiar=\{textos\.limpiar\}/);
+});

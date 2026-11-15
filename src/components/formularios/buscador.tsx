@@ -17,6 +17,7 @@ export function Buscador({
   valor,
   onCambio,
   placeholder = "Buscar…",
+  etiquetaLimpiar = "Limpiar búsqueda",
   variante = "filtro",
   className,
   ...props
@@ -30,6 +31,8 @@ export function Buscador({
   valor: string;
   onCambio: (v: string) => void;
   placeholder?: string;
+  /** Nombre accesible del botón de limpiar, para traducirlo (por defecto «Limpiar búsqueda»). */
+  etiquetaLimpiar?: string;
   variante?: "filtro" | "campo";
   className?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "value" | "onChange" | "placeholder" | "className" | "type">) {
@@ -54,7 +57,7 @@ export function Buscador({
       {valor ? (
         <button
           type="button"
-          aria-label="Limpiar búsqueda"
+          aria-label={etiquetaLimpiar}
           onClick={() => onCambio("")}
           className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded p-1 text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
         >
