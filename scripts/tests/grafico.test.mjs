@@ -63,3 +63,25 @@ test("cada barra lleva un borde de 1 px con el color de trazo (contraste no text
   assert.match(fuente, /strokeWidth=\{1\}/);
   assert.doesNotMatch(fuente, /"var\(--chart-2\)"|"var\(--chart-3\)"/);
 });
+
+import { escalaEje } from "../../src/lib/escala-grafico.ts";
+
+test("escalaEje con enteros nunca da marcas con decimales, ni con máximos pequeños", () => {
+  assert.deepEqual(escalaEje(1, 4, true), [0, 1]);
+  assert.deepEqual(escalaEje(2, 4, true), [0, 1, 2]);
+  assert.deepEqual(escalaEje(7, 4, true), [0, 2, 4, 6, 8]);
+  for (const max of [1, 2, 3, 5, 9, 13, 40, 123, 1000]) {
+    for (const m of escalaEje(max, 4, true)) assert.ok(Number.isInteger(m), `max ${max}: ${m}`);
+  }
+});
+
+test("escalaEje sin enteros conserva la escala de siempre", () => {
+  assert.deepEqual(escalaEje(1), [0, 0.25, 0.5, 0.75, 1]);
+  assert.deepEqual(escalaEje(0), [0, 1]);
+  assert.deepEqual(escalaEje(100), [0, 25, 50, 75, 100]);
+});
+
+test("los gráficos de barras y de líneas aceptan `enteros` y usan escalaEje", () => {
+  assert.equal(fuente.match(/escalaEje\(Math\.max\(\.\.\.series\.flatMap\(\(s\) => s\.valores\), 0\), 4, enteros\)/g)?.length, 2);
+  assert.equal(fuente.match(/enteros\?: boolean;/g)?.length, 2);
+});

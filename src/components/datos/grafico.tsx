@@ -4,6 +4,7 @@ import { m } from "motion/react";
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
 import { MovimientoLocal } from "@/components/movimiento";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
+import { escalaEje } from "@/lib/escala-grafico";
 import { TARJETA } from "@/lib/estilos";
 import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
@@ -15,15 +16,6 @@ export type Serie = { nombre: string; valores: number[] };
 const COLORES_BARRAS = ["var(--chart-base)", "var(--chart-destacado)", "var(--acento-3)", "var(--chart-4)", "var(--chart-5)"];
 const TRAZOS = ["var(--chart-trazo-base)", "var(--chart-trazo-destacado)", "var(--chart-trazo-3)", "var(--chart-trazo-4)", "var(--chart-trazo-5)"];
 const COLORES = ["var(--chart-1)", ...TRAZOS.slice(1)];
-
-function escala(max: number, pasos = 4): number[] {
-  if (max <= 0) return [0, 1];
-  const bruto = max / pasos;
-  const mag = 10 ** Math.floor(Math.log10(bruto));
-  const paso = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((p) => p >= bruto) ?? bruto;
-  const tope = Math.ceil(max / paso) * paso;
-  return Array.from({ length: Math.round(tope / paso) + 1 }, (_, i) => i * paso);
-}
 
 /** Leyenda en píldoras, a la derecha del título. Solo con ≥ 2 series. */
 function Leyenda({ series, colores = COLORES, trazos }: { series: Array<{ nombre: string }>; colores?: string[]; trazos?: string[] }) {
@@ -115,6 +107,7 @@ export function GraficoBarras({
   rotuloVisible,
   tituloDeCategoria,
   propiedadesDeCategoria,
+  enteros = false,
   className,
 }: {
   categorias: string[];
@@ -138,6 +131,8 @@ export function GraficoBarras({
   tituloDeCategoria?: (indice: number) => string;
   /** Atributos extra del grupo de cada categoría (`data-*`, para pruebas o analítica). */
   propiedadesDeCategoria?: (indice: number) => Record<`data-${string}`, string | number>;
+  /** Conteos (prácticas, comprobantes): las marcas del eje Y son enteros, sin 0,25 ni 0,5. Por defecto, la escala admite decimales. */
+  enteros?: boolean;
   className?: string;
 }) {
   const id = useId();
@@ -146,7 +141,7 @@ export function GraficoBarras({
   const mg = { top: 8, right: 8, bottom: 24, left: 44 };
   const w = ancho - mg.left - mg.right;
   const h = alto - mg.top - mg.bottom;
-  const ticks = escala(Math.max(...series.flatMap((s) => s.valores), 0));
+  const ticks = escalaEje(Math.max(...series.flatMap((s) => s.valores), 0), 4, enteros);
   const max = ticks[ticks.length - 1];
   const grupo = w / categorias.length;
   const barra = Math.max(4, (grupo * 0.62 - 4 * (series.length - 1)) / series.length);
@@ -232,6 +227,7 @@ export function GraficoLineas({
   formato = (v) => v.toLocaleString("en-US"),
   alto = 200,
   titulo,
+  enteros = false,
   className,
 }: {
   categorias: string[];
@@ -239,6 +235,8 @@ export function GraficoLineas({
   formato?: (v: number) => string;
   alto?: number;
   titulo?: string;
+  /** Conteos (prácticas, comprobantes): las marcas del eje Y son enteros, sin 0,25 ni 0,5. Por defecto, la escala admite decimales. */
+  enteros?: boolean;
   className?: string;
 }) {
   const id = useId();
@@ -247,7 +245,7 @@ export function GraficoLineas({
   const mg = { top: 8, right: 12, bottom: 24, left: 44 };
   const w = ancho - mg.left - mg.right;
   const h = alto - mg.top - mg.bottom;
-  const ticks = escala(Math.max(...series.flatMap((s) => s.valores), 0));
+  const ticks = escalaEje(Math.max(...series.flatMap((s) => s.valores), 0), 4, enteros);
   const max = ticks[ticks.length - 1];
   const x = (i: number) => mg.left + (categorias.length === 1 ? w / 2 : (i / (categorias.length - 1)) * w);
   const y = (v: number) => mg.top + h - (v / max) * h;
