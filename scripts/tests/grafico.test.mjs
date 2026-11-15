@@ -85,3 +85,7 @@ test("los gráficos de barras y de líneas aceptan `enteros` y usan escalaEje", 
   assert.equal(fuente.match(/escalaEje\(Math\.max\(\.\.\.series\.flatMap\(\(s\) => s\.valores\), 0\), 4, enteros\)/g)?.length, 2);
   assert.equal(fuente.match(/enteros\?: boolean;/g)?.length, 2);
 });
+
+test("`enteros` es opcional y vale false por defecto en los dos gráficos", () => {
+  assert.equal(fuente.match(/enteros = false,/g)?.length, 2);
+});
