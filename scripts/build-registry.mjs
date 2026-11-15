@@ -38,7 +38,8 @@ function nombrePaquete(especificador) {
   return especificador.startsWith("@") ? `${partes[0]}/${partes[1]}` : partes[0];
 }
 
-function analizarImports(contenido) {
+/** `archivo` (ruta del item) solo sirve para el mensaje de error. */
+export function analizarImports(contenido, archivo = "(archivo)") {
   const internos = new Set();
   const externos = new Set();
   for (const match of contenido.matchAll(IMPORT_RE)) {
@@ -48,7 +49,7 @@ function analizarImports(contenido) {
     } else if (especificador.startsWith(".")) {
       // Todo usa el alias @/. Un import relativo no es resoluble como item del registro y `khipu add` dejaría un
       // import roto en el proyecto consumidor: se rechaza en vez de ignorarlo.
-      throw new Error(`Import relativo "${especificador}": usa el alias "@/..." para que el registro lo resuelva.`);
+      throw new Error(`${archivo}: import relativo "${especificador}"; usa el alias "@/..." para que el registro lo resuelva.`);
     } else {
       const paquete = nombrePaquete(especificador);
       if (!PAQUETES_IMPLICITOS.has(paquete)) externos.add(paquete);
@@ -64,7 +65,7 @@ export function construirRegistro() {
   for (const rutaAbs of archivos) {
     const rutaRel = relative(SRC, rutaAbs).replace(/\\/g, "/").replace(/\.tsx?$/, "");
     const contenido = readFileSync(rutaAbs, "utf8");
-    const { internos, externos } = analizarImports(contenido);
+    const { internos, externos } = analizarImports(contenido, rutaRel);
     const categoria = rutaRel.split("/")[0] === "components" ? rutaRel.split("/")[1] : "lib";
     items[rutaRel] = {
       name: basename(rutaRel),

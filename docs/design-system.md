@@ -619,7 +619,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 `EntradaFecha` abre un **calendario propio** en un popover (`formularios/calendario.tsx`), no el selector nativo del navegador, que no se puede estilizar y cambiaba con cada sistema. El disparador es un `CAMPO` con icono de calendario, la fecha como «15 Set 2026» o «Sep 15, 2026» con `locale="en"` (o el `placeholder`) y un caret que gira. El valor sigue siendo ISO `YYYY-MM-DD`, con las mismas props; `conVistaPrevia` queda sin efecto.
 
-- **Calendario:** mes en español («Setiembre 2026»), semana de lunes a domingo, días de 36 px en círculo. Hoy va en el acento suave; el elegido, en `primary`. Los días fuera de `min`/`max` quedan deshabilitados. Botón «Hoy» al pie.
+- **Calendario:** mes en el idioma de `locale` («Setiembre 2026» en `es`, «September 2026» en `en`), semana de lunes a domingo, días de 36 px en círculo. Hoy va en el acento suave; el elegido, en `primary`. Los días fuera de `min`/`max` quedan deshabilitados. Botón «Hoy» al pie.
 - **Teclado** (patrón de grilla de fechas de WAI-ARIA): al abrir, el foco va al día elegido o a hoy. Flechas por día o semana, RePág/AvPág por mes (con Shift, por año), Inicio/Fin al comienzo o fin de la semana, Enter o Espacio para elegir. Al elegir, el foco vuelve al disparador.
 - **Fechas sin zona horaria:** `lib/calendario.ts` arma todo en hora local al mediodía. `new Date("2026-09-01")` es UTC y en Lima mostraba el día anterior.
 

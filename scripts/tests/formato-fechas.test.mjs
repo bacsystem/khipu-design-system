@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { esLocaleFecha, formatearFecha, formatearFechaHora, LOCALES_FECHA } from "../../src/lib/formato.ts";
 import { nombreMes } from "../../src/lib/calendario.ts";
-import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { analizarImports } from "../build-registry.mjs";
 import { cargarTsx } from "./cargar-tsx.mjs";
 
 test("formatearFecha sin locale es la de siempre (castellano)", () => {
@@ -107,6 +107,19 @@ test("nombreMes ignora claves heredadas del prototipo", () => {
   assert.equal(nombreMes(2026, 8, "constructor"), "Setiembre 2026");
 });
 
-test("el registro rechaza un import relativo en vez de ignorarlo", () => {
-  assert.match(readFileSync(new URL("../build-registry.mjs", import.meta.url), "utf8"), /throw new Error\(`Import relativo/);
+test("analizarImports rechaza cualquier import relativo y nombra el archivo", () => {
+  for (const codigo of [
+    'import { a } from "./x";',
+    'import type { A } from "../x";',
+    'export { a } from "./x";',
+    'export * from "../../x";',
+  ]) {
+    assert.throws(() => analizarImports(codigo, "components/nav/sidebar"), /components\/nav\/sidebar: import relativo/, codigo);
+  }
+});
+
+test("analizarImports resuelve el alias @/ y separa los paquetes", () => {
+  const { internos, externos } = analizarImports('import { f } from "@/lib/x";\nimport type { T } from "@/lib/formato";\nimport { m } from "motion/react";\nimport React from "react";');
+  assert.deepEqual(internos, ["lib/formato", "lib/x"]);
+  assert.deepEqual(externos, ["motion"]);
 });
