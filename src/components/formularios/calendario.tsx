@@ -2,8 +2,8 @@
 
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { DIAS_SEMANA, dentroDeRango, desdeIso, hoyIso, nombreMes, semanasDelMes, sumarDias, sumarMeses } from "@/lib/calendario";
-import { formatearFecha } from "@/lib/formato";
+import { DIAS_SEMANA, DIAS_SEMANA_EN, dentroDeRango, desdeIso, hoyIso, nombreMes, semanasDelMes, sumarDias, sumarMeses } from "@/lib/calendario";
+import { esLocaleFecha, formatearFecha, type LocaleFecha } from "@/lib/formato";
 import { OBJETIVO_TACTIL } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,11 @@ const BOTON_MES = cn(
   OBJETIVO_TACTIL,
   "grid size-8 place-items-center rounded-full text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-acento/55",
 );
+
+const TEXTOS: Record<LocaleFecha, { hoy: string; anterior: string; siguiente: string }> = {
+  es: { hoy: "Hoy", anterior: "Mes anterior", siguiente: "Mes siguiente" },
+  en: { hoy: "Today", anterior: "Previous month", siguiente: "Next month" },
+};
 
 /**
  * Calendario de un mes (lunes a domingo) para elegir una fecha. Valor ISO `YYYY-MM-DD`. Teclado como el patrón de
@@ -24,6 +29,7 @@ export function Calendario({
   min,
   max,
   conHoy = true,
+  locale = "es",
   className,
 }: {
   valor?: string;
@@ -32,8 +38,13 @@ export function Calendario({
   max?: string;
   /** Botón «Hoy» al pie (si hoy está dentro de `min`/`max`). */
   conHoy?: boolean;
+  /** Idioma de los textos y de los nombres de mes y de día (`es` por defecto; otro valor cae en `es`). */
+  locale?: LocaleFecha;
   className?: string;
 }) {
+  const idioma = esLocaleFecha(locale) ? locale : "es";
+  const textos = TEXTOS[idioma];
+  const diasSemana = idioma === "en" ? DIAS_SEMANA_EN : DIAS_SEMANA;
   const hoy = hoyIso();
   const inicial = desdeIso(valor) ? (valor as string) : hoy;
   const [foco, setFoco] = useState(inicial);
@@ -76,21 +87,21 @@ export function Calendario({
   return (
     <div className={cn("grid w-[17.5rem] gap-2", className)}>
       <div className="flex items-center justify-between">
-        <button type="button" aria-label="Mes anterior" className={BOTON_MES} onClick={() => setFoco(sumarMeses(foco, -1))}>
+        <button type="button" aria-label={textos.anterior} className={BOTON_MES} onClick={() => setFoco(sumarMeses(foco, -1))}>
           <CaretLeftIcon weight="bold" className="size-4" />
         </button>
         <span aria-live="polite" className="text-cuerpo font-semibold text-foreground">
-          {nombreMes(anio, mes)}
+          {nombreMes(anio, mes, idioma)}
         </span>
-        <button type="button" aria-label="Mes siguiente" className={BOTON_MES} onClick={() => setFoco(sumarMeses(foco, 1))}>
+        <button type="button" aria-label={textos.siguiente} className={BOTON_MES} onClick={() => setFoco(sumarMeses(foco, 1))}>
           <CaretRightIcon weight="bold" className="size-4" />
         </button>
       </div>
 
-      <table ref={grilla} role="grid" aria-label={nombreMes(anio, mes)} onKeyDown={teclado} className="w-full border-collapse">
+      <table ref={grilla} role="grid" aria-label={nombreMes(anio, mes, idioma)} onKeyDown={teclado} className="w-full border-collapse">
         <thead>
           <tr>
-            {DIAS_SEMANA.map((d) => (
+            {diasSemana.map((d) => (
               <th key={d.largo} scope="col" className="pb-1 text-center text-etiqueta font-medium text-texto-terciario">
                 <abbr title={d.largo} className="no-underline">
                   {d.corto}
@@ -114,7 +125,7 @@ export function Calendario({
                       tabIndex={d.iso === foco ? 0 : -1}
                       disabled={!habilitado}
                       aria-current={esHoy ? "date" : undefined}
-                      aria-label={formatearFecha(d.iso)}
+                      aria-label={formatearFecha(d.iso, idioma)}
                       onClick={() => onElegir(d.iso)}
                       onFocus={() => setFoco(d.iso)}
                       className={cn(
@@ -143,7 +154,7 @@ export function Calendario({
             onClick={() => onElegir(hoy)}
             className="h-7 rounded-full px-3 text-control font-medium text-foreground transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-acento/55 focus-visible:outline-none"
           >
-            Hoy
+            {textos.hoy}
           </button>
         </div>
       ) : null}

@@ -309,6 +309,9 @@ export function Galeria() {
           <Campo id="g-fecha" etiqueta="Fecha de emisión">
             <EntradaFecha id="g-fecha" valor={fecha} onCambio={setFecha} />
           </Campo>
+          <Campo id="g-fecha-en" etiqueta="Date (locale en)">
+            <EntradaFecha id="g-fecha-en" valor={fecha} onCambio={setFecha} locale="en" limpiable />
+          </Campo>
           <Campo id="g-monto" etiqueta="Importe total" ayuda="Se formatea al salir del campo">
             <EntradaMonto id="g-monto" valor={monto} onCambio={setMonto} moneda={moneda} onMoneda={setMoneda} />
           </Campo>

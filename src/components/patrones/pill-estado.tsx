@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { PESO_ICONO, type IconoComponente } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
-import type { Tono } from "./metricas";
+import type { Tono } from "@/components/patrones/metricas";
 
 const ESTILOS: Record<Tono, string> = {
   ok: "bg-success text-success-foreground",

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { SidebarNav, type GrupoNav } from "./sidebar-nav";
+import { SidebarNav, type GrupoNav } from "@/components/nav/sidebar-nav";
 
 /**
  * Contenido del sidebar (248px en desktop, cajón lateral en móvil). Se compone por slots para no acoplarlo a ninguna app:

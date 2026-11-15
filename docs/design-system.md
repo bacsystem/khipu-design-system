@@ -455,7 +455,7 @@ Para un aviso corto que pide una decisión (la sesión está por finalizar, la s
 - **Diseño**: select «Diseño» en el menú de usuario, justo debajo de Tema (`nav/selector-diseno.tsx`). Es independiente del tema: el diseño va en `<html data-diseno>` y claro/oscuro en la clase `.dark`, así que cada diseño existe en los dos modos. Ver «Diseños» en §20.
 - **Apariencia**: «Apariencia…» en el menú de usuario abre `PanelApariencia` (paleta, tono oscuro, tipografía, diseño). Ver «Apariencia» en §20.
 - **Iconos**: Phosphor; semánticos en duotono, funcionales en bold, nunca con fondo. Ver «Iconos» en §20.
-- **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
+- **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). Con `locale: "en"`: «Sep 15, 2026» y «Sep 15, 2026, 10:32»; la zona sigue siendo Lima en los dos idiomas. **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
 - **Accesibilidad**: todo disparador de menú/diálogo con `aria-label`; controles segmentados como `radiogroup`; `sr-only` para etiquetas de iconos; foco visible con `ring-ring`.
 
 ---
@@ -615,9 +615,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 ### Fechas
 
-`EntradaFecha` abre un **calendario propio** en un popover (`formularios/calendario.tsx`), no el selector nativo del navegador, que no se puede estilizar y cambiaba con cada sistema. El disparador es un `CAMPO` con icono de calendario, la fecha como «15 Set 2026» (o el `placeholder`) y un caret que gira. El valor sigue siendo ISO `YYYY-MM-DD`, con las mismas props; `conVistaPrevia` queda sin efecto.
+`EntradaFecha` y `Calendario` aceptan `locale` (`"es"` por defecto, `"en"`): fecha del disparador, mes, días de la semana, «Hoy» y «Mes anterior/siguiente» siguen el idioma; el `placeholder` y el `etiquetaLimpiar` por defecto de `EntradaFecha` también («Pick a date», «Clear date»); si se pasan, mandan. `formatearFecha(iso, locale)` y `formatearFechaHora(iso, locale)` (`lib/formato`) escriben «15 Set 2026» o «Sep 15, 2026».
 
-- **Calendario:** mes en español («Setiembre 2026»), semana de lunes a domingo, días de 36 px en círculo. Hoy va en el acento suave; el elegido, en `primary`. Los días fuera de `min`/`max` quedan deshabilitados. Botón «Hoy» al pie.
+`EntradaFecha` abre un **calendario propio** en un popover (`formularios/calendario.tsx`), no el selector nativo del navegador, que no se puede estilizar y cambiaba con cada sistema. El disparador es un `CAMPO` con icono de calendario, la fecha como «15 Set 2026» o «Sep 15, 2026» con `locale="en"` (o el `placeholder`) y un caret que gira. El valor sigue siendo ISO `YYYY-MM-DD`, con las mismas props; `conVistaPrevia` queda sin efecto.
+
+- **Calendario:** mes en el idioma de `locale` («Setiembre 2026» en `es`, «September 2026» en `en`), semana de lunes a domingo, días de 36 px en círculo. Hoy va en el acento suave; el elegido, en `primary`. Los días fuera de `min`/`max` quedan deshabilitados. Botón «Hoy» al pie.
 - **Teclado** (patrón de grilla de fechas de WAI-ARIA): al abrir, el foco va al día elegido o a hoy. Flechas por día o semana, RePág/AvPág por mes (con Shift, por año), Inicio/Fin al comienzo o fin de la semana, Enter o Espacio para elegir. Al elegir, el foco vuelve al disparador.
 - **Fechas sin zona horaria:** `lib/calendario.ts` arma todo en hora local al mediodía. `new Date("2026-09-01")` es UTC y en Lima mostraba el día anterior.
 

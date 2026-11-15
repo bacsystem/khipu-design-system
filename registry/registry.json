@@ -661,7 +661,9 @@
         "src/components/nav/sidebar.tsx"
       ],
       "dependencies": [],
-      "registryDependencies": []
+      "registryDependencies": [
+        "components/nav/sidebar-nav"
+      ]
     },
     "components/nav/theme-toggle": {
       "name": "theme-toggle",
@@ -1018,6 +1020,7 @@
       ],
       "dependencies": [],
       "registryDependencies": [
+        "components/patrones/metricas",
         "lib/iconos",
         "lib/utils"
       ]
@@ -1451,7 +1454,9 @@
         "src/lib/calendario.ts"
       ],
       "dependencies": [],
-      "registryDependencies": []
+      "registryDependencies": [
+        "lib/formato"
+      ]
     },
     "lib/ordenar": {
       "name": "ordenar",
