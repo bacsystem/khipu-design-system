@@ -5,9 +5,14 @@ import { useRef, useState } from "react";
 import { Calendario } from "@/components/formularios/calendario";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CAMPO, CONTROL_FILTRO } from "@/lib/estilos";
-import { formatearFecha, type LocaleFecha } from "@/lib/formato";
+import { esLocaleFecha, formatearFecha, type LocaleFecha } from "@/lib/formato";
 import { PESO_ICONO } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
+
+const TEXTOS: Record<LocaleFecha, { elegir: string; quitar: string }> = {
+  es: { elegir: "Elegir fecha", quitar: "Quitar la fecha" },
+  en: { elegir: "Pick a date", quitar: "Clear date" },
+};
 
 /**
  * Fecha con calendario propio en un popover (el selector nativo del navegador no se puede estilizar y cambiaba con
@@ -25,9 +30,9 @@ export function EntradaFecha({
   min,
   max,
   disabled,
-  placeholder = "Elegir fecha",
+  placeholder,
   limpiable = false,
-  etiquetaLimpiar = "Quitar la fecha",
+  etiquetaLimpiar,
   locale = "es",
   nombre,
   enBarra = false,
@@ -46,7 +51,7 @@ export function EntradaFecha({
   limpiable?: boolean;
   /** Nombre accesible de la ✕. */
   etiquetaLimpiar?: string;
-  /** Idioma de la fecha escrita y del calendario (`es` por defecto). Los textos propios (`placeholder`, `etiquetaLimpiar`) los traduce quien lo usa. */
+  /** Idioma de la fecha escrita, del calendario y de los textos por defecto (`placeholder`, `etiquetaLimpiar`); `es` por defecto. */
   locale?: LocaleFecha;
   /** Nombre del `<input type="hidden">` que lleva el ISO en un `<form>` nativo. */
   nombre?: string;
@@ -61,6 +66,9 @@ export function EntradaFecha({
   describidoPor?: string;
   className?: string;
 }) {
+  const idioma = esLocaleFecha(locale) ? locale : "es";
+  const elegir = placeholder ?? TEXTOS[idioma].elegir;
+  const quitar = etiquetaLimpiar ?? TEXTOS[idioma].quitar;
   const [abierto, setAbierto] = useState(false);
   const caja = useRef<HTMLDivElement>(null);
   const conValor = !!valor;
@@ -84,7 +92,7 @@ export function EntradaFecha({
           )}
         >
           <CalendarBlankIcon weight={PESO_ICONO} className="size-4 shrink-0 text-muted-foreground" />
-          <span className={cn("min-w-0 flex-1 truncate tabular-nums", !conValor && "text-texto-terciario")}>{conValor ? formatearFecha(valor, locale) : placeholder}</span>
+          <span className={cn("min-w-0 flex-1 truncate tabular-nums", !conValor && "text-texto-terciario")}>{conValor ? formatearFecha(valor, idioma) : elegir}</span>
           {conLimpiar ? null : (
             <CaretDownIcon weight="bold" className="size-3.5 shrink-0 text-texto-terciario transition-transform duration-(--duracion-rapida) ease-salida group-data-popup-open:rotate-180" />
           )}
@@ -93,7 +101,7 @@ export function EntradaFecha({
         <PopoverContent className="w-auto p-3" initialFocus={() => caja.current?.querySelector<HTMLElement>("button[data-iso][tabindex='0']") ?? true}>
           <div ref={caja}>
             <Calendario
-              locale={locale}
+              locale={idioma}
               valor={valor}
               min={min}
               max={max}
@@ -108,8 +116,8 @@ export function EntradaFecha({
       {conLimpiar ? (
         <button
           type="button"
-          aria-label={etiquetaLimpiar}
-          title={etiquetaLimpiar}
+          aria-label={quitar}
+          title={quitar}
           onClick={() => onCambio?.("")}
           className="absolute top-1/2 right-2 grid size-5 -translate-y-1/2 place-items-center rounded-full text-texto-terciario transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
         >

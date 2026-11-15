@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { esLocaleFecha, formatearFecha, formatearFechaHora, LOCALES_FECHA } from "../../src/lib/formato.ts";
 import { nombreMes } from "../../src/lib/calendario.ts";
-import { readFileSync } from "node:fs";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { cargarTsx } from "./cargar-tsx.mjs";
 
 test("formatearFecha sin locale es la de siempre (castellano)", () => {
   assert.equal(formatearFecha("2026-09-15"), "15 Set 2026");
@@ -44,13 +46,56 @@ test("un mes inválido devuelve el texto tal cual, no «undefined»", () => {
   assert.equal(formatearFecha("2026-13-10", "en"), "2026-13-10");
 });
 
-test("el calendario y EntradaFecha siguen el idioma", () => {
-  assert.equal(nombreMes(2026, 8), "Setiembre 2026");
-  assert.equal(nombreMes(2026, 8, "en"), "September 2026");
-  const calendario = readFileSync(new URL("../../src/components/formularios/calendario.tsx", import.meta.url), "utf8");
-  const entrada = readFileSync(new URL("../../src/components/formularios/entrada-fecha.tsx", import.meta.url), "utf8");
-  assert.match(calendario, /formatearFecha\(d\.iso, idioma\)/);
-  assert.match(calendario, /locale = "es"/);
-  assert.match(entrada, /formatearFecha\(valor, locale\)/);
-  assert.match(entrada, /<Calendario\s+locale=\{locale\}/);
+test("un ISO con offset se convierte a Lima, también al cambiar de año", () => {
+  assert.equal(formatearFechaHora("2026-09-15T23:32:00+09:00", "en"), "Sep 15, 2026, 09:32");
+  assert.equal(formatearFechaHora("2027-01-01T03:00:00Z"), "31 Dic 2026, 22:00");
+  assert.equal(formatearFechaHora("2027-01-01T03:00:00Z", "en"), "Dec 31, 2026, 22:00");
+});
+
+test("una cadena vacía se devuelve tal cual", () => {
+  assert.equal(formatearFecha(""), "");
+  assert.equal(formatearFecha("", "en"), "");
+  assert.equal(formatearFechaHora(""), "");
+});
+
+// ── Render real de Calendario y EntradaFecha ─────────────────────────────────────────────────────────────────────────
+
+const { Calendario } = await cargarTsx("components/formularios/calendario");
+const { EntradaFecha } = await cargarTsx("components/formularios/entrada-fecha");
+const html = (el) => renderToStaticMarkup(el);
+const calendario = (locale) => html(createElement(Calendario, { valor: "2026-09-15", onElegir() {}, locale }));
+
+test("Calendario en inglés: mes, días, botones y fechas sin una palabra en castellano", () => {
+  const en = calendario("en");
+  for (const texto of ["September 2026", 'aria-label="Previous month"', 'aria-label="Next month"', 'title="Monday"', 'title="Sunday"', "Today", 'aria-label="Sep 15, 2026"']) {
+    assert.ok(en.includes(texto), texto);
+  }
+  for (const castellano of ["Setiembre", "Mes anterior", "Mes siguiente", "lunes", "domingo", "Hoy", "Set 2026"]) {
+    assert.ok(!en.includes(castellano), castellano);
+  }
+});
+
+test("Calendario en castellano (por defecto y con es) es el de siempre", () => {
+  const es = calendario("es");
+  for (const texto of ["Setiembre 2026", 'aria-label="Mes anterior"', 'aria-label="Mes siguiente"', 'title="lunes"', "Hoy", 'aria-label="15 Set 2026"']) {
+    assert.ok(es.includes(texto), texto);
+  }
+  assert.equal(calendario(undefined), es);
+});
+
+test("Calendario con un idioma desconocido o null se renderiza igual que en castellano, sin errores", () => {
+  const es = calendario("es");
+  for (const raro of ["fr", null, "EN", "en-US", ""]) assert.equal(calendario(raro), es, String(raro));
+});
+
+test("EntradaFecha escribe la fecha, el placeholder y la ✕ en el idioma, y mandan los que se pasan", () => {
+  const ent = (props) => html(createElement(EntradaFecha, { id: "f", limpiable: true, ...props }));
+  const en = ent({ valor: "2026-09-15", locale: "en" });
+  assert.ok(en.includes("Sep 15, 2026") && en.includes('aria-label="Clear date"'));
+  assert.ok(ent({ locale: "en" }).includes("Pick a date"));
+  const es = ent({ valor: "2026-09-15" });
+  assert.ok(es.includes("15 Set 2026") && es.includes('aria-label="Quitar la fecha"'));
+  assert.ok(ent({}).includes("Elegir fecha"));
+  assert.ok(ent({ locale: "en", placeholder: "Elegir", valor: "" }).includes("Elegir"));
+  assert.equal(ent({ valor: "2026-09-15", locale: "fr" }), es);
 });

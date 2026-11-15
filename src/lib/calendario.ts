@@ -4,6 +4,8 @@
  * Sin dependencias: lo usan los componentes y los tests de node.
  */
 
+import type { LocaleFecha } from "./formato";
+
 export type DiaCalendario = { iso: string; dia: number; delMes: boolean };
 
 /** Nombres de mes del calendario (en Perú se escribe «Setiembre»). */
@@ -74,8 +76,10 @@ export function dentroDeRango(iso: string, min?: string, max?: string): boolean 
 }
 
 /** «Setiembre 2026». `mes` empieza en 0. */
-export function nombreMes(anio: number, mes: number, locale: "es" | "en" = "es"): string {
-  return `${(locale === "en" ? MESES_EN : MESES)[mes]} ${anio}`;
+const MESES_POR_LOCALE: Record<LocaleFecha, readonly string[]> = { es: MESES, en: MESES_EN };
+
+export function nombreMes(anio: number, mes: number, locale: LocaleFecha = "es"): string {
+  return `${(MESES_POR_LOCALE[locale] ?? MESES)[mes]} ${anio}`;
 }
 
 /** Seis semanas (lunes a domingo) que contienen el mes; los días de los meses vecinos van con `delMes: false`. */

@@ -455,7 +455,7 @@ Para un aviso corto que pide una decisión (la sesión está por finalizar, la s
 - **Diseño**: select «Diseño» en el menú de usuario, justo debajo de Tema (`nav/selector-diseno.tsx`). Es independiente del tema: el diseño va en `<html data-diseno>` y claro/oscuro en la clase `.dark`, así que cada diseño existe en los dos modos. Ver «Diseños» en §20.
 - **Apariencia**: «Apariencia…» en el menú de usuario abre `PanelApariencia` (paleta, tono oscuro, tipografía, diseño). Ver «Apariencia» en §20.
 - **Iconos**: Phosphor; semánticos en duotono, funcionales en bold, nunca con fondo. Ver «Iconos» en §20.
-- **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
+- **Fechas**: `formatearFecha("2026-09-15") → "15 Set 2026"`; `formatearFechaHora(iso) → "15 Set 2026, 10:32"` en zona Lima (`lib/formato.ts`). Con `locale: "en"`: «Sep 15, 2026» y «Sep 15, 2026, 10:32»; la zona sigue siendo Lima en los dos idiomas. **Montos**: `S/ 2,000.00` / `$ 5.00` (`formatearMonto`). **Correlativos**: 8 dígitos con ceros (`F001-00000126`).
 - **Accesibilidad**: todo disparador de menú/diálogo con `aria-label`; controles segmentados como `radiogroup`; `sr-only` para etiquetas de iconos; foco visible con `ring-ring`.
 
 ---
