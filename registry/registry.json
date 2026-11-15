@@ -644,12 +644,14 @@
         "src/components/nav/sidebar-nav.tsx"
       ],
       "dependencies": [
+        "@phosphor-icons/react",
         "motion"
       ],
       "registryDependencies": [
         "lib/estilos",
         "lib/iconos",
         "lib/movimiento",
+        "lib/navegacion",
         "lib/utils"
       ]
     },

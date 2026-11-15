@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.23] - 2026-11-15
+
+### Added
+- `GrupoNav colapsable` / `abiertoPorDefecto` / `id` (`nav/sidebar-nav`): un grupo del sidebar puede plegarse desde su título, que pasa a ser un botón con `aria-expanded` y `aria-controls` (teclado: Tab, Enter y Espacio). El grupo que contiene la ruta activa se abre solo, también al navegar; el resto arranca cerrado salvo `abiertoPorDefecto`. El estado se recuerda en `localStorage` (`CLAVE_GRUPOS_NAV`, o `claveAlmacenamiento`) dentro de un `try/catch`: sin almacenamiento, con acceso bloqueado o con JSON roto funciona igual, solo que no recuerda (`leerGruposAbiertos`, `guardarGruposAbiertos` en `lib/navegacion`). El despliegue anima la altura con `grid-template-rows` solo con `motion-safe:` (con «reducir movimiento» abre y cierra de golpe) y un grupo cerrado es `inert`: sus ítems salen del teclado y del lector de pantalla. `id` identifica al grupo en el estado recordado (por defecto, el título): ponlo si el título se traduce.
+- `SidebarNav textos` y `SidebarContent textosNav` (`TextosSidebarNav`: `expandirGrupo`, `contraerGrupo`, con `{grupo}` por el título; por defecto «Expandir {grupo}» / «Contraer {grupo}»), el `title` del botón. Un grupo sin `colapsable` se ve y se comporta exactamente como antes.
+
+### Changed
+- **Pie fijo.** `SidebarContent` ya no se desplaza entero: solo la navegación hace scroll (`min-h-0 flex-1 overflow-y-auto`), y la marca, el selector, el pie y el usuario (`MenuUsuario`: perfil, tema, cerrar sesión) quedan `shrink-0` y siempre a la vista, aunque el menú tenga decenas de ítems. El pie lleva `border-t border-border/60`, como decía la guía. `Shell` ya no hace scroll del contenedor del sidebar (`overflow-hidden`) y `MobileNav` ya no envuelve el contenido en un contenedor que desplaza todo: el cajón es una columna con el mismo comportamiento (su hijo debe ser el `SidebarContent` directo).
+- `scripts/tests/cargar-tsx.mjs` resuelve los imports `next/link` y `next/navigation` (el ESM de Node pide la extensión) para poder renderizar `SidebarNav`.
+
 ## [0.5.22] - 2026-11-15
 
 ### Added

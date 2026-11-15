@@ -20,10 +20,21 @@ const GRUPOS: GrupoNav[] = [
   },
   {
     titulo: "Configuración",
+    // Colapsable: el título es un botón; se abre solo si la ruta activa está dentro y se recuerda en localStorage.
+    colapsable: true,
+    abiertoPorDefecto: true,
+    id: "configuracion",
     items: [
       { href: "/ejemplo/empresa", label: "Empresa", icon: ShieldCheckIcon },
       { href: "/ejemplo/api-keys", label: "API keys", icon: KeyIcon },
     ],
+  },
+  {
+    // Un menú largo: solo la navegación se desplaza, el usuario del pie sigue a la vista y los grupos se pliegan.
+    titulo: "Reportes",
+    colapsable: true,
+    id: "reportes",
+    items: ["Ventas", "Compras", "Impuestos", "Clientes", "Productos", "Cobranzas", "Auditoría", "Exportaciones"].map((label) => ({ label, icon: ReceiptIcon })),
   },
 ];
 
