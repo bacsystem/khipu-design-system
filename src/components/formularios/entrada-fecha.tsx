@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { Calendario } from "@/components/formularios/calendario";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CAMPO, CONTROL_FILTRO } from "@/lib/estilos";
-import { formatearFecha } from "@/lib/formato";
+import { formatearFecha, type LocaleFecha } from "@/lib/formato";
 import { PESO_ICONO } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +28,7 @@ export function EntradaFecha({
   placeholder = "Elegir fecha",
   limpiable = false,
   etiquetaLimpiar = "Quitar la fecha",
+  locale = "es",
   nombre,
   enBarra = false,
   invalido,
@@ -45,6 +46,8 @@ export function EntradaFecha({
   limpiable?: boolean;
   /** Nombre accesible de la ✕. */
   etiquetaLimpiar?: string;
+  /** Idioma de la fecha escrita y del calendario (`es` por defecto). Los textos propios (`placeholder`, `etiquetaLimpiar`) los traduce quien lo usa. */
+  locale?: LocaleFecha;
   /** Nombre del `<input type="hidden">` que lleva el ISO en un `<form>` nativo. */
   nombre?: string;
   /** Sin efecto desde 0.5.0: el disparador ya muestra la fecha formateada. Se conserva por compatibilidad. */
@@ -81,7 +84,7 @@ export function EntradaFecha({
           )}
         >
           <CalendarBlankIcon weight={PESO_ICONO} className="size-4 shrink-0 text-muted-foreground" />
-          <span className={cn("min-w-0 flex-1 truncate tabular-nums", !conValor && "text-texto-terciario")}>{conValor ? formatearFecha(valor) : placeholder}</span>
+          <span className={cn("min-w-0 flex-1 truncate tabular-nums", !conValor && "text-texto-terciario")}>{conValor ? formatearFecha(valor, locale) : placeholder}</span>
           {conLimpiar ? null : (
             <CaretDownIcon weight="bold" className="size-3.5 shrink-0 text-texto-terciario transition-transform duration-(--duracion-rapida) ease-salida group-data-popup-open:rotate-180" />
           )}
@@ -90,6 +93,7 @@ export function EntradaFecha({
         <PopoverContent className="w-auto p-3" initialFocus={() => caja.current?.querySelector<HTMLElement>("button[data-iso][tabindex='0']") ?? true}>
           <div ref={caja}>
             <Calendario
+              locale={locale}
               valor={valor}
               min={min}
               max={max}

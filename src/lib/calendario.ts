@@ -9,6 +9,8 @@ export type DiaCalendario = { iso: string; dia: number; delMes: boolean };
 /** Nombres de mes del calendario (en Perú se escribe «Setiembre»). */
 const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
 
+const MESES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 /** Encabezados de columna, semana de lunes a domingo. */
 export const DIAS_SEMANA = [
   { corto: "L", largo: "lunes" },
@@ -18,6 +20,16 @@ export const DIAS_SEMANA = [
   { corto: "V", largo: "viernes" },
   { corto: "S", largo: "sábado" },
   { corto: "D", largo: "domingo" },
+];
+
+export const DIAS_SEMANA_EN = [
+  { corto: "M", largo: "Monday" },
+  { corto: "T", largo: "Tuesday" },
+  { corto: "W", largo: "Wednesday" },
+  { corto: "T", largo: "Thursday" },
+  { corto: "F", largo: "Friday" },
+  { corto: "S", largo: "Saturday" },
+  { corto: "S", largo: "Sunday" },
 ];
 
 const dosCifras = (n: number) => String(n).padStart(2, "0");
@@ -62,8 +74,8 @@ export function dentroDeRango(iso: string, min?: string, max?: string): boolean 
 }
 
 /** «Setiembre 2026». `mes` empieza en 0. */
-export function nombreMes(anio: number, mes: number): string {
-  return `${MESES[mes]} ${anio}`;
+export function nombreMes(anio: number, mes: number, locale: "es" | "en" = "es"): string {
+  return `${(locale === "en" ? MESES_EN : MESES)[mes]} ${anio}`;
 }
 
 /** Seis semanas (lunes a domingo) que contienen el mes; los días de los meses vecinos van con `delMes: false`. */

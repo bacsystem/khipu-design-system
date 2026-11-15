@@ -1,7 +1,11 @@
 const SIMBOLOS: Record<string, string> = { PEN: "S/", USD: "$" };
 
 /** Idiomas de las fechas escritas: castellano (por defecto) e inglés. */
-export type LocaleFecha = "es" | "en";
+export const LOCALES_FECHA = ["es", "en"] as const;
+export type LocaleFecha = (typeof LOCALES_FECHA)[number];
+
+/** ¿Es un idioma que sabemos escribir? Para acotar lo que llega de fuera (cookie, `useLocale()`, JS sin tipos). */
+export const esLocaleFecha = (valor: unknown): valor is LocaleFecha => LOCALES_FECHA.some((l) => l === valor);
 
 const MESES: Record<LocaleFecha, readonly string[]> = {
   es: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Dic"],
@@ -37,10 +41,12 @@ export function sumarDias(iso: string, dias: number): string {
 
 /** Fecha ISO `YYYY-MM-DD` a texto: «15 Nov 2026» (`es`, por defecto) o «Nov 15, 2026» (`en`). Si no es una fecha, la devuelve tal cual. */
 export function formatearFecha(iso: string, locale: LocaleFecha = "es"): string {
+  // Un idioma desconocido (`fr`, `null`) cae en castellano en ejecución, aunque el tipo no lo permita.
+  const idioma = esLocaleFecha(locale) ? locale : "es";
   const [anio, mes, dia] = iso.split("-").map(Number);
-  const nombreMes = MESES[locale]?.[mes - 1];
+  const nombreMes = MESES[idioma][mes - 1];
   if (!anio || !mes || !dia || !nombreMes) return iso;
-  return locale === "en" ? `${nombreMes} ${dia}, ${anio}` : `${dia} ${nombreMes} ${anio}`;
+  return idioma === "en" ? `${nombreMes} ${dia}, ${anio}` : `${dia} ${nombreMes} ${anio}`;
 }
 
 /** Instante ISO (UTC) a fecha y hora de Lima: «15 Set 2026, 10:32» (`es`, por defecto) o «Sep 15, 2026, 10:32» (`en`). */

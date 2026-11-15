@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.22] - 2026-11-15
 
 ### Added
-- `formatearFecha(iso, locale)` y `formatearFechaHora(iso, locale)` (`lib/formato`) aceptan `"es"` (por defecto) o `"en"`: los meses salen en el idioma pedido («15 Set 2026» / «Sep 15, 2026»), así que una app en inglés ya no dice «Set». Sin pasar `locale` el resultado es exactamente el de antes. Exporta el tipo `LocaleFecha`.
+- `formatearFecha(iso, locale)` y `formatearFechaHora(iso, locale)` (`lib/formato`) aceptan `"es"` (por defecto) o `"en"`: los meses salen en el idioma pedido («15 Set 2026» / «Sep 15, 2026»), así que una app en inglés ya no dice «Set». Sin pasar `locale` el resultado es exactamente el de antes. Exporta `LocaleFecha`, `LOCALES_FECHA` y `esLocaleFecha()`. Un idioma desconocido (`fr`, `null`) cae en castellano en ejecución. `EntradaFecha locale` y `Calendario locale` hacen lo mismo con la fecha del disparador, los nombres de mes y de día, «Hoy» y «Mes anterior/siguiente» (`nombreMes(anio, mes, locale)`, `DIAS_SEMANA_EN`).
+
+### Fixed
+- `formatearFecha` con un mes fuera de 1–12 («2026-13-10») devolvía «10 undefined 2026»; ahora devuelve el texto tal cual, como con cualquier otra cosa que no sea una fecha.
 
 ## [0.5.21] - 2026-11-15
 
