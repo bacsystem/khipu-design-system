@@ -5,7 +5,7 @@
 // Se regenera con `node scripts/build-registry.mjs` — nunca se edita registry.json a mano, porque
 // la fuente de verdad son los imports reales del código, no una lista mantenida aparte que se desincroniza.
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { join, relative, extname, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -78,7 +78,8 @@ export function construirRegistro() {
 }
 
 // Importarlo (para probarlo) no escribe nada: solo se escribe al ejecutarlo como script.
-if (process.argv[1] && join(process.argv[1]) === fileURLToPath(import.meta.url)) {
+// `realpathSync`: ejecutado por un symlink (`node enlace.mjs`), argv[1] es el enlace y la URL del módulo, el archivo real.
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const registro = {
     generatedAt: new Date().toISOString().slice(0, 10),
     items: construirRegistro(),
