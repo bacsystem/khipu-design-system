@@ -48,9 +48,12 @@ export const CONTROL_FILTRO = "h-control rounded-full border border-border bg-ca
 // Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, o vistas que son enlaces): caja de h-control con segmentos de h-7.
 // `min-h-control` y no `h-control`: con muchas opciones la caja se parte en filas en vez de desbordarse, y con una sola fila mide igual.
 export const SEGMENTADO = "inline-flex min-h-control w-fit flex-wrap items-center gap-0.5 rounded-full bg-secondary p-[3px]";
-/** Segmento sin fondo de activo: para `Tabs`, que pinta el activo con un indicador que se desliza. */
+/**
+ * Segmento sin fondo de activo: para `Tabs`, que pinta el activo con un indicador que se desliza. El anillo de foco es **hacia dentro** (`ring-inset`):
+ * la caja segmentada de `Tabs` y `TabsRuta` se desplaza en horizontal (`overflow-x-auto`) y recorta también en vertical.
+ */
 export const SEGMENTO_BASE =
-  "relative inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground aria-[current=page]:text-foreground [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+  "relative inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground aria-[current=page]:text-foreground [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
 // El segmento activo se marca con `data-active` (base-ui) o con `aria-current="page"` (un enlace a la vista actual).
 // En oscuro el activo usa `input` (blanco translúcido): `card` es más oscuro que `secondary` y el activo se hundiría.
 export const SEGMENTO = `${SEGMENTO_BASE} data-active:bg-card data-active:shadow-sm dark:data-active:bg-input aria-[current=page]:bg-card aria-[current=page]:shadow-sm dark:aria-[current=page]:bg-input`;
@@ -131,3 +134,16 @@ export const ANIMACION_POPUP =
 // Panel de sugerencias/opciones de un combobox de búsqueda (Combobox, Autocomplete).
 export const POPUP_LISTA =
   "max-h-72 w-(--anchor-width) min-w-56 overflow-y-auto rounded-xl bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-border outline-none";
+/** Tono del contador de una pestaña: los de estado (`ok`, `aviso`, `info`) o `neutro` (por defecto, que en la pestaña activa toma el acento). */
+export type TonoContadorTab = "ok" | "aviso" | "info" | "neutro";
+const CONTADOR_TONO_ESTADO = {
+  ok: "bg-success text-success-foreground",
+  aviso: "bg-warning text-warning-foreground",
+  info: "bg-accent text-accent-foreground",
+} as const;
+/**
+ * Clases de color del contador de una pestaña (`Tabs`, `TabsRuta`): el tono de estado pedido, o, sin tono / `neutro`, `neutroActivo` (cada componente
+ * indica cómo detecta su pestaña activa: `in-data-active:` en `Tabs`, `group-aria-[current=page]:` en `TabsRuta`). Se añade a `CONTADOR_PESTANA`.
+ */
+export const colorContadorPestana = (tono: TonoContadorTab | undefined, neutroActivo: string): string =>
+  tono === undefined || tono === "neutro" ? neutroActivo : CONTADOR_TONO_ESTADO[tono];

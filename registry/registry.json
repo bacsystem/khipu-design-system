@@ -911,6 +911,7 @@
       ],
       "registryDependencies": [
         "lib/estilos",
+        "lib/navegacion",
         "lib/utils"
       ]
     },

@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, type ReactNode } from "react";
-import { CONTADOR_PESTANA, PESTANA_LINEA_BASE, SEGMENTADO, SEGMENTO } from "@/lib/estilos";
-import { desplazamientoCentrado, indiceActivoRuta } from "@/lib/navegacion";
+import { CONTADOR_PESTANA, PESTANA_LINEA_BASE, SEGMENTADO, SEGMENTO, colorContadorPestana, type TonoContadorTab } from "@/lib/estilos";
+import { centrarEnContenedor, indiceActivoRuta } from "@/lib/navegacion";
 import { cn } from "@/lib/utils";
 
-/** Tono del contador: los de estado (`ok`, `aviso`, `info`) o `neutro` (por defecto, que en la pestaña activa toma el acento). */
-export type TonoContadorTab = "ok" | "aviso" | "info" | "neutro";
+export type { TonoContadorTab };
 
 export type ItemTabsRuta = {
   /** Ruta de la app (empieza por `/`); con i18n por segmento, con el idioma incluido (`usePathname` lo trae). Query y hash no cuentan para la activa. */
@@ -30,12 +29,6 @@ const PESTANA_LINEA = cn(
   "after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-foreground after:opacity-0 after:transition-opacity aria-[current=page]:after:opacity-100",
 );
 const CONTADOR_NEUTRO = "group-aria-[current=page]:bg-acento group-aria-[current=page]:text-acento-texto";
-const CONTADOR_TONO: Record<TonoContadorTab, string> = {
-  ok: "bg-success text-success-foreground",
-  aviso: "bg-warning text-warning-foreground",
-  info: "bg-accent text-accent-foreground",
-  neutro: CONTADOR_NEUTRO,
-};
 // En móvil las pestañas que no entran se desplazan en horizontal, sin barra a la vista (si no, empujaban la página entera).
 const DESPLAZABLE = "max-w-full overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
@@ -71,14 +64,7 @@ export function TabsRuta({
   useEffect(() => {
     const nav = navRef.current;
     const enlace = nav?.querySelector<HTMLElement>('[aria-current="page"]');
-    if (!nav || !enlace || nav.scrollWidth <= nav.clientWidth) return;
-    const n = nav.getBoundingClientRect();
-    const e = enlace.getBoundingClientRect();
-    const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    nav.scrollTo({
-      left: desplazamientoCentrado({ izquierda: n.left + nav.clientLeft, ancho: nav.clientWidth, scrollLeft: nav.scrollLeft }, { izquierda: e.left, ancho: e.width }),
-      behavior: reducido ? "auto" : "smooth",
-    });
+    if (nav && enlace) centrarEnContenedor(nav, enlace);
   }, [pathname]);
 
   return (
@@ -88,7 +74,7 @@ export function TabsRuta({
           <li key={item.href} className="flex">
             <Link href={item.href} aria-current={i === activo ? "page" : undefined} className={estilo === "linea" ? PESTANA_LINEA : cn("group", SEGMENTO)}>
               {item.etiqueta}
-              {item.contador != null ? <span className={cn(CONTADOR_PESTANA, CONTADOR_TONO[item.tonoContador ?? "neutro"])}>{item.contador}</span> : null}
+              {item.contador != null ? <span className={cn(CONTADOR_PESTANA, colorContadorPestana(item.tonoContador, CONTADOR_NEUTRO))}>{item.contador}</span> : null}
             </Link>
           </li>
         ))}
