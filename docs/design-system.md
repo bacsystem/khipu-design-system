@@ -506,12 +506,12 @@ Generado desde `src/` (`npm run docs:build`; la CI lo comprueba): no se edita a 
 | `components` | `apariencia`, `apariencia-opciones`, `diseno`, `disenos`, `movimiento`, `providers`, `script-diseno` |
 | `components/datos` | `grafico`, `kpi`, `lista-datos`, `tabla-datos`, `tabla-listado`, `timeline`, `trazo-animado` |
 | `components/feedback` | `alerta`, `banner`, `estado-vacio`, `progreso`, `skeleton`, `spinner`, `toast`, `tooltip` |
-| `components/formularios` | `autocomplete`, `buscador`, `calendario`, `campo`, `casilla`, `combobox`, `contrasena`, `deslizador`, `entrada-fecha`, `entrada-monto`, `entrada-rango-fechas`, `opciones`, `select-campo`, `stepper-numerico`, `zona-archivos` |
+| `components/formularios` | `autocomplete`, `buscador`, `calendario`, `campo`, `casilla`, `combobox`, `contrasena`, `deslizador`, `entrada-decimal`, `entrada-fecha`, `entrada-monto`, `entrada-rango-fechas`, `opciones`, `select-campo`, `stepper-numerico`, `zona-archivos` |
 | `components/nav` | `barra-inferior`, `centro-notificaciones`, `logo`, `menu-usuario`, `mobile-nav`, `panel-apariencia`, `rail`, `selector-apariencia`, `selector-contexto`, `selector-diseno`, `shell`, `sidebar`, `sidebar-nav`, `theme-toggle`, `top-bar` |
 | `components/navegacion` | `acordeon`, `dialogo-confirmacion`, `menu-acciones`, `paleta`, `panel-lateral`, `pasos`, `tabs`, `tabs-ruta` |
 | `components/patrones` | `aviso-responsivo`, `bloque-codigo`, `boton-async`, `boton-copiar`, `cabecera-dialogo`, `cabecera-pagina`, `cabecera-seccion`, `confirmacion-en-linea`, `franja-cuenta-regresiva`, `metricas`, `metricas-desplazable`, `numero-animado`, `panel-quitable`, `pie-tabla`, `pill-estado`, `tarjeta-destacada` |
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
-| `lib` | `calendario`, `cola-toast`, `columnas-visibles`, `escala-grafico`, `estilos`, `exportar`, `formato`, `iconos`, `movimiento`, `navegacion`, `ordenar`, `paginacion`, `rail`, `utils` |
+| `lib` | `calendario`, `cola-toast`, `columnas-visibles`, `decimal`, `escala-grafico`, `estilos`, `exportar`, `formato`, `iconos`, `movimiento`, `navegacion`, `ordenar`, `paginacion`, `rail`, `utils` |
 <!-- /generado:componentes -->
 
 ## 20. Kit reutilizable
