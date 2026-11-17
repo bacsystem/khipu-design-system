@@ -14,7 +14,7 @@ import { EstadoVacio } from "@/components/feedback/estado-vacio";
 import { ProgresoCircular, ProgresoLineal } from "@/components/feedback/progreso";
 import { Skeleton, SkeletonMetricas } from "@/components/feedback/skeleton";
 import { Spinner } from "@/components/feedback/spinner";
-import { useToast } from "@/components/feedback/toast";
+import { toast } from "@/components/feedback/toast";
 import { Tooltip } from "@/components/feedback/tooltip";
 import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
 import { Autocomplete } from "@/components/formularios/autocomplete";
@@ -104,9 +104,13 @@ const COLUMNAS_LISTADO: ColumnaListado<Doc>[] = COLUMNAS.map((c) =>
         : c,
 );
 
+/** Función suelta, fuera de cualquier componente: `toast` no necesita hooks. */
+function guardarBorrador() {
+  toast.aviso("Borrador guardado", "Se llamó a toast desde una función normal.");
+}
+
 const SECCION = cn(TARJETA, ENTRADA, "grid gap-4 px-5 py-4");
 export function Galeria() {
-  const toast = useToast();
   const [confirmar, setConfirmar] = useState(false);
   const [panel, setPanel] = useState(false);
   const [paleta, setPaleta] = useState(false);
@@ -194,6 +198,9 @@ export function Galeria() {
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={ACCION_SECUNDARIA} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
+          </button>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={guardarBorrador}>
+            Toast desde una función
           </button>
           <button type="button" className={ACCION_SECUNDARIA} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
             Toast error con acción
