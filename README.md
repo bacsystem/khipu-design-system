@@ -85,7 +85,7 @@ import { PALETAS, TONOS_OSCURO } from "khipu-design-system/apariencia-opciones";
 ```
 
 - Cada módulo conserva su `"use client"`: los que usan hooks o callbacks son componentes cliente; `ui/button` (y `buttonVariants`), `ui/input`, `ui/card`, `feedback/alerta`, etc. no lo llevan y se pueden usar —y llamar— desde un Server Component.
-- **`nav/*` es un export aparte** (shell, sidebar, top bar, selector de contexto, menú de usuario, mobile nav, theme toggle): dependen del router de Next (`next/link`, `usePathname`) y de `next-themes`, y una app suele tener su propio shell. Están disponibles, pero no son parte del núcleo estable: si tu app ya tiene su navegación, no los importes. `navegacion/paleta` también usa `useRouter`. **Con Next 16 y `cacheComponents`**, `SidebarNav`, `TopBar` y `MobileNav` usan `usePathname` y deben ir (ellos o su padre) dentro de `<Suspense>`; sin él, `next build` falla en las rutas dinámicas con «usePathname() in a Client Component outside of <Suspense>». Sin `cacheComponents` (el caso por defecto) no hace falta.
+- **`nav/*` es un export aparte** (shell, sidebar, top bar, selector de contexto, menú de usuario, mobile nav, theme toggle): dependen del router de Next (`next/link`, `usePathname`) y de `next-themes`, y una app suele tener su propio shell. Están disponibles, pero no son parte del núcleo estable: si tu app ya tiene su navegación, no los importes. `navegacion/paleta` también usa `useRouter`. **Con Next 16 y `cacheComponents`**, `SidebarNav`, `TopBar`, `MobileNav` y `BarraInferior` usan `usePathname` y deben ir (ellos o su padre) dentro de `<Suspense>`; sin él, `next build` falla en las rutas dinámicas con «usePathname() in a Client Component outside of <Suspense>». Sin `cacheComponents` (el caso por defecto) no hace falta.
 - No hay un `index` que lo exporte todo, a propósito: un barrel mezclaría módulos cliente y servidor y obligaría al bundler a cargar todos los componentes.
 
 **Mantenerlo** — antes de cada tag corre `npm run verify:next15`: instala `next@15.5.28` sin guardarlo (`npm i --no-save`), compila y verifica el paquete y corre los tests, porque el repo solo desarrolla con Next 16 y el peer promete también 15.5 (el portal sigue ahí); después restaura con `npm ci`. `npm run build:paquete` compila a `dist/`; `npm run verify:paquete` compila y falla si un componente de `src/` no tiene subpath en `exports`, si un subpath no resuelve a su `.js` y su `.d.ts`, si un módulo no carga o si el CSS apunta a algo que no existe. Una carpeta nueva en `src/components/` necesita su entrada `"./<carpeta>/*"` en `package.json`. La receta para migrar el portal de khipu está en [`docs/adopcion-en-el-portal.md`](docs/adopcion-en-el-portal.md).
@@ -104,13 +104,13 @@ src/
 ├── components/apariencia.tsx AparienciaProvider · useApariencia (paleta y tono oscuro) — ver docs/design-system.md «Apariencia»
 ├── components/apariencia-opciones.ts PALETAS · TONOS_OSCURO · claves de localStorage · código del script sin parpadeo
 ├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
-├── components/nav/          shell · sidebar · sidebar-nav · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
+├── components/nav/          shell · sidebar · sidebar-nav · rail (BotonRail) · barra-inferior · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
 ├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · aviso-responsivo · franja-cuenta-regresiva · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
 ├── components/feedback/     toast (useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
-└── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y)
+└── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple, itemActivo) · rail (preferencia del rail) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y)
 
 cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
@@ -144,6 +144,19 @@ export default function Layout({ children }) {
   );
 }
 ```
+
+**Tablet y móvil.** Con `rail="auto"` el sidebar se pliega a 64 px (solo iconos, con tooltips) entre 768 y 1279 px; el botón de su cabecera lo expande y la elección se recuerda en `localStorage`. En el móvil (≤ 767 px) no hay sidebar: la `BarraInferior` recibe las entradas como datos, una entrada «Más» con el menú completo y, si quieres, una acción flotante. Con la barra no hace falta la hamburguesa: omite `menuMovil` (y, si la página pinta su propio título, `migaComoTitulo={false}`).
+
+```tsx
+<Shell
+  rail="auto"
+  sidebar={<SidebarApp />}
+  barraInferior={<BarraInferiorApp />} // cliente: <BarraInferior items={…} mas={{ etiqueta: "Más", contenido: <SidebarApp /> }} accion={{ href: "/ventas/nueva", etiqueta: "Nueva venta", icono: PlusIcon }} />
+  topBar={<TopBar migas={MIGAS} migaComoTitulo={false} />}
+>
+```
+
+Para que no parpadee, `ScriptDiseno` va en el `<head>` (copia la preferencia a `<html data-rail>` antes del primer pintado) y, para que la barra respete la zona segura de iOS, el `viewport` lleva `viewportFit: "cover"`. Si usas la CLI (`khipu add`), la variante `rail:` vive en `styles/theme.css`: copia también ese bloque. Ver [`src/app/ejemplo/layout.tsx`](src/app/ejemplo/layout.tsx) y [`barra-inferior-app.tsx`](src/app/ejemplo/barra-inferior-app.tsx).
 
 `SidebarApp` (ver [`src/app/ejemplo/sidebar-app.tsx`](src/app/ejemplo/sidebar-app.tsx)) compone `SidebarContent` con `LogoMarca`, `SelectorContexto`, los grupos de `SidebarNav` y `MenuUsuario`.
 

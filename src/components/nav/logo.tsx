@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 /**
  * Marca del sidebar: icono en caja con gradiente primary → primary-light, nombre y sufijo en primary.
- * `icono` acepta cualquier SVG de 20px (por defecto, un glifo neutro).
+ * `icono` acepta cualquier SVG de 20px (por defecto, un glifo neutro). En el rail (`Shell rail="auto"` plegado) queda solo el icono; el nombre sigue siendo el nombre accesible del enlace.
  */
 export function LogoMarca({
   nombre,
@@ -26,7 +26,7 @@ export function LogoMarca({
           </svg>
         )}
       </div>
-      <span className="flex min-w-0 items-baseline gap-0.5">
+      <span className="flex min-w-0 items-baseline gap-0.5 rail:sr-only">
         <span className="truncate text-titulo font-bold text-foreground">{nombre}</span>
         {sufijo ? <span className="text-etiqueta font-medium text-muted-foreground">{sufijo}</span> : null}
       </span>

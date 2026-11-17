@@ -6,6 +6,36 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * `rail:` aplica la utilidad cuando el sidebar de un `Shell rail="auto"` está plegado a 64 px (solo iconos). Lo decide CSS, sin esperar a React:
+ *   - desde md (768 px) con la preferencia guardada en rail (`html[data-rail="rail"]`, que `ScriptDiseno` copia antes del primer pintado), o
+ *   - entre md y xl (768–1279 px) mientras el usuario no haya elegido expandido.
+ * Solo dentro de `[data-khipu-rail="auto"]` (lo pone `Shell`), así que un sidebar sin `rail="auto"` o el cajón móvil no cambian.
+ * Debe coincidir con `railEfectivo` en `lib/rail.ts`.
+ */
+@custom-variant rail {
+  @media (width >= 48rem) {
+    &:where(html[data-rail="rail"] [data-khipu-rail="auto"] *) {
+      @slot;
+    }
+  }
+  @media (width >= 48rem) and (width < 80rem) {
+    &:where(html:not([data-rail="expandido"]) [data-khipu-rail="auto"] *) {
+      @slot;
+    }
+  }
+}
+
+/*
+ * Con una `BarraInferior` en pantalla (móvil, < md) los avisos flotantes suben lo que mide la barra más la zona segura del dispositivo.
+ * `--khipu-reserva-inferior` solo existe entonces; los toasts lo leen (`var(--khipu-reserva-inferior, 0px)`).
+ */
+@media (width < 48rem) {
+  :root:has([data-barra-inferior]) {
+    --khipu-reserva-inferior: calc(3.5rem + 1px + env(safe-area-inset-bottom));
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

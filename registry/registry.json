@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15",
+  "generatedAt": "2026-11-17",
   "items": {
     "components/apariencia-opciones": {
       "name": "apariencia-opciones",
@@ -515,6 +515,25 @@
       ],
       "registryDependencies": []
     },
+    "components/nav/barra-inferior": {
+      "name": "barra-inferior",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/barra-inferior.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/nav/mobile-nav",
+        "components/nav/sidebar-nav",
+        "lib/estilos",
+        "lib/iconos",
+        "lib/navegacion",
+        "lib/utils"
+      ]
+    },
     "components/nav/logo": {
       "name": "logo",
       "type": "component",
@@ -539,6 +558,7 @@
         "components/apariencia",
         "components/diseno",
         "components/nav/panel-apariencia",
+        "components/nav/rail",
         "components/nav/theme-toggle",
         "components/ui/menu",
         "lib/estilos",
@@ -582,6 +602,24 @@
         "lib/estilos"
       ]
     },
+    "components/nav/rail": {
+      "name": "rail",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/rail.tsx"
+      ],
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/feedback/tooltip",
+        "lib/estilos",
+        "lib/iconos",
+        "lib/rail",
+        "lib/utils"
+      ]
+    },
     "components/nav/selector-apariencia": {
       "name": "selector-apariencia",
       "type": "component",
@@ -608,6 +646,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/nav/rail",
         "components/ui/select",
         "lib/utils"
       ]
@@ -634,7 +673,10 @@
         "src/components/nav/shell.tsx"
       ],
       "dependencies": [],
-      "registryDependencies": []
+      "registryDependencies": [
+        "components/nav/rail",
+        "lib/rail"
+      ]
     },
     "components/nav/sidebar-nav": {
       "name": "sidebar-nav",
@@ -648,6 +690,8 @@
         "motion"
       ],
       "registryDependencies": [
+        "components/feedback/tooltip",
+        "components/nav/rail",
         "lib/estilos",
         "lib/iconos",
         "lib/movimiento",
@@ -664,6 +708,7 @@
       ],
       "dependencies": [],
       "registryDependencies": [
+        "components/nav/rail",
         "components/nav/sidebar-nav"
       ]
     },
@@ -1071,7 +1116,8 @@
       "dependencies": [],
       "registryDependencies": [
         "components/apariencia-opciones",
-        "components/disenos"
+        "components/disenos",
+        "lib/rail"
       ]
     },
     "components/ui/avatar": {
@@ -1486,6 +1532,16 @@
       "category": "lib",
       "files": [
         "src/lib/escala-grafico.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/rail": {
+      "name": "rail",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/rail.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Figtree, Inter, JetBrains_Mono, Manrope, Plus_Jakarta_Sans } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ScriptDiseno } from "@/components/script-diseno";
@@ -18,6 +18,8 @@ const mono = JetBrains_Mono({ variable: "--font-mono", weight: ["400", "500", "6
 const fuentes = [sans, jakarta, manrope, dmSans, figtree, mono].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = { title: "Mi aplicación" };
+// `viewport-fit=cover` hace que `env(safe-area-inset-bottom)` valga algo en iPhone: la BarraInferior lo usa para no quedar bajo la barra de gestos.
+export const viewport: Viewport = { viewportFit: "cover" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

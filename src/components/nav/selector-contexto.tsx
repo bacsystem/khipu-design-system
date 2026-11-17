@@ -3,6 +3,7 @@
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CaretUpDownIcon, CheckIcon } from "@phosphor-icons/react";
 import { useTransition } from "react";
+import { useRail } from "@/components/nav/rail";
 import { SelectContent } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +33,7 @@ function Avatar({ item, activo }: { item: ContextoItem; activo: boolean }) {
 /**
  * Selector de contexto del sidebar (empresa/organización activa): tarjeta como disparador y popup del mismo ancho.
  * `onCambio` puede ser async (p. ej. una server action que fija una cookie); mientras resuelve, el disparador se atenúa.
+ * En el rail (`Shell rail="auto"` plegado a 64 px) el disparador se reduce al avatar del contexto activo (su nombre accesible sigue siendo `etiqueta`) y la lista se abre a la derecha con ancho propio.
  */
 export function SelectorContexto({
   items,
@@ -45,6 +47,7 @@ export function SelectorContexto({
   onCambio: (id: string) => void | Promise<void>;
 }) {
   const [cambiando, startTransition] = useTransition();
+  const { rail } = useRail();
   const activo = items.find((i) => i.id === activoId) ?? items[0];
   const mapa = Object.fromEntries(items.map((i) => [i.id, i.nombre]));
 
@@ -61,21 +64,21 @@ export function SelectorContexto({
         aria-label={etiqueta}
         disabled={cambiando}
         className={cn(
-          "flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 overflow-hidden rounded-lg border border-border/60 bg-muted/80 p-2 text-left transition-colors outline-none select-none",
+          "flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 overflow-hidden rounded-lg border border-border/60 bg-muted/80 p-2 text-left transition-colors outline-none select-none rail:justify-center rail:border-transparent rail:bg-transparent rail:p-1",
           "hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50 data-[popup-open]:bg-secondary disabled:pointer-events-none disabled:opacity-60",
         )}
       >
         <div className="flex min-w-0 items-center gap-2.5">
           {activo ? <Avatar item={activo} activo /> : null}
-          <div className="min-w-0 overflow-hidden">
+          <div className="min-w-0 overflow-hidden rail:hidden">
             <p className="truncate text-control leading-tight font-medium text-foreground">{activo?.nombre}</p>
             {activo?.detalle ? <p className="truncate font-mono text-etiqueta leading-tight text-muted-foreground">{activo.detalle}</p> : null}
           </div>
         </div>
-        <CaretUpDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70" />
+        <CaretUpDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70 rail:hidden" />
       </SelectPrimitive.Trigger>
 
-      <SelectContent align="start" alignItemWithTrigger={false} sideOffset={6} className="w-(--anchor-width) min-w-0 p-1">
+      <SelectContent side={rail ? "right" : undefined} align="start" alignItemWithTrigger={false} sideOffset={6} className={cn("min-w-0 p-1", rail ? "w-64" : "w-(--anchor-width)")}>
         <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">{etiqueta}</div>
         {items.map((item) => (
           <SelectPrimitive.Item

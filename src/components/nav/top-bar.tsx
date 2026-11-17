@@ -40,8 +40,10 @@ function Pill({ pill }: { pill: PillEntorno }) {
 }
 
 /**
- * Barra superior pegajosa (h-14). Izquierda: `menuMovil` (hamburguesa), miga (es el h1 de la página) y pills.
+ * Barra superior pegajosa (h-14). Izquierda: `menuMovil` (hamburguesa), miga (por defecto es el h1 de la página) y pills.
  * Derecha: buscador opcional, y `acciones` (máximo dos secundarias + una principal; el resto va en diálogos).
+ * Con `migaComoTitulo={false}` la miga es solo texto de ubicación (`<nav aria-label>`, la página con `aria-current="page"`) y no un `h1`: úsalo cuando la
+ * página pinta su propio título (`CabeceraPagina`) y la app prefiere no tener dos. Sin `menuMovil` no hay hamburguesa (con `BarraInferior` no hace falta).
  */
 export function TopBar({
   migas,
@@ -50,6 +52,7 @@ export function TopBar({
   buscador,
   acciones,
   etiquetaUbicacion = "Ubicación",
+  migaComoTitulo = true,
 }: {
   migas: Miga[];
   pills?: PillEntorno[];
@@ -59,6 +62,8 @@ export function TopBar({
   acciones?: ReactNode;
   /** Nombre accesible de la miga (`aria-label` de su `nav`). */
   etiquetaUbicacion?: string;
+  /** Con `true` (por defecto) la página de la miga es el `h1`. Con `false` es texto de ubicación y el título lo pone el contenido. */
+  migaComoTitulo?: boolean;
 }) {
   const pathname = usePathname();
   const miga = migas.find((m) => pathname.startsWith(m.prefijo));
@@ -73,7 +78,13 @@ export function TopBar({
             {/* En el teléfono solo la página: la sección y la página no entraban junto a la acción principal y la página quedaba en «C…». */}
             <span className="hidden text-texto-terciario sm:inline">{miga.seccion}</span>
             <span className="hidden text-texto-terciario/50 sm:inline">/</span>
-            <h1 className="truncate font-heading text-titulo text-foreground">{miga.pagina}</h1>
+            {migaComoTitulo ? (
+              <h1 className="truncate font-heading text-titulo text-foreground">{miga.pagina}</h1>
+            ) : (
+              <span aria-current="page" className="truncate font-heading text-titulo text-foreground">
+                {miga.pagina}
+              </span>
+            )}
           </nav>
         ) : null}
 

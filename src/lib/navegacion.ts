@@ -62,3 +62,12 @@ export function guardarGruposAbiertos(clave: string, estado: GruposAbiertos): vo
     // Sin almacenamiento el estado vale solo para esta visita.
   }
 }
+
+/**
+ * Si un ítem de navegación (sidebar o barra inferior) es el de la ruta actual: por prefijo, o por igualdad exacta con `exacto`.
+ * Un ítem sin `href` (el «próximamente») nunca está activo.
+ */
+export function itemActivo(item: { href?: string; exacto?: boolean }, pathname: string): boolean {
+  if (!item.href) return false;
+  return item.exacto ? pathname === item.href : pathname.startsWith(item.href);
+}

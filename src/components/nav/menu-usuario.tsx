@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Menu, MenuContent, MenuItem, MenuLinkItem, MenuSeparator, MenuTrigger } from "@/components/ui/menu";
 import { useApariencia } from "@/components/apariencia";
 import { useDiseno } from "@/components/diseno";
+import { useRail } from "@/components/nav/rail";
 import { PanelApariencia, type TextosPanelApariencia } from "@/components/nav/panel-apariencia";
 import { type TextosThemeToggle, ThemeToggle } from "@/components/nav/theme-toggle";
 import { ROTULO } from "@/lib/estilos";
@@ -57,6 +58,7 @@ function iniciales(texto: string): string {
  * Bloque de usuario del sidebar: disparador tipo tarjeta (igual que SelectorContexto) y menú del mismo ancho con
  * la cuenta, el tema en línea (solo iconos), «Apariencia…» (abre `PanelApariencia` a la derecha con paleta, tono oscuro,
  * tipografía y diseño), acciones propias y "Cerrar sesión".
+ * En el rail (`Shell rail="auto"` plegado a 64 px) el disparador se reduce al avatar y el menú se abre a la derecha con ancho propio.
  */
 export function MenuUsuario({
   usuario,
@@ -87,6 +89,7 @@ export function MenuUsuario({
   const conDiseno = mostrarDiseno && disenos.length > 1;
   const { paletas } = useApariencia();
   const conApariencia = mostrarApariencia && paletas.length > 1;
+  const { rail } = useRail();
   const nombre = usuario.nombre ?? usuario.email.split("@")[0] ?? usuario.email;
 
   async function salir() {
@@ -104,7 +107,7 @@ export function MenuUsuario({
         <MenuTrigger
           aria-label={textos.menu}
           className={cn(
-            "flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 overflow-hidden rounded-xl bg-secondary p-2 text-left transition-colors outline-none select-none",
+            "flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 overflow-hidden rounded-xl bg-secondary p-2 text-left transition-colors outline-none select-none rail:justify-center rail:bg-transparent rail:p-1",
             "hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-secondary",
           )}
         >
@@ -112,16 +115,16 @@ export function MenuUsuario({
             <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-acento text-etiqueta font-bold text-acento-texto shadow-xs">
               {iniciales(usuario.nombre ?? usuario.email)}
             </div>
-            <div className="min-w-0 overflow-hidden">
+            <div className="min-w-0 overflow-hidden rail:hidden">
               <p className="truncate text-control leading-tight font-medium text-foreground">{nombre}</p>
               <p className="truncate text-etiqueta leading-tight text-muted-foreground">{usuario.email}</p>
             </div>
           </div>
-          <CaretUpDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70" />
+          <CaretUpDownIcon weight="bold" className="size-4 shrink-0 text-muted-foreground/70 rail:hidden" />
         </MenuTrigger>
 
         {/* Mismo ancho y alineación que el disparador: no invade el contenido principal. */}
-        <MenuContent side="top" align="start" className="w-(--anchor-width) min-w-0">
+        <MenuContent side={rail ? "right" : "top"} align={rail ? "end" : "start"} className={rail ? "w-64 min-w-0" : "w-(--anchor-width) min-w-0"}>
           <div className="px-2 pt-1.5 pb-1 text-etiqueta font-medium text-muted-foreground">{textos.cuenta}</div>
           <div className="flex items-start gap-2.5 rounded-lg bg-accent py-1.5 pr-2 pl-2 text-accent-foreground">
             <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-acento text-etiqueta font-bold text-acento-texto shadow-xs">

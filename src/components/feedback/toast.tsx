@@ -21,7 +21,7 @@ function Lista() {
   const { toasts } = ToastPrimitive.useToastManager();
   return (
     <ToastPrimitive.Portal>
-      <ToastPrimitive.Viewport className="fixed right-4 bottom-4 z-50 flex w-[min(360px,calc(100vw-2rem))] flex-col gap-2 outline-none">
+      <ToastPrimitive.Viewport className="fixed right-4 bottom-[calc(1rem+var(--khipu-reserva-inferior,0px))] z-50 flex w-[min(360px,calc(100vw-2rem))] flex-col gap-2 outline-none">
         {toasts.map((t) => {
           const tono = (t.type as Tono | undefined) ?? "info";
           const Icono = ICONOS[tono];
