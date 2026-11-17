@@ -125,6 +125,15 @@ export function centrarEnContenedor(contenedor: HTMLElement, elemento: HTMLEleme
   });
 }
 
+/** Selector de la pestaña activa de `Tabs` (base-ui marca `aria-selected`). */
+export const SELECTOR_PESTANA_ACTIVA = '[role="tab"][aria-selected="true"]';
+
+/** Busca dentro de `contenedor` el elemento que cumple `selector` (la pestaña activa) y lo centra con `centrarEnContenedor`; sin él, no hace nada. */
+export function centrarActiva(contenedor: HTMLElement, selector: string): void {
+  const activa = contenedor.querySelector<HTMLElement>(selector);
+  if (activa) centrarEnContenedor(contenedor, activa);
+}
+
 // ── Notificaciones (`nav/centro-notificaciones`) ──────────────────────────────────────────────────────────────────
 
 /** Textos de `CentroNotificaciones`: pasa los que quieras traducir (`Partial`), el resto queda en castellano. */

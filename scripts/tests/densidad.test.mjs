@@ -44,7 +44,8 @@ test("la fila vacía de una tabla no lleva la píldora gris de las celdas", () =
 // 0.5.4: cinco pestañas subrayadas miden más que un teléfono; la fila tiene que desplazarse ella y no empujar la página.
 test("la fila de pestañas subrayadas se desplaza a lo ancho y su indicador no queda recortado", () => {
   const tabs = leer("src/components/navegacion/tabs.tsx");
-  assert.match(tabs, /const PESTANAS_LINEA =\s*"flex items-center gap-4 overflow-x-auto/);
+  assert.match(tabs, /const PESTANAS_LINEA = `flex items-center gap-4 [^`]*\$\{DESPLAZABLE_X\}`/);
+  assert.match(leer("src/lib/estilos.ts"), /export const DESPLAZABLE_X = "[^"]*overflow-x-auto/);
   assert.match(tabs, /linea: cn\(INDICADOR_BASE, "bottom-0 h-0\.5/);
   assert.doesNotMatch(tabs, /"flex items-center gap-4 border-b border-border"/);
 });

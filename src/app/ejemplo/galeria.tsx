@@ -534,10 +534,11 @@ export function Galeria() {
           defaultValor="archivadas"
           items={[
             { id: "todas", etiqueta: "Todas", contador: "1,482" },
-            { id: "vencidas", etiqueta: "Vencidas", contador: "Vencida", tonoContador: "aviso" },
+            { id: "vencidas", etiqueta: "Vencidas", contador: "Vencida", tonoContador: "error" },
             { id: "aprobadas", etiqueta: "Aprobadas", contador: "Aprobada", tonoContador: "ok" },
             { id: "resueltas", etiqueta: "Resueltas", contador: "1 resuelto", tonoContador: "ok" },
             { id: "revision", etiqueta: "En revisión", contador: 3, tonoContador: "info" },
+            { id: "pendientes", etiqueta: "Pendientes", contador: 7, tonoContador: "aviso" },
             { id: "archivadas", etiqueta: "Archivadas", contador: 0 },
           ]}
         />

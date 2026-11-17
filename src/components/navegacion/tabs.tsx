@@ -1,9 +1,9 @@
 "use client";
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
-import { useEffect, useRef, type ReactNode } from "react";
-import { CONTADOR_PESTANA, PESTANA_LINEA_BASE, SEGMENTADO, SEGMENTO_BASE, colorContadorPestana, type TonoContadorTab } from "@/lib/estilos";
-import { centrarEnContenedor } from "@/lib/navegacion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { CONTADOR_PESTANA, DESPLAZABLE_X, PESTANA_LINEA_BASE, SEGMENTADO, SEGMENTO_BASE, colorContadorPestana, type TonoContadorTab } from "@/lib/estilos";
+import { SELECTOR_PESTANA_ACTIVA, centrarActiva } from "@/lib/navegacion";
 import { cn } from "@/lib/utils";
 
 export type { TonoContadorTab };
@@ -27,16 +27,10 @@ const PESTANA_LINEA = `${PESTANA_LINEA_BASE} data-active:text-foreground`;
 // `-z-10` dentro de una lista `isolate`: queda sobre el fondo de la lista y debajo del texto de las pestañas.
 const INDICADOR_BASE =
   "absolute -z-10 left-(--active-tab-left) w-(--active-tab-width) transition-[left,width,top,height] duration-(--duracion-media) ease-salida motion-reduce:transition-none";
-// La fila subrayada se desplaza a lo ancho cuando las pestañas no entran (en un teléfono, cinco pestañas miden más que la pantalla y empujaban la página entera),
-// sin barra de desplazamiento a la vista. La línea de base es una sombra interior y no un `border-b`, y el indicador va en `bottom-0`: con `overflow-x-auto` el
-// navegador recorta también en vertical, y un indicador en `-bottom-px` sobre el borde quedaba cortado.
-const PESTANAS_LINEA =
-  "flex items-center gap-4 overflow-x-auto [scrollbar-width:none] shadow-[inset_0_-1px_0_var(--color-border)] [&::-webkit-scrollbar]:hidden";
-
-// El Root lleva `min-w-0`: dentro de un grid o flex el mínimo automático lo ensancharía hasta el ancho de todas las pestañas y no habría desborde que desplazar.
-// La caja segmentada también se desplaza en horizontal en vez de partirse en filas (con `flex-wrap` medía 2–3 filas en un teléfono), sin barra a la vista.
-// `max-w-full` + `w-fit`: con pocas pestañas mide lo que miden. El foco de los segmentos va hacia dentro (`SEGMENTO_BASE`), porque aquí se recorta.
-const SEGMENTADO_DESPLAZABLE = cn(SEGMENTADO, "max-w-full flex-nowrap scroll-px-1 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden");
+// La fila subrayada se desplaza a lo ancho cuando las pestañas no entran (`DESPLAZABLE_X`: en un teléfono, cinco pestañas miden más que la pantalla y empujaban la
+// página entera). La línea de base es una sombra interior y no un `border-b`, y el indicador va en `bottom-0`: con `overflow-x-auto` el navegador recorta también en
+// vertical, y un indicador en `-bottom-px` sobre el borde quedaba cortado. La caja segmentada ya es una fila desplazable por su receta (`SEGMENTADO`).
+const PESTANAS_LINEA = `flex items-center gap-4 shadow-[inset_0_-1px_0_var(--color-border)] ${DESPLAZABLE_X}`;
 
 const INDICADOR = {
   linea: cn(INDICADOR_BASE, "bottom-0 h-0.5 rounded-full bg-foreground"),
@@ -51,7 +45,7 @@ const INDICADOR = {
  * fuera del componente según `valor`/`onCambio`; si esa región tiene `id`, pásalo en `controla` para que cada pestaña lo declare en `aria-controls`. Los iconos dentro de una pestaña miden `size-4` salvo que lleven su `size-*`.
  * - `etiqueta`: nombre accesible de la lista de pestañas (`aria-label` del `tablist`, p. ej. «Estado de las cotizaciones»); sin ella la lista no tiene nombre.
  * - `items[].contador` (número o texto) y `tonoContador`: igual que en `TabsRuta`.
- * - Las dos fijan su altura (`h-10` la línea, una sola fila de `h-control` la segmentada) y, si no entran, se desplazan en horizontal sin barra a la vista; la activa se centra al montar y al cambiar `valor`.
+ * - Las dos fijan su altura (`h-10` la línea; la segmentada, una sola fila de 34 px: segmentos `h-7` + 3 px de relleno) y, si no entran, se desplazan en horizontal sin barra a la vista; la activa se centra al montar y cada vez que cambia (con `valor` o sin él).
  */
 export function Tabs<T extends string>({
   items,
@@ -80,15 +74,20 @@ export function Tabs<T extends string>({
 }) {
   const conPaneles = children != null || paneles != null;
   const listaRef = useRef<HTMLDivElement>(null);
-  // Centra la pestaña activa dentro de la propia lista (al montar y cuando `valor` cambia desde fuera; al navegar con flechas el foco ya la trae a la vista).
+  // La activa de un `Tabs` sin `valor` la lleva base-ui por dentro: se espeja aquí (onValueChange) para poder centrarla también al hacer clic en una pestaña cortada.
+  const [interno, setInterno] = useState<T | undefined>(defaultValor ?? items[0]?.id);
+  const activo = valor ?? interno;
+  // Centra la pestaña activa dentro de la propia lista, al montar y cada vez que cambia (clic, flechas, o `valor` desde fuera).
   useEffect(() => {
-    const lista = listaRef.current;
-    const activa = lista?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
-    if (lista && activa) centrarEnContenedor(lista, activa);
-  }, [valor]);
+    if (listaRef.current) centrarActiva(listaRef.current, SELECTOR_PESTANA_ACTIVA);
+  }, [activo]);
+  // `min-w-0` en el Root: dentro de un grid o flex el mínimo automático lo ensancharía hasta el ancho de todas las pestañas y no habría desborde que desplazar.
   return (
-    <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => onCambio?.(v as T)} className={cn("min-w-0", className)}>
-      <TabsPrimitive.List ref={listaRef} aria-label={etiqueta} className={cn("relative isolate", estilo === "linea" ? PESTANAS_LINEA : SEGMENTADO_DESPLAZABLE)}>
+    <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => {
+        setInterno(v as T);
+        onCambio?.(v as T);
+      }} className={cn("min-w-0", className)}>
+      <TabsPrimitive.List ref={listaRef} aria-label={etiqueta} className={cn("relative isolate", estilo === "linea" ? PESTANAS_LINEA : SEGMENTADO)}>
         {items.map((t) => (
           <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} {...(!conPaneles && controla ? { "aria-controls": controla } : {})} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
