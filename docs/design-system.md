@@ -148,7 +148,7 @@ Regla de tonos para estado: **verde** = aceptado/activo, **ámbar** = provisiona
 
 ## 3. Tipografía
 
-- **Inter** (`--font-sans`) para toda la interfaz, con los rasgos `font-feature-settings: "cv11", "ss01", "ss03"` en `body`. **JetBrains Mono** (`--font-mono`, pesos 400/500/600) **solo** para correlativos (`F001-00000136`), ids, llaves y código. Fechas, montos, RUC y cantidades van en Inter con `tabular-nums`. Las dos se cargan con `next/font/google` en `<html>` (`src/app/layout.tsx`).
+- **Inter** (`--font-sans`) para toda la interfaz, con los rasgos `font-feature-settings: "cv11", "ss01", "ss03"` en `body`. **JetBrains Mono** (`--font-mono`, pesos 400/500/600) **solo** para correlativos (`F001-00000136`), ids, llaves y código. Fechas, montos, RUC y cantidades van en Inter con `tabular-nums`. Las dos se cargan con `next/font/local` en `<html>` (`src/app/layout.tsx`) desde `src/app/fonts` (woff2 `latin` con su licencia OFL), así que el build no descarga nada.
 - Tamaños con nombre en `@theme` (utilidades de Tailwind v4 que traen su interlineado, y las nuevas también su peso y tracking):
 
 | Utilidad | Tamaño / interlineado | Peso | Tracking | Uso |
@@ -198,6 +198,8 @@ Reglas:
 | Control | **`h-control`** (32 px) | `ACCION_PRINCIPAL/SECUNDARIA`, `CONTROL_FILTRO`, `CAMPO` (`Entrada`, `SelectCampo`, `Combobox`, `Autocomplete`, `EntradaFecha`, `EntradaMonto`, `<select>` nativo con `SELECT_NATIVO`), `BOTON_PRIMARIO/SECUNDARIO/DESTRUCTIVO`, `Button` (todos los tamaños salvo `xs`), `ui/Input`, `SelectTrigger` (todos los `size`), `StepperNumerico`, `PieTabla`, `SelectorPorPagina`, `ConfirmacionEnLinea`, `MenuAcciones`, `Toolbar`, `ThemeToggle`, `GrupoBotones` |
 | Contenedor segmentado | píldora `min-h-control` con ítems `h-7` | `SEGMENTADO`/`SEGMENTO`, `Toolbar`, `GrupoBotones`, `SelectorPorPagina`, `ThemeToggle`, `Segmentado` de `BloqueCodigo`: por fuera miden lo mismo que cualquier control |
 | Dentro de otro control | `h-6`/`h-7` | `Button` `size="xs"`/`"icon-xs"` y el selector de moneda de `EntradaMonto`: solo van dentro de un control de `h-control`, nunca sueltos en una fila |
+
+**CLI para consumidores (`khipu-ds verificar`).** Los chequeos de arriba (`check:tipografia`, `check:alturas`, `check:contraste`) son del propio kit y corren sobre `src/` de este repo. Una app que consume el kit usa `khipu-ds verificar` (`cli/verificar.mjs`): comparte con el kit las reglas de tipografía y de alturas (`cli/reglas.mjs`, una sola fuente), añade las reglas `estilos` (valores arbitrarios, colores literales, paleta, `z-*`, sombras y radios fuera de escala, `duration-*`, `style` inline, `font-mono` en montos) e `iconos`, y una baseline por archivo + regla + coincidencia que solo puede bajar. Las excepciones del kit (`salvoRecetas` en `lib/estilos.ts`, la exención `tipografia-ok` por subcadena) no existen para el consumidor, que exime con un comentario `// <grupo>-ok` que se cuenta. `contraste` no se ofrece al consumidor: verifica los tokens del kit. Uso, reglas y baseline en el [README](../README.md#verificar-tu-app-khipu-ds-verificar).
 
 **Nunca se sobrescribe la altura de una receta con `cn(RECETA, "h-N")`**, y toda receta de control de `lib/estilos.ts` mide `h-control`. `npm run lint` lo verifica (`scripts/verificar-alturas.mjs`) y falla con el archivo y la línea. La única sobrescritura permitida es `h-auto` (el textarea de `Entrada`, que crece con su contenido). Un control escrito a mano junto a uno del kit usa `h-control`, nunca `h-9` (los 36 px de 0.4).
 
@@ -280,6 +282,28 @@ Recetas (en `lib/estilos.ts`, re-exportadas desde `top-bar.tsx`; también son la
 - `ACCION_SECUNDARIA`: `h-control rounded-full bg-card px-3.5 text-control font-medium text-foreground ring-1 ring-border hover:bg-secondary`.
 
 El selector de tema **no** está en la top bar: vive en el menú de usuario.
+
+---
+
+## 8b. Notificaciones y pestañas de ruta (`nav/centro-notificaciones.tsx`, `navegacion/tabs-ruta.tsx`)
+
+**`CentroNotificaciones`** — la campana de la top bar. Todo es dato de la app: `notificaciones: Notificacion[]` (`{ id, titulo, descripcion?, fecha /* ISO */, tono?, icono?, href?, categoria?, acciones?, leida }`), `categorias?: { id, etiqueta }[]`, `onLeer(id)`, `onLeerTodas()`, `verTodas?: { href, etiqueta }`, `textos?` (`Partial<TextosNotificaciones>`, valores en `TEXTOS_NOTIFICACIONES_ES`) y `locale?` para las fechas. El kit no guarda el estado de lectura: la app lo actualiza (o llama a su API) en los callbacks y vuelve a pasar la lista.
+- **Disparador:** `size-control` redondo (receta `CONTROL_FILTRO`), `aria-label` «Notificaciones, 3 sin leer» (`textos.etiquetaBoton`) y un punto `bg-destructive` solo si hay sin leer (decorativo: lo que anuncia el lector es el `aria-label`).
+- **Panel:** `Popover` de 360 px (`md:w-90`; ancho completo menos 1 rem bajo `md`), diálogo nombrado por su título, con «N sin leer» como descripción (`aria-live="polite"`). «Marcar todas como leídas» solo con `onLeerTodas` y pendientes. Más de 4 notificaciones visibles → `ScrollArea` de `min(24rem, 60svh)`; con menos, el panel mide su contenido. Vacío → `EstadoVacio` compacto.
+- **Fila:** icono en caja del tono (el icono cambia con el tono: no depende solo del color), título (semibold si no leída), descripción a 2 líneas, `<time dateTime>` con `formatearFechaHora` (hora de Lima). Con `href` es un `Link`; sin `href` y sin leer, un `<button>` que la marca en el sitio; leída y sin enlace, texto. Las sin leer llevan un punto y «Sin leer» (`sr-only`). Abrir una sin leer llama a `onLeer(id)`; un clic simple en un enlace cierra el panel (⌘/Ctrl-clic abre otra pestaña y lo deja abierto).
+- **Acciones por notificación** (`acciones: { etiqueta, href?, onClick? }[]`): botones `ACCION_SECUNDARIA` bajo la fila, **fuera** de su enlace (no se anidan controles). Con `href` seguro son enlaces, sin él llaman a `onClick`; una sin ninguno de los dos se ignora. Usarlas marca la notificación como leída (`onLeer`).
+- **Filtro por categoría** (`categorias` + `Notificacion.categoria`): bajo la cabecera, un `GrupoBotones` «Todas N · SUNAT N · …» con contadores. Sin `categorias` no hay filtro. El estado del filtro es del panel; la cabecera sigue contando las sin leer de **todas**.
+- **Seguridad:** el `href` (de la notificación y de sus acciones) solo se acepta si es una ruta de la app (`/x`) o `http(s)://host`; `javascript:`, `data:`, `//host`, `/\host`, cualquier carácter de control (el navegador borra tab y saltos de línea: `/\t/evil.com` llegaría a otro sitio) y `http://` a secas se descartan (`hrefNotificacionSeguro`).
+- **Teclado:** Enter/Espacio abre; el foco entra al panel; Tab recorre filas y acciones (el anillo va hacia dentro porque el panel recorta); Esc cierra y devuelve el foco a la campana. Al marcar una como leída el foco queda en su fila (el botón se desmonta, el `<li>` no), y tras «Marcar todas» en el título del panel.
+- No usa `usePathname`: no necesita `<Suspense>`. `PanelNotificaciones` / `ContenidoNotificaciones` (el contenido) son públicos pero **solo funcionan dentro de un `Popover`** (su título y descripción nombran el diálogo).
+- **Helpers sin `"use client"`** en `lib/navegacion`: `hrefNotificacionSeguro`, `TEXTOS_NOTIFICACIONES_ES`, `etiquetaBotonNotificaciones`; un Server Component los puede llamar (desde un módulo cliente no).
+
+**`TabsRuta`** — pestañas cuyo destino es otra URL (compras → proveedores → órdenes). `items: { href, etiqueta: ReactNode, contador?: number | string, tonoContador?: "ok" | "aviso" | "info" | "neutro", exacto? }[]`, `etiqueta` (nombre de la `<nav>`) y `estilo: "linea" | "segmentado"` (por defecto `"linea"`).
+- Es una `<nav aria-label>` con una lista de `Link` y `aria-current="page"` en la ruta actual, **no** `role="tablist"`: cada pestaña es una página, no un panel. Para pestañas de un mismo panel sin cambiar de URL, `Tabs`.
+- **Activa** (`indiceActivoRuta`, en `lib/navegacion`, sin `"use client"`): por **segmento** (`/compras` activa `/compras/ordenes` pero no `/comprasx`), ignorando query y hash, y con `exacto` solo la ruta idéntica (úsalo en la pestaña «raíz», o seguiría activa en todas las demás). Si coinciden varias gana la de href más largo: nunca hay dos con `aria-current`. Un `href` que no empieza por `/` (vacío, `?vista=1`, absoluto) no se enciende nunca. `usePathname` incluye el prefijo de idioma si lo hay: los `href` deben llevarlo (con `basePath` no).
+- **Look:** el mismo de `Tabs`, de la misma receta (`PESTANA_LINEA_BASE`, `CONTADOR_PESTANA`, `SEGMENTADO` + `SEGMENTO` en `lib/estilos`). `"linea"` es la pestaña subrayada (`h-10`, foco **hacia dentro**: la fila recorta); `"segmentado"` pinta el activo con `aria-current`. Un enlace no tiene indicador deslizante: el subrayado/relleno cambia sin animar. El contador acepta texto corto («SUNAT 13.1») y un tono de estado; el neutro toma el acento en la pestaña activa.
+- **Móvil:** la fila se desplaza en horizontal (sin barra a la vista, `overscroll-x-contain`) y la pestaña activa se centra al montar y al cambiar de ruta (`desplazamientoCentrado`, con rectángulos de pantalla; respeta «reducir movimiento»).
+- **`usePathname`:** con `cacheComponents` (Next 16) va dentro de `<Suspense>`, igual que `SidebarNav`, `TopBar` y `BarraInferior`.
 
 ---
 
@@ -477,7 +501,7 @@ Para un aviso corto que pide una decisión (la sesión está por finalizar, la s
 | Carpeta | Componentes |
 |---|---|
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
-| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `rail`, `barra-inferior`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
+| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `rail`, `barra-inferior`, `centro-notificaciones`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
 | `components/empresa` | `certificado-form`, `credenciales-sol-form`, `nueva-empresa-dialog`, `nueva-empresa-form`, `referencia-empresa` |
@@ -494,7 +518,7 @@ Todo lo anterior es este mismo repo (`khipu-design-system`), pensado para copiar
 |---|---|
 | `feedback/` | `ToastProvider` + `toast` / `useToast()`, `Tooltip`, `Alerta`, `Banner`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
 | `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `SelectCampo`, `Combobox`, `Autocomplete`, `Contrasena`, `Deslizador`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
-| `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯; una acción deshabilitada explica el porqué con `ayuda`, texto visible bajo el ítem: un `title` no llega a un ítem deshabilitado —sin puntero— ni al móvil), `DialogoConfirmacion`, `Paleta` (⌘K) |
+| `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯; una acción deshabilitada explica el porqué con `ayuda`, texto visible bajo el ítem: un `title` no llega a un ítem deshabilitado —sin puntero— ni al móvil), `DialogoConfirmacion`, `Paleta` (⌘K), `TabsRuta` (pestañas que son rutas: enlaces con `aria-current`, ver §8b) |
 | `datos/` | `TablaDatos<T>`, `TablaListado<T>` (buscador, columnas visibles recordadas, CSV e impresión; tarjetas en móvil, `anchoMinimo`, `pie`, `filaActiva`), `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
 Los gráficos usan `--chart-1..5` (ver «Gráficos» más abajo); en oscuro los pasos semánticos son `#27a070 #bf8a26 #dc4a68 #3a88c6`, validados para daltonismo y contraste, y `--chart-1` es el `acento-2` de la paleta.
@@ -564,7 +588,8 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 | `SidebarNav` | El fondo del ítem activo se desliza (`layoutId`); un grupo colapsable anima su altura (`grid-template-rows`, solo `motion-safe:`) y gira su caret |
 | `TablaDatos` | La barra de acciones masivas entra y sale |
 | `NumeroAnimado` | Cuenta desde 0; úsalo como hijo de `Metrica` o `valor` de `Kpi` |
-| `Sparkline`, `GraficoLineas` (`TrazoAnimado`) | La línea se dibuja |
+| `Sparkline`, `GraficoLineas` (`TrazoAnimado`) | La línea se dibuja; el área tenue aparece con un fundido; la serie `discontinua` se pinta ya completa |
+| `GraficoDona` | Los sectores aparecen escalonados con un fundido (opacidad) |
 | `GraficoBarras` | Las barras crecen desde la base, escalonadas |
 | `ProgresoCircular` | El anillo avanza con resorte |
 | `ConfirmacionEnLinea`, `BotonCopiar` | Cambio animado de acción a confirmación; el icono gira a un check |
@@ -614,7 +639,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 ```
 
-**Tipografía.** Inter es la fuente de la app (`--font-sans`). Las otras las carga la app con `next/font` en `--fuente-<valor>` y `preload: false` (solo se descargan si alguien las elige), y `html[data-fuente="<valor>"]` las pone en `--font-sans`. Los datos (correlativos, ids, código) siguen en JetBrains Mono. Inter se carga una sola vez: Turbopack rechaza dos llamadas a la misma fuente de `next/font/google`.
+**Tipografía.** Inter es la fuente de la app (`--font-sans`). Las otras las carga la app con `next/font/local` en `--fuente-<valor>` y `preload: false` (solo se descargan si alguien las elige), y `html[data-fuente="<valor>"]` las pone en `--font-sans`. Los datos (correlativos, ids, código) siguen en JetBrains Mono.
 
 **Agregar una paleta:** (1) un bloque `html:root[data-paleta="…"]` en `src/styles/tokens.css` que redefina solo `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto` y `--acento-3`; (2) su entrada en `PALETAS` (la `muestra` con los mismos hex); (3) su nombre en `PALETAS` de `scripts/verificar-contraste.mjs`, para que `npm run check:contraste` la mida en claro y en los tres tonos oscuros.
 
@@ -656,12 +681,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 Props nuevas, todas opcionales: `icono`, `tono` (`ok | aviso | error | neutro | acento`), `visual`, `destacada`, `acciones`. `serie`, `variacion`, `periodo` e `invertir` no cambian. `FilaMetricas` es una grilla de tarjetas separadas con `gap-3` (mismo export, mismas props). `VisualDeMetrica` y `ChipVariacion` se exportan sueltos.
 
+**Pie, sufijo, ayuda, tono y fila desplazable** (todo opcional):
+
+- `pie` (`TarjetaMetrica`, `Metrica`, `Kpi`): banda inferior pegada a los bordes de la tarjeta y siempre al fondo (`mt-auto`: en una fila de tarjetas estiradas queda alineada con las vecinas aunque una tenga menos contenido; `border-t border-border/60`, `text-etiqueta`, texto terciario). Su margen negativo y el relleno de la tarjeta salen de las mismas variables `--metrica-px`/`--metrica-pb`, así que cambiar el relleno en un sitio basta. Contenido libre (`pie="Vence el 30/11"`) o un par `{ etiqueta, valor }`: la etiqueta a la izquierda y el valor a la derecha (medio y tabular), sin que la app escriba `flex justify-between`.
+- `valorConTono` (`Metrica`, `Kpi`): el valor y la `ayuda` toman el color de texto del `tono` (`success-foreground`, `warning-foreground`, `destructive-texto`; `acento` el del acento). Con `tono` neutro o sin él no cambia nada, y en una tarjeta `destacada` manda `text-current`. `npm run check:contraste` mide esos pares (éxito, aviso y error sobre `--card` y sobre `--secondary`, y el tono `acento` en claro y oscuro).
+- `Kpi sufijo` («/ 136», «%») y `Kpi ayuda` (texto de apoyo bajo la tendencia) igualan a `Metrica`; `Metrica ayuda` ya no es obligatoria (sin ella no hay fila).
+- `FilaMetricas desplazable`: bajo `md` la fila es un carrusel horizontal con snap (tarjetas de al menos 11 rem) en vez de apilarse; es un `role="region"` con `aria-label` (`etiqueta`, por defecto «Métricas») y `tabIndex=0` para desplazarla con el teclado, solo mientras desborda (`metricas-desplazable.tsx`, cliente, mide con `ResizeObserver`): desde `md` es la grilla de siempre y no es una parada de Tab vacía. Hasta medir (servidor y primer render) se asume que desborda.
+
 ### Gráficos
 
 - Con una serie, `GraficoBarras` pinta las barras en `--chart-base` (el `acento-2` de la paleta; en oscuro al 38 %) y la barra `destacado` (índice) en `--chart-destacado`, el `acento` pleno. Con varias series usa `--chart-1..5` en orden fijo. `GraficoLineas` y `Sparkline` usan `--chart-1`.
 - Dentro de otra tarjeta (la sección del panel), `GraficoBarras plano` y `etiquetadoPor` con el id del título de la sección; `descripcion` resume el gráfico para un lector de pantalla y `tituloDeCategoria` da el texto de cada barra (title y tooltip). Con muchas categorías (los días de un mes), `rotuloVisible` deja rótulo solo en algunas. Un valor 0 no dibuja barra. `enteros` (en `GraficoBarras` y `GraficoLineas`) deja el eje Y solo con marcas enteras, para conteos; por defecto la escala admite decimales (`lib/escala-grafico`).
 - **Accesibilidad (WCAG 1.4.11):** el relleno pastel no llega a 3:1 sobre la tarjeta en claro, así que cada barra (y cada muestra de la leyenda) lleva un borde de 1 px en `--chart-trazo-*` (`base`, `destacado`, `3`, `4`, `5`), que sí supera 3:1 en las 5 paletas y los 3 tonos oscuros; `npm run check:contraste` lo comprueba. `GraficoLineas` con varias series usa esos mismos colores de trazo. Además, el valor de cada barra va en su `<title>` y en el tooltip: ningún dato se comunica solo por el color.
 - Rejilla recesiva, etiquetas de eje en texto terciario, leyenda solo con ≥ 2 series, máximo 5 series.
+- **Barras apiladas:** `GraficoBarras apiladas` pone una barra por categoría con las series una sobre otra (la escala cubre la suma; solo el segmento de arriba lleva las esquinas redondeadas; cada segmento conserva su borde `--chart-trazo-*` y entre segmentos queda un hueco de 2 px donde se ve la tarjeta: en oscuro el relleno y el borde de dos series contiguas son casi iguales y sin hueco no habría frontera). Los colores siguen `ORDEN_COMPOSICION` (`lib/escala-grafico`: base, destacado, `--chart-4`, `acento-3`, `--chart-5`), que nunca junta `destacado` con `acento-3`; `npm run check:contraste` mide la distancia OKLab (ΔE ≥ 7,5) entre los bordes de series contiguas en las 20 combinaciones. Sin `descripcion`, el `<desc>` resume cada categoría con sus series y el total. El tooltip añade el total (`textoTotal`, «Total» por defecto, para traducirlo) y el `<title>` de cada categoría resume series y total.
+- **Líneas con área y guiones:** `GraficoLineas area` rellena bajo cada línea con su color al 14 % (sin hex: el mismo token del trazo); una `Serie` con `discontinua: true` va a guiones y su muestra en la leyenda también (metas, proyecciones, el período anterior; no se rellena). `GraficoLineas` ahora se nombra y se describe como las barras (`etiqueta`, `etiquetadoPor`, `descripcion`, `plano`) y, sin `descripcion`, el `<desc>` dice por serie de dónde a dónde va y su máximo (el `<title>` de cada categoría es solo el tooltip nativo del puntero).
+- **Dona:** `GraficoDona({ partes, centro, titulo, formato, etiquetadoPor, etiqueta, descripcion, tamano, plano })` para composiciones (medios de pago, estados): hasta 5 partes; con más, las últimas se agrupan en «Otros» (`textos.otros`, traducible) y el porcentaje sigue siendo sobre el total completo. **Usa la paleta de las barras (relleno pastel + borde `--chart-trazo-*`, que supera el 3:1), no `--chart-1..5` en bruto**: `--chart-2` y `--chart-3` dan 2,5 y 2,2 sobre blanco y no tienen par de borde. Los sectores van separados por un hueco de 2 px y en el orden `ORDEN_COMPOSICION`, como las apiladas. La leyenda lista nombre, valor y porcentaje. El valor y el porcentaje van también en el `<title>` de cada sector y en el `<desc>` (o en `descripcion`): el color no carga solo la información. `centro` va en el hueco (p. ej. el total). Un total 0 deja el anillo vacío; una sola parte llena el anillo.
+- **Movimiento:** las líneas se dibujan, el área y la dona aparecen con un fundido y las barras crecen; con «reducir movimiento» el área y la dona aparecen ya completas (hay una prueba que lo simula).
 
 ### Pendientes
 

@@ -44,6 +44,33 @@ Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force`
 
 El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
 
+### Verificar tu app: `khipu-ds verificar`
+
+Guardas de diseño para la app **consumidora**. Sale con `1` y `archivo:línea` si hay violaciones nuevas y con `2` si los argumentos o la baseline son inválidos. Cómo invocarlo: con el kit instalado, `pnpm exec khipu-ds verificar …` o `npm exec --no -- khipu-ds verificar …` (el `--no` evita que npm baje un paquete homónimo del registro público: `khipu-ds` **no está publicado en npm**); sin instalarlo, `npx github:bacsystem/khipu-design-system#vX.Y.Z verificar …` (fija una etiqueta) o `node cli/khipu.mjs verificar …` desde un clon. Nunca `npx khipu-ds`.
+
+```bash
+khipu-ds verificar tipografia alturas estilos iconos --dir src --baseline ds-baseline.json
+khipu-ds verificar --dir src --baseline ds-baseline.json --inicializar   # una vez: congela la deuda actual
+khipu-ds verificar --dir src --baseline ds-baseline.json --podar         # tras arreglar: la baseline baja
+khipu-ds verificar --baseline ds-baseline.json --mover src/viejo.tsx src/nuevo.tsx   # tras renombrar un archivo
+```
+
+`--base` es un alias de `--baseline`; `--help` lista las opciones. Una carpeta que se llame como un grupo (`estilos`) se pasa como `--dir ./estilos`.
+
+| Grupo | Reglas |
+|---|---|
+| `tipografia` | `tamano-suelto` (`text-[13px]`), `tamano-tailwind` (`text-sm`…`text-4xl`, también con variante: `md:text-lg`), `mayusculas`, `tracking-ancho` |
+| `alturas` | `h-N`/`size-N` (salvo `h-auto`/`h-control`) en `cn(RECETA, "…")` y en `className` de `Button`/`Boton`/`Input`/`Entrada`/`SelectTrigger`/`SelectCampo`/`Toggle`/`Buscador`. No cuenta `[&_svg]:size-4` (apunta al icono) |
+| `estilos` | `valor-arbitrario` (`prefijo-[…]` y `prefijo-(--var)` de color, tamaño, espaciado, radio, sombra, z, duración, `leading`/`grid-cols`/`font`/`opacity`/`scale`…, y propiedades `[animation-duration:1.6s]`; incluye nombres CSS como `bg-[red]`; se admiten las variables CSS que define el kit (`duration-(--duracion-rapida)`, `w-(--spacing-control)`; se leen de `tokens.css`/`theme.css`) y las que inyectan base-ui/radix, `w-(--anchor-width)`, `h-(--active-tab-height)`), `color-literal` (hex de 6/8 dígitos, hex de 3/4 como valor de `fill`/`color`/`background…`, y `rgb/hsl/hwb/lab/lch/oklab/oklch(`), `paleta` (`bg-blue-500`, `text-white`, `bg-black/50`…), `z-index` (`z-*`), `sombra` (fuera de `xs/sm/md/lg/tarjeta/elevada`), `radio` (fuera de `md/lg/xl/full/none`), `duracion` (`duration-N`), `style-inline` (`style={{}}` con alguna propiedad que no sea `--variable`, y `style={objeto}`), `font-mono-monto` |
+| `iconos` | `paquete`: importar de `lucide-react`, heroicons, react-icons, tabler… (opt-in: sin grupos se corren `tipografia`, `alturas` y `estilos`) |
+
+- **Qué se revisa:** `.ts/.tsx/.js/.jsx/.mjs/.cjs` bajo `--dir` (por defecto `src`). Se ignoran `node_modules`, `.next`, `dist`, `build`, `coverage`, `__tests__`, `__mocks__`, `mocks`, `tests`, `test`, `e2e`, `*.test.*`, `*.spec.*`, `*.d.ts` y `*.stories.*`; `--ignorar a b` añade nombres (admite `*`) y `--incluir mocks` revisa algo ignorado. Los comentarios (también los JSX) no cuentan, y `/*` o `//` dentro de un string (`accept="image/*"`) no se toman por comentario. Va por línea y no entiende el código: `shadow`/`rounded` a secas solo cuentan dentro de un string, y un hex corto como `#123` o `href="#add"` no es un color. Una app de ~400 archivos tarda menos de un segundo.
+- **Exenciones:** solo en forma de **comentario** en la misma línea: `// estilos-ok`, `{/* estilos-ok */}` o, por regla, `// estilos-ok: paleta, z-index`. Un `estilos-ok` dentro de un string no vale. La exención no oculta el hallazgo: se **cuenta**, aparece en el resumen («N con exención») y, con baseline, se guarda como `estilos/paleta (exenta)` con la misma regla de solo bajar (una exención nueva falla). Sin baseline no hay dónde registrarlas y solo se informan.
+- **`font-mono` en montos:** el kit no puede saber qué es un monto, así que `font-mono-monto` solo corre con `--monto <regex>` (p. ej. `--monto 'formatCurrency\(|S/'`; en una baseline hecha con `--monto`, pásalo siempre, también al podar). Cada `font-mono` se evalúa por separado contra **su** etiqueta entera (atributos antes y después de `className`: `value={formatCurrency(x)}`, `placeholder="S/ 0.00"`) y su contenido hasta el siguiente `<`. **Límite:** un monto que llega por prop (`<StatCard value={formatCurrency(x)} />`, cuyo componente aplica `font-mono`) no se puede detectar desde fuera.
+- **`contraste`** (`npm run check:contraste`) verifica los tokens del propio kit, no el código de una app, y no forma parte de `verificar`.
+- **Baseline (`--baseline <json>`):** `{ "version": 1, "violaciones": { "<archivo>": { "<grupo/regla>": { "<coincidencia>": <cantidad> } } } }`. Las rutas son **relativas al archivo de baseline** (la misma baseline vale corriendo desde la raíz del monorepo o desde la app). Cuenta por archivo + regla + coincidencia (no por línea), así que mover código no rompe nada. Falla si una cantidad **sube** o aparece una clave nueva. Las entradas que ya no se alcanzan solo avisan, salvo con `--estricto`. `--podar` y `--estricto` solo consideran lo que esa corrida pudo ver (los archivos bajo `--dir`, los grupos pedidos y `font-mono-monto` solo con `--monto`): `verificar tipografia --podar` conserva la deuda de `estilos`. `--podar` nunca añade; `--inicializar` la crea y se niega si ya existe, para que solo pueda bajar. **Renombrar un archivo o una carpeta:** `git mv` y luego `--mover <de> <a>` (renombra el prefijo de todas las entradas; o edita las claves del JSON).
+- **Integración típica:** `"lint:ds": "khipu-ds verificar tipografia alturas estilos iconos --dir src --baseline ds-baseline.json --monto 'formatCurrency\\(|S/'"` (un script de `package.json` usa el binario local, no `npx`).
+
 ## Instalarlo como paquete (desde 0.3.0)
 
 La alternativa a copiar archivos: depender del design system y recibir sus cambios subiendo de versión. No está publicado en npm (`"private": true`, a propósito: publicar lo decide el dueño del repo), así que se instala **desde GitHub, fijado a un tag**:
@@ -65,7 +92,7 @@ npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el 
 .dark { --primary: #5cc8c2; }
 ```
 
-`styles.css` trae `tw-animate-css`, las variantes `data-open`/`data-closed`/… de shadcn (copiadas en el build: no hace falta instalar `shadcn`), los tokens (`tokens.css`), el tema (`theme.css`) y los `@source` que hacen que **tu** Tailwind genere las clases de los componentes compilados (Tailwind no escanea `node_modules` por su cuenta). `tokens.css` y `theme.css` también se exportan sueltos. Las fuentes no van en el paquete: define `--font-sans` y `--font-mono` (Inter y JetBrains Mono con `next/font` en `<html>`, como en [`src/app/layout.tsx`](src/app/layout.tsx)). Para que el diseño, la paleta y el tono oscuro guardados se apliquen sin parpadeo al cargar, pon `ScriptDiseno` en el `<head>`.
+`styles.css` trae `tw-animate-css`, las variantes `data-open`/`data-closed`/… de shadcn (copiadas en el build: no hace falta instalar `shadcn`), los tokens (`tokens.css`), el tema (`theme.css`) y los `@source` que hacen que **tu** Tailwind genere las clases de los componentes compilados (Tailwind no escanea `node_modules` por su cuenta). `tokens.css` y `theme.css` también se exportan sueltos. Las fuentes no van en el paquete: define `--font-sans` y `--font-mono` (Inter y JetBrains Mono con `next/font` en `<html>`, como en [`src/app/layout.tsx`](src/app/layout.tsx), que las sirve con `next/font/local` desde [`src/app/fonts`](src/app/fonts) para que el build no dependa de la red; esos archivos no van en el paquete, así que cópialos al repo de tu app o toma los mismos de `@fontsource-variable/*`). Para que el diseño, la paleta y el tono oscuro guardados se apliquen sin parpadeo al cargar, pon `ScriptDiseno` en el `<head>`.
 
 **Imports** — un subpath por componente, igual que la carpeta en `src/components/`:
 
@@ -86,7 +113,7 @@ import { PALETAS, TONOS_OSCURO } from "khipu-design-system/apariencia-opciones";
 ```
 
 - Cada módulo conserva su `"use client"`: los que usan hooks o callbacks son componentes cliente; `ui/button` (y `buttonVariants`), `ui/input`, `ui/card`, `feedback/alerta`, etc. no lo llevan y se pueden usar —y llamar— desde un Server Component.
-- **`nav/*` es un export aparte** (shell, sidebar, top bar, selector de contexto, menú de usuario, mobile nav, theme toggle): dependen del router de Next (`next/link`, `usePathname`) y de `next-themes`, y una app suele tener su propio shell. Están disponibles, pero no son parte del núcleo estable: si tu app ya tiene su navegación, no los importes. `navegacion/paleta` también usa `useRouter`. **Con Next 16 y `cacheComponents`**, `SidebarNav`, `TopBar`, `MobileNav` y `BarraInferior` usan `usePathname` y deben ir (ellos o su padre) dentro de `<Suspense>`; sin él, `next build` falla en las rutas dinámicas con «usePathname() in a Client Component outside of <Suspense>». Sin `cacheComponents` (el caso por defecto) no hace falta.
+- **`nav/*` es un export aparte** (shell, sidebar, top bar, selector de contexto, menú de usuario, mobile nav, theme toggle): dependen del router de Next (`next/link`, `usePathname`) y de `next-themes`, y una app suele tener su propio shell. Están disponibles, pero no son parte del núcleo estable: si tu app ya tiene su navegación, no los importes. `navegacion/paleta` también usa `useRouter`. **Con Next 16 y `cacheComponents`**, `SidebarNav`, `TopBar`, `MobileNav`, `BarraInferior` y `navegacion/tabs-ruta` (`TabsRuta`) usan `usePathname` y deben ir (ellos o su padre) dentro de `<Suspense>`; sin él, `next build` falla en las rutas dinámicas con «usePathname() in a Client Component outside of <Suspense>». Sin `cacheComponents` (el caso por defecto) no hace falta.
 - No hay un `index` que lo exporte todo, a propósito: un barrel mezclaría módulos cliente y servidor y obligaría al bundler a cargar todos los componentes.
 
 **Mantenerlo** — `npm run verify:next15` corre en CI (job `next15`) en cada PR y antes de cada release; en local es una comprobación opcional: instala `next@15.5.28` sin guardarlo (`npm i --no-save`), compila y verifica el paquete y corre los tests, porque el repo solo desarrolla con Next 16 y el peer promete también 15.5 (el portal sigue ahí); después restaura con `npm ci` (en local; en CI el runner se descarta). `npm run build:paquete` compila a `dist/`; `npm run verify:paquete` compila y falla si un componente de `src/` no tiene subpath en `exports`, si un subpath no resuelve a su `.js` y su `.d.ts`, si un módulo no carga o si el CSS apunta a algo que no existe. Una carpeta nueva en `src/components/` necesita su entrada `"./<carpeta>/*"` en `package.json`. La receta para migrar el portal de khipu está en [`docs/adopcion-en-el-portal.md`](docs/adopcion-en-el-portal.md).
@@ -113,15 +140,15 @@ src/
 ├── components/apariencia.tsx AparienciaProvider · useApariencia (paleta y tono oscuro) — ver docs/design-system.md «Apariencia»
 ├── components/apariencia-opciones.ts PALETAS · TONOS_OSCURO · claves de localStorage · código del script sin parpadeo
 ├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
-├── components/nav/          shell · sidebar · sidebar-nav · rail (BotonRail) · barra-inferior · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
+├── components/nav/          shell · sidebar · sidebar-nav · rail (BotonRail) · barra-inferior · centro-notificaciones · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
 ├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · aviso-responsivo · franja-cuenta-regresiva · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
 ├── components/feedback/     toast (`toast` / useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
-├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
+├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras —también apiladas—, líneas con área y guiones, dona, anillos)
 └── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple, itemActivo) · rail (preferencia del rail) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y)
 
-cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
+cli/khipu.mjs                CLI (list · add · verificar) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
 ```
 

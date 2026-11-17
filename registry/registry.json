@@ -537,6 +537,30 @@
         "lib/utils"
       ]
     },
+    "components/nav/centro-notificaciones": {
+      "name": "centro-notificaciones",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/centro-notificaciones.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/feedback/estado-vacio",
+        "components/patrones/metricas",
+        "components/ui/grupo-botones",
+        "components/ui/popover",
+        "components/ui/scroll-area",
+        "lib/estilos",
+        "lib/formato",
+        "lib/iconos",
+        "lib/navegacion",
+        "lib/utils"
+      ]
+    },
     "components/nav/logo": {
       "name": "logo",
       "type": "component",
@@ -846,6 +870,20 @@
         "lib/utils"
       ]
     },
+    "components/navegacion/tabs-ruta": {
+      "name": "tabs-ruta",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/tabs-ruta.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/navegacion",
+        "lib/utils"
+      ]
+    },
     "components/navegacion/tabs": {
       "name": "tabs",
       "type": "component",
@@ -997,6 +1035,16 @@
         "lib/utils"
       ]
     },
+    "components/patrones/metricas-desplazable": {
+      "name": "metricas-desplazable",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/metricas-desplazable.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
     "components/patrones/metricas": {
       "name": "metricas",
       "type": "component",
@@ -1008,6 +1056,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/patrones/metricas-desplazable",
         "lib/estilos",
         "lib/iconos",
         "lib/utils"
