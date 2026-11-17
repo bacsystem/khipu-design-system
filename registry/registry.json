@@ -1050,6 +1050,16 @@
         "lib/utils"
       ]
     },
+    "components/patrones/metricas-desplazable": {
+      "name": "metricas-desplazable",
+      "type": "component",
+      "category": "patrones",
+      "files": [
+        "src/components/patrones/metricas-desplazable.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
     "components/patrones/metricas": {
       "name": "metricas",
       "type": "component",
@@ -1061,6 +1071,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/patrones/metricas-desplazable",
         "lib/estilos",
         "lib/iconos",
         "lib/utils"

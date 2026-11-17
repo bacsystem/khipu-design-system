@@ -4,8 +4,9 @@ import { BellIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, ListNumbersIcon, P
 import { useState } from "react";
 import { TablaDatos, type Columna } from "@/components/datos/tabla-datos";
 import { TablaListado, type ColumnaListado } from "@/components/datos/tabla-listado";
-import { GraficoBarras, GraficoLineas } from "@/components/datos/grafico";
+import { GraficoBarras, GraficoDona, GraficoLineas } from "@/components/datos/grafico";
 import { Kpi } from "@/components/datos/kpi";
+import { FilaMetricas, Metrica } from "@/components/patrones/metricas";
 import { ListaDatos } from "@/components/datos/lista-datos";
 import { Timeline } from "@/components/datos/timeline";
 import { Alerta } from "@/components/feedback/alerta";
@@ -589,6 +590,51 @@ export function Galeria() {
           <Kpi etiqueta="Facturado (mes)" valor={<NumeroAnimado valor={128430} prefijo="S/ " />} variacion={12.4} serie={[42, 48, 45, 60, 58, 71, 80]} />
           <Kpi etiqueta="Documentos emitidos" valor={<NumeroAnimado valor={1236} />} variacion={-3.1} serie={[120, 110, 130, 125, 118, 121, 116]} />
           <Kpi etiqueta="Rechazados" valor={<NumeroAnimado valor={4} />} variacion={-40} invertir serie={[9, 7, 8, 6, 5, 6, 4]} />
+        </div>
+        {/* KPI con `sufijo`, `ayuda`, `pie` (libre o par etiqueta/valor) y `valorConTono`; en móvil la fila se desliza (`desplazable`). */}
+        <FilaMetricas columnas={3} desplazable etiqueta="Indicadores de ejemplo">
+          <Kpi etiqueta="Cobranza del mes" tono="ok" valorConTono valor="82" sufijo="%" ayuda="Por encima de la meta" pie={{ etiqueta: "Meta", valor: "75%" }} />
+          <Kpi etiqueta="Por cobrar" tono="error" valorConTono valor="S/ 14,200" pie="Vence el 30/11" />
+          <Metrica etiqueta="Stock crítico" sufijo="/ 136" ayuda="Reponer esta semana" tono="aviso" valorConTono pie={{ etiqueta: "Almacén", valor: "Central" }}>
+            12
+          </Metrica>
+        </FilaMetricas>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <GraficoBarras
+            apiladas
+            titulo="Emitidos por tipo (apiladas)"
+            categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]}
+            series={[
+              { nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] },
+              { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] },
+              { nombre: "Notas", valores: [6, 4, 9, 5, 8, 7] },
+            ]}
+            descripcion="Facturas, boletas y notas por mes; el total sube de 206 en abril a 315 en setiembre."
+          />
+          <GraficoLineas
+            area
+            titulo="Facturado contra la meta (S/ miles)"
+            categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]}
+            series={[
+              { nombre: "Real", valores: [82, 95, 91, 110, 121, 128] },
+              { nombre: "Meta", valores: [100, 100, 100, 110, 110, 110], discontinua: true },
+            ]}
+            formato={(v) => `${v}k`}
+            descripcion="Lo facturado supera la meta desde agosto."
+          />
+          <GraficoDona
+            titulo="Ventas por medio de pago"
+            partes={[
+              { nombre: "Efectivo", valor: 5200, detalle: "Caja y delivery" },
+              { nombre: "Yape / Plin", valor: 3100 },
+              { nombre: "Tarjeta", valor: 1900 },
+              { nombre: "Transferencia", valor: 260 },
+              { nombre: "Depósito", valor: 90 },
+              { nombre: "Vale", valor: 50 },
+            ]}
+            formato={(v) => `S/ ${v.toLocaleString("en-US")}`}
+            centro="S/ 10,600"
+          />
         </div>
         <div className="grid gap-3 lg:grid-cols-2">
           <GraficoBarras titulo="Documentos por mes" categorias={["Abr", "May", "Jun", "Jul", "Ago", "Set"]} series={[{ nombre: "Facturas", valores: [120, 140, 135, 160, 172, 190] }, { nombre: "Boletas", valores: [80, 95, 90, 110, 120, 118] }]} />
