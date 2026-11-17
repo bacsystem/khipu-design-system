@@ -1,0 +1,87 @@
+name: Release
+
+# Tags and releases a version when package.json carries one that has no v<version> tag yet.
+# Tags/releases created with GITHUB_TOKEN do not trigger other workflows (fine: none listens).
+on:
+  push:
+    branches: [main]
+
+# One release at a time; never cancel a run that may be halfway through tagging.
+# (GitHub keeps only the newest pending run: if two pushes land while one run is active the
+# older pending one is dropped, which is harmless unless both bump the version; see README.)
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: plan (is there a version to release?)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.plan.outputs.version }}
+      needs_release: ${{ steps.plan.outputs.needs_release }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - id: plan
+        run: .github/scripts/release-plan.sh
+
+  ci:
+    name: ci
+    needs: plan
+    if: needs.plan.outputs.needs_release == 'true'
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  release:
+    name: release (tag + GitHub release)
+    needs: [plan, ci]
+    if: needs.plan.outputs.needs_release == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.plan.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # depth 1 is enough: the tag message only needs the pushed commit
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Build notes and tag message
+        run: |
+          .github/scripts/changelog-section.sh "$VERSION" > "$RUNNER_TEMP/notes.md"
+          .github/scripts/tag-message.sh "$VERSION" "$GITHUB_SHA" > "$RUNNER_TEMP/tag-message.txt"
+          echo "Tag message: $(cat "$RUNNER_TEMP/tag-message.txt")"
+      - name: Create the annotated tag
+        run: |
+          # Re-checked here (not only in "plan") so a re-run of this job is idempotent.
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists; skipping."
+            exit 0
+          fi
+          tag_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/tags" \
+            -f tag="v$VERSION" -F message=@"$RUNNER_TEMP/tag-message.txt" \
+            -f object="$GITHUB_SHA" -f type=commit --jq .sha)"
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f ref="refs/tags/v$VERSION" -f sha="$tag_sha" >/dev/null
+          echo "Created annotated tag v$VERSION ($tag_sha) on $GITHUB_SHA"
+      - name: Create the GitHub release
+        run: |
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists; skipping."
+            exit 0
+          fi
+          gh release create "v$VERSION" --verify-tag --title "v$VERSION" \
+            --notes-file "$RUNNER_TEMP/notes.md" --latest
