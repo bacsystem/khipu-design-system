@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-17
+
+### Added
+- `TablaDatos` y `TablaListado` ganan, todo opcional y sin cambiar el comportamiento de quien no los usa: `tarjetaMovil` (bajo `md` cada fila es una tarjeta en una `<ul role="list" aria-label>`; la tabla se ve desde `md`; con `onFila` la tarjeta es un `<button>`, o un `<div>` con `tarjetaMovilInteractiva` si lleva controles propios; la `seleccion` pone su casilla en la tarjeta), `anchoMinimo` (`min-width` de la tabla con scroll horizontal dentro de la tarjeta), `pie` (fila de totales `<tfoot>` sobre las columnas visibles y, en móvil, un resumen `role="group"` fuera de la lista, para que el lector de pantalla cuente solo las filas), `pieEtiqueta` (el rótulo «Total»: primera celda del pie y título del resumen móvil), `filaActiva` (`aria-current="true"` en la fila o la tarjeta, más la banda de acento) y `titulo` (nombre de la lista de tarjetas; `TablaListado` lo pasa solo).
+- `TablaListado claveAlmacenamiento`: recuerda las columnas en `localStorage` (nuevo `lib/columnas-visibles`: `calcularOcultas`, `leerColumnasOcultas`, `guardarColumnasOcultas`, `interpretarColumnasOcultas`, `restablecerColumnasOcultas`; nunca lanza). Se guardan las columnas **ocultas**, no las visibles: una columna que se añada después con `ocultaInicial: true` la verá quien ya tenía algo guardado; cambia la clave si todos deben partir de cero. Lo recordado se lee con `useSyncExternalStore`, sin desajuste de hidratación (la primera pintura usa `ocultaInicial`).
+- Acción «Restablecer» (`textos.restablecer`) en el selector de columnas: vuelve a `ocultaInicial` y borra lo recordado.
+- **Aviso de tipo:** `TextosTablaListado` gana `fijo` y `restablecer`, obligatorios en el tipo: quien tipa un objeto completo de textos debe añadirlos (quien pasa `Partial`, no).
+
+### Changed
+- El selector de columnas de `TablaListado` lista ahora todas las columnas con título de texto y marca las `ocultable: false` como bloqueadas con «Fijo» (`textos.fijo`). Sigue apareciendo solo si hay al menos una columna ocultable: un listado sin ninguna no gana botón ni barra.
+- `filaActiva` usa `aria-current="true"` (no `aria-selected`): en una `table` sin rol `grid` es la semántica correcta, y «seleccionada» queda para la casilla de `seleccion`.
+- Sin selector de densidad de filas (decisión de producto).
+
 ## [0.6.0] - 2026-11-17
 
 ### Added

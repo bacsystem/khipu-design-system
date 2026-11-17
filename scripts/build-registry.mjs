@@ -60,7 +60,7 @@ export function analizarImports(contenido, archivo = "(archivo)") {
 
 export function construirRegistro() {
   const items = {};
-  const archivos = listarArchivos(join(SRC, "components")).concat([join(SRC, "lib", "estilos.ts"), join(SRC, "lib", "utils.ts"), join(SRC, "lib", "formato.ts"), join(SRC, "lib", "paginacion.ts"), join(SRC, "lib", "navegacion.ts"), join(SRC, "lib", "movimiento.ts"), join(SRC, "lib", "iconos.ts"), join(SRC, "lib", "calendario.ts"), join(SRC, "lib", "ordenar.ts"), join(SRC, "lib", "exportar.ts"), join(SRC, "lib", "escala-grafico.ts")]);
+  const archivos = listarArchivos(join(SRC, "components")).concat([join(SRC, "lib", "estilos.ts"), join(SRC, "lib", "utils.ts"), join(SRC, "lib", "formato.ts"), join(SRC, "lib", "paginacion.ts"), join(SRC, "lib", "navegacion.ts"), join(SRC, "lib", "movimiento.ts"), join(SRC, "lib", "iconos.ts"), join(SRC, "lib", "calendario.ts"), join(SRC, "lib", "ordenar.ts"), join(SRC, "lib", "exportar.ts"), join(SRC, "lib", "columnas-visibles.ts"), join(SRC, "lib", "escala-grafico.ts")]);
 
   for (const rutaAbs of archivos) {
     const rutaRel = relative(SRC, rutaAbs).replace(/\\/g, "/").replace(/\.tsx?$/, "");

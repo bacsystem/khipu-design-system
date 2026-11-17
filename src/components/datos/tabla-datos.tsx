@@ -3,15 +3,21 @@
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { ArrowDownIcon, ArrowUpIcon, ArrowsDownUpIcon, CheckIcon, MinusIcon, TrayIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
 import { MovimientoLocal } from "@/components/movimiento";
 import { CABECERA_TABLA, CONTENEDOR_TABLA, PieTabla, TablaVacia, type TextosPieTabla } from "@/components/patrones/pie-tabla";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ordenarFilas, type OrdenTabla } from "@/lib/ordenar";
 import { CURVA_SALIDA, DURACION } from "@/lib/movimiento";
 import { POR_PAGINA_DEFECTO } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
+
+// Fila activa (`filaActiva`): la banda toma `accent` y la primera celda lleva el filo de acento (§12).
+const BANDA_ACTIVA = "group-aria-[current=true]/fila:bg-accent";
+const BANDA_ACTIVA_INICIO = "group-aria-[current=true]/fila:shadow-[inset_3px_0_0_var(--color-acento)]";
+// Tarjeta móvil: la misma banda `secondary` de 12 px de las filas, con la casilla (si hay) a la izquierda.
+const TARJETA_MOVIL = "flex items-start gap-3 rounded-xl bg-secondary p-3 text-control";
 
 const CASILLA_CELDA =
   "flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border-[1.5px] border-input bg-card transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-3 focus-visible:ring-acento/55 data-checked:border-primary data-checked:bg-primary data-indeterminate:border-primary data-indeterminate:bg-primary";
@@ -94,6 +100,13 @@ export function TablaDatos<T>({
   porPaginaInicial = POR_PAGINA_DEFECTO,
   nota,
   onFila,
+  titulo,
+  tarjetaMovil,
+  tarjetaMovilInteractiva = false,
+  anchoMinimo,
+  pie,
+  pieEtiqueta,
+  filaActiva,
   onOrdenCambio,
   reinicioPagina,
   seleccion,
@@ -110,6 +123,25 @@ export function TablaDatos<T>({
   porPaginaInicial?: number;
   nota?: ReactNode;
   onFila?: (fila: T) => void;
+  /** Nombre accesible de la lista de tarjetas móviles (`aria-label` del `<ul>`). */
+  titulo?: string;
+  /**
+   * Bajo `md` (≤ 767 px) cada fila se dibuja como una tarjeta con lo que devuelve esta función, en una `<ul role="list">`,
+   * en vez de la tabla (desde `md` se ve la tabla). Búsqueda, orden, paginación y `seleccion` siguen valiendo. Con
+   * `onFila` la tarjeta es un `<button>`: si lo que dibujas tiene botones o enlaces, pon `tarjetaMovilInteractiva` para que
+   * sea un `<div>` y ponle tú el enlace principal.
+   */
+  tarjetaMovil?: (fila: T) => ReactNode;
+  /** La tarjeta lleva controles propios: se dibuja como `<div>` aunque haya `onFila` (que entonces no se llama desde ella). */
+  tarjetaMovilInteractiva?: boolean;
+  /** Ancho mínimo de la tabla (`"48rem"`): por debajo, la tabla hace scroll horizontal dentro de su tarjeta. */
+  anchoMinimo?: string;
+  /** Fila de totales: el nodo de cada columna por su `id`. Solo se pintan las columnas que se muestran; en móvil, una tarjeta resumen al final. */
+  pie?: Partial<Record<string, ReactNode>>;
+  /** Rótulo de la fila de totales («Total»): va en la primera celda de la tabla (salvo que `pie` ya traiga esa columna) y como título del resumen móvil. */
+  pieEtiqueta?: ReactNode;
+  /** `clave` de la fila resaltada (la que se ve en un panel o detalle): `aria-current="true"` y la banda de acento (en la tabla y en las tarjetas). */
+  filaActiva?: string;
   /** Avisa cada orden que elige el usuario (p. ej. para exportar en el mismo orden). No se llama con `ordenInicial`. */
   onOrdenCambio?: (orden: OrdenTabla) => void;
   /**
@@ -130,6 +162,7 @@ export function TablaDatos<T>({
   className?: string;
 }) {
   const textos = { ...TEXTOS_SELECCION_ES, ...textosParciales };
+  const idResumen = useId();
   const [orden, setOrden] = useState<OrdenTabla>(ordenInicial ?? null);
   const [pagina, setPagina] = useState(1);
   // Volver a la página 1 cuando cambia `reinicioPagina` (la búsqueda, un filtro): si no, el usuario se queda en la
@@ -173,6 +206,133 @@ export function TablaDatos<T>({
 
   if (cargando) return <SkeletonTabla columnas={columnas.length} />;
 
+  const conPie = pie !== undefined && columnas.some((c) => pie[c.id] != null);
+  const conTarjetas = tarjetaMovil !== undefined;
+  const claseCelda = (c: Columna<T>, i: number) =>
+    cn("px-3 py-2", i === 0 && !seleccion && "pl-4", i === columnas.length - 1 && "pr-4", c.alinear === "derecha" && "text-right tabular-nums", c.className);
+
+  const tabla = (
+    <Table style={anchoMinimo ? { minWidth: anchoMinimo } : undefined}>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            {seleccion ? (
+              <TableHead className="w-10 pl-4">
+                <CasillaCelda etiqueta={textos.seleccionarTodo} checked={todosSeleccionados} indeterminate={algunoSeleccionado} onCheckedChange={alternarTodos} />
+              </TableHead>
+            ) : null}
+            {columnas.map((c, i) => (
+              <TableHead key={c.id} style={{ width: c.ancho }} className={cn(CABECERA_TABLA, i === 0 && !seleccion && "pl-4", i === columnas.length - 1 && "pr-4", c.alinear === "derecha" && "text-right")}>
+                {c.ordenable ? (
+                  <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 hover:text-foreground", orden?.id === c.id && "text-foreground")}>
+                    {c.titulo}
+                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon weight="bold" className="size-3" /> : <ArrowDownIcon weight="bold" className="size-3" /> : <ArrowsDownUpIcon weight="bold" className="size-3 opacity-50" />}
+                  </button>
+                ) : (
+                  c.titulo
+                )}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody className="text-control">
+          {visibles.map((f) => {
+            const id = clave(f);
+            return (
+              <TableRow
+                key={id}
+                onClick={onFila ? () => onFila(f) : undefined}
+                data-state={seleccion?.seleccionados.includes(id) ? "selected" : undefined}
+                aria-current={filaActiva === id ? "true" : undefined}
+                className={cn("group", onFila && "cursor-pointer")}
+              >
+                {seleccion ? (
+                  <TableCell className={cn("w-10 pl-4", BANDA_ACTIVA, BANDA_ACTIVA_INICIO)}>
+                    <CasillaCelda etiqueta={textos.seleccionarFila(id)} checked={seleccionados.includes(id)} onCheckedChange={() => alternarFila(id)} />
+                  </TableCell>
+                ) : null}
+                {columnas.map((c, i) => (
+                  <TableCell key={c.id} className={cn(claseCelda(c, i), BANDA_ACTIVA, i === 0 && !seleccion && BANDA_ACTIVA_INICIO)}>
+                    {c.render ? c.render(f) : String((f as Record<string, unknown>)[c.id] ?? "")}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
+          {visibles.length === 0 ? (
+            <TableRow className="hover:bg-transparent">
+              <TableCell colSpan={seleccion ? columnas.length + 1 : columnas.length}>
+                <TablaVacia icon={<TrayIcon className="size-6" />}>{vacio}</TablaVacia>
+              </TableCell>
+            </TableRow>
+          ) : null}
+        </TableBody>
+        {conPie ? (
+          <TableFooter className="text-control">
+            <TableRow className="hover:bg-transparent">
+              {seleccion ? <TableCell className="w-10 pl-4" /> : null}
+              {columnas.map((c, i) => (
+                <TableCell key={c.id} className={claseCelda(i === 0 && pie?.[c.id] == null ? { ...c, className: undefined } : c, i)}>
+                  {pie?.[c.id] ?? (i === 0 ? pieEtiqueta : null)}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableFooter>
+        ) : null}
+    </Table>
+  );
+
+  const tarjetas = tarjetaMovil ? (
+    <>
+    <ul role="list" aria-label={titulo} className="flex flex-col gap-2 px-1 py-2 md:hidden">
+      {visibles.map((f) => {
+        const id = clave(f);
+        const contenido = tarjetaMovil(f);
+        const marcada = seleccionados.includes(id);
+        const activa = filaActiva === id;
+        const comoBoton = onFila !== undefined && !tarjetaMovilInteractiva;
+        return (
+          <li
+            key={id}
+            data-state={marcada ? "selected" : undefined}
+            aria-current={activa ? "true" : undefined}
+            className={cn(TARJETA_MOVIL, marcada && "bg-accent", activa && "bg-accent shadow-[inset_3px_0_0_var(--color-acento)]")}
+          >
+            {seleccion ? <CasillaCelda etiqueta={textos.seleccionarFila(id)} checked={marcada} onCheckedChange={() => alternarFila(id)} /> : null}
+            {comoBoton ? (
+              <button type="button" onClick={() => onFila(f)} className="min-w-0 flex-1 rounded-lg text-left outline-none focus-visible:ring-3 focus-visible:ring-acento/55">
+                {contenido}
+              </button>
+            ) : (
+              <div className="min-w-0 flex-1">{contenido}</div>
+            )}
+          </li>
+        );
+      })}
+      {visibles.length === 0 ? (
+        <li>
+          <TablaVacia icon={<TrayIcon className="size-6" />}>{vacio}</TablaVacia>
+        </li>
+      ) : null}
+    </ul>
+    {conPie ? (
+      // El resumen no es una fila: va fuera de la lista (el lector de pantalla anuncia tantos elementos como filas).
+      <div role="group" aria-labelledby={idResumen} data-resumen className={cn(TARJETA_MOVIL, "mx-1 mb-2 flex-col gap-1 font-medium md:hidden")}>
+        <p id={idResumen}>{pieEtiqueta ?? titulo}</p>
+        <dl className="grid w-full grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+          {columnas
+            .filter((c) => pie?.[c.id] != null)
+            .map((c) => (
+              <div key={c.id} className="col-span-2 grid grid-cols-subgrid">
+                <dt className="text-texto-terciario">{c.titulo}</dt>
+                <dd className="text-right tabular-nums">{pie?.[c.id]}</dd>
+              </div>
+            ))}
+        </dl>
+      </div>
+    ) : null}
+    </>
+  ) : null;
+
   return (
     <div className={cn(CONTENEDOR_TABLA, className)}>
       <MovimientoLocal><AnimatePresence initial={false}>
@@ -215,63 +375,14 @@ export function TablaDatos<T>({
         </m.div>
       ) : null}
       </AnimatePresence></MovimientoLocal>
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            {seleccion ? (
-              <TableHead className="w-10 pl-4">
-                <CasillaCelda etiqueta={textos.seleccionarTodo} checked={todosSeleccionados} indeterminate={algunoSeleccionado} onCheckedChange={alternarTodos} />
-              </TableHead>
-            ) : null}
-            {columnas.map((c, i) => (
-              <TableHead key={c.id} style={{ width: c.ancho }} className={cn(CABECERA_TABLA, i === 0 && !seleccion && "pl-4", i === columnas.length - 1 && "pr-4", c.alinear === "derecha" && "text-right")}>
-                {c.ordenable ? (
-                  <button type="button" onClick={() => alternar(c.id)} className={cn("inline-flex items-center gap-1 hover:text-foreground", orden?.id === c.id && "text-foreground")}>
-                    {c.titulo}
-                    {orden?.id === c.id ? orden.dir === "asc" ? <ArrowUpIcon weight="bold" className="size-3" /> : <ArrowDownIcon weight="bold" className="size-3" /> : <ArrowsDownUpIcon weight="bold" className="size-3 opacity-50" />}
-                  </button>
-                ) : (
-                  c.titulo
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody className="text-control">
-          {visibles.map((f) => {
-            const id = clave(f);
-            return (
-              <TableRow
-                key={id}
-                onClick={onFila ? () => onFila(f) : undefined}
-                data-state={seleccion?.seleccionados.includes(id) ? "selected" : undefined}
-                className={cn("group", onFila && "cursor-pointer")}
-              >
-                {seleccion ? (
-                  <TableCell className="w-10 pl-4">
-                    <CasillaCelda etiqueta={textos.seleccionarFila(id)} checked={seleccionados.includes(id)} onCheckedChange={() => alternarFila(id)} />
-                  </TableCell>
-                ) : null}
-                {columnas.map((c, i) => (
-                  <TableCell
-                    key={c.id}
-                    className={cn("px-3 py-2", i === 0 && !seleccion && "pl-4", i === columnas.length - 1 && "pr-4", c.alinear === "derecha" && "text-right tabular-nums", c.className)}
-                  >
-                    {c.render ? c.render(f) : String((f as Record<string, unknown>)[c.id] ?? "")}
-                  </TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
-          {visibles.length === 0 ? (
-            <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={seleccion ? columnas.length + 1 : columnas.length}>
-                <TablaVacia icon={<TrayIcon className="size-6" />}>{vacio}</TablaVacia>
-              </TableCell>
-            </TableRow>
-          ) : null}
-        </TableBody>
-      </Table>
+      {conTarjetas ? (
+        <>
+          {tarjetas}
+          <div className="hidden md:block">{tabla}</div>
+        </>
+      ) : (
+        tabla
+      )}
       <PieTabla
         desde={visibles.length === 0 ? 0 : (paginaActual - 1) * porPagina + 1}
         hasta={(paginaActual - 1) * porPagina + visibles.length}

@@ -95,7 +95,13 @@ const COLUMNAS: Columna<Doc>[] = [
 const ESTADO_DOC = { ok: "Aceptado", aviso: "Con obs.", error: "Rechazado" } as const;
 /** Las mismas columnas para `TablaListado`: `texto` hace que se busque y exporte lo que se ve («Aceptado», «S/ 2,000.01»), no el dato crudo. */
 const COLUMNAS_LISTADO: ColumnaListado<Doc>[] = COLUMNAS.map((c) =>
-  c.id === "total" ? { ...c, texto: (d: Doc) => formatearMonto("PEN", d.total) } : c.id === "estado" ? { ...c, texto: (d: Doc) => ESTADO_DOC[d.estado] } : c,
+  c.id === "total"
+    ? { ...c, texto: (d: Doc) => formatearMonto("PEN", d.total) }
+    : c.id === "estado"
+      ? { ...c, texto: (d: Doc) => ESTADO_DOC[d.estado] }
+      : c.id === "numero"
+        ? { ...c, ocultable: false } // «Fijo» en el selector de columnas
+        : c,
 );
 
 const SECCION = cn(TARJETA, ENTRADA, "grid gap-4 px-5 py-4");
@@ -117,6 +123,7 @@ export function Galeria() {
   const [peso, setPeso] = useState<number | null>(2.5);
   const [rango, setRango] = useState<RangoFechas>({ desde: "2026-09-01", hasta: "2026-09-15" });
   const [docsSeleccionados, setDocsSeleccionados] = useState<string[]>([]);
+  const [docActivo, setDocActivo] = useState<string | undefined>("2");
   const [clave, setClave] = useState("");
   const [vista, setVista] = useState<"lista" | "tarjetas">("lista");
   const [bannerVisible, setBannerVisible] = useState(true);
@@ -586,7 +593,9 @@ export function Galeria() {
             ),
           }}
         />
-        {/* El mismo listado completo en cliente con buscador, columnas visibles, CSV e impresión (en el orden de la tabla). */}
+        {/* El mismo listado completo en cliente con buscador, columnas visibles (una «Fijo», «Restablecer» y recordadas con
+            `claveAlmacenamiento`), CSV e impresión. Bajo 768 px cada fila es una tarjeta (`tarjetaMovil`); `anchoMinimo` hace
+            scroll horizontal dentro de la tarjeta; `pie` suma los totales; `filaActiva` resalta la fila abierta. */}
         <TablaListado
           titulo="Documentos"
           columnas={COLUMNAS_LISTADO}
@@ -594,6 +603,22 @@ export function Galeria() {
           clave={(d) => d.id}
           unidad="documentos"
           placeholderBusqueda="Buscar por número o cliente…"
+          claveAlmacenamiento="khipu-ejemplo:documentos:columnas"
+          anchoMinimo="44rem"
+          filaActiva={docActivo}
+          onFila={(d) => setDocActivo(d.id)}
+          pieEtiqueta="Total"
+          pie={{ total: formatearMonto("PEN", DOCS.reduce((suma, d) => suma + d.total, 0)) }}
+          tarjetaMovil={(d) => (
+            <div className="flex min-w-0 flex-col gap-1">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono font-semibold">{d.numero}</span>
+                <PillEstado tono={d.estado}>{ESTADO_DOC[d.estado]}</PillEstado>
+              </div>
+              <span className="truncate text-muted-foreground">{d.cliente}</span>
+              <span className="font-mono tabular-nums">{formatearMonto("PEN", d.total)}</span>
+            </div>
+          )}
         />
       </section>
     </>
