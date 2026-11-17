@@ -261,6 +261,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/feedback/spinner",
         "lib/cola-toast",
         "lib/estilos",
         "lib/utils"
