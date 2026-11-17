@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-17
+
+### Added
+- `TablaDatos` y `TablaListado` ganan, todo opcional y sin cambiar el comportamiento actual: `tarjetaMovil` (bajo `md` cada fila es una tarjeta en una `<ul role="list" aria-label>`; la tabla se ve desde `md`; con `onFila` la tarjeta es un `<button>`, o un `<div>` con `tarjetaMovilInteractiva` si lleva controles propios; la `seleccion` pone su casilla en la tarjeta), `anchoMinimo` (`min-width` de la tabla con scroll horizontal dentro de la tarjeta), `pie` (fila de totales `<tfoot>` sobre las columnas visibles y, en móvil, una tarjeta resumen), `filaActiva` (`aria-selected` + banda de acento; `aria-current` en las tarjetas) y `titulo` (nombre de la lista de tarjetas; `TablaListado` lo pasa solo).
+- `TablaListado`: el selector de columnas muestra las `ocultable: false` bloqueadas con «Fijo» (`textos.fijo`) y una acción «Restablecer» (`textos.restablecer`) que vuelve a `ocultaInicial`; `claveAlmacenamiento` recuerda las columnas visibles en `localStorage` (nuevo `lib/columnas-visibles`: `leerColumnasOcultas`, `guardarColumnasOcultas`, `interpretarColumnasOcultas`; nunca lanza). Lo recordado se lee con `useSyncExternalStore`, así que no hay desajuste de hidratación.
+- Pruebas `scripts/tests/tabla-movil.test.mjs` y casos en la galería (`/ejemplo`).
+
+### Notes
+- No se añade selector de densidad de filas (decisión de producto).
+- Archivos compartidos tocados: `scripts/build-registry.mjs` (una entrada en la lista de `lib`), `registry/registry.json` (regenerado), `package.json`/`package-lock.json` (versión).
+
 ## [0.6.0] - 2026-11-17
 
 ### Added

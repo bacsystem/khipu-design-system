@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15",
+  "generatedAt": "2026-11-17",
   "items": {
     "components/apariencia-opciones": {
       "name": "apariencia-opciones",
@@ -106,6 +106,7 @@
         "components/datos/tabla-datos",
         "components/formularios/buscador",
         "components/ui/menu",
+        "lib/columnas-visibles",
         "lib/estilos",
         "lib/exportar",
         "lib/ordenar"
@@ -1476,6 +1477,16 @@
       "category": "lib",
       "files": [
         "src/lib/exportar.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/columnas-visibles": {
+      "name": "columnas-visibles",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/columnas-visibles.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

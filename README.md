@@ -77,6 +77,7 @@ import { Campo } from "khipu-design-system/formularios/campo";
 import { Tabs } from "khipu-design-system/navegacion/tabs";
 import { PieTabla } from "khipu-design-system/patrones/pie-tabla";
 import { TablaDatos } from "khipu-design-system/datos/tabla-datos";
+import { TablaListado } from "khipu-design-system/datos/tabla-listado"; // tarjetaMovil, anchoMinimo, pie, filaActiva, claveAlmacenamiento
 import { ACCION_PRINCIPAL, CAMPO } from "khipu-design-system/lib/estilos";
 import { cn } from "khipu-design-system/utils";
 import { Providers } from "khipu-design-system/providers";

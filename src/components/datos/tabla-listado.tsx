@@ -1,7 +1,7 @@
 "use client";
 
-import { ColumnsIcon, DownloadSimpleIcon, FileCsvIcon, PrinterIcon } from "@phosphor-icons/react";
-import { useMemo, useState, type ReactNode } from "react";
+import { ArrowCounterClockwiseIcon, ColumnsIcon, DownloadSimpleIcon, FileCsvIcon, PrinterIcon } from "@phosphor-icons/react";
+import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import { TablaDatos, type Columna, type TextosTablaDatos } from "@/components/datos/tabla-datos";
 import { Buscador } from "@/components/formularios/buscador";
 import {
@@ -11,8 +11,10 @@ import {
   MenuGroup,
   MenuGroupLabel,
   MenuItem,
+  MenuSeparator,
   MenuTrigger,
 } from "@/components/ui/menu";
+import { interpretarColumnasOcultas, guardarColumnasOcultas } from "@/lib/columnas-visibles";
 import { ACCION_SECUNDARIA } from "@/lib/estilos";
 import { descargarCsv, imprimirTabla, type ColumnaExportable } from "@/lib/exportar";
 import { ordenarFilas, type OrdenTabla } from "@/lib/ordenar";
@@ -30,7 +32,7 @@ export type ColumnaListado<T> = Columna<T> & {
   texto?: (fila: T) => string | number | null | undefined;
   tituloTexto?: string;
   exportable?: boolean;
-  /** `false`: no aparece en el selector de columnas (siempre visible). */
+  /** `false`: siempre visible; en el selector de columnas aparece marcada y bloqueada con «Fijo» (`textos.fijo`). */
   ocultable?: boolean;
   /** Oculta la columna al inicio (el usuario puede mostrarla). Solo vale para columnas que se pueden ocultar. */
   ocultaInicial?: boolean;
@@ -41,6 +43,20 @@ function textoDe<T>(c: ColumnaListado<T>, f: T): string | number | null | undefi
   if (c.valor) return c.valor(f);
   const v = (f as Record<string, unknown>)[c.id];
   return typeof v === "string" || typeof v === "number" ? v : v == null ? "" : String(v);
+}
+
+function leerCrudo(clave: string): string | null {
+  try {
+    return localStorage.getItem(clave);
+  } catch {
+    return null;
+  }
+}
+
+/** Otra pestaña cambió lo recordado: el store externo se vuelve a leer. */
+function suscribirAlmacen(avisar: () => void): () => void {
+  window.addEventListener("storage", avisar);
+  return () => window.removeEventListener("storage", avisar);
 }
 
 function nombreDe<T>(c: ColumnaListado<T>): string | null {
@@ -66,6 +82,10 @@ export type TextosTablaListado = {
   exportar: string;
   exportarCsv: string;
   imprimir: string;
+  /** Rótulo de una columna que no se puede ocultar (`ocultable: false`) en el selector de columnas. */
+  fijo: string;
+  /** Acción del selector que devuelve las columnas a su estado inicial (`ocultaInicial`). */
+  restablecer: string;
 };
 
 const TEXTOS_ES: TextosTablaListado = {
@@ -76,6 +96,8 @@ const TEXTOS_ES: TextosTablaListado = {
   exportar: "Exportar",
   exportarCsv: "Exportar CSV",
   imprimir: "Imprimir",
+  fijo: "Fijo",
+  restablecer: "Restablecer",
 };
 
 /**
@@ -98,6 +120,7 @@ export function TablaListado<T>({
   acciones,
   textos: textosParciales,
   onImpresionBloqueada,
+  claveAlmacenamiento,
   ...resto
 }: {
   columnas: ColumnaListado<T>[];
@@ -113,14 +136,39 @@ export function TablaListado<T>({
   /** Textos de la barra y, además, los de la tabla (`TextosTablaDatos`), que se pasan a `TablaDatos`. */
   textos?: Partial<TextosTablaListado & TextosTablaDatos>;
   onImpresionBloqueada?: () => void;
+  /**
+   * Recuerda las columnas visibles en `localStorage` bajo esta clave (una por listado: `"app:clientes:columnas"`). Sin ella
+   * (o sin almacenamiento) se parte siempre de `ocultaInicial`. Lo guardado se aplica tras hidratar, sin desajuste con el servidor.
+   */
+  claveAlmacenamiento?: string;
 } & Omit<React.ComponentProps<typeof TablaDatos<T>>, "columnas" | "filas" | "clave" | "textos">) {
   const textos = { ...TEXTOS_ES, ...textosParciales };
   const textoBusqueda = placeholderBusqueda ?? textos.buscar;
   const [busqueda, setBusqueda] = useState("");
   const [orden, setOrden] = useState<OrdenTabla>(resto.ordenInicial ?? null);
 
-  const ocultables = columnas.filter((c) => c.ocultable !== false && nombreDe(c) !== null);
-  const [ocultas, setOcultas] = useState<string[]>(() => ocultables.filter((c) => c.ocultaInicial).map((c) => c.id));
+  const todas = columnas.filter((c) => nombreDe(c) !== null);
+  // Lo recordado se lee como un store externo: en el servidor y al hidratar vale `null` (sin desajuste) y luego el valor real.
+  const recordado = useSyncExternalStore(
+    suscribirAlmacen,
+    () => (claveAlmacenamiento ? leerCrudo(claveAlmacenamiento) : null),
+    () => null,
+  );
+  // La elección hecha en esta sesión manda sobre lo recordado, que manda sobre `ocultaInicial`.
+  const [elegidas, setElegidas] = useState<string[] | null>(null);
+  const ocultas = useMemo(() => {
+    const ocultables = columnas.filter((c) => c.ocultable !== false && nombreDe(c) !== null);
+    const guardadas = elegidas ?? interpretarColumnasOcultas(recordado);
+    return guardadas
+      ? guardadas.filter((id) => ocultables.some((c) => c.id === id))
+      : ocultables.filter((c) => c.ocultaInicial).map((c) => c.id);
+  }, [columnas, elegidas, recordado]);
+
+  function cambiarOcultas(nuevas: string[] | null) {
+    // `null` = restablecer: se olvida lo elegido y lo recordado, y vuelve `ocultaInicial`.
+    setElegidas(nuevas ?? columnas.filter((c) => c.ocultable !== false && nombreDe(c) !== null && c.ocultaInicial).map((c) => c.id));
+    if (claveAlmacenamiento) guardarColumnasOcultas(claveAlmacenamiento, nuevas);
+  }
 
   const visibles = useMemo(() => columnas.filter((c) => !ocultas.includes(c.id)), [columnas, ocultas]);
 
@@ -149,7 +197,7 @@ export function TablaListado<T>({
 
   return (
     <div className="flex min-w-0 flex-col gap-3">
-      {buscar || exportar || acciones || ocultables.length > 0 ? (
+      {buscar || exportar || acciones || todas.length > 0 ? (
         <div className="flex flex-wrap items-center gap-2" data-sin-imprimir>
           {buscar ? (
             <div className="min-w-56 flex-1">
@@ -164,7 +212,7 @@ export function TablaListado<T>({
           ) : (
             <div className="flex-1" />
           )}
-          {ocultables.length > 0 ? (
+          {todas.length > 0 ? (
             <Menu>
               <MenuTrigger className={ACCION_SECUNDARIA} aria-label={textos.columnas} title={textos.columnas}>
                 <ColumnsIcon className="size-4" />
@@ -173,18 +221,30 @@ export function TablaListado<T>({
               <MenuContent align="end" className="min-w-48">
                 <MenuGroup>
                   <MenuGroupLabel>{textos.columnasVisibles}</MenuGroupLabel>
-                  {ocultables.map((c) => (
-                    <MenuCheckboxItem
-                      key={c.id}
-                      checked={!ocultas.includes(c.id)}
-                      onCheckedChange={(visible) =>
-                        setOcultas((o) => (visible ? o.filter((x) => x !== c.id) : [...o, c.id]))
-                      }
-                    >
-                      {nombreDe(c)}
-                    </MenuCheckboxItem>
-                  ))}
+                  {todas.map((c) =>
+                    c.ocultable === false ? (
+                      <MenuCheckboxItem key={c.id} checked disabled>
+                        {nombreDe(c)}
+                        <span className="ml-auto pl-3 text-etiqueta text-muted-foreground">{textos.fijo}</span>
+                      </MenuCheckboxItem>
+                    ) : (
+                      <MenuCheckboxItem
+                        key={c.id}
+                        checked={!ocultas.includes(c.id)}
+                        onCheckedChange={(visible) =>
+                          cambiarOcultas(visible ? ocultas.filter((x) => x !== c.id) : [...ocultas, c.id])
+                        }
+                      >
+                        {nombreDe(c)}
+                      </MenuCheckboxItem>
+                    ),
+                  )}
                 </MenuGroup>
+                <MenuSeparator />
+                <MenuItem onClick={() => cambiarOcultas(null)}>
+                  <ArrowCounterClockwiseIcon className="size-4" />
+                  {textos.restablecer}
+                </MenuItem>
               </MenuContent>
             </Menu>
           ) : null}
@@ -218,6 +278,7 @@ export function TablaListado<T>({
         columnas={visibles}
         filas={filtradas}
         clave={clave}
+        titulo={titulo}
         {...resto}
         reinicioPagina={reinicio}
         textos={textosParciales}
