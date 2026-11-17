@@ -9,7 +9,7 @@ export type TabItem<T extends string> = { id: T; etiqueta: ReactNode; contador?:
 
 // h-10 fijo (no padding vertical) para que el contador no altere la altura de la fila.
 const PESTANA_LINEA =
-  "inline-flex h-10 items-center gap-1.5 px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground";
+  "inline-flex h-10 items-center gap-1.5 px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
 
 // base-ui posiciona el indicador con --active-tab-left/top/width/height; la transición CSS lo desliza entre pestañas.
 // `-z-10` dentro de una lista `isolate`: queda sobre el fondo de la lista y debajo del texto de las pestañas.
@@ -30,6 +30,8 @@ const INDICADOR = {
  * Pestañas de página. `estilo="segmentado"` es el control en caja de las barras de filtro; `"linea"` es la pestaña subrayada para secciones de detalle.
  * Los paneles se pasan como `render(id)` (`children`) o, desde un Server Component —que no puede pasarle una función a un componente de cliente—, ya
  * armados en `paneles`, uno por id. En los dos casos solo se monta el panel activo.
+ * Sin `children` ni `paneles` es una **tira sola**: no hay paneles (ni su `pt-4`) y las pestañas no llevan `aria-controls`; el contenido lo pinta la app
+ * fuera del componente según `valor`/`onCambio`; si esa región tiene `id`, pásalo en `controla` para que cada pestaña lo declare en `aria-controls`. Los iconos dentro de una pestaña miden `size-4` salvo que lleven su `size-*`.
  */
 export function Tabs<T extends string>({
   items,
@@ -39,6 +41,7 @@ export function Tabs<T extends string>({
   estilo = "linea",
   children,
   paneles,
+  controla,
   className,
 }: {
   items: TabItem<T>[];
@@ -48,24 +51,29 @@ export function Tabs<T extends string>({
   estilo?: "linea" | "segmentado";
   children?: (id: T) => ReactNode;
   paneles?: Partial<Record<T, ReactNode>>;
+  /** Solo en tira sola: `id` de la región de contenido de la app (con `role="tabpanel"`); va como `aria-controls` en cada pestaña. */
+  controla?: string;
   className?: string;
 }) {
+  const conPaneles = children != null || paneles != null;
   return (
     <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => onCambio?.(v as T)} className={className}>
       <TabsPrimitive.List className={cn("relative isolate", estilo === "linea" ? PESTANAS_LINEA : SEGMENTADO)}>
         {items.map((t) => (
-          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
+          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} {...(!conPaneles && controla ? { "aria-controls": controla } : {})} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
             {t.contador != null ? <span className="rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums in-data-active:bg-acento in-data-active:text-acento-texto">{t.contador}</span> : null}
           </TabsPrimitive.Tab>
         ))}
         <TabsPrimitive.Indicator className={INDICADOR[estilo]} />
       </TabsPrimitive.List>
-      {items.map((t) => (
-        <TabsPrimitive.Panel key={t.id} value={t.id} className="pt-4 outline-none">
-          {children ? children(t.id) : paneles?.[t.id]}
-        </TabsPrimitive.Panel>
-      ))}
+      {conPaneles
+        ? items.map((t) => (
+            <TabsPrimitive.Panel key={t.id} value={t.id} className="pt-4 outline-none">
+              {children ? children(t.id) : paneles?.[t.id]}
+            </TabsPrimitive.Panel>
+          ))
+        : null}
     </TabsPrimitive.Root>
   );
 }

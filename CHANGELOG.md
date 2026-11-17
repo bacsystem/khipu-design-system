@@ -14,6 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Si usas la CLI (`khipu add toast`)** se copia también `lib/cola-toast`. `useToast()` ya no exige estar dentro de un `ToastProvider` (sin él, los avisos esperan en la cola). **Un solo `ToastProvider` por app:** ahora comparten el almacén del módulo, así que con dos cada aviso sale dos veces (antes cada uno tenía el suyo); en desarrollo se avisa en consola.
 - `toast.promise` ya no tumba la app: base-ui cambia el tipo del aviso a `loading`/`success`, que el visor no conocía (React #130, también en 0.8.0). `loading` se pinta con `Spinner` y tono info, `success` como ok y un tipo desconocido como info. La promesa que devuelve no deja un rechazo sin capturar.
 
+## [0.9.0] - 2026-11-17
+
+### Added
+- **`Tabs` como tira sola**: sin `children` ni `paneles` el componente no monta ningún `Panel`. Antes montaba uno por pestaña, vacío, con `pt-4` (16 px de hueco bajo la tira) y con `aria-controls` hacia un panel sin contenido. Ahora la tira es solo `role="tablist"` + `role="tab"` con `aria-selected` (sin `aria-controls`), y el contenido lo pinta la app fuera, con `valor`/`onCambio` (controlado) o `defaultValor`. Prop opcional `controla` (id de la región de contenido de la app, con `role="tabpanel"`): va como `aria-controls` en cada pestaña de la tira sola. La galería lo muestra.
+- Las recetas de pestaña (`PESTANA_LINEA` de `Tabs estilo="linea"` y `SEGMENTO_BASE` de `lib/estilos` para `"segmentado"`) fijan el tamaño del icono: `[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`, la misma regla que `ui/button`. Un icono con su propio `size-*` lo conserva.
+
+### Changed
+- **Los iconos de las pestañas ahora miden 16 px** (`size-4`) en `linea` y `segmentado`, y también en la receta exportada `SEGMENTO` (que incluye `SEGMENTO_BASE`). Para otro tamaño usa `size-*` en el icono (no `h-*`/`w-*`, que no desactivan la regla).
+- Compatible hacia atrás: con `children` o `paneles` el marcado es el mismo de 0.8.0 salvo la regla de iconos en la clase de cada pestaña. **Si usas la CLI (`khipu add`) vuelve a copiar `lib/estilos.ts` y `navegacion/tabs.tsx`.** Quien pasaba `className="size-4"` a los iconos de una pestaña puede quitarlo.
+
 ## [0.8.0] - 2026-11-17
 
 ### Added

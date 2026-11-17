@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # Reused by release.yml so a release runs exactly the same checks.
+  workflow_call:
+
+# On a PR a new push cancels the previous run; on main (and when called from release.yml) runs
+# are never cancelled. The "ci-" prefix keeps this group apart from release.yml's.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: checks (lint, typecheck, test, paquete, registry, build)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # .nvmrc pins the Node major (22; Next 16 needs >= 20.9)
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # eslint + check:alturas + check:tipografia + check:contraste
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run verify:paquete
+      - name: Registry is up to date
+        run: |
+          npm run registry:build
+          git diff --exit-code -- registry || {
+            echo "::error::registry/ is out of date: run 'npm run registry:build' and commit the result"
+            exit 1
+          }
+          untracked="$(git ls-files --others --exclude-standard -- registry)"
+          if [ -n "$untracked" ]; then
+            echo "::error::registry/ has untracked generated files: $untracked"
+            exit 1
+          fi
+      - name: Example app builds
+        run: npm run build
+
+  next15:
+    # The repo develops on Next 16 but the peer also promises 15.5: install next@15.5.28
+    # (--no-save), then verify:paquete + npm test. It mutates node_modules only, which is
+    # discarded with the runner, so there is nothing to restore (locally, run 'npm ci' after).
+    name: next15 (peer contract)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run verify:next15
