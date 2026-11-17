@@ -55,6 +55,16 @@ export const SEGMENTO_BASE =
 // En oscuro el activo usa `input` (blanco translúcido): `card` es más oscuro que `secondary` y el activo se hundiría.
 export const SEGMENTO = `${SEGMENTO_BASE} data-active:bg-card data-active:shadow-sm dark:data-active:bg-input aria-[current=page]:bg-card aria-[current=page]:shadow-sm dark:aria-[current=page]:bg-input`;
 
+/**
+ * Pestaña subrayada (`Tabs estilo="linea"` y `TabsRuta`): base común, sin el estado activo ni el subrayado, que añade cada uno (`data-active:` o
+ * `aria-[current=page]:`). `h-10` fijo para que un contador no cambie la altura de la fila. El anillo de foco es **hacia dentro** (`ring-inset`):
+ * la fila es `overflow-x-auto` y recorta también en vertical, y un anillo con separación se cortaría.
+ */
+export const PESTANA_LINEA_BASE =
+  "inline-flex h-10 items-center gap-1.5 px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+/** Contador de una pestaña (`Tabs`, `TabsRuta`): cada una le añade su estado activo. */
+export const CONTADOR_PESTANA = "rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums";
+
 // ── Formularios: el campo y su CTA ──
 /** Foco de un campo: borde y anillo del acento de la paleta (en claro, el texto del acento para que el borde llegue a 3:1). `CAMPO` y `SELECT_NATIVO` lo llevan escrito (las recetas de control van en texto plano: las revisa verificar-alturas). */
 export const FOCO_CAMPO =
