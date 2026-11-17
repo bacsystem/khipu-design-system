@@ -535,6 +535,29 @@
         "lib/utils"
       ]
     },
+    "components/nav/centro-notificaciones": {
+      "name": "centro-notificaciones",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/centro-notificaciones.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/feedback/estado-vacio",
+        "components/patrones/metricas",
+        "components/ui/popover",
+        "components/ui/scroll-area",
+        "lib/estilos",
+        "lib/formato",
+        "lib/iconos",
+        "lib/navegacion",
+        "lib/utils"
+      ]
+    },
     "components/nav/logo": {
       "name": "logo",
       "type": "component",
@@ -841,6 +864,19 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/tabs-ruta": {
+      "name": "tabs-ruta",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/tabs-ruta.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/estilos",
         "lib/utils"
       ]
     },

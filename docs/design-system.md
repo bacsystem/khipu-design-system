@@ -283,6 +283,25 @@ El selector de tema **no** está en la top bar: vive en el menú de usuario.
 
 ---
 
+## 8b. Notificaciones y pestañas de ruta (`nav/centro-notificaciones.tsx`, `navegacion/tabs-ruta.tsx`)
+
+**`CentroNotificaciones`** — la campana de la top bar. Todo es dato de la app: `notificaciones: Notificacion[]` (`{ id, titulo, descripcion?, fecha /* ISO */, tono?, icono?, href?, leida }`), `onLeer(id)`, `onLeerTodas()`, `verTodas?: { href, etiqueta }`, `textos?` (`Partial<TextosNotificaciones>`, valores en `TEXTOS_NOTIFICACIONES_ES`) y `locale?` para las fechas. El kit no guarda el estado de lectura: la app lo actualiza (o llama a su API) en los callbacks y vuelve a pasar la lista.
+- **Disparador:** `size-control` redondo (receta `CONTROL_FILTRO`), `aria-label` «Notificaciones, 3 sin leer» (`textos.etiquetaBoton`) y un punto `bg-destructive` solo si hay sin leer (el punto es decorativo: lo que anuncia el lector es el `aria-label`).
+- **Panel:** `Popover` de 360 px (`md:w-90`; ancho completo menos 1 rem bajo `md`), diálogo nombrado por su título, con «N sin leer» como descripción (`aria-live="polite"`: cambia al marcar). «Marcar todas como leídas» solo con `onLeerTodas` y pendientes. Más de 4 notificaciones → `ScrollArea` de `min(24rem, 60svh)`; con menos, el panel mide su contenido. Vacío → `EstadoVacio` compacto.
+- **Fila:** icono en caja del tono (el icono cambia con el tono: no depende solo del color), título (semibold si no leída), descripción a 2 líneas, `<time dateTime>` con `formatearFechaHora` (hora de Lima). Con `href` es un `Link`; sin `href` y sin leer, un `<button>` que la marca en el sitio; leída y sin enlace, texto. Las sin leer llevan un punto y «Sin leer» (`sr-only`). Abrir una sin leer llama a `onLeer(id)`; un clic simple en un enlace cierra el panel (⌘/Ctrl-clic abre otra pestaña y lo deja abierto).
+- **Seguridad:** el `href` solo se acepta si es una ruta de la app (`/x`) o `http(s)://`; `javascript:`, `data:` y `//host` se descartan (`hrefNotificacionSeguro`).
+- **Teclado:** Enter/Espacio abre; el foco entra al panel; Tab recorre las filas y las acciones (el anillo de foco va hacia dentro porque el panel recorta); Esc cierra y devuelve el foco a la campana.
+- No usa `usePathname`: no necesita `<Suspense>`. `PanelNotificaciones` (el contenido) es público pero va dentro de un `Popover` (su título y descripción nombran el diálogo).
+
+**`TabsRuta`** — pestañas cuyo destino es otra URL (compras → proveedores → órdenes). `items: { href, etiqueta: ReactNode, contador?, exacto? }[]`, `etiqueta` (nombre de la `<nav>`) y `estilo: "linea" | "segmentado"` (por defecto `"linea"`).
+- Es una `<nav aria-label>` con una lista de `Link` y `aria-current="page"` en la ruta actual, **no** `role="tablist"`: cada pestaña es una página, no un panel. Para pestañas de un mismo panel sin cambiar de URL, `Tabs`.
+- **Activa:** por **segmento** (`/compras` activa `/compras/ordenes` pero no `/comprasx`), ignorando query y hash, y con `exacto` solo la ruta idéntica (úsalo en la pestaña «raíz», o seguiría activa en todas las demás). Si coinciden varias gana la de href más largo: nunca hay dos con `aria-current` (`indiceActivoRuta`).
+- **Look:** el de `Tabs`. `"linea"` es la pestaña subrayada (`h-10`, contador igual al de `Tabs`); `"segmentado"` usa `SEGMENTADO` + `SEGMENTO` (el activo se pinta con `aria-current`). Un enlace no tiene indicador deslizante: el subrayado/relleno cambia sin animar entre pestañas.
+- **Móvil:** la fila se desplaza en horizontal (sin barra a la vista, `overscroll-x-contain`) y la pestaña activa se centra al montar y al cambiar de ruta (respeta «reducir movimiento»).
+- **`usePathname`:** con `cacheComponents` (Next 16) va dentro de `<Suspense>`, igual que `SidebarNav`, `TopBar` y `BarraInferior`.
+
+---
+
 ## 9. Botones
 
 ### `ui/button.tsx` (cva)
@@ -475,7 +494,7 @@ Para un aviso corto que pide una decisión (la sesión está por finalizar, la s
 | Carpeta | Componentes |
 |---|---|
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
-| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `rail`, `barra-inferior`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
+| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `rail`, `barra-inferior`, `centro-notificaciones`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
 | `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
 | `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
 | `components/empresa` | `certificado-form`, `credenciales-sol-form`, `nueva-empresa-dialog`, `nueva-empresa-form`, `referencia-empresa` |
@@ -492,7 +511,7 @@ Todo lo anterior es este mismo repo (`khipu-design-system`), pensado para copiar
 |---|---|
 | `feedback/` | `ToastProvider` + `useToast()`, `Tooltip`, `Alerta`, `Banner`, `Skeleton*`, `EstadoVacio`, `Spinner`, `ProgresoLineal`, `ProgresoCircular` |
 | `formularios/` | `Campo`, `Entrada`, `AreaTexto`, `Formulario`, `Casilla`, `Interruptor`, `GrupoOpciones`, `SelectCampo`, `Combobox`, `Autocomplete`, `Contrasena`, `Deslizador`, `EntradaFecha`, `EntradaRangoFechas`, `EntradaMonto`, `ZonaArchivos`, `Buscador`, `StepperNumerico` |
-| `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯; una acción deshabilitada explica el porqué con `ayuda`, texto visible bajo el ítem: un `title` no llega a un ítem deshabilitado —sin puntero— ni al móvil), `DialogoConfirmacion`, `Paleta` (⌘K) |
+| `navegacion/` | `Tabs`, `Pasos` + `TarjetaPaso`, `PanelLateral`, `Acordeon`, `MenuAcciones` (⋯; una acción deshabilitada explica el porqué con `ayuda`, texto visible bajo el ítem: un `title` no llega a un ítem deshabilitado —sin puntero— ni al móvil), `DialogoConfirmacion`, `Paleta` (⌘K), `TabsRuta` (pestañas que son rutas: enlaces con `aria-current`, ver §8b) |
 | `datos/` | `TablaDatos<T>`, `TablaListado<T>` (buscador, columnas visibles recordadas, CSV e impresión; tarjetas en móvil, `anchoMinimo`, `pie`, `filaActiva`), `Timeline`, `ListaDatos`, `Kpi` + `Sparkline`, `GraficoBarras`, `GraficoLineas` |
 
 Los gráficos usan `--chart-1..5` (ver «Gráficos» más abajo); en oscuro los pasos semánticos son `#27a070 #bf8a26 #dc4a68 #3a88c6`, validados para daltonismo y contraste, y `--chart-1` es el `acento-2` de la paleta.

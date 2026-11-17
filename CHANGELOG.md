@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`CentroNotificaciones`** (`nav/centro-notificaciones`): la campana de la top bar con un panel (`Popover`) de notificaciones. Todo son datos de la app: `notificaciones: Notificacion[]` (`id`, `titulo`, `descripcion?`, `fecha` ISO en hora de Lima, `tono?`, `icono?`, `href?`, `leida`), `onLeer(id)`, `onLeerTodas()`, `verTodas?`, `textos?` (`Partial<TextosNotificaciones>`; `TEXTOS_NOTIFICACIONES_ES`) y `locale?`. Disparador `size-control` con `aria-label` «Notificaciones, 3 sin leer» y un punto si hay sin leer; panel de 360 px (ancho completo bajo `md`) nombrado por su título, con `ScrollArea` desde 5 notificaciones y `EstadoVacio` si no hay ninguna. Cada fila es un enlace (con `href`), un botón que la marca en el sitio (sin `href` y sin leer) o texto; las sin leer llevan punto y «Sin leer» para el lector de pantalla. El `href` solo se acepta si es una ruta de la app o `http(s)` (`hrefNotificacionSeguro`). Teclado: Enter/Espacio abre, Tab recorre, Esc cierra y devuelve el foco a la campana. No usa `usePathname`. `PanelNotificaciones` (el contenido, dentro de un `Popover`) también es público.
+- **`TabsRuta`** (`navegacion/tabs-ruta`): pestañas que son rutas. Una `<nav aria-label>` con una lista de `next/link` y `aria-current="page"` en la ruta actual (con `usePathname`; coincidencia por segmento, `exacto` por item y, si coinciden varias, gana la de href más largo: `indiceActivoRuta`), no `role="tablist"`. `items: { href, etiqueta, contador?, exacto? }[]`, `etiqueta` y `estilo: "linea" | "segmentado"`, con el mismo aspecto que `Tabs` (contador incluido). En móvil se desplaza en horizontal y centra la pestaña activa. **Con `cacheComponents` (Next 16)** va dentro de `<Suspense>`, igual que `SidebarNav`, `TopBar` y `BarraInferior`.
+- App de ejemplo: la galería muestra las dos piezas y `/ejemplo/series` es la segunda ruta de la demo de `TabsRuta`.
+
 ## [0.8.0] - 2026-11-17
 
 ### Added
