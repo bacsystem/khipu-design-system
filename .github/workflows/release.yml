@@ -8,7 +8,8 @@ on:
 
 # One release at a time; never cancel a run that may be halfway through tagging.
 # (GitHub keeps only the newest pending run: if two pushes land while one run is active the
-# older pending one is dropped, which is harmless unless both bump the version; see README.)
+# older pending one is dropped, which is harmless unless both bump the version; see the README,
+# section "Publicar una versión", for how to recover.)
 concurrency:
   group: release
   cancel-in-progress: false
@@ -24,6 +25,7 @@ jobs:
     outputs:
       version: ${{ steps.plan.outputs.version }}
       needs_release: ${{ steps.plan.outputs.needs_release }}
+      tag_exists: ${{ steps.plan.outputs.tag_exists }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -32,6 +34,8 @@ jobs:
         with:
           node-version-file: .nvmrc
       - id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: .github/scripts/release-plan.sh
 
   ci:
@@ -65,6 +69,8 @@ jobs:
           .github/scripts/tag-message.sh "$VERSION" "$GITHUB_SHA" > "$RUNNER_TEMP/tag-message.txt"
           echo "Tag message: $(cat "$RUNNER_TEMP/tag-message.txt")"
       - name: Create the annotated tag
+        # Skipped when the tag already exists (recovery: tag without release)
+        if: needs.plan.outputs.tag_exists != 'true'
         run: |
           # Re-checked here (not only in "plan") so a re-run of this job is idempotent.
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" >/dev/null 2>&1; then
@@ -83,5 +89,11 @@ jobs:
             echo "Release v$VERSION already exists; skipping."
             exit 0
           fi
+          # Only the highest version is "Latest" (the API marks it latest by default otherwise)
+          if [ "$(.github/scripts/is-highest-version.sh "$VERSION")" = true ]; then
+            latest=--latest
+          else
+            latest=--latest=false
+          fi
           gh release create "v$VERSION" --verify-tag --title "v$VERSION" \
-            --notes-file "$RUNNER_TEMP/notes.md" --latest
+            --notes-file "$RUNNER_TEMP/notes.md" "$latest"
