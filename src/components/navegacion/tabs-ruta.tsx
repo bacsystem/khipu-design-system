@@ -3,63 +3,51 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, type ReactNode } from "react";
-import { FOCO, SEGMENTADO, SEGMENTO } from "@/lib/estilos";
+import { CONTADOR_PESTANA, PESTANA_LINEA_BASE, SEGMENTADO, SEGMENTO } from "@/lib/estilos";
+import { desplazamientoCentrado, indiceActivoRuta } from "@/lib/navegacion";
 import { cn } from "@/lib/utils";
 
+/** Tono del contador: los de estado (`ok`, `aviso`, `info`) o `neutro` (por defecto, que en la pestaña activa toma el acento). */
+export type TonoContadorTab = "ok" | "aviso" | "info" | "neutro";
+
 export type ItemTabsRuta = {
+  /** Ruta de la app (empieza por `/`); con i18n por segmento, con el idioma incluido (`usePathname` lo trae). Query y hash no cuentan para la activa. */
   href: string;
   etiqueta: ReactNode;
-  /** Contador junto a la etiqueta (se muestra también el 0). */
-  contador?: number;
+  /** Contador o texto corto tras la etiqueta («12», «SUNAT 13.1»); se muestra también el 0. */
+  contador?: number | string;
+  /** Color del contador (`neutro` si no se pasa). */
+  tonoContador?: TonoContadorTab;
   /** Activa solo con la ruta exacta. Sin esto, también con sus subrutas (`/compras/proveedores/42` mantiene «Proveedores»). */
   exacto?: boolean;
 };
 
-// Receta de la pestaña subrayada (la misma de `Tabs estilo="linea"`) pero sobre un enlace: el activo se marca con `aria-current="page"` y el
-// subrayado es un `::after` (aquí no hay indicador que se deslice entre pestañas, porque cada pestaña es una página).
+// El subrayado de la activa es un `::after` (aquí no hay indicador que se deslice entre pestañas, porque cada pestaña es una página). La base es la receta
+// compartida con `Tabs` (`PESTANA_LINEA_BASE`, con el foco hacia dentro porque la fila recorta).
 const PESTANA_LINEA = cn(
-  "group relative inline-flex h-10 items-center gap-1.5 px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida hover:text-foreground aria-[current=page]:text-foreground",
+  "group relative aria-[current=page]:text-foreground",
+  PESTANA_LINEA_BASE,
   "after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-foreground after:opacity-0 after:transition-opacity aria-[current=page]:after:opacity-100",
-  FOCO,
 );
-// Mismo contador que `Tabs`; el activo lo marca `aria-current` del enlace (`group-aria-[current=page]`).
-const CONTADOR =
-  "rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums group-aria-[current=page]:bg-acento group-aria-[current=page]:text-acento-texto";
+const CONTADOR_NEUTRO = "group-aria-[current=page]:bg-acento group-aria-[current=page]:text-acento-texto";
+const CONTADOR_TONO: Record<TonoContadorTab, string> = {
+  ok: "bg-success text-success-foreground",
+  aviso: "bg-warning text-warning-foreground",
+  info: "bg-accent text-accent-foreground",
+  neutro: CONTADOR_NEUTRO,
+};
 // En móvil las pestañas que no entran se desplazan en horizontal, sin barra a la vista (si no, empujaban la página entera).
 const DESPLAZABLE = "max-w-full overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
-const rutaDe = (href: string) => {
-  const ruta = href.split(/[?#]/)[0] ?? "";
-  return ruta.length > 1 ? ruta.replace(/\/+$/, "") : ruta;
-};
-
-/**
- * Qué pestaña corresponde a `pathname`, o -1. Sin `exacto` coincide por **segmento** (`/compras` activa `/compras/ordenes`, no `/comprasx`) y,
- * si coinciden varias (`/compras` y `/compras/ordenes`), gana la de href más largo: nunca hay dos con `aria-current`.
- */
-export function indiceActivoRuta(items: Pick<ItemTabsRuta, "href" | "exacto">[], pathname: string): number {
-  const actual = rutaDe(pathname);
-  let mejor = -1;
-  let largo = -1;
-  items.forEach((item, i) => {
-    const base = rutaDe(item.href);
-    const coincide = actual === base || (!item.exacto && base !== "/" && actual.startsWith(`${base}/`));
-    if (coincide && base.length > largo) {
-      mejor = i;
-      largo = base.length;
-    }
-  });
-  return mejor;
-}
-
 /**
  * Pestañas que son **rutas** (compras → proveedores → órdenes): una `<nav aria-label>` con una lista de enlaces `next/link`, no `role="tablist"`,
- * porque cada una es una página y no un panel. La de la ruta actual lleva `aria-current="page"` (la detecta con `usePathname`, ver `indiceActivoRuta`).
- * Para pestañas de un mismo panel (sin cambiar de URL) usa `Tabs`.
+ * porque cada una es una página y no un panel. La de la ruta actual lleva `aria-current="page"` (la detecta con `usePathname`, ver `indiceActivoRuta`
+ * en `lib/navegacion`, que un Server Component sí puede llamar). Para pestañas de un mismo panel (sin cambiar de URL) usa `Tabs`.
  *
  * - `etiqueta`: nombre accesible de la `<nav>` («Secciones de compras»).
- * - `estilo`: `"linea"` (por defecto, subrayada, para secciones de detalle) o `"segmentado"` (control en caja de las barras de filtro).
- * - `items[].contador`: número opcional tras la etiqueta; `exacto` evita que la pestaña «raíz» siga activa en sus subrutas.
+ * - `estilo`: `"linea"` (por defecto, subrayada, para secciones de detalle) o `"segmentado"` (control en caja de las barras de filtro). Las dos comparten
+ *   receta con `Tabs` (`PESTANA_LINEA_BASE`, `SEGMENTO`, `CONTADOR_PESTANA` de `lib/estilos`).
+ * - `items[].contador`: número o texto corto tras la etiqueta, con `tonoContador` (`ok`, `aviso`, `info`, `neutro`); `exacto` evita que la pestaña «raíz» siga activa en sus subrutas.
  * - En móvil las pestañas se desplazan en horizontal y la activa se centra a la vista al montar y al cambiar de ruta.
  *
  * Usa `usePathname`: con `cacheComponents` (Next 16) va dentro de `<Suspense>`, como `SidebarNav`, `TopBar` y `BarraInferior`.
@@ -84,8 +72,13 @@ export function TabsRuta({
     const nav = navRef.current;
     const enlace = nav?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!nav || !enlace || nav.scrollWidth <= nav.clientWidth) return;
+    const n = nav.getBoundingClientRect();
+    const e = enlace.getBoundingClientRect();
     const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    nav.scrollTo({ left: enlace.offsetLeft - (nav.clientWidth - enlace.offsetWidth) / 2, behavior: reducido ? "auto" : "smooth" });
+    nav.scrollTo({
+      left: desplazamientoCentrado({ izquierda: n.left + nav.clientLeft, ancho: nav.clientWidth, scrollLeft: nav.scrollLeft }, { izquierda: e.left, ancho: e.width }),
+      behavior: reducido ? "auto" : "smooth",
+    });
   }, [pathname]);
 
   return (
@@ -95,7 +88,7 @@ export function TabsRuta({
           <li key={item.href} className="flex">
             <Link href={item.href} aria-current={i === activo ? "page" : undefined} className={estilo === "linea" ? PESTANA_LINEA : cn("group", SEGMENTO)}>
               {item.etiqueta}
-              {item.contador != null ? <span className={CONTADOR}>{item.contador}</span> : null}
+              {item.contador != null ? <span className={cn(CONTADOR_PESTANA, CONTADOR_TONO[item.tonoContador ?? "neutro"])}>{item.contador}</span> : null}
             </Link>
           </li>
         ))}

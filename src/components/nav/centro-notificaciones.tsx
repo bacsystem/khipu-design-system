@@ -3,16 +3,27 @@
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { BellIcon, BellSimpleSlashIcon, CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon } from "@phosphor-icons/react";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState, type MouseEvent, type ReactNode } from "react";
 import { EstadoVacio } from "@/components/feedback/estado-vacio";
 import type { Tono } from "@/components/patrones/metricas";
+import { GrupoBotones } from "@/components/ui/grupo-botones";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CONTROL_FILTRO, FOCO } from "@/lib/estilos";
+import { ACCION_SECUNDARIA, CONTROL_FILTRO, FOCO } from "@/lib/estilos";
 import { formatearFechaHora, type LocaleFecha } from "@/lib/formato";
 import { PESO_ICONO, PESO_ICONO_FUNCIONAL, type IconoComponente } from "@/lib/iconos";
-import { esClickSimple } from "@/lib/navegacion";
+import { esClickSimple, etiquetaBotonNotificaciones, hrefNotificacionSeguro, TEXTOS_NOTIFICACIONES_ES, type TextosNotificaciones } from "@/lib/navegacion";
 import { cn } from "@/lib/utils";
+
+// Los helpers puros (`hrefNotificacionSeguro`, `TEXTOS_NOTIFICACIONES_ES`, `etiquetaBotonNotificaciones`) viven en `lib/navegacion`, sin `"use client"`,
+// para que un Server Component pueda usarlos. Solo se reexportan los tipos.
+export type { TextosNotificaciones };
+
+/** Acción de una notificación (un botón bajo ella): con `href` es un enlace, sin él un botón que llama a `onClick`. Sin ninguno de los dos se ignora. */
+export type AccionNotificacion = { etiqueta: string; href?: string; onClick?: () => void };
+
+/** Categoría para filtrar el panel (solo se muestra el filtro si se pasa `categorias`). */
+export type CategoriaNotificacion = { id: string; etiqueta: string };
 
 /** Una notificación. Los datos y su estado de lectura son de la app: el kit no guarda nada. */
 export type Notificacion = {
@@ -27,42 +38,12 @@ export type Notificacion = {
   icono?: IconoComponente;
   /** Destino al abrirla: una ruta de la app (`/…`) o `http(s)://…`; cualquier otro esquema se ignora. */
   href?: string;
+  /** `id` de una de las `categorias` del centro, para el filtro. */
+  categoria?: string;
+  /** Acciones bajo la notificación («Ver comprobante», «Reintentar»…). Son controles aparte: no van dentro del enlace de la fila. */
+  acciones?: AccionNotificacion[];
   leida: boolean;
 };
-
-/** Textos de `CentroNotificaciones`: pasa los que quieras traducir (`Partial`), el resto queda en castellano. */
-export type TextosNotificaciones = {
-  titulo: string;
-  /** `aria-label` del botón de la campana. */
-  etiquetaBoton: (sinLeer: number) => string;
-  /** Subtítulo del panel («3 sin leer»). */
-  sinLeer: (sinLeer: number) => string;
-  marcarTodas: string;
-  vacioTitulo: string;
-  vacioDescripcion: string;
-  /** Texto solo para lectores de pantalla en cada notificación no leída. */
-  marcaSinLeer: string;
-};
-
-export const TEXTOS_NOTIFICACIONES_ES: TextosNotificaciones = {
-  titulo: "Notificaciones",
-  etiquetaBoton: (n) => (n > 0 ? `Notificaciones, ${n} sin leer` : "Notificaciones"),
-  sinLeer: (n) => (n > 0 ? `${n} sin leer` : "Todo al día"),
-  marcarTodas: "Marcar todas como leídas",
-  vacioTitulo: "No hay notificaciones",
-  vacioDescripcion: "Cuando haya novedades, aparecerán aquí.",
-  marcaSinLeer: "Sin leer",
-};
-
-export const etiquetaBotonNotificaciones = (sinLeer: number, textos: TextosNotificaciones = TEXTOS_NOTIFICACIONES_ES) => textos.etiquetaBoton(sinLeer);
-
-/** El `href` solo si es una ruta de la app (`/x`, no `//host`) o http(s): `javascript:`, `data:` y demás ejecutan código o salen de la app. */
-export function hrefNotificacionSeguro(href: string | undefined): string | undefined {
-  const limpio = href?.trim();
-  if (!limpio) return undefined;
-  if (limpio.startsWith("/") && !limpio.startsWith("//") && !limpio.startsWith("/\\")) return limpio;
-  return /^https?:\/\//i.test(limpio) ? limpio : undefined;
-}
 
 const TONOS: Record<Tono, { caja: string; icono: IconoComponente }> = {
   ok: { caja: "bg-success text-success-foreground", icono: CheckCircleIcon },
@@ -76,7 +57,7 @@ const MAX_SIN_SCROLL = 4;
 // Foco hacia dentro: el panel recorta (`overflow-hidden`), un anillo con separación se cortaría.
 const FILA = "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors duration-(--duracion-rapida) ease-salida outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset";
 
-function Contenido({ n, textos, locale }: { n: Notificacion; textos: TextosNotificaciones; locale: LocaleFecha }) {
+function CuerpoFila({ n, textos, locale }: { n: Notificacion; textos: TextosNotificaciones; locale: LocaleFecha }) {
   const tono = TONOS[n.tono ?? "neutro"];
   const Icono = n.icono ?? tono.icono;
   return (
@@ -103,12 +84,23 @@ function Contenido({ n, textos, locale }: { n: Notificacion; textos: TextosNotif
   );
 }
 
+const TODAS = "__todas";
+
+/** Devuelve el foco, tras confirmarse el cambio de estado, a un elemento que sigue montado (el que tenía el foco puede desaparecer al marcar como leída). */
+const enfocar = (el: Element | null | undefined) => {
+  if (el instanceof HTMLElement) setTimeout(() => el.focus(), 0);
+};
+
 /**
- * El contenido del panel (cabecera, lista o estado vacío, pie). Es público para poder componerlo en otro contenedor (p. ej. una página «Notificaciones»)
- * y para probarlo sin abrir el popover. No guarda estado.
+ * El contenido del panel **sin estado**: cabecera, filtro de categorías, lista o estado vacío y pie. La categoría activa llega por `categoria`/`onCategoria`.
+ * Usa `PopoverPrimitive.Title`/`Description`, así que **solo funciona dentro de un `Popover`** (lo nombran como diálogo); si no lo necesitas, usa
+ * `CentroNotificaciones`. Para probarlo, envuélvelo en un `Popover`.
  */
-export function PanelNotificaciones({
+export function ContenidoNotificaciones({
   notificaciones,
+  categorias,
+  categoria = null,
+  onCategoria,
   onLeer,
   onLeerTodas,
   verTodas,
@@ -117,6 +109,10 @@ export function PanelNotificaciones({
   alCerrar,
 }: {
   notificaciones: Notificacion[];
+  categorias?: CategoriaNotificacion[];
+  /** `id` de la categoría activa, o `null` para todas. */
+  categoria?: string | null;
+  onCategoria?: (id: string | null) => void;
   onLeer?: (id: string) => void;
   onLeerTodas?: () => void;
   verTodas?: { href: string; etiqueta: string };
@@ -127,17 +123,19 @@ export function PanelNotificaciones({
 }) {
   const sinLeer = notificaciones.filter((n) => !n.leida).length;
   const hrefVerTodas = hrefNotificacionSeguro(verTodas?.href);
+  const visibles = categoria == null ? notificaciones : notificaciones.filter((n) => n.categoria === categoria);
+  const cuenta = (id: string | null) => (id == null ? notificaciones.length : notificaciones.filter((n) => n.categoria === id).length);
 
-  const filas = notificaciones.map((n) => {
+  const filas = visibles.map((n) => {
     const href = hrefNotificacionSeguro(n.href);
-    const contenido = <Contenido n={n} textos={textos} locale={locale} />;
-    const fondo = n.leida ? "hover:bg-secondary" : "bg-secondary/50 hover:bg-secondary";
-    let fila: ReactNode;
+    const contenido = <CuerpoFila n={n} textos={textos} locale={locale} />;
+    const hover = "hover:bg-secondary";
+    let principal: ReactNode;
     if (href) {
-      fila = (
+      principal = (
         <Link
           href={href}
-          className={cn(FILA, fondo)}
+          className={cn(FILA, hover)}
           onClick={(e) => {
             if (!n.leida) onLeer?.(n.id);
             if (esClickSimple(e)) alCerrar?.();
@@ -147,42 +145,109 @@ export function PanelNotificaciones({
         </Link>
       );
     } else if (!n.leida) {
-      fila = (
-        <button type="button" className={cn(FILA, fondo, "cursor-pointer")} onClick={() => onLeer?.(n.id)}>
+      principal = (
+        <button
+          type="button"
+          className={cn(FILA, hover, "cursor-pointer")}
+          onClick={(e: MouseEvent<HTMLButtonElement>) => {
+            // Al leerse deja de ser un botón y se desmonta: el foco pasa a la fila (el `<li>`, que sigue montado) para no perder el sitio en la lista.
+            const fila = e.currentTarget.closest("li");
+            onLeer?.(n.id);
+            enfocar(fila);
+          }}
+        >
           {contenido}
         </button>
       );
     } else {
-      fila = <div className={FILA}>{contenido}</div>;
+      principal = <div className={FILA}>{contenido}</div>;
     }
+    const acciones = (n.acciones ?? []).flatMap((a, i) => {
+      const destino = hrefNotificacionSeguro(a.href);
+      if (!destino && !a.onClick) return [];
+      return [
+        destino ? (
+          <Link
+            key={i}
+            href={destino}
+            className={ACCION_SECUNDARIA}
+            onClick={(e) => {
+              a.onClick?.();
+              if (!n.leida) onLeer?.(n.id);
+              if (esClickSimple(e)) alCerrar?.();
+            }}
+          >
+            {a.etiqueta}
+          </Link>
+        ) : (
+          <button
+            key={i}
+            type="button"
+            className={ACCION_SECUNDARIA}
+            onClick={() => {
+              a.onClick?.();
+              if (!n.leida) onLeer?.(n.id);
+            }}
+          >
+            {a.etiqueta}
+          </button>
+        ),
+      ];
+    });
     return (
-      <li key={n.id} className="border-b border-border/70 last:border-b-0">
-        {fila}
+      <li key={n.id} tabIndex={-1} className={cn("border-b border-border/70 outline-none last:border-b-0 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50", !n.leida && "bg-secondary/50")}>
+        {principal}
+        {acciones.length > 0 ? <div className="flex flex-wrap gap-2 pr-4 pb-3 pl-15">{acciones}</div> : null}
       </li>
     );
   });
   const lista = <ul>{filas}</ul>;
 
   return (
-    <>
+    <div data-panel-notificaciones="">
       <div className="flex items-start justify-between gap-3 border-b border-border/70 px-4 py-3">
         <div className="min-w-0">
-          <PopoverPrimitive.Title className="text-cuerpo font-semibold text-foreground">{textos.titulo}</PopoverPrimitive.Title>
+          <PopoverPrimitive.Title data-panel-titulo="" tabIndex={-1} className="text-cuerpo font-semibold text-foreground outline-none">
+            {textos.titulo}
+          </PopoverPrimitive.Title>
           <PopoverPrimitive.Description className="mt-0.5 text-etiqueta text-muted-foreground" aria-live="polite">
             {textos.sinLeer(sinLeer)}
           </PopoverPrimitive.Description>
         </div>
         {onLeerTodas && sinLeer > 0 ? (
-          <button type="button" onClick={onLeerTodas} className={cn("shrink-0 rounded-md px-1.5 py-1 text-etiqueta font-medium text-foreground underline-offset-2 hover:bg-secondary hover:underline", FOCO)}>
+          <button
+            type="button"
+            onClick={(e) => {
+              // El botón se oculta cuando no queda nada por leer: el foco pasa al título del panel.
+              const titulo = e.currentTarget.closest("[data-panel-notificaciones]")?.querySelector("[data-panel-titulo]");
+              onLeerTodas();
+              enfocar(titulo);
+            }}
+            className={cn("shrink-0 rounded-md px-1.5 py-1 text-etiqueta font-medium text-foreground underline-offset-2 hover:bg-secondary hover:underline", FOCO)}
+          >
             {textos.marcarTodas}
           </button>
         ) : null}
       </div>
-      {notificaciones.length === 0 ? (
+      {categorias && categorias.length > 0 ? (
+        <div className="overflow-x-auto border-b border-border/70 px-4 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <GrupoBotones
+            tamano="sm"
+            etiqueta={textos.filtrarPor}
+            valor={categoria ?? TODAS}
+            onCambio={(v) => onCategoria?.(v === TODAS ? null : v)}
+            opciones={[
+              { valor: TODAS, etiqueta: <Cuenta etiqueta={textos.todas} n={cuenta(null)} /> },
+              ...categorias.map((c) => ({ valor: c.id, etiqueta: <Cuenta etiqueta={c.etiqueta} n={cuenta(c.id)} /> })),
+            ]}
+          />
+        </div>
+      ) : null}
+      {visibles.length === 0 ? (
         <EstadoVacio icon={BellSimpleSlashIcon} titulo={textos.vacioTitulo} className="rounded-none border-0 bg-transparent px-6 py-8">
           {textos.vacioDescripcion}
         </EstadoVacio>
-      ) : notificaciones.length > MAX_SIN_SCROLL ? (
+      ) : visibles.length > MAX_SIN_SCROLL ? (
         <ScrollArea alto="min(24rem, 60svh)">{lista}</ScrollArea>
       ) : (
         lista
@@ -194,25 +259,43 @@ export function PanelNotificaciones({
           </Link>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function Cuenta({ etiqueta, n }: { etiqueta: string; n: number }) {
+  return (
+    <>
+      {etiqueta} <span className="tabular-nums text-muted-foreground">{n}</span>
     </>
   );
 }
 
+/** `ContenidoNotificaciones` con el filtro de categoría como estado propio. Va dentro de un `Popover`. */
+export function PanelNotificaciones(props: Omit<Parameters<typeof ContenidoNotificaciones>[0], "categoria" | "onCategoria">) {
+  const [categoria, setCategoria] = useState<string | null>(null);
+  return <ContenidoNotificaciones {...props} categoria={categoria} onCategoria={setCategoria} />;
+}
+
 /**
  * Campana de la barra superior con un panel de notificaciones (`Popover`). **Todo son datos de la app**: `notificaciones` (con su `leida`), y los
- * callbacks `onLeer(id)` (al abrir una sin leer) y `onLeerTodas()` para que la app actualice su estado o llame a su API; el kit no recuerda nada.
+ * callbacks `onLeer(id)` (al abrir una sin leer o usar una de sus acciones) y `onLeerTodas()` para que la app actualice su estado o llame a su API; el kit no recuerda nada.
  *
  * - **Disparador:** botón de `size-control` con `aria-label` «Notificaciones, 3 sin leer» (traducible en `textos.etiquetaBoton`) y un punto si hay sin leer.
  * - **Panel:** diálogo nombrado por su título, 360 px (ancho completo bajo `md`). Cada notificación es un enlace (con `href`), un botón (sin `href` y sin leer)
  *   o texto; las sin leer llevan punto y «Sin leer» para el lector de pantalla. Vacío → `EstadoVacio`. Con más de 4 la lista se acota y se desplaza.
- *   Teclado: Enter/Espacio abre, Tab recorre filas y acciones, Esc cierra y devuelve el foco a la campana; abrir una notificación (clic simple) cierra el panel.
+ * - `Notificacion.acciones`: botones o enlaces bajo la notificación («Ver comprobante», «Descargar CDR»); sin `href` llaman a `onClick`.
+ * - `categorias` (+ `Notificacion.categoria`): muestra bajo la cabecera un filtro con contadores («Todas 5 · SUNAT 2 · Stock 1»). Sin `categorias` no hay filtro.
+ * - **Teclado:** Enter/Espacio abre, Tab recorre filas y acciones, Esc cierra y devuelve el foco a la campana; abrir una notificación (clic simple) cierra el panel.
+ *   Al marcar una como leída el foco queda en su fila, y tras «Marcar todas» en el título del panel.
  * - `verTodas`: enlace de pie (p. ej. «Ver historial»). `locale` fija el idioma de las fechas.
- * - El `href` de cada notificación solo se acepta si es una ruta de la app o `http(s)`.
+ * - El `href` de cada notificación y acción solo se acepta si es una ruta de la app o `http(s)` (`hrefNotificacionSeguro` en `lib/navegacion`).
  *
  * Usa `next/link` (no `usePathname`), así que no necesita `<Suspense>`.
  */
 export function CentroNotificaciones({
   notificaciones,
+  categorias,
   onLeer,
   onLeerTodas,
   verTodas,
@@ -221,6 +304,7 @@ export function CentroNotificaciones({
   className,
 }: {
   notificaciones: Notificacion[];
+  categorias?: CategoriaNotificacion[];
   onLeer?: (id: string) => void;
   onLeerTodas?: () => void;
   verTodas?: { href: string; etiqueta: string };
@@ -244,6 +328,7 @@ export function CentroNotificaciones({
       <PopoverContent align="end" className="w-[calc(100vw-1rem)] overflow-hidden p-0 md:w-90">
         <PanelNotificaciones
           notificaciones={notificaciones}
+          categorias={categorias}
           onLeer={onLeer}
           onLeerTodas={onLeerTodas}
           verTodas={verTodas}

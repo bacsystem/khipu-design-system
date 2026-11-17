@@ -549,6 +549,7 @@
       "registryDependencies": [
         "components/feedback/estado-vacio",
         "components/patrones/metricas",
+        "components/ui/grupo-botones",
         "components/ui/popover",
         "components/ui/scroll-area",
         "lib/estilos",
@@ -877,6 +878,7 @@
       "dependencies": [],
       "registryDependencies": [
         "lib/estilos",
+        "lib/navegacion",
         "lib/utils"
       ]
     },
