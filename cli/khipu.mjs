@@ -9,6 +9,7 @@
 // Uso:
 //   node cli/khipu.mjs list [categoria]
 //   node cli/khipu.mjs add <componente...> [--force]
+//   node cli/khipu.mjs verificar [tipografia|alturas|estilos|iconos ...] [--dir <ruta>...] [--baseline <json>] [--podar]
 //
 // El registro (registry/registry.json) se genera con `node scripts/build-registry.mjs` a partir
 // de los imports reales del código — nunca se edita a mano.
@@ -16,6 +17,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { ayudaVerificar, ejecutarVerificar } from "./verificar.mjs";
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CWD = process.cwd();
@@ -150,11 +152,15 @@ switch (comando) {
   case "add":
     comandoAdd(argumentos, { force });
     break;
+  case "verificar":
+    process.exitCode = ejecutarVerificar(resto);
+    break;
   default:
     console.log(
       "khipu-design-system CLI\n\n" +
         "  node cli/khipu.mjs list [categoria]        Lista los componentes disponibles\n" +
-        "  node cli/khipu.mjs add <nombre...> [-f]    Copia un componente y sus dependencias a este proyecto\n",
+        "  node cli/khipu.mjs add <nombre...> [-f]    Copia un componente y sus dependencias a este proyecto\n" +
+        ayudaVerificar(),
     );
     if (comando) process.exitCode = 1;
 }
