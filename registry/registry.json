@@ -577,6 +577,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/nav/rail",
         "components/ui/button",
         "components/ui/sheet",
         "lib/estilos"

@@ -48,7 +48,7 @@ export function SidebarContent({
 
       {pie || usuario ? (
         <div className="flex w-full min-w-0 shrink-0 flex-col gap-2.5 border-t border-border/60 p-3 rail:items-center rail:p-2">
-          {pie ? <div className="w-full min-w-0 rail:hidden">{pie}</div> : null}
+          {pie ? <div className="flex w-full min-w-0 flex-col gap-2.5 rail:hidden">{pie}</div> : null}
           {usuario}
         </div>
       ) : null}

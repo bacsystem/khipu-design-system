@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { MobileNav } from "@/components/nav/mobile-nav";
 import type { ItemNav } from "@/components/nav/sidebar-nav";
-import { ACCION_PRINCIPAL, FOCO } from "@/lib/estilos";
+import { ACCION_FLOTANTE, FOCO } from "@/lib/estilos";
 import { PESO_ICONO, PESO_ICONO_ACTIVO, type IconoComponente } from "@/lib/iconos";
 import { itemActivo } from "@/lib/navegacion";
 import { cn } from "@/lib/utils";
@@ -57,7 +57,7 @@ function Entrada({ item, pathname }: { item: ItemNav; pathname: string }) {
  * - `items`: las entradas (hasta 4) **las pone la app**, como datos: el kit no trae ninguna lista fija. La activa se detecta por prefijo de la ruta
  *   (o exacta con `exacto`) y lleva `aria-current="page"`. Cada una mide ≥ 44 px.
  * - `mas`: una última entrada que abre `contenido` en un cajón (foco atrapado, Escape y el fondo cierran, el foco vuelve al botón; se cierra al navegar).
- * - `accion`: botón redondo flotante sobre la barra (p. ej. «Nueva venta»), con `aria-label`. Su hueco está **en el flujo**: la barra queda pegada abajo
+ * - `accion`: botón redondo flotante de 56 px (`ACCION_FLOTANTE`) sobre la barra (p. ej. «Nueva venta»), con `aria-label`. Su hueco está **en el flujo**: la barra queda pegada abajo
  *   (`sticky`) al final de la columna, así que ni ella ni la acción tapan el final del contenido. Respeta la zona segura (`env(safe-area-inset-bottom)`; la
  *   página necesita `viewport-fit=cover` para que valga algo).
  * - `etiqueta`: nombre accesible de la `<nav>` (por defecto «Navegación principal»).
@@ -82,7 +82,7 @@ export function BarraInferior({
   const Accion = accion?.icono;
 
   return (
-    <div data-barra-inferior className="pointer-events-none sticky bottom-0 z-30 md:hidden">
+    <div data-barra-inferior data-con-accion={accion ? "" : undefined} className="pointer-events-none sticky bottom-0 z-30 md:hidden">
       {/* Hueco de la acción flotante: ocupa sitio en el flujo para que, al final de la página, la acción quede por encima del contenido y no encima. */}
       {accion ? <div aria-hidden className="h-20" /> : null}
       <div className="relative">
@@ -90,7 +90,7 @@ export function BarraInferior({
           <Link
             href={accion.href}
             aria-label={accion.etiqueta}
-            className={cn(ACCION_PRINCIPAL, "pointer-events-auto absolute right-4 bottom-full mb-3 size-14 justify-center rounded-full p-0 shadow-lg")}
+            className={cn(ACCION_FLOTANTE, "pointer-events-auto absolute right-4 bottom-full mb-3")}
           >
             <Accion weight="bold" aria-hidden className="size-6" />
           </Link>

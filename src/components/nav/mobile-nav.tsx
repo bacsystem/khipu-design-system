@@ -3,6 +3,7 @@
 import { ListIcon } from "@phosphor-icons/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactElement, type ReactNode } from "react";
+import { ContextoRail } from "@/components/nav/rail";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { OBJETIVO_TACTIL } from "@/lib/estilos";
@@ -42,7 +43,8 @@ export function MobileNav({
         </SheetTrigger>
       )}
       <SheetContent side="left" showCloseButton={false} aria-label={etiquetaCajon} className="w-[248px] max-w-[85vw] bg-sidebar p-0 text-sidebar-foreground">
-        {children}
+        {/* El cajón es siempre «completo»: no hereda el rail del Shell (el contexto cruza el portal). */}
+        <ContextoRail.Provider value={{ modo: "nunca", rail: false }}>{children}</ContextoRail.Provider>
       </SheetContent>
     </Sheet>
   );

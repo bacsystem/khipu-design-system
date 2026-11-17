@@ -13,7 +13,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = join(ROOT, "src");
 
 const RECETAS = /\bcn\(\s*(CAMPO\w*|BOTON_\w+|ACCION_\w+|CONTROL_FILTRO)\s*,([^()]*(?:\([^()]*\)[^()]*)*)\)/g;
-const ALTURA = /(?<![\w-])(?:[a-z-]+:)*h-(?!auto\b|control\b)[\w.[]/;
+// También `size-N`: fija la altura a la vez que el ancho y, en Tailwind v4, pierde contra `h-control` (el botón sale 56×34 en vez de redondo).
+const ALTURA = /(?<![\w-])(?:[a-z-]+:)*(?:h|size)-(?!auto\b|control\b)[\w.[]/;
 
 function listarArchivos(dir) {
   return readdirSync(dir).flatMap((entrada) => {
@@ -38,7 +39,7 @@ for (const archivo of listarArchivos(SRC)) {
 const ESTILOS = join(SRC, "lib", "estilos.ts");
 const textoEstilos = readFileSync(ESTILOS, "utf8");
 for (const m of textoEstilos.matchAll(/export const ((?:CAMPO|BOTON_\w+|ACCION_\w+|CONTROL_FILTRO))\s*=\s*\n?\s*"([^"]*)"/g)) {
-  if (!/(?<![\w-])h-control(?![\w-])/.test(m[2])) {
+  if (!/(?<![\w-])h-control(?![\w-])/.test(m[2]) && m[1] !== "ACCION_FLOTANTE") {
     const linea = textoEstilos.slice(0, m.index).split("\n").length;
     errores.push(`src/lib/estilos.ts:${linea}  ${m[1]} no mide h-control (altura única de control)`);
   }

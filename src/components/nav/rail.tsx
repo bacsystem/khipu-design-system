@@ -33,7 +33,10 @@ function preferenciaDelDocumento() {
   return esPreferenciaRail(valor) ? valor : null;
 }
 
+const sinMatchMedia = () => typeof window === "undefined" || typeof window.matchMedia !== "function";
+
 function suscribir(avisar: () => void) {
+  if (sinMatchMedia()) return () => {};
   const medios = [window.matchMedia(MEDIA_RAIL_MD), window.matchMedia(MEDIA_RAIL_XL)];
   for (const medio of medios) medio.addEventListener("change", avisar);
   const observador = new MutationObserver(avisar);
@@ -44,12 +47,22 @@ function suscribir(avisar: () => void) {
   };
 }
 
+const nadie = () => () => {};
+const siempreFalso = () => false;
+
 const instantanea = () =>
-  railEfectivo({
+  sinMatchMedia()
+    ? false
+    : railEfectivo({
     preferencia: preferenciaDelDocumento(),
     desdeMd: window.matchMedia(MEDIA_RAIL_MD).matches,
     desdeXl: window.matchMedia(MEDIA_RAIL_XL).matches,
   });
+
+/** De dónde sale el estado: la pantalla con `rail="auto"`; con `"nunca"` de ningún sitio (no toca `matchMedia`). Exportada para probarla sin DOM. */
+export function fuenteDePantalla(modo: ModoRail) {
+  return modo === "auto" ? { suscribir, instantanea } : { suscribir: nadie, instantanea: siempreFalso };
+}
 
 /**
  * Lo pone `Shell`. El aspecto (64 px, iconos sin texto) lo resuelve CSS (`rail:` en `styles/theme.css`), sin esperar a React, así que no
@@ -57,7 +70,9 @@ const instantanea = () =>
  * colapsables, ancho de los menús). En el servidor y en la hidratación vale `rail: false`.
  */
 export function ProveedorRail({ modo, children }: { modo: ModoRail; children: ReactNode }) {
-  const plegado = useSyncExternalStore(suscribir, instantanea, () => false);
+  // Solo con rail="auto" se mira la pantalla: un Shell por defecto no toca matchMedia (tampoco existe en jsdom).
+  const { suscribir: suscribirPantalla, instantanea: leerPantalla } = fuenteDePantalla(modo);
+  const plegado = useSyncExternalStore(suscribirPantalla, leerPantalla, siempreFalso);
 
   // Sin `ScriptDiseno` en el `<head>` nadie copió la preferencia guardada a <html data-rail>: se hace tras montar.
   useEffect(() => {

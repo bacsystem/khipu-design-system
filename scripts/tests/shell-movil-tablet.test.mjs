@@ -13,7 +13,7 @@ const leer = (ruta) => readFileSync(join(RAIZ, ruta), "utf8").replaceAll("\r\n",
 
 const rail = await cargarTsx("lib/rail");
 const { Shell } = await cargarTsx("components/nav/shell");
-const { ContextoRail, BotonRail } = await cargarTsx("components/nav/rail");
+const { ContextoRail, BotonRail, fuenteDePantalla } = await cargarTsx("components/nav/rail");
 const { SidebarContent } = await cargarTsx("components/nav/sidebar");
 const { SidebarNav } = await cargarTsx("components/nav/sidebar-nav");
 const { BarraInferior } = await cargarTsx("components/nav/barra-inferior");
@@ -269,4 +269,70 @@ test("MobileNav sigue teniendo su hamburguesa por defecto y acepta otro disparad
   const otro = html(createElement(MobileNav, { disparador: createElement("button", { type: "button", id: "mio" }, "Mío") }, createElement("p", null, "x")));
   assert.match(otro, /id="mio"/);
   assert.doesNotMatch(otro, /Abrir menú/);
+});
+
+// ── Revisión PR #61 ───────────────────────────────────────────────────────────────────────────────────────────────
+
+test("H1: la acción flotante es un círculo de 56 px: receta sin h-control, size-14 y objetivo ≥ 44 px", async () => {
+  const { ACCION_FLOTANTE } = await cargarTsx("lib/estilos");
+  assert.doesNotMatch(ACCION_FLOTANTE, /(?<![\w-])h-control(?![\w-])/);
+  assert.match(ACCION_FLOTANTE, /(?<![\w-])size-14(?![\w-])/);
+  assert.match(ACCION_FLOTANTE, /rounded-full/);
+  const con = barra("/x", { accion: { href: "/n", etiqueta: "Nueva", icono: Icono } });
+  const fab = con.match(/<a aria-label="Nueva"[^>]*>/)[0];
+  assert.match(fab, /size-14/);
+  assert.doesNotMatch(fab, /h-control/);
+  assert.doesNotMatch(leer("src/components/nav/barra-inferior.tsx"), /ACCION_PRINCIPAL/);
+});
+
+test("H1: check:alturas rechaza size-N sobre una receta de control", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const { mkdtempSync, mkdirSync, writeFileSync, cpSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const raiz = mkdtempSync(join(tmpdir(), "alturas-"));
+  mkdirSync(join(raiz, "scripts"));
+  mkdirSync(join(raiz, "src/lib"), { recursive: true });
+  cpSync(join(RAIZ, "scripts/verificar-alturas.mjs"), join(raiz, "scripts/verificar-alturas.mjs"));
+  writeFileSync(join(raiz, "src/lib/estilos.ts"), 'export const ACCION_X = "h-control";\n');
+  writeFileSync(join(raiz, "src/a.tsx"), 'const c = cn(ACCION_PRINCIPAL, "size-14 rounded-full");\n');
+  const r = spawnSync(process.execPath, [join(raiz, "scripts/verificar-alturas.mjs")], { encoding: "utf8" });
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stderr, /src\/a\.tsx/);
+});
+
+test("H2: un Shell por defecto no toca matchMedia (ni existe en jsdom); con auto y sin matchMedia tampoco rompe", () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const explota = () => {
+    throw new Error("matchMedia no debe llamarse");
+  };
+  try {
+    Object.defineProperty(globalThis, "window", { configurable: true, value: { matchMedia: explota } });
+    const nunca = fuenteDePantalla("nunca");
+    assert.equal(nunca.instantanea(), false);
+    assert.doesNotThrow(() => nunca.suscribir(() => {})());
+    Object.defineProperty(globalThis, "window", { configurable: true, value: {} });
+    const auto = fuenteDePantalla("auto");
+    assert.equal(auto.instantanea(), false, "sin matchMedia (jsdom): expandido");
+    assert.doesNotThrow(() => auto.suscribir(() => {})());
+  } finally {
+    if (original) Object.defineProperty(globalThis, "window", original);
+    else delete globalThis.window;
+  }
+});
+
+test("H3: con acción flotante los avisos suben también por encima de ella", () => {
+  const css = leer("src/styles/theme.css");
+  assert.match(css, /:root:has\(\[data-barra-inferior\]\[data-con-accion\]\)\s*\{\s*--khipu-reserva-inferior: calc\(3\.5rem \+ 1px \+ 4\.5rem/);
+  assert.match(barra("/x", { accion: { href: "/n", etiqueta: "N", icono: Icono } }), /data-con-accion=""/);
+  assert.doesNotMatch(barra("/x"), /data-con-accion/);
+});
+
+test("H4: el cajón de «Más» no hereda el rail del Shell", () => {
+  const fuente = leer("src/components/nav/mobile-nav.tsx");
+  assert.match(fuente, /<ContextoRail\.Provider value=\{\{ modo: "nunca", rail: false \}\}>\{children\}<\/ContextoRail\.Provider>/);
+});
+
+test("H5: varios hijos de pie conservan su separación", () => {
+  const salida = html(enRuta("/a", createElement(SidebarContent, { marca: null, grupos: [], pie: [createElement("i", { key: 1 }, "p1"), createElement("i", { key: 2 }, "p2")] })));
+  assert.match(salida, /<div class="flex w-full min-w-0 flex-col gap-2\.5 rail:hidden"><i>p1<\/i><i>p2<\/i><\/div>/);
 });

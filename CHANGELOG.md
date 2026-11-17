@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - App de ejemplo: el layout de `/ejemplo` usa `rail="auto"` y `BarraInferior` (sin hamburguesa); la galería lo explica.
 
 ### Changed
+- **Si usas la CLI (`khipu add`) vuelve a copiar `src/styles/theme.css`**: trae la variante `rail:` (`@custom-variant rail`) y las reglas de `--khipu-reserva-inferior`. Sin ellas `Shell rail="auto"` no se pliega y los toasts no suben sobre `BarraInferior`. (Con el paquete npm llegan solos en `styles.css`.) La receta `ACCION_FLOTANTE` (`lib/estilos`) es la del botón redondo de la barra; `check:alturas` ahora también rechaza `size-N` sobre una receta de control.
 - `SidebarContent`: el chip y el pie van en un contenedor propio (para ocultarlos en el rail); sin `rail="auto"` se ven igual que antes. `Toast`: el visor sube `--khipu-reserva-inferior` (0 sin barra inferior). **Con `cacheComponents` (Next 16)** `BarraInferior` usa `usePathname`: va dentro de `<Suspense>`, igual que `SidebarNav`, `TopBar` y `MobileNav`.
 
 ## [0.6.0] - 2026-11-17

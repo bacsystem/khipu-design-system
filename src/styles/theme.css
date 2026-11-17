@@ -36,6 +36,13 @@
   }
 }
 
+@media (width < 48rem) {
+  /* Con acción flotante, los avisos suben además por encima de ella (56 px + 12 px de separación + 4 px). */
+  :root:has([data-barra-inferior][data-con-accion]) {
+    --khipu-reserva-inferior: calc(3.5rem + 1px + 4.5rem + env(safe-area-inset-bottom));
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -37,6 +37,11 @@ const DESHABILITADO = "disabled:pointer-events-none disabled:cursor-not-allowed 
 // ── Acciones de página: top bar, barra de filtros, acciones sueltas en tarjetas, alertas o estados vacíos ──
 // La principal es casi negra (primary) en claro y casi blanca en oscuro: el color de la paleta vive en superficies, no en botones.
 export const ACCION_PRINCIPAL = `inline-flex h-control items-center gap-1.5 rounded-full bg-primary px-4 text-control font-semibold whitespace-nowrap text-primary-foreground shadow-xs ${TRANSICION_CONTROL} hover:bg-primary/85 ${FOCO} ${PRESION} ${DESHABILITADO}`;
+/**
+ * Acción flotante redonda (la de `BarraInferior`): 56 px, un solo icono. Es la única receta de acción **sin** `h-control` a propósito (no forma fila con
+ * otros controles): con `ACCION_PRINCIPAL` + `size-14`, en Tailwind v4 gana `h-control` y el botón mide 56×34 en vez de un círculo.
+ */
+export const ACCION_FLOTANTE = `inline-flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ${TRANSICION_CONTROL} hover:bg-primary/85 ${FOCO} ${PRESION} ${DESHABILITADO}`;
 export const ACCION_SECUNDARIA = `inline-flex h-control items-center gap-1.5 rounded-full bg-card px-3.5 text-control font-medium whitespace-nowrap text-foreground ring-1 ring-border ${TRANSICION_CONTROL} hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
 // Select, buscador y refrescar de una barra de filtros: la misma altura que las acciones de arriba.
 export const CONTROL_FILTRO = "h-control rounded-full border border-border bg-card text-control font-medium text-foreground";
