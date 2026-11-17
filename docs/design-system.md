@@ -562,7 +562,8 @@ El movimiento confirma una acción, muestra un cambio de estado o introduce cont
 | `SidebarNav` | El fondo del ítem activo se desliza (`layoutId`); un grupo colapsable anima su altura (`grid-template-rows`, solo `motion-safe:`) y gira su caret |
 | `TablaDatos` | La barra de acciones masivas entra y sale |
 | `NumeroAnimado` | Cuenta desde 0; úsalo como hijo de `Metrica` o `valor` de `Kpi` |
-| `Sparkline`, `GraficoLineas` (`TrazoAnimado`) | La línea se dibuja |
+| `Sparkline`, `GraficoLineas` (`TrazoAnimado`) | La línea se dibuja; el área tenue y la serie `discontinua` aparecen con un fundido |
+| `GraficoDona` | Los sectores aparecen escalonados con un fundido |
 | `GraficoBarras` | Las barras crecen desde la base, escalonadas |
 | `ProgresoCircular` | El anillo avanza con resorte |
 | `ConfirmacionEnLinea`, `BotonCopiar` | Cambio animado de acción a confirmación; el icono gira a un check |
@@ -645,12 +646,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 Props nuevas, todas opcionales: `icono`, `tono` (`ok | aviso | error | neutro | acento`), `visual`, `destacada`, `acciones`. `serie`, `variacion`, `periodo` e `invertir` no cambian. `FilaMetricas` es una grilla de tarjetas separadas con `gap-3` (mismo export, mismas props). `VisualDeMetrica` y `ChipVariacion` se exportan sueltos.
 
+**Pie, sufijo, ayuda, tono y fila desplazable** (todo opcional):
+
+- `pie` (`TarjetaMetrica`, `Metrica`, `Kpi`): banda inferior pegada a los bordes de la tarjeta (`border-t border-border/60`, `text-etiqueta`, texto terciario). Contenido libre (`pie="Vence el 30/11"`) o un par `{ etiqueta, valor }`: la etiqueta a la izquierda y el valor a la derecha (medio y tabular), sin que la app escriba `flex justify-between`.
+- `valorConTono` (`Metrica`, `Kpi`): el valor y la `ayuda` toman el color de texto del `tono` (`success-foreground`, `warning-foreground`, `destructive-texto`; `acento` el del acento). Con `tono` neutro o sin él no cambia nada, y en una tarjeta `destacada` manda `text-current`. `npm run check:contraste` mide esos pares.
+- `Kpi sufijo` («/ 136», «%») y `Kpi ayuda` (texto de apoyo bajo la tendencia) igualan a `Metrica`; `Metrica ayuda` ya no es obligatoria (sin ella no hay fila).
+- `FilaMetricas desplazable`: bajo `md` la fila es un carrusel horizontal con snap (tarjetas de al menos 11 rem) en vez de apilarse; es un `role="region"` con `aria-label` (`etiqueta`, por defecto «Métricas») y `tabIndex=0` para desplazarla con el teclado. Desde `md` vuelve a la grilla de siempre.
+
 ### Gráficos
 
 - Con una serie, `GraficoBarras` pinta las barras en `--chart-base` (el `acento-2` de la paleta; en oscuro al 38 %) y la barra `destacado` (índice) en `--chart-destacado`, el `acento` pleno. Con varias series usa `--chart-1..5` en orden fijo. `GraficoLineas` y `Sparkline` usan `--chart-1`.
 - Dentro de otra tarjeta (la sección del panel), `GraficoBarras plano` y `etiquetadoPor` con el id del título de la sección; `descripcion` resume el gráfico para un lector de pantalla y `tituloDeCategoria` da el texto de cada barra (title y tooltip). Con muchas categorías (los días de un mes), `rotuloVisible` deja rótulo solo en algunas. Un valor 0 no dibuja barra. `enteros` (en `GraficoBarras` y `GraficoLineas`) deja el eje Y solo con marcas enteras, para conteos; por defecto la escala admite decimales (`lib/escala-grafico`).
 - **Accesibilidad (WCAG 1.4.11):** el relleno pastel no llega a 3:1 sobre la tarjeta en claro, así que cada barra (y cada muestra de la leyenda) lleva un borde de 1 px en `--chart-trazo-*` (`base`, `destacado`, `3`, `4`, `5`), que sí supera 3:1 en las 5 paletas y los 3 tonos oscuros; `npm run check:contraste` lo comprueba. `GraficoLineas` con varias series usa esos mismos colores de trazo. Además, el valor de cada barra va en su `<title>` y en el tooltip: ningún dato se comunica solo por el color.
 - Rejilla recesiva, etiquetas de eje en texto terciario, leyenda solo con ≥ 2 series, máximo 5 series.
+- **Barras apiladas:** `GraficoBarras apiladas` pone una barra por categoría con las series una sobre otra (la escala cubre la suma; solo el segmento de arriba lleva las esquinas redondeadas; cada segmento conserva su borde `--chart-trazo-*`). El tooltip añade el total (`textoTotal`, «Total» por defecto, para traducirlo) y el `<title>` de cada categoría resume series y total.
+- **Líneas con área y guiones:** `GraficoLineas area` rellena bajo cada línea con su color al 14 % (sin hex: el mismo token del trazo); una `Serie` con `discontinua: true` va a guiones y su muestra en la leyenda también (metas, proyecciones, el período anterior; no se rellena). `GraficoLineas` ahora se nombra y se describe como las barras (`etiqueta`, `etiquetadoPor`, `descripcion`, `plano`) y cada categoría lleva en su `<title>` los valores de todas las series.
+- **Dona:** `GraficoDona({ partes, centro, titulo, formato, etiquetadoPor, etiqueta, descripcion, tamano, plano })` para composiciones (medios de pago, estados): hasta 5 partes, quien la usa agrupa el resto en «Otros». Cada sector lleva el pastel de la paleta con su borde `--chart-trazo-*` (el mismo par de las barras, que supera el 3:1), y la leyenda lista nombre, valor y porcentaje. El valor y el porcentaje van también en el `<title>` de cada sector y en el `<desc>` (o en `descripcion`): el color no carga solo la información. `centro` va en el hueco (p. ej. el total). Un total 0 deja el anillo vacío; una sola parte llena el anillo.
+- **Movimiento:** las líneas se dibujan, el área y la dona aparecen con un fundido y las barras crecen; con «reducir movimiento» todo aparece ya completo.
 
 ### Pendientes
 

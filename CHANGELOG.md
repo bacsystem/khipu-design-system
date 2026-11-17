@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Gráficos** (`datos/grafico`, todo opcional y sin cambiar a quien no lo usa): `GraficoBarras apiladas` (una barra por categoría con las series una sobre otra; la escala cubre la suma, el tooltip añade el total y `textoTotal` lo traduce), `GraficoLineas area` (relleno tenue bajo cada línea, con el token del trazo) y `Serie.discontinua` (línea a guiones para metas y proyecciones, también en la leyenda), y el componente nuevo `GraficoDona({ partes, centro, titulo, formato, etiquetadoPor, etiqueta, descripcion, tamano, plano })`: hasta 5 partes con el pastel de la paleta y su borde `--chart-trazo-*`, leyenda con valor y porcentaje, que van también en el `<title>` de cada sector y en el `<desc>`. Sin colores fijos: solo tokens del kit.
+- `GraficoLineas` gana `etiqueta`, `etiquetadoPor`, `descripcion` y `plano` (como `GraficoBarras`): nombre y resumen accesibles, y cada categoría lleva en su `<title>` los valores de todas las series. Las animaciones nuevas (área, dona) respetan «reducir movimiento».
+- **Métricas:** `pie` en `TarjetaMetrica`, `Metrica` y `Kpi` (banda inferior con `border-border/60`: contenido libre o un par `{ etiqueta, valor }` con la etiqueta a la izquierda y el valor a la derecha), `valorConTono` en `Metrica` y `Kpi` (valor y `ayuda` en el color de texto del `tono`), `Kpi sufijo` y `Kpi ayuda`, y `FilaMetricas desplazable` (bajo `md` una fila con scroll horizontal y snap, tarjetas de al menos 11 rem, `role="region"` con `aria-label` —`etiqueta`, por defecto «Métricas»— y `tabIndex=0`). `TEXTO_TONO` y el tipo `PieMetrica` se exportan de `patrones/metricas`.
+- App de ejemplo: la galería muestra las barras apiladas, el área con meta a guiones, la dona y la fila de KPI desplazable con pie.
+
+### Changed
+- `Metrica ayuda` pasa a ser opcional: sin ella no se pinta la fila de ayuda. Las pruebas de `grafico` se ajustaron a la estructura nueva (la rejilla sigue continua; solo las series `discontinua` llevan guiones).
+
 ## [0.8.0] - 2026-11-17
 
 ### Added

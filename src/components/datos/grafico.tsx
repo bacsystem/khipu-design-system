@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
 import { MovimientoLocal } from "@/components/movimiento";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
@@ -9,7 +9,8 @@ import { TARJETA } from "@/lib/estilos";
 import { RESORTE_SUAVE } from "@/lib/movimiento";
 import { cn } from "@/lib/utils";
 
-export type Serie = { nombre: string; valores: number[] };
+/** `discontinua`: la línea va a guiones (metas, proyecciones); solo `GraficoLineas`. */
+export type Serie = { nombre: string; valores: number[]; discontinua?: boolean };
 // Barras: relleno pastel de la paleta (como en el boceto) con un borde de 1 px que sí llega a 3:1 sobre la tarjeta
 // (WCAG 1.4.11; el pastel solo queda en 1.3–1.6). Líneas: el color de borde de cada serie, que cumple el mismo 3:1
 // (el verde y el ámbar semánticos de chart-2/chart-3 quedaban en 2–2.5 sobre blanco). Lo mide `npm run check:contraste`.
@@ -18,16 +19,20 @@ const TRAZOS = ["var(--chart-trazo-base)", "var(--chart-trazo-destacado)", "var(
 const COLORES = ["var(--chart-1)", ...TRAZOS.slice(1)];
 
 /** Leyenda en píldoras, a la derecha del título. Solo con ≥ 2 series. */
-function Leyenda({ series, colores = COLORES, trazos }: { series: Array<{ nombre: string }>; colores?: string[]; trazos?: string[] }) {
+function Leyenda({ series, colores = COLORES, trazos }: { series: Array<{ nombre: string; discontinua?: boolean }>; colores?: string[]; trazos?: string[] }) {
   if (series.length < 2) return null;
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       {series.map((s, i) => (
         <span key={s.nombre} className="inline-flex items-center gap-1.5 rounded-full bg-secondary py-0.5 pr-2.5 pl-2 text-etiqueta font-medium text-foreground">
-          <span
-            className="size-2.5 rounded-full"
-            style={{ background: colores[i % colores.length], boxShadow: trazos ? `inset 0 0 0 1px ${trazos[i % trazos.length]}` : undefined }}
-          />
+          {s.discontinua ? (
+            <span className="w-3.5 border-t-2 border-dashed" style={{ borderColor: colores[i % colores.length] }} />
+          ) : (
+            <span
+              className="size-2.5 rounded-full"
+              style={{ background: colores[i % colores.length], boxShadow: trazos ? `inset 0 0 0 1px ${trazos[i % trazos.length]}` : undefined }}
+            />
+          )}
           {s.nombre}
         </span>
       ))}
@@ -67,7 +72,7 @@ function useAnchoReal(): [RefObject<HTMLDivElement | null>, number] {
 }
 
 /** Tooltip anclado en horizontal al índice (porcentaje del ancho) y en vertical dentro de la tarjeta, bajo el título. */
-function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array<{ nombre: string; valor: string; color: string }> }) {
+function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array<{ nombre: string; valor: string; color?: string; total?: boolean }> }) {
   return (
     <div
       className="pointer-events-none absolute top-10 z-10 min-w-28 -translate-x-1/2 rounded-lg bg-foreground px-2.5 py-1.5 text-etiqueta text-background shadow-md"
@@ -75,9 +80,9 @@ function Tooltip({ x, titulo, filas }: { x: number; titulo: string; filas: Array
     >
       <div className="mb-0.5 font-medium">{titulo}</div>
       {filas.map((f) => (
-        <div key={f.nombre} className="flex items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-1.5 text-background/70">
-            <span className="size-2 rounded-sm" style={{ background: f.color }} />
+        <div key={f.nombre} className={cn("flex items-center justify-between gap-3", f.total && "mt-0.5 border-t border-background/20 pt-0.5")}>
+          <span className={cn("inline-flex items-center gap-1.5", f.total ? "font-medium text-background" : "text-background/70")}>
+            {f.color ? <span className="size-2 rounded-sm" style={{ background: f.color }} /> : null}
             {f.nombre}
           </span>
           <span className="font-semibold tabular-nums">{f.valor}</span>
@@ -108,6 +113,8 @@ export function GraficoBarras({
   tituloDeCategoria,
   propiedadesDeCategoria,
   enteros = false,
+  apiladas = false,
+  textoTotal = "Total",
   className,
 }: {
   categorias: string[];
@@ -133,6 +140,10 @@ export function GraficoBarras({
   propiedadesDeCategoria?: (indice: number) => Record<`data-${string}`, string | number>;
   /** Conteos (prácticas, comprobantes): las marcas del eje Y son enteros, sin 0,25 ni 0,5. Por defecto, la escala admite decimales. */
   enteros?: boolean;
+  /** Una barra por categoría con las series una sobre otra (la escala cubre la suma y el tooltip muestra el total). */
+  apiladas?: boolean;
+  /** Rótulo del total en el tooltip y el resumen accesible de cada barra apilada (traducido por quien lo usa). */
+  textoTotal?: string;
   className?: string;
 }) {
   const id = useId();
@@ -141,10 +152,12 @@ export function GraficoBarras({
   const mg = { top: 8, right: 8, bottom: 24, left: 44 };
   const w = ancho - mg.left - mg.right;
   const h = alto - mg.top - mg.bottom;
-  const ticks = escalaEje(Math.max(...series.flatMap((s) => s.valores), 0), 4, enteros);
+  const totalDe = (i: number) => series.reduce((suma, s) => suma + Math.max(0, s.valores[i] ?? 0), 0);
+  const tope = apiladas ? Math.max(...categorias.map((_, i) => totalDe(i)), 0) : Math.max(...series.flatMap((s) => s.valores), 0);
+  const ticks = escalaEje(tope, 4, enteros);
   const max = ticks[ticks.length - 1];
   const grupo = w / categorias.length;
-  const barra = Math.max(4, (grupo * 0.62 - 4 * (series.length - 1)) / series.length);
+  const barra = apiladas ? Math.max(4, grupo * 0.62) : Math.max(4, (grupo * 0.62 - 4 * (series.length - 1)) / series.length);
   const y = (v: number) => mg.top + h - (v / max) * h;
   const nombreDe = (i: number) => tituloDeCategoria?.(i) ?? categorias[i];
   const nombrado = etiquetadoPor ?? `${id}-t`;
@@ -164,15 +177,41 @@ export function GraficoBarras({
           </g>
         ))}
         {categorias.map((c, i) => {
-          const x0 = mg.left + i * grupo + (grupo - (barra * series.length + 4 * (series.length - 1))) / 2;
+          const x0 = mg.left + i * grupo + (grupo - (barra * (apiladas ? 1 : series.length) + (apiladas ? 0 : 4 * (series.length - 1)))) / 2;
+          // Apiladas: de abajo arriba, cada segmento sobre la suma de los anteriores; solo el de arriba lleva las esquinas redondeadas.
+          let acumulado = 0;
+          const ultimo = series.reduce((u, s, j) => ((s.valores[i] ?? 0) > 0 ? j : u), -1);
           return (
             <g key={c} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)} {...propiedadesDeCategoria?.(i)}>
-              {tituloDeCategoria ? <title>{nombreDe(i)}</title> : null}
+              {apiladas ? (
+                <title>{`${nombreDe(i)}: ${series.map((s) => `${s.nombre} ${formato(s.valores[i] ?? 0)}`).join(", ")}; ${textoTotal} ${formato(totalDe(i))}`}</title>
+              ) : tituloDeCategoria ? (
+                <title>{nombreDe(i)}</title>
+              ) : null}
               <rect x={mg.left + i * grupo} y={mg.top} width={grupo} height={h} fill={hover === i ? "var(--muted)" : "transparent"} />
               {series.map((s, j) => {
                 const v = s.valores[i] ?? 0;
                 // Sin valor no hay marca: el extremo redondeado dejaba una joroba sobre la línea base.
                 if (v <= 0) return null;
+                if (apiladas) {
+                  const base = y(acumulado);
+                  acumulado += v;
+                  const sh = Math.max(0, base - y(acumulado));
+                  const sr = j === ultimo ? Math.min(9, barra / 2, sh) : 0;
+                  return (
+                    <m.path
+                      key={s.nombre}
+                      d={`M${x0},${base} v${-Math.max(0, sh - sr)} a${sr},${sr} 0 0 1 ${sr},${-sr} h${barra - 2 * sr} a${sr},${sr} 0 0 1 ${sr},${sr} v${Math.max(0, sh - sr)} z`}
+                      fill={COLORES_BARRAS[j % COLORES_BARRAS.length]}
+                      stroke={TRAZOS[j % TRAZOS.length]}
+                      strokeWidth={1}
+                      style={{ originY: 1 }}
+                      initial={{ scaleY: 0 }}
+                      animate={{ scaleY: 1 }}
+                      transition={{ ...RESORTE_SUAVE, delay: i * 0.03 }}
+                    />
+                  );
+                }
                 const bx = x0 + j * (barra + 4);
                 const by = y(v);
                 const bh = Math.max(0, mg.top + h - by);
@@ -209,18 +248,42 @@ export function GraficoBarras({
         <Tooltip
           x={((mg.left + hover * grupo + grupo / 2) / ancho) * 100}
           titulo={nombreDe(hover)}
-          filas={series.map((s, j) => ({
-            nombre: s.nombre,
-            valor: formato(s.valores[hover] ?? 0),
-            color: series.length === 1 ? (hover === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES_BARRAS[j % COLORES_BARRAS.length],
-          }))}
+          filas={[
+            ...series.map((s, j) => ({
+              nombre: s.nombre,
+              valor: formato(s.valores[hover] ?? 0),
+              color: series.length === 1 ? (hover === destacado ? "var(--chart-destacado)" : "var(--chart-base)") : COLORES_BARRAS[j % COLORES_BARRAS.length],
+            })),
+            ...(apiladas ? [{ nombre: textoTotal, valor: formato(totalDe(hover)), total: true }] : []),
+          ]}
         />
       ) : null}
     </div>
   );
 }
 
-/** Líneas (una o varias series): trazo de 2px, marcador ≥ 8px al pasar el cursor, crosshair y tooltip con todas las series. */
+/** Relleno tenue bajo una línea (`area`): aparece con un fundido; con «reducir movimiento» ya está completo. */
+function AreaAnimada({ d, color, retraso }: { d: string; color: string; retraso: number }) {
+  const reducir = useReducedMotion();
+  return (
+    <m.path
+      data-area=""
+      d={d}
+      fill={color}
+      stroke="none"
+      initial={reducir ? false : { opacity: 0 }}
+      animate={{ opacity: 0.14 }}
+      transition={{ duration: 0.4, delay: retraso }}
+    />
+  );
+}
+
+/**
+ * Líneas (una o varias series): trazo de 2px, marcador ≥ 8px al pasar el cursor, crosshair y tooltip con todas las series.
+ * `area` rellena bajo cada línea con su color; una serie `discontinua` va a guiones (metas, proyecciones, el período anterior).
+ * Accesible como las barras: `etiqueta`/`titulo` o `etiquetadoPor` la nombran, `descripcion` la resume y cada categoría
+ * lleva en su `<title>` los valores de todas las series. `plano` la deja sin tarjeta, para ir dentro de otra sección.
+ */
 export function GraficoLineas({
   categorias,
   series,
@@ -228,6 +291,11 @@ export function GraficoLineas({
   alto = 200,
   titulo,
   enteros = false,
+  area = false,
+  plano = false,
+  etiquetadoPor,
+  etiqueta,
+  descripcion,
   className,
 }: {
   categorias: string[];
@@ -237,6 +305,16 @@ export function GraficoLineas({
   titulo?: string;
   /** Conteos (prácticas, comprobantes): las marcas del eje Y son enteros, sin 0,25 ni 0,5. Por defecto, la escala admite decimales. */
   enteros?: boolean;
+  /** Rellena bajo cada línea con su color (tenue). Las series `discontinua` no se rellenan. */
+  area?: boolean;
+  /** Sin tarjeta ni relleno propios: para un gráfico dentro de otra tarjeta. */
+  plano?: boolean;
+  /** `id` del elemento que nombra al gráfico (el título de la sección que lo contiene). */
+  etiquetadoPor?: string;
+  /** Nombre accesible cuando no hay `titulo` ni `etiquetadoPor` (traducido por quien lo usa). */
+  etiqueta?: string;
+  /** Resumen para lectores de pantalla («sube de 82 a 128 en seis meses»): va en `<desc>`. */
+  descripcion?: string;
   className?: string;
 }) {
   const id = useId();
@@ -249,12 +327,16 @@ export function GraficoLineas({
   const max = ticks[ticks.length - 1];
   const x = (i: number) => mg.left + (categorias.length === 1 ? w / 2 : (i / (categorias.length - 1)) * w);
   const y = (v: number) => mg.top + h - (v / max) * h;
+  const base = mg.top + h;
+  const nombrado = etiquetadoPor ?? `${id}-t`;
+  const trazo = (s: Serie) => s.valores.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
 
   return (
-    <div className={cn(TARJETA, "relative px-4 py-3.5", className)}>
+    <div className={cn(!plano && cn(TARJETA, "px-4 py-3.5"), "relative", className)}>
       <Cabecera titulo={titulo} leyenda={<Leyenda series={series} />} />
-      <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={`${id}-t`} className="block max-w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
-        <title id={`${id}-t`}>{titulo ?? "Gráfico de líneas"}</title>
+      <div ref={caja} className="w-full"><MovimientoLocal><svg viewBox={`0 0 ${ancho} ${alto}`} width={ancho} height={alto} role="img" aria-labelledby={nombrado} aria-describedby={descripcion ? `${id}-d` : undefined} className="block max-w-full overflow-visible" style={{ fontSize: 10 }} onMouseLeave={() => setHover(null)}>
+        {etiquetadoPor ? null : <title id={`${id}-t`}>{titulo ?? etiqueta ?? "Gráfico de líneas"}</title>}
+        {descripcion ? <desc id={`${id}-d`}>{descripcion}</desc> : null}
         {ticks.map((t) => (
           <g key={t}>
             <line x1={mg.left} x2={ancho - mg.right} y1={y(t)} y2={y(t)} stroke="var(--border)" />
@@ -264,19 +346,27 @@ export function GraficoLineas({
           </g>
         ))}
         {hover != null ? <line x1={x(hover)} x2={x(hover)} y1={mg.top} y2={mg.top + h} stroke="var(--muted-foreground)" strokeOpacity="0.4" /> : null}
-        {series.map((s, j) => (
-          <TrazoAnimado
-            key={s.nombre}
-            d={s.valores.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}
-            stroke={COLORES[j % COLORES.length]}
-            retraso={j * 0.08}
-          />
-        ))}
+        {area
+          ? series.map((s, j) =>
+              s.discontinua || s.valores.length < 2 ? null : (
+                <AreaAnimada key={s.nombre} d={`${trazo(s)} L${x(s.valores.length - 1).toFixed(1)},${base} L${x(0).toFixed(1)},${base} Z`} color={COLORES[j % COLORES.length]} retraso={j * 0.08} />
+              ),
+            )
+          : null}
+        {series.map((s, j) =>
+          s.discontinua ? (
+            // Un trazo a guiones no se anima con `pathLength` (usa el mismo dasharray): aparece con un fundido.
+            <path key={s.nombre} d={trazo(s)} fill="none" stroke={COLORES[j % COLORES.length]} strokeWidth={2} strokeDasharray="5 4" strokeLinejoin="round" strokeLinecap="round" />
+          ) : (
+            <TrazoAnimado key={s.nombre} d={trazo(s)} stroke={COLORES[j % COLORES.length]} retraso={j * 0.08} />
+          ),
+        )}
         {hover != null
           ? series.map((s, j) => <circle key={s.nombre} cx={x(hover)} cy={y(s.valores[hover] ?? 0)} r="4" fill={COLORES[j % COLORES.length]} stroke="var(--card)" strokeWidth="2" />)
           : null}
         {categorias.map((c, i) => (
           <g key={c}>
+            <title>{`${c}: ${series.map((s) => `${s.nombre} ${formato(s.valores[i] ?? 0)}`).join(", ")}`}</title>
             <rect x={x(i) - w / categorias.length / 2} y={mg.top} width={w / categorias.length} height={h} fill="transparent" onMouseEnter={() => setHover(i)} />
             <text x={x(i)} y={alto - 8} textAnchor="middle" fill="var(--texto-terciario)">
               {c}
@@ -287,6 +377,127 @@ export function GraficoLineas({
       {hover != null ? (
         <Tooltip x={(x(hover) / ancho) * 100} titulo={categorias[hover]} filas={series.map((s, j) => ({ nombre: s.nombre, valor: formato(s.valores[hover] ?? 0), color: COLORES[j % COLORES.length] }))} />
       ) : null}
+    </div>
+  );
+}
+
+export type ParteDona = { nombre: string; valor: number; detalle?: ReactNode };
+
+/** Punto de la circunferencia de radio `r` a `a` grados desde las 12 en punto, en sentido horario. */
+function polar(c: number, r: number, a: number): [number, number] {
+  const rad = ((a - 90) * Math.PI) / 180;
+  return [c + r * Math.cos(rad), c + r * Math.sin(rad)];
+}
+
+/** Sector de anillo entre `ri` y `ro` desde el ángulo `a0` hasta `a1` (grados, menos de 360). */
+function sector(c: number, ro: number, ri: number, a0: number, a1: number): string {
+  const [x0, y0] = polar(c, ro, a0);
+  const [x1, y1] = polar(c, ro, a1);
+  const [x2, y2] = polar(c, ri, a1);
+  const [x3, y3] = polar(c, ri, a0);
+  const grande = a1 - a0 > 180 ? 1 : 0;
+  return `M${x0.toFixed(2)},${y0.toFixed(2)} A${ro},${ro} 0 ${grande} 1 ${x1.toFixed(2)},${y1.toFixed(2)} L${x2.toFixed(2)},${y2.toFixed(2)} A${ri},${ri} 0 ${grande} 0 ${x3.toFixed(2)},${y3.toFixed(2)} Z`;
+}
+
+/**
+ * Dona de composición (hasta 5 partes; quien la usa agrupa el resto en «Otros»): cada parte es un sector con el pastel de la
+ * paleta y su borde `--chart-trazo-*` (el mismo par que las barras), y la leyenda al lado lleva nombre, valor y porcentaje.
+ * El valor y el porcentaje van también en el `<title>` de cada sector y en el `<desc>` (o en `descripcion`), así que el color
+ * no carga solo la información. `centro` va en el hueco (p. ej. el total). Se nombra con `titulo`, `etiqueta` o `etiquetadoPor`.
+ * Con «reducir movimiento» los sectores aparecen ya completos.
+ */
+export function GraficoDona({
+  partes,
+  centro,
+  titulo,
+  formato = (v) => v.toLocaleString("en-US"),
+  etiquetadoPor,
+  etiqueta,
+  descripcion,
+  tamano = 160,
+  plano = false,
+  className,
+}: {
+  partes: ParteDona[];
+  centro?: ReactNode;
+  titulo?: string;
+  formato?: (v: number) => string;
+  /** `id` del elemento que nombra al gráfico (el título de la sección que lo contiene). */
+  etiquetadoPor?: string;
+  /** Nombre accesible cuando no hay `titulo` ni `etiquetadoPor` (traducido por quien lo usa). */
+  etiqueta?: string;
+  /** Resumen para lectores de pantalla; por defecto, la lista «nombre: valor (porcentaje)». */
+  descripcion?: string;
+  tamano?: number;
+  /** Sin tarjeta ni relleno propios: para un gráfico dentro de otra tarjeta. */
+  plano?: boolean;
+  className?: string;
+}) {
+  const id = useId();
+  const reducir = useReducedMotion();
+  const dato = partes.slice(0, 5).map((p) => ({ ...p, valor: Math.max(0, p.valor) }));
+  const total = dato.reduce((suma, p) => suma + p.valor, 0);
+  const pct = (v: number) => `${total > 0 ? ((v / total) * 100).toFixed(1) : "0.0"}%`;
+  const texto = (p: { nombre: string; valor: number }) => `${p.nombre}: ${formato(p.valor)} (${pct(p.valor)})`;
+  const c = tamano / 2;
+  const ro = c - 1;
+  const ri = Math.round(ro * 0.62);
+  let acumulado = 0;
+  const sectores = dato.map((p, i) => {
+    const a0 = (acumulado / total) * 360;
+    acumulado += p.valor;
+    return { ...p, i, a0, a1: (acumulado / total) * 360 };
+  });
+  const nombrado = etiquetadoPor ?? `${id}-t`;
+  return (
+    <div className={cn(!plano && cn(TARJETA, "px-4 py-3.5"), "grid gap-3", className)}>
+      {titulo ? <div className="px-1 text-titulo text-foreground">{titulo}</div> : null}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="relative shrink-0" style={{ width: tamano, height: tamano }}>
+          <MovimientoLocal>
+            <svg width={tamano} height={tamano} viewBox={`0 0 ${tamano} ${tamano}`} role="img" aria-labelledby={nombrado} aria-describedby={`${id}-d`}>
+              {etiquetadoPor ? null : <title id={`${id}-t`}>{titulo ?? etiqueta ?? "Gráfico de dona"}</title>}
+              <desc id={`${id}-d`}>{descripcion ?? dato.map(texto).join("; ")}</desc>
+              {/* Pista de fondo: la dona vacía (total 0) sigue viéndose como un anillo. */}
+              <circle cx={c} cy={c} r={(ro + ri) / 2} fill="none" stroke="var(--secondary)" strokeWidth={ro - ri} />
+              {total > 0
+                ? sectores.map((p) => {
+                    if (p.valor <= 0) return null;
+                    const llena = p.a1 - p.a0 >= 359.99;
+                    const relleno = COLORES_BARRAS[p.i % COLORES_BARRAS.length];
+                    const borde = TRAZOS[p.i % TRAZOS.length];
+                    return (
+                      <m.g key={p.nombre} data-parte={p.nombre} initial={reducir ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35, delay: p.i * 0.06 }}>
+                        <title>{texto(p)}</title>
+                        {llena ? (
+                          <>
+                            <circle cx={c} cy={c} r={(ro + ri) / 2} fill="none" stroke={relleno} strokeWidth={ro - ri} />
+                            <circle cx={c} cy={c} r={ro} fill="none" stroke={borde} strokeWidth={1} />
+                            <circle cx={c} cy={c} r={ri} fill="none" stroke={borde} strokeWidth={1} />
+                          </>
+                        ) : (
+                          <path d={sector(c, ro, ri, p.a0, p.a1)} fill={relleno} stroke={borde} strokeWidth={1} strokeLinejoin="round" />
+                        )}
+                      </m.g>
+                    );
+                  })
+                : null}
+            </svg>
+          </MovimientoLocal>
+          {centro ? <div className="pointer-events-none absolute inset-0 grid place-items-center text-titulo font-semibold text-foreground tabular-nums">{centro}</div> : null}
+        </div>
+        <ul className="grid min-w-40 flex-1 gap-2">
+          {dato.map((p, i) => (
+            <li key={p.nombre} className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-2 text-control">
+              <span className="size-2.5 rounded-full" style={{ background: COLORES_BARRAS[i % COLORES_BARRAS.length], boxShadow: `inset 0 0 0 1px ${TRAZOS[i % TRAZOS.length]}` }} />
+              <span className="min-w-0 text-foreground">{p.nombre}</span>
+              <span className="font-semibold text-foreground tabular-nums">{formato(p.valor)}</span>
+              <span className="w-12 text-right text-texto-terciario tabular-nums">{pct(p.valor)}</span>
+              {p.detalle ? <span className="col-start-2 col-end-5 truncate text-etiqueta text-texto-terciario">{p.detalle}</span> : null}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

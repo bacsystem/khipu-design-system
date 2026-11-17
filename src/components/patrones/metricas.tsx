@@ -1,6 +1,6 @@
 import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
-import { TARJETA_ELEVABLE } from "@/lib/estilos";
+import { FOCO, TARJETA_ELEVABLE } from "@/lib/estilos";
 import { PESO_ICONO, PESO_ICONO_ACTIVO, type IconoComponente } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ export type Tono = "ok" | "aviso" | "error" | "neutro";
 export type TonoMetrica = Tono | "acento";
 export type VisualMetrica = { tipo: "barra"; valor: number } | { tipo: "puntos"; total: number; marcados: number };
 
-const TEXTO_TONO: Record<TonoMetrica, string> = {
+export const TEXTO_TONO: Record<TonoMetrica, string> = {
   ok: "text-success-foreground",
   aviso: "text-warning-foreground",
   error: "text-destructive-texto",
@@ -23,6 +23,36 @@ const RELLENO_TONO: Record<TonoMetrica, string> = {
   neutro: "bg-muted-foreground/50",
   acento: "bg-chart-destacado",
 };
+
+/**
+ * Pie de una tarjeta de métrica: contenido libre o un par `{ etiqueta, valor }` (etiqueta a la izquierda, valor a la derecha).
+ * Va en una banda inferior con borde suave; la tarjeta de `TarjetaMetrica` la pega a sus bordes.
+ */
+export type PieMetrica = ReactNode | { etiqueta: ReactNode; valor: ReactNode };
+
+function esParPie(pie: PieMetrica): pie is { etiqueta: ReactNode; valor: ReactNode } {
+  return typeof pie === "object" && pie !== null && !Array.isArray(pie) && !("$$typeof" in pie) && "etiqueta" in pie && "valor" in pie;
+}
+
+function PieDeMetrica({ children, destacada }: { children: PieMetrica; destacada?: boolean }) {
+  return (
+    <div
+      className={cn(
+        "-mx-[15px] mt-1 -mb-[13px] flex min-w-0 items-baseline justify-between gap-2 border-t border-border/60 px-[15px] py-2 text-etiqueta",
+        destacada ? "border-current/15 opacity-80" : "text-texto-terciario",
+      )}
+    >
+      {esParPie(children) ? (
+        <>
+          <span className="min-w-0 truncate">{children.etiqueta}</span>
+          <span className={cn("shrink-0 font-medium tabular-nums", !destacada && "text-foreground")}>{children.valor}</span>
+        </>
+      ) : (
+        children
+      )}
+    </div>
+  );
+}
 
 /** Punto de estado de 6px para ayudas y pills. */
 export function Punto({ tono }: { tono: Tono }) {
@@ -50,6 +80,7 @@ export function TarjetaMetrica({
   tono = "neutro",
   destacada,
   acciones,
+  pie,
   className,
   children,
 }: {
@@ -58,6 +89,7 @@ export function TarjetaMetrica({
   tono?: TonoMetrica;
   destacada?: boolean;
   acciones?: ReactNode;
+  pie?: PieMetrica;
   className?: string;
   children: ReactNode;
 }) {
@@ -80,6 +112,7 @@ export function TarjetaMetrica({
         {acciones ? <span className="-my-1 shrink-0">{acciones}</span> : null}
       </div>
       {children}
+      {pie ? <PieDeMetrica destacada={destacada}>{pie}</PieDeMetrica> : null}
     </div>
   );
 }
@@ -141,36 +174,54 @@ export function Metrica({
   destacada,
   acciones,
   texto,
+  pie,
+  valorConTono,
 }: {
   etiqueta: string;
   children: ReactNode;
   sufijo?: ReactNode;
-  ayuda: ReactNode;
+  ayuda?: ReactNode;
   icono?: IconoComponente;
   tono?: TonoMetrica;
   visual?: VisualMetrica;
   destacada?: boolean;
   acciones?: ReactNode;
   texto?: boolean;
+  /** Banda inferior: contenido libre o un par `{ etiqueta, valor }`. */
+  pie?: PieMetrica;
+  /** Pinta el valor y la ayuda con el color del `tono` (verde, ámbar, rojo; el `neutro` no cambia nada). */
+  valorConTono?: boolean;
 }) {
+  const conTono = valorConTono && !destacada && tono !== undefined && tono !== "neutro";
   return (
-    <TarjetaMetrica etiqueta={etiqueta} icono={icono} tono={tono} destacada={destacada} acciones={acciones}>
-      <div className={cn("flex min-w-0 flex-wrap items-baseline gap-x-1.5", texto ? "text-metrica-texto" : "text-metrica tabular-nums", destacada ? "text-current" : "text-foreground")}>
+    <TarjetaMetrica etiqueta={etiqueta} icono={icono} tono={tono} destacada={destacada} acciones={acciones} pie={pie}>
+      <div className={cn("flex min-w-0 flex-wrap items-baseline gap-x-1.5", texto ? "text-metrica-texto" : "text-metrica tabular-nums", destacada ? "text-current" : conTono ? TEXTO_TONO[tono] : "text-foreground")}>
         {children}
         {sufijo ? <span className={cn("text-control font-normal", destacada ? "opacity-70" : "text-texto-terciario")}>{sufijo}</span> : null}
       </div>
       {visual ? <VisualDeMetrica visual={visual} tono={tono} destacada={destacada} /> : null}
-      <div className={cn("flex min-w-0 items-center gap-1.5 truncate text-etiqueta", destacada ? "opacity-80" : "text-texto-terciario")}>{ayuda}</div>
+      {ayuda ? <div className={cn("flex min-w-0 items-center gap-1.5 truncate text-etiqueta", destacada ? "opacity-80" : conTono ? TEXTO_TONO[tono] : "text-texto-terciario")}>{ayuda}</div> : null}
     </TarjetaMetrica>
   );
 }
 
-/** Fila de métricas: tarjetas separadas por 12px (4 columnas en desktop, 2 en tablet, 1 en móvil; `columnas` de 2 a 5). */
-export function FilaMetricas({ children, columnas = 4 }: { children: ReactNode; columnas?: 2 | 3 | 4 | 5 }) {
+/**
+ * Fila de métricas: tarjetas separadas por 12px (4 columnas en desktop, 2 en tablet, 1 en móvil; `columnas` de 2 a 5).
+ * `desplazable`: bajo `md` es una sola fila que se desliza en horizontal (tarjetas de al menos 11 rem, con snap) en vez
+ * de apilarse; es una región con nombre (`etiqueta`, por defecto «Métricas») y recibe foco para poder desplazarla con el teclado.
+ */
+export function FilaMetricas({ children, columnas = 4, desplazable = false, etiqueta = "Métricas" }: { children: ReactNode; columnas?: 2 | 3 | 4 | 5; desplazable?: boolean; etiqueta?: string }) {
   return (
     <section
+      {...(desplazable ? { role: "region", "aria-label": etiqueta, tabIndex: 0 } : {})}
       className={cn(
         "grid grid-cols-1 gap-3 sm:grid-cols-2",
+        desplazable &&
+          cn(
+            "max-md:flex max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:overscroll-x-contain max-md:pb-1 max-md:*:min-w-44 max-md:*:flex-1 max-md:*:snap-start",
+            "md:grid",
+            FOCO,
+          ),
         columnas === 5 && "lg:grid-cols-5",
         columnas === 4 && "lg:grid-cols-4",
         columnas === 3 && "lg:grid-cols-3",
