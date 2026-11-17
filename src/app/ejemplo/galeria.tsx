@@ -560,7 +560,7 @@ export function Galeria() {
         {/* KPI con `sufijo`, `ayuda`, `pie` (libre o par etiqueta/valor) y `valorConTono`; en móvil la fila se desliza (`desplazable`). */}
         <FilaMetricas columnas={3} desplazable etiqueta="Indicadores de ejemplo">
           <Kpi etiqueta="Cobranza del mes" tono="ok" valorConTono valor="82" sufijo="%" ayuda="Por encima de la meta" pie={{ etiqueta: "Meta", valor: "75%" }} />
-          <Kpi etiqueta="Por cobrar" tono="error" valorConTono valor="S/ 14,200" ayuda="3 facturas vencidas" pie="Vence el 30/11" />
+          <Kpi etiqueta="Por cobrar" tono="error" valorConTono valor="S/ 14,200" pie="Vence el 30/11" />
           <Metrica etiqueta="Stock crítico" sufijo="/ 136" ayuda="Reponer esta semana" tono="aviso" valorConTono pie={{ etiqueta: "Almacén", valor: "Central" }}>
             12
           </Metrica>
@@ -594,7 +594,9 @@ export function Galeria() {
               { nombre: "Efectivo", valor: 5200, detalle: "Caja y delivery" },
               { nombre: "Yape / Plin", valor: 3100 },
               { nombre: "Tarjeta", valor: 1900 },
-              { nombre: "Otros", valor: 400 },
+              { nombre: "Transferencia", valor: 260 },
+              { nombre: "Depósito", valor: 90 },
+              { nombre: "Vale", valor: 50 },
             ]}
             formato={(v) => `S/ ${v.toLocaleString("en-US")}`}
             centro="S/ 10,600"
