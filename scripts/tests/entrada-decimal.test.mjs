@@ -22,7 +22,8 @@ test("un separador suelto es siempre el decimal; con dos tipos el último decima
 test("un separador suelto con exactamente 3 dígitos detrás es de miles si el campo tiene menos de 3 decimales (H1: dinero)", () => {
   assert.equal(parsearDecimal("1,234", 2), 1234);
   assert.equal(parsearDecimal("2,500", 2), 2500);
-  assert.equal(parsearDecimal("1.500", 2), 1500);
+  assert.equal(parsearDecimal("1.500", 2), 1.5, "un punto suelto es siempre decimal");
+  assert.equal(parsearDecimal("1.250", 2), 1.25);
   assert.equal(parsearDecimal("15,000", 2), 15000);
   assert.equal(parsearDecimal("999,999", 0), 999999);
   assert.equal(parsearDecimal("1,234"), 1234, "el valor por defecto son 2 decimales");

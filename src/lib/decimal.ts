@@ -5,7 +5,7 @@
  * - Solo se conservan dígitos, `.`, `,` y un `-` inicial (este último únicamente si `negativo`). Espacios y letras se descartan.
  * - Un separador suelto, `.` o `,`, es el decimal: «12,5» y «12.5» valen 12.5; «0,125» vale 0.125.
  *   **Excepción (miles):** si va seguido de exactamente 3 dígitos, la parte entera tiene 1–3 dígitos y no empieza por 0, y el campo
- *   tiene menos de 3 decimales, es separador de miles: «1,234» y «1.234» valen 1234, «2,500» vale 2500. Es lo que se ve en
+ *   tiene menos de 3 decimales, es separador de miles: «1,234» vale 1234 y «2,500» vale 2500; solo con la coma: un punto suelto sigue siendo decimal («1.250» vale 1.25). Es lo que se ve en
  *   pantalla (`1,234.50`), y con 2 decimales «1.234» como decimal no cabría: se leería 1.23, mil veces menos. Con `decimales >= 3`
  *   «1,234» vale 1.234.
  * - Con los dos a la vez, el último es el decimal y el otro agrupa miles: «1.234,56» y «1,234.56» valen 1234.56.
@@ -33,7 +33,7 @@ export function parsearDecimal(texto: string, decimales = 2): number | null {
   const mezcla = punto >= 0 && coma >= 0;
   let entero: string;
   let fraccion: string;
-  const miles = !mezcla && !repetido && ultimo >= 0 && decimales < 3 && /^[1-9]\d{0,2}$/.test(cuerpo.slice(0, ultimo)) && /^\d{3}$/.test(cuerpo.slice(ultimo + 1));
+  const miles = !mezcla && !repetido && ultimo >= 0 && sep === "," && decimales < 3 && /^[1-9]\d{0,2}$/.test(cuerpo.slice(0, ultimo)) && /^\d{3}$/.test(cuerpo.slice(ultimo + 1));
   if (ultimo < 0 || (repetido && !mezcla) || miles) {
     entero = cuerpo.replace(/[.,]/g, "");
     fraccion = "";
