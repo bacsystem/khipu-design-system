@@ -7,10 +7,20 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    // eslint-config-next 16 trae las reglas nuevas de react-hooks (las del React Compiler) como error. Los componentes
-    // que las incumplen (ref sincronizada en el render, setState en un efecto de montaje para evitar desajustes de
-    // hidratación…) funcionan y están probados; reescribirlos cambiaría su comportamiento y esta migración no puede
-    // hacerlo. Quedan como aviso, visibles, hasta migrarlos uno a uno.
+    // eslint-config-next 16 trae las reglas nuevas de react-hooks (las del React Compiler) como error. Estos 7 archivos
+    // las incumplen (ref sincronizada en el render, setState en un efecto de montaje para que la hidratación coincida…).
+    // El comportamiento de esos efectos NO tiene pruebas, así que reescribirlos aquí cambiaría el componente sin red de
+    // seguridad: quedan como aviso, solo ellos, y en el resto del repo siguen en error. Migración (empezando por escribir
+    // sus pruebas): https://github.com/bacsystem/khipu-design-system/issues/58. Al migrar un archivo, quítalo de la lista.
+    files: [
+      "src/app/ejemplo/demo-avisos.tsx",
+      "src/components/apariencia.tsx",
+      "src/components/diseno.tsx",
+      "src/components/formularios/calendario.tsx",
+      "src/components/nav/mobile-nav.tsx",
+      "src/components/nav/theme-toggle.tsx",
+      "src/components/navegacion/paleta.tsx",
+    ],
     rules: {
       "react-hooks/refs": "warn",
       "react-hooks/set-state-in-effect": "warn",
