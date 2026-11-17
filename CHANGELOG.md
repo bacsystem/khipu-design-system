@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Notas de actualización (0.9.0 → 0.10.0)**
 - **Tipos:** `TextosPieTabla` (y `TextosTablaDatos`, que lo extiende) gana `paginacion`, `primera` y `ultima`: son obligatorios en el tipo, así que quien tipa un objeto completo de textos debe añadirlos (con `Partial` no hace falta).
-- **Comportamiento:** `EntradaMonto` ya no quita las comas al teclear: «1,5» vale 1.5 (antes 15), «12,5» vale 12.5 (antes 125) y «1,234» vale 1234 (coma de miles). `EntradaDecimal decimales={0}` lee el punto de miles: «1.500» vale 1500 (antes 1.5). `PieTabla` sin `onPorPagina` ya no pinta el selector de filas.
+- **Comportamiento:** `EntradaMonto` ya no quita las comas al teclear: «1,5» vale 1.5 (antes 15), «12,5» vale 12.5 (antes 125) y «1,234» vale 1234 (coma de miles). `PieTabla` sin `onPorPagina` ya no pinta el selector de filas.
 - **Tests:** los botones Anterior/Siguiente/extremos de `PieTabla` sin destino usan `aria-disabled` y no `disabled`: `toBeDisabled()` de jest-dom ya no coincide; usa `toHaveAttribute("aria-disabled", "true")`.
 - **Un solo `ToastProvider` por app** (ahora comparten el almacén del módulo; con dos, cada aviso sale dos veces).
 - **pnpm 10 o posterior:** bloquea el script `prepare` de las dependencias de git, así que faltarían `dist/` y `registry/registry.json`: aprueba la compilación (`pnpm approve-builds`). Con npm y pnpm 9 corre solo.
