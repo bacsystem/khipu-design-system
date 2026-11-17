@@ -14,7 +14,7 @@ const jakarta = localFont({ src: "./fonts/plus-jakarta-sans-latin-wght-normal.wo
 const manrope = localFont({ src: "./fonts/manrope-latin-wght-normal.woff2", weight: "200 800", variable: "--fuente-manrope", preload: false });
 const dmSans = localFont({ src: "./fonts/dm-sans-latin-wght-normal.woff2", weight: "100 1000", variable: "--fuente-dmsans", preload: false });
 const figtree = localFont({ src: "./fonts/figtree-latin-wght-normal.woff2", weight: "300 900", variable: "--fuente-figtree", preload: false });
-const mono = localFont({ src: "./fonts/jetbrains-mono-latin-wght-normal.woff2", weight: "100 800", variable: "--font-mono" });
+const mono = localFont({ src: "./fonts/jetbrains-mono-latin-wght-normal.woff2", weight: "100 600", variable: "--font-mono" });
 const fuentes = [sans, jakarta, manrope, dmSans, figtree, mono].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = { title: "Mi aplicación" };
