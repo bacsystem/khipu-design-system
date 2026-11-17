@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`EntradaDecimal`** (`formularios/entrada-decimal`): número tecleado (cantidades, precios, descuentos, pesos, %). Conserva el texto mientras tiene el foco (se puede escribir «12,» o «1.» y vaciar el campo), acepta `,` o `.` como decimal, comunica el número en cada cambio (`null` si está vacío) acotado a `max` y redondeado a `decimales` (`0` = entero, teclado numérico), normaliza y acota a `min` al salir, refleja un `valor` que cambia desde fuera, mide `h-control` con cifras `tabular-nums`; `sufijo`, `alinear`, `invalido`, `aria-label`. Va dentro de `Campo`. Nuevo `lib/decimal` (`parsearDecimal`, `limpiarTextoDecimal`, `ajustarDecimal`, `textoDeDecimal`) con las reglas de separadores (ver `docs/design-system.md`).
+
+### Fixed
+- **`EntradaMonto`: «12,5» daba 125.** El campo quitaba las comas al teclear (`replace(/[^\d.]/g, "")`). Ahora usa el parser de `EntradaDecimal`: `,` y `.` valen como decimal («12,5» = 12.5), y con los dos a la vez el último es el decimal y el otro agrupa miles («1.234,56» y «1,234.56» = 1234.56). **Cambio de comportamiento:** quien tecleaba `1,234.50` con la coma como separador de miles obtiene lo mismo; quien tecleaba `1,5` obtenía 15 y ahora obtiene 1.5; un valor con un solo separador y tres decimales («1,234») ahora es 1.234, no 1234. La API no cambia.
+
 ## [0.8.0] - 2026-11-17
 
 ### Added

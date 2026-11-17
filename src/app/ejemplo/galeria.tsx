@@ -24,6 +24,7 @@ import { Combobox } from "@/components/formularios/combobox";
 import { Contrasena } from "@/components/formularios/contrasena";
 import { Deslizador } from "@/components/formularios/deslizador";
 import { EntradaFecha } from "@/components/formularios/entrada-fecha";
+import { EntradaDecimal } from "@/components/formularios/entrada-decimal";
 import { EntradaMonto } from "@/components/formularios/entrada-monto";
 import { EntradaRangoFechas, type RangoFechas } from "@/components/formularios/entrada-rango-fechas";
 import { GrupoOpciones } from "@/components/formularios/opciones";
@@ -110,6 +111,8 @@ export function Galeria() {
   const [confirmar, setConfirmar] = useState(false);
   const [panel, setPanel] = useState(false);
   const [paleta, setPaleta] = useState(false);
+  const [descuentoPct, setDescuentoPct] = useState<number | null>(12.5);
+  const [piezas, setPiezas] = useState<number | null>(3);
   const [monto, setMonto] = useState<number | null>(2360);
   const [moneda, setMoneda] = useState("PEN");
   const [fecha, setFecha] = useState("2026-09-15");
@@ -262,7 +265,7 @@ export function Galeria() {
 
       {/* ── Formularios ─────────────────────────────────────────── */}
       <section className={SECCION} style={pasoEntrada(7)}>
-        <CabeceraSeccion icon={PencilSimpleIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={PencilSimpleIcon} titulo="Formularios" subtitulo="campo · combobox · autocomplete · fecha · monto · decimal · casilla · interruptor · opciones · archivos · buscador · stepper · rango de fechas · contraseña · deslizador" conBorde={false} className="px-0 py-0" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Buscador etiqueta="Buscar documentos" valor={busqueda} onCambio={setBusqueda} placeholder="Buscar por serie o cliente…" />
           <Campo id="g-buscador-campo" etiqueta="Buscar cliente (variante campo)">
@@ -321,6 +324,12 @@ export function Galeria() {
           </Campo>
           <Campo id="g-monto" etiqueta="Importe total" ayuda="Se formatea al salir del campo">
             <EntradaMonto id="g-monto" valor={monto} onCambio={setMonto} moneda={moneda} onMoneda={setMoneda} />
+          </Campo>
+          <Campo id="g-descuento" etiqueta="Descuento" ayuda="Escribe 12,5 o 12.5; máximo 100">
+            <EntradaDecimal id="g-descuento" valor={descuentoPct} onCambio={setDescuentoPct} min={0} max={100} sufijo="%" />
+          </Campo>
+          <Campo id="g-piezas" etiqueta="Piezas" ayuda="Solo enteros (decimales={0})">
+            <EntradaDecimal id="g-piezas" valor={piezas} onCambio={setPiezas} decimales={0} min={0} alinear="izquierda" />
           </Campo>
           <Campo id="g-obs" etiqueta="Observaciones" opcional>
             <AreaTexto id="g-obs" placeholder="Notas internas…" />

@@ -108,10 +108,10 @@ src/
 ├── components/nav/          shell · sidebar · sidebar-nav · rail (BotonRail) · barra-inferior · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
 ├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · aviso-responsivo · franja-cuenta-regresiva · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
 ├── components/feedback/     toast (useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
-├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
+├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · entrada-decimal · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
-└── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple, itemActivo) · rail (preferencia del rail) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y)
+└── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple, itemActivo) · rail (preferencia del rail) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y) · decimal (texto ↔ número de los campos decimales)
 
 cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
