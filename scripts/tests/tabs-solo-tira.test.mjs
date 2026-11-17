@@ -46,7 +46,9 @@ test("con children o con paneles se montan los paneles, como antes", () => {
 test("las dos recetas de pestaña fijan el tamaño del icono, sin encoger", () => {
   const fuente = readFileSync(join(RAIZ, "src/components/navegacion/tabs.tsx"), "utf8");
   const estilos = readFileSync(join(RAIZ, "src/lib/estilos.ts"), "utf8");
-  const linea = fuente.match(/const PESTANA_LINEA =\s*"([^"]+)"/)[1];
+  // La receta de línea vive en lib/estilos (`PESTANA_LINEA_BASE`, compartida con `TabsRuta`); `Tabs` solo le añade el estado activo.
+  assert.match(fuente, /PESTANA_LINEA = `\$\{PESTANA_LINEA_BASE\}/);
+  const linea = estilos.match(/export const PESTANA_LINEA_BASE =\s*"([^"]+)"/)[1];
   const segmento = estilos.match(/export const SEGMENTO_BASE =\s*"([^"]+)"/)[1];
   for (const receta of [linea, segmento]) {
     assert.match(receta, /\[&_svg\]:shrink-0/);

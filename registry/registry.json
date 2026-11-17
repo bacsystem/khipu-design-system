@@ -261,6 +261,8 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "components/feedback/spinner",
+        "lib/cola-toast",
         "lib/estilos",
         "lib/utils"
       ]
@@ -545,6 +547,30 @@
         "components/nav/mobile-nav",
         "components/nav/sidebar-nav",
         "lib/estilos",
+        "lib/iconos",
+        "lib/navegacion",
+        "lib/utils"
+      ]
+    },
+    "components/nav/centro-notificaciones": {
+      "name": "centro-notificaciones",
+      "type": "component",
+      "category": "nav",
+      "files": [
+        "src/components/nav/centro-notificaciones.tsx"
+      ],
+      "dependencies": [
+        "@base-ui/react",
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "components/feedback/estado-vacio",
+        "components/patrones/metricas",
+        "components/ui/grupo-botones",
+        "components/ui/popover",
+        "components/ui/scroll-area",
+        "lib/estilos",
+        "lib/formato",
         "lib/iconos",
         "lib/navegacion",
         "lib/utils"
@@ -856,6 +882,20 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/utils"
+      ]
+    },
+    "components/navegacion/tabs-ruta": {
+      "name": "tabs-ruta",
+      "type": "component",
+      "category": "navegacion",
+      "files": [
+        "src/components/navegacion/tabs-ruta.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/estilos",
+        "lib/navegacion",
         "lib/utils"
       ]
     },
@@ -1579,6 +1619,16 @@
       "category": "lib",
       "files": [
         "src/lib/decimal.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/cola-toast": {
+      "name": "cola-toast",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/cola-toast.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

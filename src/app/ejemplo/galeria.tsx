@@ -14,7 +14,7 @@ import { EstadoVacio } from "@/components/feedback/estado-vacio";
 import { ProgresoCircular, ProgresoLineal } from "@/components/feedback/progreso";
 import { Skeleton, SkeletonMetricas } from "@/components/feedback/skeleton";
 import { Spinner } from "@/components/feedback/spinner";
-import { useToast } from "@/components/feedback/toast";
+import { toast } from "@/components/feedback/toast";
 import { Tooltip } from "@/components/feedback/tooltip";
 import { AreaTexto, Campo, Entrada } from "@/components/formularios/campo";
 import { Autocomplete } from "@/components/formularios/autocomplete";
@@ -41,6 +41,7 @@ import { PanelLateral } from "@/components/navegacion/panel-lateral";
 import { Pasos, TarjetaPaso } from "@/components/navegacion/pasos";
 import { Tabs } from "@/components/navegacion/tabs";
 import { DemoAvisos } from "./demo-avisos";
+import { DemoNotificaciones, DemoTabsRuta } from "./demo-navegacion-ruta";
 import { BotonAsync } from "@/components/patrones/boton-async";
 import { CabeceraPagina, EnlaceVolver } from "@/components/patrones/cabecera-pagina";
 import { CabeceraSeccion } from "@/components/patrones/cabecera-seccion";
@@ -105,9 +106,13 @@ const COLUMNAS_LISTADO: ColumnaListado<Doc>[] = COLUMNAS.map((c) =>
         : c,
 );
 
+/** Función suelta, fuera de cualquier componente: `toast` no necesita hooks. */
+function guardarBorrador() {
+  toast.aviso("Borrador guardado", "Se llamó a toast desde una función normal.");
+}
+
 const SECCION = cn(TARJETA, ENTRADA, "grid gap-4 px-5 py-4");
 export function Galeria() {
-  const toast = useToast();
   const [confirmar, setConfirmar] = useState(false);
   const [panel, setPanel] = useState(false);
   const [paleta, setPaleta] = useState(false);
@@ -198,6 +203,9 @@ export function Galeria() {
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={ACCION_SECUNDARIA} onClick={() => toast.ok("Serie guardada", "F002 ya acepta emisiones.")}>
             Toast ok
+          </button>
+          <button type="button" className={ACCION_SECUNDARIA} onClick={guardarBorrador}>
+            Toast desde una función
           </button>
           <button type="button" className={ACCION_SECUNDARIA} onClick={() => toast.error("No se pudo enviar", "SUNAT no respondió a tiempo.", { etiqueta: "Reintentar", onClick: () => {} })}>
             Toast error con acción
@@ -385,6 +393,19 @@ export function Galeria() {
         <Alerta tono="info" titulo="Shell responsivo">
           El layout de esta demo usa <code className="font-mono">Shell rail=&quot;auto&quot;</code> y <code className="font-mono">BarraInferior</code>: entre 768 y 1279 px el sidebar se pliega a 64 px con tooltips (el botón de su cabecera lo expande y se recuerda); por debajo de 768 px no hay sidebar ni hamburguesa, sino la barra inferior con «Más» y la acción flotante. Reduce el ancho de la ventana para verlo.
         </Alerta>
+        <div className="grid gap-3">
+          <p className="text-control text-muted-foreground">
+            <strong className="font-semibold text-foreground">TabsRuta</strong>: pestañas que son rutas (enlaces con <code className="font-mono">aria-current=&quot;page&quot;</code>, sin <code className="font-mono">role=&quot;tablist&quot;</code>). Pulsa «Series» para cambiar de página; en móvil se desplazan en horizontal.
+          </p>
+          <DemoTabsRuta />
+          <div className="flex flex-wrap items-center gap-3">
+            <DemoNotificaciones />
+            <DemoNotificaciones vacio />
+            <span className="text-control text-muted-foreground">
+              <strong className="font-semibold text-foreground">CentroNotificaciones</strong>: con notificaciones (3 sin leer) y vacío. Abrir una la marca como leída (<code className="font-mono">onLeer</code>); Esc cierra.
+            </span>
+          </div>
+        </div>
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
             <HoverCard>
