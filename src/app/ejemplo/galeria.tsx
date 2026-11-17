@@ -115,6 +115,7 @@ export function Galeria() {
   const [fecha, setFecha] = useState("2026-09-15");
   const [archivo, setArchivo] = useState<File | null>(null);
   const [cliente, setCliente] = useState<string | null>("20554198211");
+  const [bandeja, setBandeja] = useState<"borradores" | "enviados">("borradores");
   const [tipo, setTipo] = useState<"01" | "03">("01");
   const [enviando, setEnviando] = useState(false);
   const [busqueda, setBusqueda] = useState("");
@@ -477,6 +478,20 @@ export function Galeria() {
             )
           }
         </Tabs>
+        {/* Tira sola: sin children ni paneles no hay paneles (ni hueco bajo la tira); el contenido lo decide la app según `valor`. Los iconos toman size-4 sin clase. */}
+        <div className="grid gap-3">
+          <Tabs
+            estilo="segmentado"
+            valor={bandeja}
+            onCambio={setBandeja}
+            controla="galeria-bandeja"
+            items={[
+              { id: "borradores", etiqueta: <><PencilSimpleIcon aria-hidden /> Borradores</>, contador: 4 },
+              { id: "enviados", etiqueta: <><PaperPlaneTiltIcon aria-hidden /> Enviados</> },
+            ]}
+          />
+          <p role="tabpanel" id="galeria-bandeja" aria-label="Bandeja" className="text-control text-muted-foreground">{bandeja === "borradores" ? "4 borradores sin enviar a SUNAT." : "Documentos ya enviados."}</p>
+        </div>
         <Acordeon
           defaultAbiertos={["a"]}
           items={[
