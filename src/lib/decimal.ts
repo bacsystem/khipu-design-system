@@ -58,7 +58,7 @@ export function textoDeDecimal(valor: number | null): string {
 }
 
 /**
- * Lo que un campo hace con el texto recién escrito: lo limpia, calcula el número que comunica y, si supera `max`, reescribe
+ * Lo que un campo hace con el texto recién escrito: lo limpia, calcula el número que comunica y, si supera un `max` no negativo, reescribe
  * el texto con el tope (así lo que se ve es lo que se envía, también con Enter sin salir del campo). El redondeo a
  * `decimales` no reescribe el texto mientras se teclea: se normaliza al salir.
  */
@@ -67,7 +67,7 @@ export function interpretarEntrada(crudo: string, { decimales, max, negativo = f
   const n = parsearDecimal(limpio, decimales);
   if (n === null) return { texto: limpio, valor: null };
   const valor = ajustarDecimal(n, decimales, max);
-  return { texto: max !== undefined && n > max ? textoDeDecimal(valor) : limpio, valor };
+  return { texto: max !== undefined && max >= 0 && n > max ? textoDeDecimal(valor) : limpio, valor };
 }
 
 /**

@@ -80,6 +80,15 @@ test("H3: teclear más que max reescribe el texto con el tope; el redondeo no re
   assert.deepEqual(interpretarEntrada("-5", { ...o, negativo: true }), { texto: "-5", valor: -5 });
 });
 
+test("H7: con max negativo el texto no se reescribe al teclear («-25» con max -10 queda -25)", () => {
+  const o = { decimales: 2, max: -10, negativo: true };
+  let texto = "";
+  let valor = null;
+  for (const c of "-25") ({ texto, valor } = interpretarEntrada(texto + c, o));
+  assert.deepEqual({ texto, valor }, { texto: "-25", valor: -25 });
+  assert.deepEqual(interpretarEntrada("-2", o), { texto: "-2", valor: -10 });
+});
+
 test("H2: con el foco puesto, la normalización del padre no pisa el texto; un cambio externo real sí", () => {
   const o = { decimales: 2, max: 100 };
   // `onCambio={(v) => set(v ?? 0)}`: borrar comunica null y el padre devuelve 0.
