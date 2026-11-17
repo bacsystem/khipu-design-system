@@ -103,6 +103,8 @@ export function TablaEjemplo() {
           unidad="llaves"
           porPagina={porPagina}
           onPorPagina={(n) => { setPorPagina(n); setPagina(1); }}
+          opciones={[5, 10, 25, 50]}
+          extremos
           pagina={paginaActual}
           ultimaPagina={ultimaPagina}
           onPagina={setPagina}
