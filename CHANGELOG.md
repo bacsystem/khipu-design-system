@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-17
+
 ### Added
 - **Rail del sidebar** (`Shell rail="auto" | "nunca"`, por defecto `"nunca"`: sin cambios). Con `"auto"` el sidebar se pliega a **64 px** entre 768 y 1279 px: ítems de solo icono con `Tooltip` a la derecha (el nombre sigue en el DOM como texto para el lector de pantalla), sin títulos de grupo, grupos colapsables aplanados (abiertos y sin `inert`), la marca reducida a su icono, el chip y el pie ocultos y `SelectorContexto` y `MenuUsuario` reducidos a su avatar (sus menús se abren a la derecha con ancho propio). Lo decide CSS con la variante nueva `rail:` (`styles/theme.css`, solo dentro de `[data-khipu-rail="auto"]`), así que no hay parpadeo de hidratación; un `ProveedorRail` (`nav/rail`) solo informa del estado a lo que cambia de comportamiento (tooltips, `inert`, ancho de los menús). `BotonRail` (en la cabecera de `SidebarContent`; `aria-expanded`, `aria-controls`, «Contraer menú»/«Expandir menú» traducibles con `SidebarContent textosRail`) alterna entre rail y expandido en cualquier ancho desde md; la elección se guarda en `localStorage["khipu-sidebar-rail"]` (`"rail" | "expandido"`, `lib/rail`: `CLAVE_RAIL`, `leerPreferenciaRail`, `guardarPreferenciaRail`, `railEfectivo`; todo en `try/catch`) y `ScriptDiseno` la copia a `<html data-rail>` antes del primer pintado. Sin `ScriptDiseno` en el `<head>` se aplica tras montar.
 - **`BarraInferior`** (`nav/barra-inferior`): navegación inferior del móvil (≤ 767 px; `md:hidden`) que reemplaza a la hamburguesa. `items: ItemNav[]` los pone la app (hasta 4; el kit no trae lista fija), `mas?: { etiqueta, contenido }` abre `contenido` (normalmente el `SidebarContent` completo) en el cajón de `MobileNav`, `accion?: { href, etiqueta, icono }` es un botón redondo flotante (p. ej. «Nueva venta») y `etiqueta` es el nombre de la `<nav>` («Navegación principal»). Entradas de ≥ 44 px, activa por prefijo (o `exacto`) con `aria-current="page"`, entradas sin `href` como «próximamente» deshabilitadas, zona segura `env(safe-area-inset-bottom)` (la página necesita `viewport-fit=cover`). La barra va en `Shell barraInferior` y queda `sticky` al final de la columna **en el flujo**, con el hueco de la acción reservado: ni la barra ni la acción tapan el final del contenido. Mientras hay una barra, `--khipu-reserva-inferior` sube los toasts por encima de ella.
@@ -18,6 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Si usas la CLI (`khipu add`) vuelve a copiar `src/styles/theme.css`**: trae la variante `rail:` (`@custom-variant rail`) y las reglas de `--khipu-reserva-inferior`. Sin ellas `Shell rail="auto"` no se pliega y los toasts no suben sobre `BarraInferior`. (Con el paquete npm llegan solos en `styles.css`.) La receta `ACCION_FLOTANTE` (`lib/estilos`) es la del botón redondo de la barra; `check:alturas` ahora también rechaza `size-N` sobre una receta de control.
 - `SidebarContent`: el chip y el pie van en un contenedor propio (para ocultarlos en el rail); sin `rail="auto"` se ven igual que antes. `Toast`: el visor sube `--khipu-reserva-inferior` (0 sin barra inferior). **Con `cacheComponents` (Next 16)** `BarraInferior` usa `usePathname`: va dentro de `<Suspense>`, igual que `SidebarNav`, `TopBar` y `MobileNav`.
+
+## [0.7.0] - 2026-11-17
+
+### Added
+- `TablaDatos` y `TablaListado` ganan, todo opcional y sin cambiar el comportamiento de quien no los usa: `tarjetaMovil` (bajo `md` cada fila es una tarjeta en una `<ul role="list" aria-label>`; la tabla se ve desde `md`; con `onFila` la tarjeta es un `<button>`, o un `<div>` con `tarjetaMovilInteractiva` si lleva controles propios; la `seleccion` pone su casilla en la tarjeta), `anchoMinimo` (`min-width` de la tabla con scroll horizontal dentro de la tarjeta), `pie` (fila de totales `<tfoot>` sobre las columnas visibles y, en móvil, un resumen `role="group"` fuera de la lista, para que el lector de pantalla cuente solo las filas), `pieEtiqueta` (el rótulo «Total»: primera celda del pie y título del resumen móvil), `filaActiva` (`aria-current="true"` en la fila o la tarjeta, más la banda de acento) y `titulo` (nombre de la lista de tarjetas; `TablaListado` lo pasa solo).
+- `TablaListado claveAlmacenamiento`: recuerda las columnas en `localStorage` (nuevo `lib/columnas-visibles`: `calcularOcultas`, `leerColumnasOcultas`, `guardarColumnasOcultas`, `interpretarColumnasOcultas`, `restablecerColumnasOcultas`; nunca lanza). Se guardan las columnas **ocultas**, no las visibles: una columna que se añada después con `ocultaInicial: true` la verá quien ya tenía algo guardado; cambia la clave si todos deben partir de cero. Lo recordado se lee con `useSyncExternalStore`, sin desajuste de hidratación (la primera pintura usa `ocultaInicial`).
+- Acción «Restablecer» (`textos.restablecer`) en el selector de columnas: vuelve a `ocultaInicial` y borra lo recordado.
+- **Aviso de tipo:** `TextosTablaListado` gana `fijo` y `restablecer`, obligatorios en el tipo: quien tipa un objeto completo de textos debe añadirlos (quien pasa `Partial`, no).
+
+### Changed
+- El selector de columnas de `TablaListado` lista ahora todas las columnas con título de texto y marca las `ocultable: false` como bloqueadas con «Fijo» (`textos.fijo`). Sigue apareciendo solo si hay al menos una columna ocultable: un listado sin ninguna no gana botón ni barra.
+- `filaActiva` usa `aria-current="true"` (no `aria-selected`): en una `table` sin rol `grid` es la semántica correcta, y «seleccionada» queda para la casilla de `seleccion`.
+- Sin selector de densidad de filas (decisión de producto).
 
 ## [0.6.0] - 2026-11-17
 

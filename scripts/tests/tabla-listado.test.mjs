@@ -47,7 +47,8 @@ test("TablaListado busca sin tildes ni mayúsculas y vuelve a la página 1 al bu
 test("TablaListado: el selector de columnas anuncia su estado y una columna con título no textual usa tituloTexto", () => {
   assert.match(fuente, /<MenuCheckboxItem[\s\S]*?checked=\{!ocultas\.includes\(c\.id\)\}/);
   assert.match(fuente, /if \(c\.tituloTexto\) return c\.tituloTexto;/);
-  assert.match(fuente, /ocultables\.filter\(\(c\) => c\.ocultaInicial\)/);
+  // ocultaInicial se resuelve en calcularOcultas (lib/columnas-visibles), probada en tabla-movil.test.mjs.
+  assert.match(fuente, /calcularOcultas\(/);
 });
 
 // El botón de limpiar del `Buscador` tenía «Limpiar búsqueda» fijo: ahora es `etiquetaLimpiar` y `TablaListado` la recibe en `textos.limpiar`.

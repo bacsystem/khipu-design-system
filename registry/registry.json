@@ -106,6 +106,7 @@
         "components/datos/tabla-datos",
         "components/formularios/buscador",
         "components/ui/menu",
+        "lib/columnas-visibles",
         "lib/estilos",
         "lib/exportar",
         "lib/ordenar"
@@ -1523,6 +1524,16 @@
       "category": "lib",
       "files": [
         "src/lib/exportar.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/columnas-visibles": {
+      "name": "columnas-visibles",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/columnas-visibles.ts"
       ],
       "dependencies": [],
       "registryDependencies": []
