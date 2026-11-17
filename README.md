@@ -74,7 +74,7 @@ import { Button, buttonVariants } from "khipu-design-system/ui/button";
 import { Dialog, DialogContent } from "khipu-design-system/ui/dialog";
 import { Alerta } from "khipu-design-system/feedback/alerta";
 import { Campo } from "khipu-design-system/formularios/campo";
-import { Tabs } from "khipu-design-system/navegacion/tabs";
+import { Tabs } from "khipu-design-system/navegacion/tabs"; // con children/paneles monta paneles; sin ellos es una tira sola
 import { PieTabla } from "khipu-design-system/patrones/pie-tabla";
 import { TablaDatos } from "khipu-design-system/datos/tabla-datos";
 import { TablaListado } from "khipu-design-system/datos/tabla-listado"; // tarjetaMovil, anchoMinimo, pie, filaActiva, claveAlmacenamiento
@@ -89,7 +89,15 @@ import { PALETAS, TONOS_OSCURO } from "khipu-design-system/apariencia-opciones";
 - **`nav/*` es un export aparte** (shell, sidebar, top bar, selector de contexto, menú de usuario, mobile nav, theme toggle): dependen del router de Next (`next/link`, `usePathname`) y de `next-themes`, y una app suele tener su propio shell. Están disponibles, pero no son parte del núcleo estable: si tu app ya tiene su navegación, no los importes. `navegacion/paleta` también usa `useRouter`. **Con Next 16 y `cacheComponents`**, `SidebarNav`, `TopBar`, `MobileNav`, `BarraInferior` y `navegacion/tabs-ruta` (`TabsRuta`) usan `usePathname` y deben ir (ellos o su padre) dentro de `<Suspense>`; sin él, `next build` falla en las rutas dinámicas con «usePathname() in a Client Component outside of <Suspense>». Sin `cacheComponents` (el caso por defecto) no hace falta.
 - No hay un `index` que lo exporte todo, a propósito: un barrel mezclaría módulos cliente y servidor y obligaría al bundler a cargar todos los componentes.
 
-**Mantenerlo** — antes de cada tag corre `npm run verify:next15`: instala `next@15.5.28` sin guardarlo (`npm i --no-save`), compila y verifica el paquete y corre los tests, porque el repo solo desarrolla con Next 16 y el peer promete también 15.5 (el portal sigue ahí); después restaura con `npm ci`. `npm run build:paquete` compila a `dist/`; `npm run verify:paquete` compila y falla si un componente de `src/` no tiene subpath en `exports`, si un subpath no resuelve a su `.js` y su `.d.ts`, si un módulo no carga o si el CSS apunta a algo que no existe. Una carpeta nueva en `src/components/` necesita su entrada `"./<carpeta>/*"` en `package.json`. La receta para migrar el portal de khipu está en [`docs/adopcion-en-el-portal.md`](docs/adopcion-en-el-portal.md).
+**Mantenerlo** — `npm run verify:next15` corre en CI (job `next15`) en cada PR y antes de cada release; en local es una comprobación opcional: instala `next@15.5.28` sin guardarlo (`npm i --no-save`), compila y verifica el paquete y corre los tests, porque el repo solo desarrolla con Next 16 y el peer promete también 15.5 (el portal sigue ahí); después restaura con `npm ci` (en local; en CI el runner se descarta). `npm run build:paquete` compila a `dist/`; `npm run verify:paquete` compila y falla si un componente de `src/` no tiene subpath en `exports`, si un subpath no resuelve a su `.js` y su `.d.ts`, si un módulo no carga o si el CSS apunta a algo que no existe. Una carpeta nueva en `src/components/` necesita su entrada `"./<carpeta>/*"` en `package.json`. La receta para migrar el portal de khipu está en [`docs/adopcion-en-el-portal.md`](docs/adopcion-en-el-portal.md).
+
+## Publicar una versión
+
+Las versiones se publican solas al llegar a `main`; no se crean tags a mano.
+
+1. En el PR, sube `version` en `package.json` (X.Y.Z) y añade en `CHANGELOG.md` la sección `## [X.Y.Z] - YYYY-MM-DD` (con fecha y con contenido).
+2. Al hacer merge a `main`, `.github/workflows/release.yml` mira si existe el tag `vX.Y.Z`. Si no existe, vuelve a pasar la CI completa (`ci.yml`, incluido `verify:next15`) y, solo si pasa, crea el tag anotado `vX.Y.Z` sobre el commit del push (mensaje `vX.Y.Z: <título del PR> (#N)`) y la release de GitHub con las notas = esa sección del CHANGELOG. Es «Latest» solo si es la versión más alta; si el tag y la release ya existen, no hace nada. Si falta la sección o no tiene fecha, el workflow falla antes de la CI y no se crea nada.
+3. Recuperación: si el run falla o no llegó a correr, se re-ejecuta (Actions → Release → «Re-run all jobs», o un nuevo push a `main`). Si el tag existe pero no la release, el run solo crea la release. Limitación: GitHub guarda un único run pendiente por grupo de concurrencia; si dos pushes que suben versión llegan mientras otro run está activo, se descarta el pendiente más antiguo y su versión no se publica sola: re-ejecuta el run de ese commit.
 
 ## Estructura
 

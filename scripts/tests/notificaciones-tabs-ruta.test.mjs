@@ -243,8 +243,9 @@ test("H1: el centrado no depende del offsetParent (nav en x=240, primera pestañ
 
 test("H2/H3: la pestaña de línea sale de la receta compartida, con foco hacia dentro, y Tabs usa la misma", () => {
   assert.match(estilos.PESTANA_LINEA_BASE, /focus-visible:ring-inset/);
+  assert.match(estilos.PESTANA_LINEA_BASE, /\[&_svg:not\(\[class\*='size-'\]\)\]:size-4/, "TabsRuta línea hereda la regla de iconos de 0.9.0");
   assert.ok(!/ring-offset/.test(estilos.PESTANA_LINEA_BASE), "un anillo con separación se recorta en una fila con overflow");
-  const ruta = html(enRuta("/compras", createElement(TabsRuta, { items: ITEMS, etiqueta: "x" })));
+  const ruta = html(enRuta("/compras", createElement(TabsRuta, { items: ITEMS, etiqueta: "x" }))).replaceAll("&amp;", "&").replaceAll("&#x27;", "'");
   for (const clase of estilos.PESTANA_LINEA_BASE.split(" ")) assert.ok(ruta.includes(clase), `TabsRuta línea trae ${clase}`);
   for (const clase of estilos.CONTADOR_PESTANA.split(" ")) assert.ok(ruta.includes(clase), `contador trae ${clase}`);
   const tabs = readFileSync(join(RAIZ, "src/components/navegacion/tabs.tsx"), "utf8");
