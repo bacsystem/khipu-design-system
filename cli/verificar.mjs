@@ -1,16 +1,18 @@
 // `khipu-ds verificar`: guardas de diseño para apps CONSUMIDORAS (no para este repo, que usa los scripts/verificar-*).
 // Reglas (grupos): tipografia · alturas · estilos · iconos. Sin dependencias: solo node:*.
-// La lógica de tipografía y alturas replica la de scripts/verificar-tipografia.mjs y verificar-alturas.mjs adaptada a
-// un consumidor (los scripts no viajan en el paquete; esta CLI sí). `contraste` verifica los tokens del propio kit y no aplica.
+// Las reglas de tipografía y alturas son las de cli/reglas.mjs, las mismas que usan scripts/verificar-tipografia.mjs y
+// verificar-alturas.mjs del kit (los scripts no viajan en el paquete; esta CLI sí). `contraste` verifica los tokens del propio kit y no aplica.
 //
 // Uso:
 //   khipu-ds verificar [tipografia|alturas|estilos|iconos ...] [--dir <ruta>...] [--baseline <json>] [--podar]
 //                      [--inicializar] [--estricto] [--monto <regex>] [--ignorar <seg>...] [--incluir <seg>...]
 //
-// Una línea con `<grupo>-ok` (p. ej. `// estilos-ok`) queda exenta de ese grupo.
+// Un comentario `<grupo>-ok[: regla]` (p. ej. `// estilos-ok`) marca los hallazgos de esa línea como «exentos»: se cuentan aparte,
+// se muestran en el resumen y, con baseline, se guardan en ella (una exención nueva falla).
 
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { ALTURA as ALTURA_COMPARTIDA, RECETAS, TIPOGRAFIA as TIPOGRAFIA_COMPARTIDA } from "./reglas.mjs";
 
 export const GRUPOS = ["tipografia", "alturas", "estilos", "iconos"];
@@ -31,9 +33,27 @@ const PREFIJOS_ARBITRARIOS = [
 // `prefijo-[valor]` y la sintaxis de Tailwind v4 `prefijo-(--var)` / `prefijo-(tipo:--var)`, que es lo mismo que `prefijo-[var(--var)]`.
 const ARBITRARIO = new RegExp(`(?<![\\w-])(-?(?:${PREFIJOS_ARBITRARIOS})-(?:\\[([^\\]\\s]+)\\]|\\(((?:[\\w-]+:)?--[\\w-]+)\\)))`, "g");
 // Propiedad arbitraria `[animation-duration:1.6s]` (no los selectores `[&_svg]` ni `[stroke='#ccc']`, ni las variables `[--x:1]`).
-const PROPIEDAD_ARBITRARIA = /(?<![\w-])(\[(?!--)[a-z][a-z-]*:[^\]\s]+\])/g;
+// `[img:first-child]:` (variante: va seguida de `:`) y los selectores con paréntesis o corchetes anidados no son propiedades.
+const PROPIEDAD_ARBITRARIA = /(?<![\w-])(\[(?!--)[a-z][a-z-]*:[^\]\s()[]+\])(?![:\w-])/g;
 // Variables que inyecta el propio componente (base-ui/radix): no son un valor de la app.
-const VARIABLE_DE_COMPONENTE = /^var\(--(?:anchor|available|positioner|transform-origin|radix|base-ui)/;
+const VARIABLE_DE_COMPONENTE = /^--(?:anchor|available|positioner|transform-origin|radix|base-ui|active-tab)/;
+const RAIZ_DEL_KIT = join(dirname(fileURLToPath(import.meta.url)), "..");
+let variablesKit = null;
+/** Variables CSS que define el kit (`--duracion-rapida`, `--spacing-control`…), leídas de sus tokens y tema: nunca una lista a mano que se desfase. */
+function variablesDelKit() {
+  if (variablesKit) return variablesKit;
+  variablesKit = new Set();
+  for (const archivo of ["tokens.css", "theme.css"]) {
+    for (const ruta of [join(RAIZ_DEL_KIT, "src", "styles", archivo), join(RAIZ_DEL_KIT, "dist", "styles", archivo)]) {
+      if (!existsSync(ruta)) continue;
+      for (const m of readFileSync(ruta, "utf8").matchAll(/^\s*(--[\w-]+)\s*:/gm)) variablesKit.add(m[1]);
+      break;
+    }
+  }
+  return variablesKit;
+}
+/** `var(--x)` / `(--x)` de una clase: ¿es una variable del kit o del componente (base-ui/radix)? */
+const esVariablePermitida = (nombre) => VARIABLE_DE_COMPONENTE.test(nombre) || variablesDelKit().has(nombre);
 const PALETA = new RegExp(`(?<![\\w-])${PREFIJOS_COLOR}-(?:${COLORES}-\\d{2,3}|white|black)(?:/\\d+)?(?![\\w-])`, "g");
 // Hex de 6/8 dígitos en cualquier parte; de 3/4 solo como valor de una prop/propiedad de color (así `Pedido #123` o `href="#add"` no cuentan).
 const HEX_LARGO = /(?<![\w&#/.[-])#(?:[\da-fA-F]{8}|[\da-fA-F]{6})(?![\w-])/g;
@@ -63,22 +83,63 @@ export function reglaActiva(regla, { grupos = GRUPOS, monto = null } = {}) {
 
 const lineaDe = (texto, indice) => texto.slice(0, indice).split("\n").length;
 
-/** Texto sin comentarios (de línea y de bloque, también los JSX), con la misma longitud y saltos de línea para que índices y líneas no cambien. */
-export function sinComentarios(texto) {
-  const blanquear = (m) => m.replace(/[^\n]/g, " ");
-  return texto.replace(/\/\*[\s\S]*?\*\//g, blanquear).replace(/(^|[\s;,{}()])\/\/[^\n]*/g, (m, previo) => previo + blanquear(m.slice(previo.length)));
+/**
+ * Recorre el texto con un autómata de comillas (string, template, comentario de línea y de bloque) y devuelve el código con los
+ * comentarios blanqueados (misma longitud y saltos de línea: índices y líneas no cambian) y los comentarios aparte.
+ * Un `/*` o `//` dentro de un string (`accept="image/*"`, `"a // b"`) no es un comentario. `//` precedido de `:` (URL en JSX) tampoco.
+ */
+export function separarComentarios(texto) {
+  let codigo = "";
+  const comentarios = [];
+  let i = 0;
+  while (i < texto.length) {
+    const c = texto[i];
+    const sig = texto[i + 1];
+    if (c === "/" && sig === "*") {
+      const fin = texto.indexOf("*/", i + 2);
+      const hasta = fin === -1 ? texto.length : fin + 2;
+      comentarios.push({ inicio: i, texto: texto.slice(i, hasta) });
+      codigo += texto.slice(i, hasta).replace(/[^\n]/g, " ");
+      i = hasta;
+    } else if (c === "/" && sig === "/" && texto[i - 1] !== ":") {
+      let hasta = texto.indexOf("\n", i);
+      if (hasta === -1) hasta = texto.length;
+      comentarios.push({ inicio: i, texto: texto.slice(i, hasta) });
+      codigo += " ".repeat(hasta - i);
+      i = hasta;
+    } else if (c === '"' || c === "'" || c === "`") {
+      let j = i + 1;
+      for (; j < texto.length; j++) {
+        if (texto[j] === "\\") j++;
+        else if (texto[j] === c) break;
+        else if (texto[j] === "\n" && c !== "`") break; // un string normal no cruza líneas (el apóstrofo de un texto JSX no abre uno)
+      }
+      const hasta = Math.min(j + 1, texto.length);
+      codigo += texto.slice(i, hasta);
+      i = hasta;
+    } else {
+      codigo += c;
+      i++;
+    }
+  }
+  return { codigo, comentarios };
 }
 
+/** Texto sin comentarios (de línea y de bloque, también los JSX), con la misma longitud y saltos de línea para que índices y líneas no cambien. */
+export const sinComentarios = (texto) => separarComentarios(texto).codigo;
+
 // Exenciones por línea, solo en forma de comentario: `// estilos-ok`, un comentario JSX de bloque con estilos-ok, o `// estilos-ok: paleta, z-index`.
-export function leerExenciones(texto) {
+// Se leen de los comentarios reales, no de cualquier texto: un `// estilos-ok` dentro de un string no exime nada.
+export function leerExenciones(texto, comentarios = separarComentarios(texto).comentarios) {
   const porLinea = new Map();
-  const patron = /(?:\/\/|\/\*)\s*(tipografia|alturas|estilos|iconos)-ok\b(?:\s*:\s*([\w/-]+(?:\s*,\s*[\w/-]+)*))?/g;
-  texto.split("\n").forEach((linea, i) => {
-    for (const m of linea.matchAll(patron)) {
-      const reglas = m[2] ? m[2].split(",").map((r) => r.trim()).map((r) => (r.includes("/") ? r : `${m[1]}/${r}`)) : null;
-      (porLinea.get(i + 1) ?? porLinea.set(i + 1, []).get(i + 1)).push({ grupo: m[1], reglas });
-    }
-  });
+  const patron = /^(?:\/\/|\/\*)\s*(tipografia|alturas|estilos|iconos)-ok\b(?:\s*:\s*([\w/-]+(?:\s*,\s*[\w/-]+)*))?/;
+  for (const c of comentarios) {
+    const m = c.texto.match(patron);
+    if (!m) continue;
+    const reglas = m[2] ? m[2].split(",").map((r) => r.trim()).map((r) => (r.includes("/") ? r : `${m[1]}/${r}`)) : null;
+    const linea = lineaDe(texto, c.inicio);
+    (porLinea.get(linea) ?? porLinea.set(linea, []).get(linea)).push({ grupo: m[1], reglas });
+  }
   return porLinea;
 }
 
@@ -149,13 +210,19 @@ function estilosEnLinea(texto) {
   return salida;
 }
 
-/** Trozo de código que pertenece al elemento cuyo `className` contiene `font-mono`: resto de la etiqueta de apertura y su contenido hasta el siguiente `<`. */
+/**
+ * Trozo de código del elemento cuyo `className` contiene `font-mono` en `desde`: su etiqueta de apertura entera (atributos antes y
+ * después de `className`) y su contenido hasta el siguiente `<`. Si `font-mono` no está dentro de una etiqueta, solo mira lo que sigue.
+ */
 function segmentoDelElemento(texto, desde) {
+  let inicio = texto.lastIndexOf("<", desde);
+  if (inicio === -1 || desde - inicio > 600 || /(?<!=)>/.test(texto.slice(inicio, desde))) inicio = desde;
   const resto = texto.slice(desde, desde + 600);
+  if (inicio === desde) return resto.split(/[\n;]/)[0]; // fuera de una etiqueta (p. ej. `cn("font-mono")`): solo su propia sentencia
   const cierre = resto.search(/(?<!=)>/);
-  if (cierre === -1) return resto.split("\n")[0];
+  if (cierre === -1) return texto.slice(inicio, desde) + resto.split("\n")[0];
   const siguiente = resto.indexOf("<", cierre);
-  return resto.slice(0, siguiente === -1 ? undefined : siguiente);
+  return texto.slice(inicio, desde) + resto.slice(0, siguiente === -1 ? undefined : siguiente);
 }
 
 /**
@@ -165,8 +232,8 @@ function segmentoDelElemento(texto, desde) {
  */
 export function analizarTexto(original, { grupos = GRUPOS, monto = null } = {}) {
   const activos = new Set(grupos);
-  const exenciones = leerExenciones(original);
-  const texto = sinComentarios(original);
+  const { codigo: texto, comentarios } = separarComentarios(original);
+  const exenciones = leerExenciones(original, comentarios);
   const lineas = texto.split("\n");
   const hallazgos = [];
   const agregar = (linea, grupo, regla, mensaje, coincidencia) => {
@@ -190,7 +257,8 @@ export function analizarTexto(original, { grupos = GRUPOS, monto = null } = {}) 
         linea = linea.replace(token, " ".repeat(token.length)); // que el hex de `bg-[#fff]` no cuente dos veces
         if (/^text-\[\d+(?:\.\d+)?(?:px|rem|em)\]$/.test(token)) continue; // tamaños de texto: los cubre `tipografia`
         if (/^tracking-\[0\.\d+em\]$/.test(token)) continue; // ídem
-        if (VARIABLE_DE_COMPONENTE.test(valor)) continue;
+        const variable = valor.match(/^var\((--[\w-]+)/)?.[1];
+        if (variable && esVariablePermitida(variable)) continue;
         agregar(n, "estilos", "valor-arbitrario", "valor arbitrario [...]: usa un token, la escala o una receta del kit", token);
       }
       for (const m of linea.matchAll(HEX_LARGO)) {
@@ -374,7 +442,7 @@ export function ayudaVerificar() {
     "                             de la baseline son relativas a ese archivo\n" +
     "      --podar                reescribe la baseline sin lo que ya se arregló (solo lo que esta corrida puede ver)\n" +
     "      --inicializar          crea la baseline con lo que hay hoy (solo si no existe)\n" +
-    "      --mover <de> <a>       renombra un archivo en la baseline (tras renombrarlo en el repo)\n" +
+    "      --mover <de> <a>       renombra un archivo o una carpeta en la baseline (tras renombrarlo en el repo)\n" +
     "      --estricto             falla también con entradas de baseline que ya no hacen falta\n" +
     "      --monto <regex>        marca font-mono en elementos cuyo contenido case (p. ej. 'formatCurrency\\(|S/')\n" +
     "      --ignorar <seg...>     ignora además carpetas/archivos por nombre (admite *)\n" +
@@ -438,19 +506,24 @@ export function ejecutarVerificar(argv, { cwd = process.cwd(), salida = console.
   }
 
   if (o.mover) {
+    // `de` puede ser un archivo o una carpeta (renombra el prefijo de todas sus entradas).
     const [de, a] = o.mover.map((r) => clave(resolve(cwd, r)));
-    if (!baseline[de]) {
+    const origen = Object.keys(baseline).filter((k) => k === de || k.startsWith(`${de}/`));
+    if (origen.length === 0) {
       error(`khipu-ds verificar: ${de} no está en la baseline.`);
       return 2;
     }
-    if (baseline[a]) {
-      error(`khipu-ds verificar: ${a} ya está en la baseline.`);
+    const destino = origen.map((k) => a + k.slice(de.length));
+    const choque = destino.find((k) => baseline[k] && !origen.includes(k));
+    if (choque) {
+      error(`khipu-ds verificar: ${choque} ya está en la baseline.`);
       return 2;
     }
-    baseline[a] = baseline[de];
-    delete baseline[de];
+    const movido = origen.map((k) => [a + k.slice(de.length), baseline[k]]);
+    for (const k of origen) delete baseline[k];
+    for (const [k, v] of movido) baseline[k] = v;
     writeFileSync(rutaBaseline, serializar(baseline));
-    salida(`Baseline: ${de} → ${a}.`);
+    salida(`Baseline: ${de} → ${a} (${origen.length} archivos).`);
     return 0;
   }
 

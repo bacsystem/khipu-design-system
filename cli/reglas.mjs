@@ -1,7 +1,8 @@
 // Reglas compartidas entre la CLI para consumidores (`cli/verificar.mjs`) y los chequeos del propio kit
 // (`scripts/verificar-tipografia.mjs`, `scripts/verificar-alturas.mjs`). Una sola fuente: si cambia una regla, cambia en los dos.
-// Los patrones se exportan SIN la bandera `g` (se pueden usar con `.test` sin estado); quien necesite todas las
-// coincidencias crea `new RegExp(patron.source, "g")`. Sin dependencias: este archivo viaja en el paquete.
+// Los patrones de TIPOGRAFIA y ALTURA se exportan SIN la bandera `g` (se pueden usar con `.test` sin estado); quien necesite todas las
+// coincidencias crea `new RegExp(patron.source, "g")`. RECETAS sí lleva `g`: solo se usa con `matchAll`, que no comparte estado.
+// Sin dependencias: este archivo viaja en el paquete.
 
 /** Escala tipográfica con nombre (docs/design-system.md §3). `salvoRecetas`: solo se permite en `src/lib/estilos.ts` del kit. */
 export const TIPOGRAFIA = [
@@ -16,6 +17,6 @@ export const RECETAS = /\bcn\(\s*(CAMPO\w*|BOTON_\w+|ACCION_\w+|CONTROL_FILTRO)\
 
 /**
  * Clase que fija altura o `size` (todo control mide `h-control`; `h-auto` sí se permite). Grupo 1 = la clase completa.
- * No cuenta `[&_svg]:size-4` (la clase apunta al icono, no al control), `h-(--alto)` ni `h-[…]`: cualquier cosa distinta de auto/control.
+ * Cuenta cualquier valor distinto de auto/control (`h-9`, `h-[40px]`, `h-(--alto)`, `size-14`). No cuenta `[&_svg]:size-4`: esa clase apunta al icono, no al control.
  */
-export const ALTURA = /(?<![\w-]|\]:)((?:[a-z-]+:)*(?:h|size)-(?!auto\b|control\b)[^\s"'`,)}]+)/;
+export const ALTURA = /(?<![\w-]|\]:)((?:[a-z-]+:)*(?:h|size)-(?!auto\b|control\b)(?:\([^)\s]*\)|[^\s"'`,)}])+)/;

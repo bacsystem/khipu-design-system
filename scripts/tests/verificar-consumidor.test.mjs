@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { after, test } from "node:test";
@@ -277,7 +277,7 @@ test("H3: la CLI y los scripts del kit usan las mismas reglas", () => {
 });
 
 test("H4: la sintaxis v4 prefijo-(--var) se trata como prefijo-[var(--var)]", () => {
-  const r = analizarTexto('<i style={{ "--w": "340px", "--z": 60 }} className="w-(--w) z-(--z) bg-(--brand)" />').map((h) => h.regla);
+  const r = analizarTexto('<i style={{ "--w": "340px", "--z": 60 }} className="w-(--w) z-(--z) bg-(--mi-color)" />').map((h) => h.regla);
   assert.equal(r.filter((x) => x === "estilos/valor-arbitrario").length, 3);
   assert.deepEqual(reglas('<i className="w-(--anchor-width) h-(length:--available-height)" />'), []);
   assert.deepEqual(reglas('<i className="w-[var(--w)]" />'), ["estilos/valor-arbitrario"]);
@@ -358,4 +358,60 @@ test("H10: robustez y mensajes", () => {
   writeFileSync(join(raiz, "b.json"), JSON.stringify({ version: 1, violaciones: { "src/a.tsx": { "estilos/paleta": { "bg-white": 3 } } } }));
   assert.match(correr(raiz, "--dir", "src", "--baseline", "b.json", "--podar").stdout, /3 violaciones quitadas/);
   assert.equal(correr(raiz, "--dir", "./estilos").status, 2); // una carpeta llamada como un grupo se pasa como ./estilos
+});
+
+// ---------- re-revisión (H12–H16) ----------
+
+test("H12: las variables del kit y de base-ui están permitidas; las de la app no", () => {
+  assert.deepEqual(reglas('<i className="duration-(--duracion-rapida) h-(--active-tab-height) w-(--spacing-control) shadow-(--sombra-md)" />'), []);
+  assert.deepEqual(reglas('<i className="w-[var(--spacing-control)] ease-(--ease-x)" />'), ["estilos/valor-arbitrario"]); // --ease-x no es del kit
+  assert.deepEqual(reglas('<i className="w-(--w) bg-(--mi-color) z-(--z)" />'), ["estilos/valor-arbitrario", "estilos/valor-arbitrario", "estilos/valor-arbitrario"]);
+  assert.deepEqual(reglas('<i className="w-(--anchor-width) h-(length:--available-height)" />'), []);
+});
+
+test("H13: /* y // dentro de un string no son comentarios", () => {
+  assert.deepEqual(reglas('<input accept="image/*" /> <i className="bg-white" />\n/** doc */'), ["estilos/paleta"]);
+  assert.deepEqual(reglas('const u = "http://x.pe // comentario"; const c = "bg-white";'), ["estilos/paleta"]);
+  const archivo = [
+    "export const a = (",
+    '  <input accept="image/*" className="w-[340px]" />',
+    ");",
+    'const b = <i className="bg-[#123456] z-50 text-[13px]" />;',
+    "/** doc */",
+    "// bg-white en un comentario",
+    "const t = `a // b ${x}`; const q = <i className=\"shadow-2xl\" />;",
+  ].join("\n");
+  const r = analizarTexto(archivo).map((h) => `${h.linea}:${h.regla}`);
+  assert.deepEqual(r, ["2:estilos/valor-arbitrario", "4:tipografia/tamano-suelto", "4:estilos/valor-arbitrario", "4:estilos/z-index", "7:estilos/sombra"]);
+  assert.deepEqual(libres('const s = "x // estilos-ok"; const c = "bg-white";'), ["estilos/paleta"]); // la exención de un string no vale
+  assert.deepEqual(libres('<i className="bg-white" /> {/* estilos-ok */}'), []);
+});
+
+test("H14: las variantes arbitrarias no son propiedades arbitrarias", () => {
+  assert.deepEqual(reglas('<i className="*:[img:first-child]:rounded-t-xl [&_svg]:size-4 [svg:not([class*=\'size-\'])]:hidden" />'), []);
+  assert.deepEqual(reglas('<i className="[animation-duration:1.6s]" />'), ["estilos/valor-arbitrario"]);
+});
+
+test("H15: font-mono-monto mira la etiqueta entera, antes y después de className", () => {
+  const monto = /formatCurrency\(|S\//;
+  assert.deepEqual(reglas('<Input value={formatCurrency(x)} className="font-mono" />', { monto }), ["estilos/font-mono-monto"]);
+  assert.deepEqual(reglas('<Input placeholder="S/ 0.00" className="font-mono" />', { monto }), ["estilos/font-mono-monto"]);
+  assert.deepEqual(reglas('<b>{formatCurrency(x)}</b><span className="font-mono">{r.sku}</span>', { monto }), []);
+  assert.deepEqual(reglas('const c = cn("font-mono"); <i>{formatCurrency(x)}</i>', { monto }), []);
+});
+
+test("H16: la coincidencia de h-(--alto) conserva el paréntesis", () => {
+  assert.equal(analizarTexto('<Button className="h-(--alto)">x</Button>', { grupos: ["alturas"] })[0].coincidencia, "h-(--alto)");
+  assert.equal(analizarTexto('cn(CAMPO, "h-(--alto) md:size-(length:--x)")', { grupos: ["alturas"] }).length, 2);
+});
+
+test("--mover acepta carpetas (renombra el prefijo)", () => {
+  const raiz = app({ "src/viejo/a.tsx": '<i className="bg-white" />\n', "src/viejo/sub/b.tsx": '<i className="z-10" />\n', "src/viejo2/c.tsx": "x" });
+  assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json", "--inicializar").status, 0);
+  renameSync(join(raiz, "src/viejo"), join(raiz, "src/nuevo"));
+  assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json").status, 1);
+  const r = correr(raiz, "--baseline", "b.json", "--mover", "src/viejo", "src/nuevo");
+  assert.equal(r.status, 0, r.stderr);
+  assert.deepEqual(Object.keys(leerJson(raiz, "b.json").violaciones), ["src/nuevo/a.tsx", "src/nuevo/sub/b.tsx"]);
+  assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json", "--estricto").status, 0);
 });

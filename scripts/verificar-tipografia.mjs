@@ -4,7 +4,7 @@
 // text-titulo-pagina, text-metrica. `uppercase` y `tracking-*` solo viven en las recetas de src/lib/estilos.ts (ROTULO,
 // CABECERA_TABLA). Una línea que contiene `tipografia-ok` queda exenta.
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TIPOGRAFIA } from "../cli/reglas.mjs";
@@ -56,7 +56,7 @@ function principal(dirs) {
   console.log("Tipografía: todo dentro de la escala.");
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(resolve(process.argv[1])) === realpathSync(fileURLToPath(import.meta.url))) {
   const args = process.argv.slice(2);
   principal(args.length > 0 ? args : POR_DEFECTO);
 }

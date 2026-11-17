@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **`khipu-ds verificar`** (`cli/verificar.mjs`): guardas de diseño para apps consumidoras. Grupos `tipografia` (escala con nombre, mayúsculas, tracking), `alturas` (`h-N`/`size-N` sobre recetas y controles), `estilos` (nuevo: valores arbitrarios `[...]`, colores hex/rgb/hsl/oklch, paleta de Tailwind y `text-white/black`, `z-*`, sombras y radios fuera de la escala, `duration-*`, `style={{}}` visual y `font-mono` en montos con `--monto <regex>`) e `iconos` (otras librerías distintas de Phosphor). Opciones `--dir`, `--baseline`/`--base` (deuda por archivo + regla + coincidencia que solo puede bajar, con rutas relativas al archivo de baseline; `--inicializar`, `--podar`, `--estricto`, `--mover`; poda y modo estricto solo sobre lo que la corrida vio), `--ignorar`/`--incluir` (por defecto ignora `node_modules`, `.next`, tests y mocks) y exención por comentario `// <grupo>-ok[: regla]`, contada y guardada en la baseline. Sale con `1` y `archivo:línea` si hay violaciones nuevas. Ver README §Verificar tu app.
+- `khipu-ds verificar` lee los comentarios con un autómata de strings (un `/*` en `accept="image/*"` no esconde código), permite las variables CSS del kit y de base-ui en `prefijo-(--x)`, y `--mover` acepta carpetas.
 - `cli/reglas.mjs`: las reglas de tipografía y de alturas viven en un solo sitio y las comparten la CLI y `check:tipografia`/`check:alturas` del kit.
 
 ### Changed
