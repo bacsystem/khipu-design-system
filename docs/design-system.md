@@ -496,21 +496,25 @@ Para un aviso corto que pide una decisión (la sesión está por finalizar, la s
 
 ## 19. Inventario de componentes
 
-| Carpeta | Componentes |
+Generado desde `src/` (`npm run docs:build`; la CI lo comprueba): no se edita a mano. Las notas de cada componente están en las secciones de este documento.
+
+<!-- generado:componentes -->
+| Carpeta | Módulos |
 |---|---|
+| `components` | `apariencia`, `apariencia-opciones`, `diseno`, `disenos`, `movimiento`, `providers`, `script-diseno` |
+| `components/datos` | `grafico`, `kpi`, `lista-datos`, `tabla-datos`, `tabla-listado`, `timeline`, `trazo-animado` |
+| `components/feedback` | `alerta`, `banner`, `estado-vacio`, `progreso`, `skeleton`, `spinner`, `toast`, `tooltip` |
+| `components/formularios` | `autocomplete`, `buscador`, `calendario`, `campo`, `casilla`, `combobox`, `contrasena`, `deslizador`, `entrada-fecha`, `entrada-monto`, `entrada-rango-fechas`, `opciones`, `select-campo`, `stepper-numerico`, `zona-archivos` |
+| `components/nav` | `barra-inferior`, `centro-notificaciones`, `logo`, `menu-usuario`, `mobile-nav`, `panel-apariencia`, `rail`, `selector-apariencia`, `selector-contexto`, `selector-diseno`, `shell`, `sidebar`, `sidebar-nav`, `theme-toggle`, `top-bar` |
+| `components/navegacion` | `acordeon`, `dialogo-confirmacion`, `menu-acciones`, `paleta`, `panel-lateral`, `pasos`, `tabs`, `tabs-ruta` |
+| `components/patrones` | `aviso-responsivo`, `bloque-codigo`, `boton-async`, `boton-copiar`, `cabecera-dialogo`, `cabecera-pagina`, `cabecera-seccion`, `confirmacion-en-linea`, `franja-cuenta-regresiva`, `metricas`, `metricas-desplazable`, `numero-animado`, `panel-quitable`, `pie-tabla`, `pill-estado`, `tarjeta-destacada` |
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
-| `components/nav` | `logo`, `sidebar-content`, `sidebar-nav`, `rail`, `barra-inferior`, `centro-notificaciones`, `empresa-selector`, `perfil-usuario`, `theme-toggle`, `selector-diseno`, `top-bar`, `mobile-nav` |
-| `components/comprobantes` | `comprobantes-table`, `estado-badge`, `boton-copiar`, `vista-previa`, `reenviar-button` |
-| `components/series` | `series-table`, `nueva-serie-dialog`, `nueva-serie-form`, `referencia-series` |
-| `components/empresa` | `certificado-form`, `credenciales-sol-form`, `nueva-empresa-dialog`, `nueva-empresa-form`, `referencia-empresa` |
-| `components/api-keys` | `api-keys-table`, `nueva-api-key-dialog`, `referencia-api-keys`, `ejemplo-integracion` |
-| `components/auth` | `auth-shell`, `login-form`, `registro-form`, `recuperar-form`, `restablecer-form` |
-| `components/developers` | `developers-view`, `api-reference` |
-| `lib` | `estilos.ts` (recetas), `formato.ts`, `paginacion.ts`, `messages.ts` |
+| `lib` | `calendario`, `cola-toast`, `columnas-visibles`, `escala-grafico`, `estilos`, `exportar`, `formato`, `iconos`, `movimiento`, `navegacion`, `ordenar`, `paginacion`, `rail`, `utils` |
+<!-- /generado:componentes -->
 
 ## 20. Kit reutilizable
 
-Todo lo anterior es este mismo repo (`khipu-design-system`), pensado para copiarse a otro proyecto Next.js 15 o 16 + Tailwind v4, sin rutas ni textos de khipu, y ampliado con cuatro grupos que el portal de origen todavía no usa pero que cualquier app necesita. Se instala componente por componente con la CLI (`cli/khipu.mjs list` / `add`, ver README §Usarlo en tu proyecto) en vez de copiar la carpeta entera a mano:
+(La tabla de abajo son notas escritas a mano por grupo: el inventario completo y al día es §19, y un PR no tiene que tocar esta tabla.) Todo lo anterior es este mismo repo (`khipu-design-system`), pensado para copiarse a otro proyecto Next.js 15 o 16 + Tailwind v4, sin rutas ni textos de khipu, y ampliado con cuatro grupos que el portal de origen todavía no usa pero que cualquier app necesita. Se instala componente por componente con la CLI (`cli/khipu.mjs list` / `add`, ver README §Usarlo en tu proyecto) en vez de copiar la carpeta entera a mano:
 
 | Grupo | Componentes |
 |---|---|

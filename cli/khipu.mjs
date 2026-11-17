@@ -11,12 +11,12 @@
 //   node cli/khipu.mjs add <componente...> [--force]
 //   node cli/khipu.mjs verificar [tipografia|alturas|estilos|iconos ...] [--dir <ruta>...] [--baseline <json>] [--podar]
 //
-// El registro (registry/registry.json) se genera con `node scripts/build-registry.mjs` a partir
-// de los imports reales del código — nunca se edita a mano.
+// El registro (registry/registry.json) no está en git: lo genera `prepare` (o `npm run registry:build`) a partir
+// de los imports reales del código — nunca se edita a mano. Si falta, se calcula en memoria.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { ayudaVerificar, ejecutarVerificar } from "./verificar.mjs";
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -26,7 +26,17 @@ function cargarJson(ruta) {
   return JSON.parse(readFileSync(ruta, "utf8"));
 }
 
-const registro = cargarJson(join(REPO_ROOT, "registry", "registry.json"));
+// registry/registry.json no está en git: lo generan `prepare` y `npm run registry:build`. Si falta (clon sin `npm install`)
+// y el repo trae el script, se calcula en memoria con el mismo código; si no, se dice cómo generarlo.
+async function cargarRegistro() {
+  const ruta = join(REPO_ROOT, "registry", "registry.json");
+  if (existsSync(ruta)) return cargarJson(ruta);
+  const script = join(REPO_ROOT, "scripts", "build-registry.mjs");
+  if (existsSync(script)) return { items: (await import(pathToFileURL(script).href)).construirRegistro() };
+  console.error("No encuentro registry/registry.json. Genéralo con `npm run registry:build` (o reinstala el paquete: `prepare` lo crea).");
+  process.exit(1);
+}
+let registro; // se carga al ejecutar list/add (verificar no lo necesita)
 const pkgKhipu = cargarJson(join(REPO_ROOT, "package.json"));
 
 function porNombre(nombre) {
@@ -147,9 +157,11 @@ const argumentos = resto.filter((a) => a !== "--force" && a !== "-f");
 
 switch (comando) {
   case "list":
+    registro = await cargarRegistro();
     comandoList(argumentos[0]);
     break;
   case "add":
+    registro = await cargarRegistro();
     comandoAdd(argumentos, { force });
     break;
   case "verificar":

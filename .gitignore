@@ -21,3 +21,6 @@ next-env.d.ts
 .worktrees/
 AGENTS.md
 CLAUDE.md
+
+# Generado (npm run registry:build; lo hacen prepare/build:paquete): no se versiona para que los PR no choquen
+/registry/registry.json

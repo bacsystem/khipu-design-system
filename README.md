@@ -42,7 +42,7 @@ Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force`
 
 **Alternativa manual (todo de una vez):** copia `src/components/` y `src/lib/` completos a tu `src/`, e instala tú mismo `@base-ui/react @phosphor-icons/react class-variance-authority cn next-themes motion` (+ `tw-animate-css` como dev dependency).
 
-El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
+El registro que usa la CLI (`registry/registry.json`) se genera a partir de los imports reales de cada componente y **no está en git**: lo crean `npm install`/`npm ci` (`prepare`) y `npm run registry:build`. Con `npx github:…` o `npm install github:…` se genera al instalar; en un clon sin instalar, la CLI lo calcula en memoria.
 
 ### Verificar tu app: `khipu-ds verificar`
 
@@ -122,8 +122,8 @@ import { PALETAS, TONOS_OSCURO } from "khipu-design-system/apariencia-opciones";
 
 Las versiones se publican solas al llegar a `main`; no se crean tags a mano.
 
-1. En el PR, sube `version` en `package.json` (X.Y.Z) y añade en `CHANGELOG.md` la sección `## [X.Y.Z] - YYYY-MM-DD` (con fecha y con contenido).
-2. Al hacer merge a `main`, `.github/workflows/release.yml` mira si existe el tag `vX.Y.Z`. Si no existe, vuelve a pasar la CI completa (`ci.yml`, incluido `verify:next15`) y, solo si pasa, crea el tag anotado `vX.Y.Z` sobre el commit del push (mensaje `vX.Y.Z: <título del PR> (#N)`) y la release de GitHub con las notas = esa sección del CHANGELOG. Es «Latest» solo si es la versión más alta; si el tag y la release ya existen, no hace nada. Si falta la sección o no tiene fecha, el workflow falla antes de la CI y no se crea nada.
+1. En un PR de release aparte (receta paso a paso en [`CONTRIBUTING.md`](CONTRIBUTING.md#publicar-una-versión-pr-de-release)): sube `version` en `package.json`, ejecuta `node scripts/changelog.mjs release` (junta los fragmentos de `changelog.d/` en la sección `## [X.Y.Z] - YYYY-MM-DD` de `CHANGELOG.md` y los borra) y `npm run docs:build` (regenera las listas de componentes). Los PR de funcionalidad no tocan `CHANGELOG.md` ni la versión: añaden su fragmento.
+2. Al hacer merge a `main`, `.github/workflows/release.yml` mira si existe el tag `vX.Y.Z`. Si no existe, vuelve a pasar la CI completa (`ci.yml`, incluido `verify:next15`) y, solo si pasa, crea el tag anotado `vX.Y.Z` sobre el commit del push (mensaje `vX.Y.Z: <título del PR> (#N)`) y la release de GitHub con las notas = esa sección del CHANGELOG. Es «Latest» solo si es la versión más alta; si el tag y la release ya existen, no hace nada. Si falta la sección, no tiene fecha o quedan fragmentos sin juntar en `changelog.d/`, el workflow falla antes de la CI y no se crea nada.
 3. Recuperación: si el run falla o no llegó a correr, se re-ejecuta (Actions → Release → «Re-run all jobs», o un nuevo push a `main`). Si el tag existe pero no la release, el run solo crea la release. Limitación: GitHub guarda un único run pendiente por grupo de concurrencia; si dos pushes que suben versión llegan mientras otro run está activo, se descarta el pendiente más antiguo y su versión no se publica sola: re-ejecuta el run de ese commit.
 
 ## Estructura
@@ -135,22 +135,35 @@ src/
 ├── styles/theme.css         @custom-variant dark + @theme inline + @layer base + «reducir movimiento» (Tailwind v4)
 ├── app/layout.tsx           Inter + JetBrains Mono, ScriptDiseno, Providers
 ├── app/ejemplo/             demo: shell completo + galería de componentes
+├── components/              inventario por carpeta más abajo (generado)
 ├── components/providers.tsx ThemeProvider + DisenoProvider + AparienciaProvider + IconContext + ProveedorMovimiento + ToastProvider + TooltipProvider
 ├── components/diseno.tsx    DisenoProvider · useDiseno (+ disenos.ts, script-diseno.tsx) — ver docs/design-system.md «Diseños»
 ├── components/apariencia.tsx AparienciaProvider · useApariencia (paleta y tono oscuro) — ver docs/design-system.md «Apariencia»
 ├── components/apariencia-opciones.ts PALETAS · TONOS_OSCURO · claves de localStorage · código del script sin parpadeo
-├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
-├── components/nav/          shell · sidebar · sidebar-nav · rail (BotonRail) · barra-inferior · centro-notificaciones · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
-├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · aviso-responsivo · franja-cuenta-regresiva · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
-├── components/feedback/     toast (`toast` / useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
-├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
-├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
-├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras —también apiladas—, líneas con área y guiones, dona, anillos)
-└── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple, itemActivo) · rail (preferencia del rail) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y)
+└── lib/                     utilidades, recetas (`estilos`) y lógica sin UI (inventario abajo; la función de cada una, en docs/design-system.md)
 
 cli/khipu.mjs                CLI (list · add · verificar) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
-registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
+registry/registry.json       generado (no está en git) por scripts/build-registry.mjs; lo crean `prepare` y `npm run registry:build`
+changelog.d/                 un fragmento por PR; el PR de release los junta en CHANGELOG.md (ver CONTRIBUTING.md)
 ```
+
+### Componentes
+
+Inventario generado desde `src/` (no se edita a mano: `npm run docs:build`; la CI lo comprueba). Las notas de cada componente están en [`docs/design-system.md`](docs/design-system.md).
+
+<!-- generado:componentes -->
+| Carpeta | Módulos |
+|---|---|
+| `components` | `apariencia`, `apariencia-opciones`, `diseno`, `disenos`, `movimiento`, `providers`, `script-diseno` |
+| `components/datos` | `grafico`, `kpi`, `lista-datos`, `tabla-datos`, `tabla-listado`, `timeline`, `trazo-animado` |
+| `components/feedback` | `alerta`, `banner`, `estado-vacio`, `progreso`, `skeleton`, `spinner`, `toast`, `tooltip` |
+| `components/formularios` | `autocomplete`, `buscador`, `calendario`, `campo`, `casilla`, `combobox`, `contrasena`, `deslizador`, `entrada-fecha`, `entrada-monto`, `entrada-rango-fechas`, `opciones`, `select-campo`, `stepper-numerico`, `zona-archivos` |
+| `components/nav` | `barra-inferior`, `centro-notificaciones`, `logo`, `menu-usuario`, `mobile-nav`, `panel-apariencia`, `rail`, `selector-apariencia`, `selector-contexto`, `selector-diseno`, `shell`, `sidebar`, `sidebar-nav`, `theme-toggle`, `top-bar` |
+| `components/navegacion` | `acordeon`, `dialogo-confirmacion`, `menu-acciones`, `paleta`, `panel-lateral`, `pasos`, `tabs`, `tabs-ruta` |
+| `components/patrones` | `aviso-responsivo`, `bloque-codigo`, `boton-async`, `boton-copiar`, `cabecera-dialogo`, `cabecera-pagina`, `cabecera-seccion`, `confirmacion-en-linea`, `franja-cuenta-regresiva`, `metricas`, `metricas-desplazable`, `numero-animado`, `panel-quitable`, `pie-tabla`, `pill-estado`, `tarjeta-destacada` |
+| `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
+| `lib` | `calendario`, `cola-toast`, `columnas-visibles`, `escala-grafico`, `estilos`, `exportar`, `formato`, `iconos`, `movimiento`, `navegacion`, `ordenar`, `paginacion`, `rail`, `utils` |
+<!-- /generado:componentes -->
 
 ## Cómo armar el shell
 

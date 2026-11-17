@@ -2,8 +2,9 @@
 // Escanea src/components/** y src/lib/*.ts, extrae sus imports y genera registry/registry.json:
 // un mapa {clave -> {name, type, category, files, dependencies, registryDependencies}} que la CLI
 // (cli/khipu.mjs) usa para copiar un componente y sus dependencias a un proyecto consumidor.
-// Se regenera con `node scripts/build-registry.mjs` — nunca se edita registry.json a mano, porque
-// la fuente de verdad son los imports reales del código, no una lista mantenida aparte que se desincroniza.
+// registry/registry.json NO está en git: se genera (en `prepare`, `build:paquete` y `verify:paquete`, o a mano con
+// `npm run registry:build`) a partir del árbol de src/. Los items salen de recorrer src/components/** y src/lib/*.ts,
+// así que añadir un componente no obliga a editar ninguna lista; la fuente de verdad son los archivos y sus imports.
 
 import { readFileSync, writeFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { join, relative, extname, basename, dirname } from "node:path";
@@ -58,9 +59,13 @@ export function analizarImports(contenido, archivo = "(archivo)") {
   return { internos: [...internos].sort(), externos: [...externos].sort() };
 }
 
-export function construirRegistro() {
+/** `raiz` = carpeta que contiene `src/` (por defecto este repo; las pruebas pasan un árbol temporal). */
+export function construirRegistro(raiz = ROOT) {
+  const SRC = join(raiz, "src");
   const items = {};
-  const archivos = listarArchivos(join(SRC, "components")).concat([join(SRC, "lib", "estilos.ts"), join(SRC, "lib", "utils.ts"), join(SRC, "lib", "formato.ts"), join(SRC, "lib", "paginacion.ts"), join(SRC, "lib", "navegacion.ts"), join(SRC, "lib", "movimiento.ts"), join(SRC, "lib", "iconos.ts"), join(SRC, "lib", "calendario.ts"), join(SRC, "lib", "ordenar.ts"), join(SRC, "lib", "exportar.ts"), join(SRC, "lib", "columnas-visibles.ts"), join(SRC, "lib", "escala-grafico.ts"), join(SRC, "lib", "rail.ts"), join(SRC, "lib", "cola-toast.ts")]);
+  // Todo src/components/** y todo src/lib/*.ts (salvo .d.ts): orden fijo para que la salida sea idéntica en cualquier máquina.
+  const libs = readdirSync(join(SRC, "lib")).filter((n) => n.endsWith(".ts") && !n.endsWith(".d.ts")).sort().map((n) => join(SRC, "lib", n));
+  const archivos = listarArchivos(join(SRC, "components")).sort().concat(libs);
 
   for (const rutaAbs of archivos) {
     const rutaRel = relative(SRC, rutaAbs).replace(/\\/g, "/").replace(/\.tsx?$/, "");
@@ -71,7 +76,7 @@ export function construirRegistro() {
       name: basename(rutaRel),
       type: rutaRel.startsWith("lib/") ? "lib" : "component",
       category: categoria,
-      files: [relative(ROOT, rutaAbs).replace(/\\/g, "/")],
+      files: [relative(raiz, rutaAbs).replace(/\\/g, "/")],
       dependencies: externos,
       registryDependencies: internos.filter((i) => i !== rutaRel),
     };
@@ -82,10 +87,8 @@ export function construirRegistro() {
 // Importarlo (para probarlo) no escribe nada: solo se escribe al ejecutarlo como script.
 // `realpathSync`: ejecutado por un symlink (`node enlace.mjs`), argv[1] es el enlace y la URL del módulo, el archivo real.
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
-  const registro = {
-    generatedAt: new Date().toISOString().slice(0, 10),
-    items: construirRegistro(),
-  };
+  // Sin fecha de generación: la salida depende solo del código, no del día.
+  const registro = { items: construirRegistro() };
 
   writeFileSync(join(ROOT, "registry", "registry.json"), JSON.stringify(registro, null, 2) + "\n");
   console.log(`registry/registry.json actualizado con ${Object.keys(registro.items).length} items.`);

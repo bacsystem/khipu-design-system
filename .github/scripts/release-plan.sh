@@ -6,8 +6,8 @@
 #    GITHUB_REPOSITORY, both set in Actions)
 #  - needs_release = true when the tag OR the release is missing. A tag without release is the
 #    recovery path (tag created, release creation failed): the release job then skips the tag.
-#  - when needs_release is true, the CHANGELOG section must exist and be dated (fails early,
-#    before running the checks)
+#  - when needs_release is true, changelog.d/ must hold no pending fragments and the CHANGELOG
+#    section must exist and be dated (fails early, before running the checks)
 # Writes the values to $GITHUB_OUTPUT (or stdout when unset).
 set -euo pipefail
 
@@ -44,6 +44,13 @@ if [ "$tag_exists" = true ] && [ "$release_exists" = true ]; then
   needs=false
 else
   [ "$tag_exists" = true ] && echo "Tag v${version} exists without a release: will only create the release." >&2
+  # Fragments left in changelog.d/ at a release commit would be missing from the notes: assemble them first
+  # (README, "Publicar una versión": node scripts/changelog.mjs release).
+  pending="$(find changelog.d -maxdepth 1 -name '*.md' ! -iname README.md 2>/dev/null | sort)"
+  if [ -n "$pending" ]; then
+    echo "::error::changelog.d/ still has fragments ($(echo "$pending" | tr '\n' ' ')): run 'node scripts/changelog.mjs release' in the release PR." >&2
+    exit 1
+  fi
   "$here/changelog-section.sh" "$version" >/dev/null
   needs=true
 fi
