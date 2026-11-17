@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Tabs estilo="linea"`: el anillo de foco de la pestaña ahora va hacia dentro (`ring-inset`): la fila recorta (`overflow-x-auto`) y el anillo con separación se cortaba. La receta se movió a `lib/estilos` (`PESTANA_LINEA_BASE`, con la regla de iconos de 16 px de 0.9.0, y `CONTADOR_PESTANA`).
 - `check:tipografia` ahora también rechaza `text-3xl`/`text-4xl` y los tamaños con variante (`md:text-lg`), y `check:alturas` rechaza `h-(--x)`/`size-(--x)`; `[&_svg]:size-4` (el icono, no el control) sigue permitido.
 
+### Fixed
+- La app de ejemplo ya no depende de la red para compilar (#65): las fuentes se sirven con `next/font/local` desde `src/app/fonts` (woff2 `latin` de Inter, JetBrains Mono, Plus Jakarta Sans, Manrope, DM Sans y Figtree, todas variables, con su licencia SIL OFL) en lugar de `next/font/google`, que las descargaba en cada build y rompía la CI de forma intermitente. Mismas variables CSS (`--font-sans`, `--font-mono`, `--fuente-*`) y mismo aspecto en la galería; JetBrains Mono se declara con peso `100 600` para que `font-bold` se siga pintando como 600, como antes. Diferencia conocida: solo se incluye el subconjunto `latin`, así que los caracteres de `latin-ext` (p. ej. Ł ř Ş ₡ ₲) usan la fuente de respaldo (añadirlos costaría ~165 KB). Los archivos no van en el paquete publicado (`files` no incluye `src/app`): quien quiera las mismas fuentes las copia del repositorio o de `@fontsource-variable/*`.
+
 ## [0.9.0] - 2026-11-17
 
 ### Added
