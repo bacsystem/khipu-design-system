@@ -336,3 +336,22 @@ test("H5: varios hijos de pie conservan su separación", () => {
   const salida = html(enRuta("/a", createElement(SidebarContent, { marca: null, grupos: [], pie: [createElement("i", { key: 1 }, "p1"), createElement("i", { key: 2 }, "p2")] })));
   assert.match(salida, /<div class="flex w-full min-w-0 flex-col gap-2\.5 rail:hidden"><i>p1<\/i><i>p2<\/i><\/div>/);
 });
+
+test("H7: check:alturas lee también las recetas con backticks (ACCION_*, BOTON_*) y solo exime a ACCION_FLOTANTE", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const { mkdtempSync, mkdirSync, writeFileSync, cpSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const correr = (estilos) => {
+    const raiz = mkdtempSync(join(tmpdir(), "alturas-"));
+    mkdirSync(join(raiz, "scripts"));
+    mkdirSync(join(raiz, "src/lib"), { recursive: true });
+    cpSync(join(RAIZ, "scripts/verificar-alturas.mjs"), join(raiz, "scripts/verificar-alturas.mjs"));
+    writeFileSync(join(raiz, "src/lib/estilos.ts"), estilos);
+    return spawnSync(process.execPath, [join(raiz, "scripts/verificar-alturas.mjs")], { encoding: "utf8" });
+  };
+  const roto = correr("export const ACCION_PRINCIPAL = `inline-flex h-12 ${FOCO}`;\n");
+  assert.equal(roto.status, 1);
+  assert.match(roto.stderr, /ACCION_PRINCIPAL/);
+  const bien = correr("export const ACCION_PRINCIPAL = `inline-flex h-control ${FOCO}`;\nexport const ACCION_FLOTANTE = `inline-flex size-14 ${FOCO}`;\n");
+  assert.equal(bien.status, 0, bien.stderr);
+});
