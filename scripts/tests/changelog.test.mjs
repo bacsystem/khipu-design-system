@@ -128,11 +128,12 @@ test("release-plan.sh: con fragmentos sobrantes falla antes de crear nada; READM
     // "remoto" sin tags: un repo vacío como origin
     const remoto = join(dir, "remoto.git");
     execFileSync("git", ["init", "-q", "--bare", remoto]);
-    const plan = () => spawnSync("bash", [join(dir, ".github/scripts/release-plan.sh")], { cwd: dir, encoding: "utf8", env: { ...process.env, REMOTE: remoto, GITHUB_OUTPUT: "/dev/stdout", GITHUB_REPOSITORY: "o/r" } });
+    const salida = join(dir, "salida.txt");
+    const plan = () => spawnSync("bash", [join(dir, ".github/scripts/release-plan.sh")], { cwd: dir, encoding: "utf8", env: { ...process.env, REMOTE: remoto, GITHUB_OUTPUT: salida, GITHUB_REPOSITORY: "o/r" } });
     execFileSync("git", ["init", "-q"], { cwd: dir });
     const ok = plan();
     assert.equal(ok.status, 0, ok.stderr);
-    assert.match(ok.stdout, /needs_release=true/);
+    assert.match(readFileSync(salida, "utf8"), /needs_release=true/);
     writeFileSync(join(dir, "changelog.d/tarde.md"), "### Added\n- b\n");
     const mal = plan();
     assert.equal(mal.status, 1);
