@@ -1,0 +1,2 @@
+### Fixed
+- **`EntradaDecimal decimales={0}` (campos enteros) lee el punto de miles:** «1.500» vale 1500, «12.000» vale 12000 y «1.500.000» vale 1500000 (antes «1.500» se leía 1.5 y se truncaba a 1). Un punto suelto con otra forma («1.5», «0.500») sigue siendo decimal y se trunca como siempre; con 1 o más decimales no cambia nada (la excepción de miles sigue siendo solo de la coma: «1.250» = 1.25, «1,250» = 1250). `parsearDecimal(texto, decimales)` aplica la regla.

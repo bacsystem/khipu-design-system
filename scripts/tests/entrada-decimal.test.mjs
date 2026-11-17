@@ -31,6 +31,26 @@ test("un separador suelto con exactamente 3 dígitos detrás es de miles si el c
   assert.equal(parsearDecimal("1,234", 4), 1.234);
 });
 
+test("en campos enteros (decimales 0) un punto suelto con 3 dígitos detrás también es de miles", () => {
+  assert.equal(parsearDecimal("1.500", 0), 1500);
+  assert.equal(parsearDecimal("12.000", 0), 12000);
+  assert.equal(parsearDecimal("999.999", 0), 999999);
+  assert.equal(parsearDecimal("1.500.000", 0), 1500000);
+  assert.equal(parsearDecimal("1,500", 0), 1500);
+  // Sin cambios: con decimales >= 1 la excepción es solo de la coma.
+  assert.equal(parsearDecimal("1.250", 1), 1.25);
+  assert.equal(parsearDecimal("1.250", 2), 1.25);
+  assert.equal(parsearDecimal("1,250", 2), 1250);
+  // Un punto que no cumple la regla sigue siendo decimal y el entero lo trunca después (ajustarDecimal).
+  assert.equal(parsearDecimal("1.5", 0), 1.5);
+  assert.equal(ajustarDecimal(parsearDecimal("1.5", 0), 0), 1);
+  assert.equal(parsearDecimal("0.500", 0), 0.5);
+  assert.equal(ajustarDecimal(parsearDecimal("0.500", 0), 0), 0);
+  assert.equal(parsearDecimal("1.50", 0), 1.5);
+  assert.equal(parsearDecimal("1.5000", 0), 1.5);
+  assert.equal(parsearDecimal("1234.500", 0), 1234.5);
+});
+
 test("lo demás sigue siendo decimal: 0,125; 12,5; 12,50; 1234,567; 1,23; 012,345", () => {
   assert.equal(parsearDecimal("0,125", 2), 0.125);
   assert.equal(parsearDecimal("012,345", 2), 12.345);
