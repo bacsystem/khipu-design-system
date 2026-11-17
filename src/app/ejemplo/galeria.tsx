@@ -367,7 +367,10 @@ export function Galeria() {
 
       {/* ── Navegación y estructura ─────────────────────────────── */}
       <section className={SECCION} style={pasoEntrada(8)}>
-        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · drawer · aviso responsivo · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · toolbar · grupo de botones · hover card · scroll area" conBorde={false} className="px-0 py-0" />
+        <CabeceraSeccion icon={FileTextIcon} titulo="Navegación y estructura" subtitulo="tabs · pasos · panel lateral · drawer · aviso responsivo · acordeón · menú ⋯ · confirmación · ⌘K · avatar · popover · toolbar · grupo de botones · hover card · scroll area · shell (rail y barra inferior)" conBorde={false} className="px-0 py-0" />
+        <Alerta tono="info" titulo="Shell responsivo">
+          El layout de esta demo usa <code className="font-mono">Shell rail=&quot;auto&quot;</code> y <code className="font-mono">BarraInferior</code>: entre 768 y 1279 px el sidebar se pliega a 64 px con tooltips (el botón de su cabecera lo expande y se recuerda); por debajo de 768 px no hay sidebar ni hamburguesa, sino la barra inferior con «Más» y la acción flotante. Reduce el ancho de la ventana para verlo.
+        </Alerta>
         <div className="flex flex-wrap items-center gap-5">
           <div className="flex items-center gap-2">
             <HoverCard>

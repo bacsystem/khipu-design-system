@@ -39,7 +39,9 @@ test("los nombres accesibles del menú, la miga y el cajón son propiedades", ()
 test("un ítem del menú puede comparar su ruta de forma exacta", () => {
   const nav = leer("src/components/nav/sidebar-nav.tsx");
   assert.match(nav, /exacto\?: boolean/);
-  assert.match(nav, /item\.exacto \? pathname === item\.href : pathname\.startsWith\(item\.href!\)/);
+  // La regla vive en lib/navegacion (`itemActivo`) y la comparten el sidebar y la barra inferior.
+  assert.match(nav, /itemActivo/);
+  assert.match(leer("src/lib/navegacion.ts"), /item\.exacto \? pathname === item\.href : pathname\.startsWith\(item\.href\)/);
 });
 
 // El cajón no desplaza todo: solo la navegación de SidebarContent, para que el usuario del pie no se esconda (sidebar-pie-grupos.test.mjs).

@@ -37,6 +37,11 @@ const DESHABILITADO = "disabled:pointer-events-none disabled:cursor-not-allowed 
 // ── Acciones de página: top bar, barra de filtros, acciones sueltas en tarjetas, alertas o estados vacíos ──
 // La principal es casi negra (primary) en claro y casi blanca en oscuro: el color de la paleta vive en superficies, no en botones.
 export const ACCION_PRINCIPAL = `inline-flex h-control items-center gap-1.5 rounded-full bg-primary px-4 text-control font-semibold whitespace-nowrap text-primary-foreground shadow-xs ${TRANSICION_CONTROL} hover:bg-primary/85 ${FOCO} ${PRESION} ${DESHABILITADO}`;
+/**
+ * Acción flotante redonda (la de `BarraInferior`): 56 px, un solo icono. Es la única receta de acción **sin** `h-control` a propósito (no forma fila con
+ * otros controles): con `ACCION_PRINCIPAL` + `size-14`, en Tailwind v4 gana `h-control` y el botón mide 56×34 en vez de un círculo.
+ */
+export const ACCION_FLOTANTE = `inline-flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ${TRANSICION_CONTROL} hover:bg-primary/85 ${FOCO} ${PRESION} ${DESHABILITADO}`;
 export const ACCION_SECUNDARIA = `inline-flex h-control items-center gap-1.5 rounded-full bg-card px-3.5 text-control font-medium whitespace-nowrap text-foreground ring-1 ring-border ${TRANSICION_CONTROL} hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
 // Select, buscador y refrescar de una barra de filtros: la misma altura que las acciones de arriba.
 export const CONTROL_FILTRO = "h-control rounded-full border border-border bg-card text-control font-medium text-foreground";
@@ -90,10 +95,10 @@ export const ROTULO = "text-etiqueta font-semibold uppercase tracking-[0.04em] t
 // ── Tablas ──
 // Acciones de la barra que aparece al seleccionar filas en `TablaDatos` (barra oscura: `foreground` de fondo).
 /** Botón de acción masiva: píldora clara sobre la barra oscura de selección. */
-export const ACCION_MASIVA = `inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-background/90 ${TRANSICION_CONTROL} hover:bg-background/12 hover:text-background focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none ${DESHABILITADO}`;
+export const ACCION_MASIVA = `inline-flex h-control items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-background/90 ${TRANSICION_CONTROL} hover:bg-background/12 hover:text-background focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none ${DESHABILITADO}`;
 /** Acción masiva destructiva (anular, eliminar). La barra invierte el tema (oscura en claro, clara en oscuro), así que el rojo
  * también: rosa claro sobre la barra oscura (9.2:1) y rojo oscuro sobre la clara (6.2:1). Hex a propósito: no hay token invertido. */
-export const ACCION_MASIVA_PELIGRO = `inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-[#ff9fb0] ${TRANSICION_CONTROL} hover:bg-[#ff9fb0]/15 focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none dark:text-[#a3263c] dark:hover:bg-[#a3263c]/10 ${DESHABILITADO}`;
+export const ACCION_MASIVA_PELIGRO = `inline-flex h-control items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-[#ff9fb0] ${TRANSICION_CONTROL} hover:bg-[#ff9fb0]/15 focus-visible:ring-2 focus-visible:ring-acento focus-visible:outline-none dark:text-[#a3263c] dark:hover:bg-[#a3263c]/10 ${DESHABILITADO}`;
 
 // Celda de cabecera de la tabla estándar (`TableHead`). `patrones/pie-tabla` la re-exporta para no romper a quien la importa desde allí.
 export const CABECERA_TABLA = `h-auto px-3 pt-2.5 pb-1 ${ROTULO}`;

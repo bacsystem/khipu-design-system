@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-17
+
+### Added
+- **Rail del sidebar** (`Shell rail="auto" | "nunca"`, por defecto `"nunca"`: sin cambios). Con `"auto"` el sidebar se pliega a **64 px** entre 768 y 1279 px: ítems de solo icono con `Tooltip` a la derecha (el nombre sigue en el DOM como texto para el lector de pantalla), sin títulos de grupo, grupos colapsables aplanados (abiertos y sin `inert`), la marca reducida a su icono, el chip y el pie ocultos y `SelectorContexto` y `MenuUsuario` reducidos a su avatar (sus menús se abren a la derecha con ancho propio). Lo decide CSS con la variante nueva `rail:` (`styles/theme.css`, solo dentro de `[data-khipu-rail="auto"]`), así que no hay parpadeo de hidratación; un `ProveedorRail` (`nav/rail`) solo informa del estado a lo que cambia de comportamiento (tooltips, `inert`, ancho de los menús). `BotonRail` (en la cabecera de `SidebarContent`; `aria-expanded`, `aria-controls`, «Contraer menú»/«Expandir menú» traducibles con `SidebarContent textosRail`) alterna entre rail y expandido en cualquier ancho desde md; la elección se guarda en `localStorage["khipu-sidebar-rail"]` (`"rail" | "expandido"`, `lib/rail`: `CLAVE_RAIL`, `leerPreferenciaRail`, `guardarPreferenciaRail`, `railEfectivo`; todo en `try/catch`) y `ScriptDiseno` la copia a `<html data-rail>` antes del primer pintado. Sin `ScriptDiseno` en el `<head>` se aplica tras montar.
+- **`BarraInferior`** (`nav/barra-inferior`): navegación inferior del móvil (≤ 767 px; `md:hidden`) que reemplaza a la hamburguesa. `items: ItemNav[]` los pone la app (hasta 4; el kit no trae lista fija), `mas?: { etiqueta, contenido }` abre `contenido` (normalmente el `SidebarContent` completo) en el cajón de `MobileNav`, `accion?: { href, etiqueta, icono }` es un botón redondo flotante (p. ej. «Nueva venta») y `etiqueta` es el nombre de la `<nav>` («Navegación principal»). Entradas de ≥ 44 px, activa por prefijo (o `exacto`) con `aria-current="page"`, entradas sin `href` como «próximamente» deshabilitadas, zona segura `env(safe-area-inset-bottom)` (la página necesita `viewport-fit=cover`). La barra va en `Shell barraInferior` y queda `sticky` al final de la columna **en el flujo**, con el hueco de la acción reservado: ni la barra ni la acción tapan el final del contenido. Mientras hay una barra, `--khipu-reserva-inferior` sube los toasts por encima de ella.
+- `TopBar migaComoTitulo` (por defecto `true`): con `false` la miga es solo texto de ubicación (`<nav aria-label>` con la página `aria-current="page"`), no un `h1`, para páginas que pintan su propio título. Sin `menuMovil` no hay hamburguesa.
+- `MobileNav disparador` y `etiquetaCajon`: otro elemento como disparador del cajón (el foco vuelve a él al cerrar) y nombre accesible del cajón (`aria-label` del diálogo, por defecto «Menú de navegación»). La hamburguesa por defecto no cambia.
+- `itemActivo(item, pathname)` (`lib/navegacion`): la regla de ítem activo del sidebar y de la barra inferior (prefijo, o exacta con `exacto`).
+- App de ejemplo: el layout de `/ejemplo` usa `rail="auto"` y `BarraInferior` (sin hamburguesa); la galería lo explica.
+
+### Changed
+- **Si usas la CLI (`khipu add`) vuelve a copiar `src/styles/theme.css`**: trae la variante `rail:` (`@custom-variant rail`) y las reglas de `--khipu-reserva-inferior`. Sin ellas `Shell rail="auto"` no se pliega y los toasts no suben sobre `BarraInferior`. (Con el paquete npm llegan solos en `styles.css`.) La receta `ACCION_FLOTANTE` (`lib/estilos`) es la del botón redondo de la barra; `check:alturas` ahora también rechaza `size-N` sobre una receta de control.
+- `SidebarContent`: el chip y el pie van en un contenedor propio (para ocultarlos en el rail); sin `rail="auto"` se ven igual que antes. `Toast`: el visor sube `--khipu-reserva-inferior` (0 sin barra inferior). **Con `cacheComponents` (Next 16)** `BarraInferior` usa `usePathname`: va dentro de `<Suspense>`, igual que `SidebarNav`, `TopBar` y `MobileNav`.
+
 ## [0.7.0] - 2026-11-17
 
 ### Added

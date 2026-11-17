@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { MobileNav } from "@/components/nav/mobile-nav";
 import { Shell } from "@/components/nav/shell";
 import { ACCION_PRINCIPAL, ACCION_SECUNDARIA, TopBar } from "@/components/nav/top-bar";
 import { AccionesEjemplo } from "./acciones";
+import { BarraInferiorApp } from "./barra-inferior-app";
 import { SidebarApp } from "./sidebar-app";
 
 // Migas y pills son datos planos: pueden vivir en el layout de servidor.
@@ -16,6 +16,9 @@ const MIGAS = [
 export default function EjemploLayout({ children }: { children: ReactNode }) {
   return (
     <Shell
+      // 64 px entre 768 y 1279 px (expandible, se recuerda); en el móvil no hay sidebar ni hamburguesa: manda la barra inferior.
+      rail="auto"
+      barraInferior={<BarraInferiorApp />}
       sidebar={<SidebarApp />}
       topBar={
         <TopBar
@@ -24,11 +27,6 @@ export default function EjemploLayout({ children }: { children: ReactNode }) {
             { texto: "Sin monitoreo", tono: "neutro", deshabilitado: true, title: "Monitoreo: próximamente" },
             { texto: "Entorno de pruebas", tono: "aviso" },
           ]}
-          menuMovil={
-            <MobileNav>
-              <SidebarApp />
-            </MobileNav>
-          }
           buscador={{ placeholder: "Buscar…", atajo: "⌘K", title: "Búsqueda global: próximamente" }}
           acciones={<AccionesEjemplo principal={ACCION_PRINCIPAL} secundaria={ACCION_SECUNDARIA} />}
         />

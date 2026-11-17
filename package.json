@@ -1,6 +1,6 @@
 {
   "name": "khipu-design-system",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "description": "Design system khipu: tokens, componentes y patrones para apps Next.js 15 y 16 + Tailwind v4 (React 19, base-ui, Phosphor, Motion).",
   "license": "MIT",
