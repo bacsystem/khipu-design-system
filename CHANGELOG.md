@@ -10,13 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.7.0] - 2026-11-17
 
 ### Added
-- `TablaDatos` y `TablaListado` ganan, todo opcional y sin cambiar el comportamiento actual: `tarjetaMovil` (bajo `md` cada fila es una tarjeta en una `<ul role="list" aria-label>`; la tabla se ve desde `md`; con `onFila` la tarjeta es un `<button>`, o un `<div>` con `tarjetaMovilInteractiva` si lleva controles propios; la `seleccion` pone su casilla en la tarjeta), `anchoMinimo` (`min-width` de la tabla con scroll horizontal dentro de la tarjeta), `pie` (fila de totales `<tfoot>` sobre las columnas visibles y, en móvil, una tarjeta resumen), `filaActiva` (`aria-selected` + banda de acento; `aria-current` en las tarjetas) y `titulo` (nombre de la lista de tarjetas; `TablaListado` lo pasa solo).
-- `TablaListado`: el selector de columnas muestra las `ocultable: false` bloqueadas con «Fijo» (`textos.fijo`) y una acción «Restablecer» (`textos.restablecer`) que vuelve a `ocultaInicial`; `claveAlmacenamiento` recuerda las columnas visibles en `localStorage` (nuevo `lib/columnas-visibles`: `leerColumnasOcultas`, `guardarColumnasOcultas`, `interpretarColumnasOcultas`; nunca lanza). Lo recordado se lee con `useSyncExternalStore`, así que no hay desajuste de hidratación.
-- Pruebas `scripts/tests/tabla-movil.test.mjs` y casos en la galería (`/ejemplo`).
+- `TablaDatos` y `TablaListado` ganan, todo opcional y sin cambiar el comportamiento de quien no los usa: `tarjetaMovil` (bajo `md` cada fila es una tarjeta en una `<ul role="list" aria-label>`; la tabla se ve desde `md`; con `onFila` la tarjeta es un `<button>`, o un `<div>` con `tarjetaMovilInteractiva` si lleva controles propios; la `seleccion` pone su casilla en la tarjeta), `anchoMinimo` (`min-width` de la tabla con scroll horizontal dentro de la tarjeta), `pie` (fila de totales `<tfoot>` sobre las columnas visibles y, en móvil, un resumen `role="group"` fuera de la lista, para que el lector de pantalla cuente solo las filas), `pieEtiqueta` (el rótulo «Total»: primera celda del pie y título del resumen móvil), `filaActiva` (`aria-current="true"` en la fila o la tarjeta, más la banda de acento) y `titulo` (nombre de la lista de tarjetas; `TablaListado` lo pasa solo).
+- `TablaListado claveAlmacenamiento`: recuerda las columnas en `localStorage` (nuevo `lib/columnas-visibles`: `calcularOcultas`, `leerColumnasOcultas`, `guardarColumnasOcultas`, `interpretarColumnasOcultas`, `restablecerColumnasOcultas`; nunca lanza). Se guardan las columnas **ocultas**, no las visibles: una columna que se añada después con `ocultaInicial: true` la verá quien ya tenía algo guardado; cambia la clave si todos deben partir de cero. Lo recordado se lee con `useSyncExternalStore`, sin desajuste de hidratación (la primera pintura usa `ocultaInicial`).
+- Acción «Restablecer» (`textos.restablecer`) en el selector de columnas: vuelve a `ocultaInicial` y borra lo recordado.
+- **Aviso de tipo:** `TextosTablaListado` gana `fijo` y `restablecer`, obligatorios en el tipo: quien tipa un objeto completo de textos debe añadirlos (quien pasa `Partial`, no).
 
-### Notes
-- No se añade selector de densidad de filas (decisión de producto).
-- Archivos compartidos tocados: `scripts/build-registry.mjs` (una entrada en la lista de `lib`), `registry/registry.json` (regenerado), `package.json`/`package-lock.json` (versión).
+### Changed
+- El selector de columnas de `TablaListado` lista ahora todas las columnas con título de texto y marca las `ocultable: false` como bloqueadas con «Fijo» (`textos.fijo`). Sigue apareciendo solo si hay al menos una columna ocultable: un listado sin ninguna no gana botón ni barra.
+- `filaActiva` usa `aria-current="true"` (no `aria-selected`): en una `table` sin rol `grid` es la semántica correcta, y «seleccionada» queda para la casilla de `seleccion`.
+- Sin selector de densidad de filas (decisión de producto).
 
 ## [0.6.0] - 2026-11-17
 

@@ -607,7 +607,8 @@ export function Galeria() {
           anchoMinimo="44rem"
           filaActiva={docActivo}
           onFila={(d) => setDocActivo(d.id)}
-          pie={{ cliente: "Total", total: formatearMonto("PEN", DOCS.reduce((suma, d) => suma + d.total, 0)) }}
+          pieEtiqueta="Total"
+          pie={{ total: formatearMonto("PEN", DOCS.reduce((suma, d) => suma + d.total, 0)) }}
           tarjetaMovil={(d) => (
             <div className="flex min-w-0 flex-col gap-1">
               <div className="flex items-center justify-between gap-2">

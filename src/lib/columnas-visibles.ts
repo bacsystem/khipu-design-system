@@ -32,3 +32,22 @@ export function guardarColumnasOcultas(clave: string, ocultas: string[] | null):
     // Sin almacenamiento: la preferencia vale solo para esta sesión.
   }
 }
+
+/** Lo mínimo que `calcularOcultas` necesita de una columna. */
+export type ColumnaOcultable = { id: string; ocultable?: boolean; ocultaInicial?: boolean };
+
+/**
+ * Qué columnas están ocultas: la elección hecha en esta sesión (`elegidas`) manda sobre lo recordado (`recordado`), que manda
+ * sobre `ocultaInicial`. Solo cuentan las columnas que se pueden ocultar: una fija (`ocultable: false`) o un id que ya no
+ * existe, aunque figuren en lo guardado, se descartan.
+ */
+export function calcularOcultas(columnas: ColumnaOcultable[], elegidas: string[] | null, recordado: string[] | null): string[] {
+  const ocultables = columnas.filter((c) => c.ocultable !== false);
+  const base = elegidas ?? recordado;
+  return base ? base.filter((id) => ocultables.some((c) => c.id === id)) : ocultables.filter((c) => c.ocultaInicial).map((c) => c.id);
+}
+
+/** «Restablecer»: olvida lo recordado (borra la clave, no guarda una lista vacía) para volver a `ocultaInicial`. */
+export function restablecerColumnasOcultas(clave: string): void {
+  guardarColumnasOcultas(clave, null);
+}

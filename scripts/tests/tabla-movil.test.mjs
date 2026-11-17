@@ -12,6 +12,7 @@ const leer = (ruta) => readFileSync(join(RAIZ, ruta), "utf8").replaceAll("\r\n",
 
 const { TablaDatos } = await cargarTsx("components/datos/tabla-datos");
 const columnasOcultas = await cargarTsx("lib/columnas-visibles");
+const { TablaListado } = await cargarTsx("components/datos/tabla-listado");
 
 const filas = [
   { id: "a", nombre: "Ana", total: 10 },
@@ -88,20 +89,39 @@ test("pie solo pinta las columnas que existen (una oculta no deja su total) y de
   assert.equal([...pie.matchAll(/<td/g)].length, 2);
 });
 
-test("pie en móvil: una tarjeta resumen al final de la lista", () => {
-  const out = html({ tarjetaMovil: tarjeta, pie: { total: "S/ 30.00" } });
+test("pie en móvil: el resumen va fuera de la lista (tantos li como filas) y pieEtiqueta lo titula", () => {
+  const out = html({ tarjetaMovil: tarjeta, pie: { total: "S/ 30.00" }, pieEtiqueta: "Total general" });
   const lista = out.slice(out.indexOf("<ul"), out.indexOf("</ul>"));
-  assert.equal([...lista.matchAll(/<li[ >]/g)].length, 3);
-  assert.match(lista, /data-resumen/);
-  assert.match(lista, /S\/ 30\.00/);
+  assert.equal([...lista.matchAll(/<li[ >]/g)].length, 2);
+  assert.doesNotMatch(lista, /data-resumen/);
+  const resumen = out.slice(out.indexOf("data-resumen"));
+  assert.match(out, /role="group" aria-labelledby="([^"]+)" data-resumen/);
+  assert.match(resumen, /<p id="[^"]+">Total general<\/p>/);
+  assert.match(resumen, /<dt[^>]*>Total<\/dt><dd[^>]*>S\/ 30\.00<\/dd>/);
+  // El rótulo ya no se lee como «Cliente: Total».
+  assert.doesNotMatch(out, /<dt[^>]*>Nombre<\/dt><dd[^>]*>Total/);
+});
+
+test("pieEtiqueta va en la primera celda del <tfoot> si pie no trae esa columna", () => {
+  const out = html({ pie: { total: "S/ 30.00" }, pieEtiqueta: "Total general" });
+  const pie = out.slice(out.indexOf("<tfoot"), out.indexOf("</tfoot>"));
+  assert.match(pie, /<td[^>]*>Total general<\/td>/);
+  assert.match(pie, /S\/ 30\.00/);
+});
+
+test("pie con solo columnas ocultas no pinta <tfoot> ni resumen móvil", () => {
+  const out = html({ tarjetaMovil: tarjeta, pie: { oculta: "X" }, pieEtiqueta: "Total" });
+  assert.doesNotMatch(out, /<tfoot/);
+  assert.doesNotMatch(out, /data-resumen/);
 });
 
 // ── filaActiva ──────────────────────────────────────────────────────────────
-test("filaActiva marca solo esa fila con aria-selected", () => {
+test("filaActiva marca solo esa fila con aria-current", () => {
   const out = html({ filaActiva: "b" });
-  assert.equal([...out.matchAll(/aria-selected="true"/g)].length, 1);
-  assert.match(out, /<tr[^>]*aria-selected="true"[^>]*>(?:(?!<\/tr>)[\s\S])*Beto/);
-  assert.doesNotMatch(html(), /aria-selected="/);
+  assert.equal([...out.matchAll(/aria-current="true"/g)].length, 1);
+  assert.doesNotMatch(out, /aria-selected="/);
+  assert.match(out, /<tr[^>]*aria-current="true"[^>]*>(?:(?!<\/tr>)[\s\S])*Beto/);
+  assert.doesNotMatch(html(), /aria-current="true"/);
 });
 
 test("filaActiva en móvil marca la tarjeta con aria-current", () => {
@@ -161,23 +181,62 @@ test("columnas ocultas: JSON roto, forma inesperada o almacenamiento que lanza n
   assert.equal(columnasOcultas.leerColumnasOcultas("t"), null);
 });
 
-// ── selector de columnas de TablaListado ────────────────────────────────────
-const listado = leer("src/components/datos/tabla-listado.tsx");
+// ── cálculo de columnas ocultas ─────────────────────────────────────────────
+const COLS = [
+  { id: "numero", ocultable: false },
+  { id: "cliente", ocultaInicial: true },
+  { id: "total" },
+];
 
-test("TablaListado: columnas fijas con «Fijo», «Restablecer» y claveAlmacenamiento", () => {
-  assert.match(listado, /fijo: "Fijo"/);
-  assert.match(listado, /restablecer: "Restablecer"/);
-  assert.match(listado, /claveAlmacenamiento\?: string/);
-  assert.match(listado, /<MenuCheckboxItem[\s\S]*?disabled/); // la fija no se puede desmarcar
-  assert.match(listado, /textos\.fijo/);
-  assert.match(listado, /textos\.restablecer/);
-  assert.match(listado, /ocultaInicial/);
-  assert.match(listado, /interpretarColumnasOcultas\(/);
-  assert.match(listado, /useSyncExternalStore/); // lo recordado se aplica tras hidratar: sin desajuste con el servidor
-  assert.match(listado, /guardarColumnasOcultas\(/);
+test("calcularOcultas: sin nada elegido ni recordado parte de ocultaInicial", () => {
+  assert.deepEqual(columnasOcultas.calcularOcultas(COLS, null, null), ["cliente"]);
 });
 
-test("TablaListado pasa titulo, tarjetaMovil y el resto a TablaDatos sin cambiar el contrato anterior", () => {
+test("calcularOcultas: lo recordado manda sobre ocultaInicial y lo elegido en la sesión sobre lo recordado", () => {
+  assert.deepEqual(columnasOcultas.calcularOcultas(COLS, null, ["total"]), ["total"]);
+  assert.deepEqual(columnasOcultas.calcularOcultas(COLS, ["cliente"], ["total"]), ["cliente"]);
+  // Elegir «ninguna oculta» también cuenta: no se confunde con «no hay elección».
+  assert.deepEqual(columnasOcultas.calcularOcultas(COLS, [], ["total"]), []);
+});
+
+test("calcularOcultas: una columna fija o inexistente en lo guardado se descarta", () => {
+  assert.deepEqual(columnasOcultas.calcularOcultas(COLS, null, ["numero", "total", "borrada"]), ["total"]);
+  assert.deepEqual(columnasOcultas.calcularOcultas(COLS, ["numero"], null), []);
+});
+
+test("restablecerColumnasOcultas borra la clave (no guarda una lista vacía)", () => {
+  const datos = new Map([["t", '["total"]']]);
+  const almacen = { getItem: (k) => datos.get(k) ?? null, setItem: (k, v) => datos.set(k, v), removeItem: (k) => datos.delete(k) };
+  conAlmacen(almacen, () => {
+    columnasOcultas.restablecerColumnasOcultas("t");
+    assert.equal(datos.has("t"), false);
+  });
+});
+
+// ── TablaListado: el menú de columnas ───────────────────────────────────────
+const baseListado = { columnas, filas, clave: (f) => f.id, titulo: "Clientes" };
+const listadoHtml = (props = {}) => renderToStaticMarkup(h(TablaListado, { ...baseListado, ...props }));
+
+test("TablaListado sin columnas ocultables no muestra «Columnas» ni una barra nueva", () => {
+  const fijas = columnas.map((c) => ({ ...c, ocultable: false }));
+  const out = listadoHtml({ columnas: fijas, buscar: false, exportar: false });
+  assert.doesNotMatch(out, /aria-label="Columnas"/);
+  assert.doesNotMatch(out, /data-sin-imprimir/);
+  // Con una ocultable, sí aparece.
+  assert.match(listadoHtml({ columnas: [fijas[0], columnas[1]], buscar: false, exportar: false }), /aria-label="Columnas"/);
+});
+
+const listado = leer("src/components/datos/tabla-listado.tsx");
+
+test("TablaListado: «Fijo» y «Restablecer» traducibles, claveAlmacenamiento hidratación-segura", () => {
+  assert.match(listado, /fijo: "Fijo"/);
+  assert.match(listado, /restablecer: "Restablecer"/);
+  assert.match(listado, /textos\.fijo/);
+  assert.match(listado, /textos\.restablecer/);
+  assert.match(listado, /<MenuCheckboxItem key=\{c\.id\} checked disabled>/);
+  assert.match(listado, /restablecerColumnasOcultas\(claveAlmacenamiento\)/);
+  assert.match(listado, /calcularOcultas\(/);
+  assert.match(listado, /useSyncExternalStore/);
   assert.match(listado, /<TablaDatos[\s\S]*?titulo=\{titulo\}/);
   assert.match(listado, /\{\.\.\.resto\}\s*reinicioPagina=\{reinicio\}/);
 });

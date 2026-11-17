@@ -14,7 +14,7 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@/components/ui/menu";
-import { interpretarColumnasOcultas, guardarColumnasOcultas } from "@/lib/columnas-visibles";
+import { calcularOcultas, guardarColumnasOcultas, interpretarColumnasOcultas, restablecerColumnasOcultas } from "@/lib/columnas-visibles";
 import { ACCION_SECUNDARIA } from "@/lib/estilos";
 import { descargarCsv, imprimirTabla, type ColumnaExportable } from "@/lib/exportar";
 import { ordenarFilas, type OrdenTabla } from "@/lib/ordenar";
@@ -139,6 +139,8 @@ export function TablaListado<T>({
   /**
    * Recuerda las columnas visibles en `localStorage` bajo esta clave (una por listado: `"app:clientes:columnas"`). Sin ella
    * (o sin almacenamiento) se parte siempre de `ocultaInicial`. Lo guardado se aplica tras hidratar, sin desajuste con el servidor.
+   * Se guardan las columnas **ocultas**, no las visibles: una columna que la app añada después con `ocultaInicial: true` la verá
+   * quien ya tenía algo guardado (no figura en su lista). Cambia la clave si necesitas que todos partan de cero.
    */
   claveAlmacenamiento?: string;
 } & Omit<React.ComponentProps<typeof TablaDatos<T>>, "columnas" | "filas" | "clave" | "textos">) {
@@ -147,27 +149,29 @@ export function TablaListado<T>({
   const [busqueda, setBusqueda] = useState("");
   const [orden, setOrden] = useState<OrdenTabla>(resto.ordenInicial ?? null);
 
+  // Con título de texto (las demás no se pueden nombrar en el selector). Las `ocultables` son las que el usuario puede ocultar.
   const todas = columnas.filter((c) => nombreDe(c) !== null);
+  const ocultables = todas.filter((c) => c.ocultable !== false);
   // Lo recordado se lee como un store externo: en el servidor y al hidratar vale `null` (sin desajuste) y luego el valor real.
   const recordado = useSyncExternalStore(
     suscribirAlmacen,
     () => (claveAlmacenamiento ? leerCrudo(claveAlmacenamiento) : null),
     () => null,
   );
-  // La elección hecha en esta sesión manda sobre lo recordado, que manda sobre `ocultaInicial`.
   const [elegidas, setElegidas] = useState<string[] | null>(null);
-  const ocultas = useMemo(() => {
-    const ocultables = columnas.filter((c) => c.ocultable !== false && nombreDe(c) !== null);
-    const guardadas = elegidas ?? interpretarColumnasOcultas(recordado);
-    return guardadas
-      ? guardadas.filter((id) => ocultables.some((c) => c.id === id))
-      : ocultables.filter((c) => c.ocultaInicial).map((c) => c.id);
-  }, [columnas, elegidas, recordado]);
+  const ocultas = useMemo(
+    () => calcularOcultas(columnas.filter((c) => nombreDe(c) !== null), elegidas, interpretarColumnasOcultas(recordado)),
+    [columnas, elegidas, recordado],
+  );
 
-  function cambiarOcultas(nuevas: string[] | null) {
-    // `null` = restablecer: se olvida lo elegido y lo recordado, y vuelve `ocultaInicial`.
-    setElegidas(nuevas ?? columnas.filter((c) => c.ocultable !== false && nombreDe(c) !== null && c.ocultaInicial).map((c) => c.id));
+  function elegirOcultas(nuevas: string[]) {
+    setElegidas(nuevas);
     if (claveAlmacenamiento) guardarColumnasOcultas(claveAlmacenamiento, nuevas);
+  }
+
+  function restablecer() {
+    setElegidas(calcularOcultas(todas, null, null));
+    if (claveAlmacenamiento) restablecerColumnasOcultas(claveAlmacenamiento);
   }
 
   const visibles = useMemo(() => columnas.filter((c) => !ocultas.includes(c.id)), [columnas, ocultas]);
@@ -197,7 +201,7 @@ export function TablaListado<T>({
 
   return (
     <div className="flex min-w-0 flex-col gap-3">
-      {buscar || exportar || acciones || todas.length > 0 ? (
+      {buscar || exportar || acciones || ocultables.length > 0 ? (
         <div className="flex flex-wrap items-center gap-2" data-sin-imprimir>
           {buscar ? (
             <div className="min-w-56 flex-1">
@@ -212,7 +216,7 @@ export function TablaListado<T>({
           ) : (
             <div className="flex-1" />
           )}
-          {todas.length > 0 ? (
+          {ocultables.length > 0 ? (
             <Menu>
               <MenuTrigger className={ACCION_SECUNDARIA} aria-label={textos.columnas} title={textos.columnas}>
                 <ColumnsIcon className="size-4" />
@@ -232,7 +236,7 @@ export function TablaListado<T>({
                         key={c.id}
                         checked={!ocultas.includes(c.id)}
                         onCheckedChange={(visible) =>
-                          cambiarOcultas(visible ? ocultas.filter((x) => x !== c.id) : [...ocultas, c.id])
+                          elegirOcultas(visible ? ocultas.filter((x) => x !== c.id) : [...ocultas, c.id])
                         }
                       >
                         {nombreDe(c)}
@@ -241,7 +245,7 @@ export function TablaListado<T>({
                   )}
                 </MenuGroup>
                 <MenuSeparator />
-                <MenuItem onClick={() => cambiarOcultas(null)}>
+                <MenuItem onClick={restablecer}>
                   <ArrowCounterClockwiseIcon className="size-4" />
                   {textos.restablecer}
                 </MenuItem>

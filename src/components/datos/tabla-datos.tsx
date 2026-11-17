@@ -3,7 +3,7 @@
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { ArrowDownIcon, ArrowUpIcon, ArrowsDownUpIcon, CheckIcon, MinusIcon, TrayIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import { SkeletonTabla } from "@/components/feedback/skeleton";
 import { MovimientoLocal } from "@/components/movimiento";
 import { CABECERA_TABLA, CONTENEDOR_TABLA, PieTabla, TablaVacia, type TextosPieTabla } from "@/components/patrones/pie-tabla";
@@ -14,8 +14,8 @@ import { POR_PAGINA_DEFECTO } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
 
 // Fila activa (`filaActiva`): la banda toma `accent` y la primera celda lleva el filo de acento (§12).
-const BANDA_ACTIVA = "group-aria-selected/fila:bg-accent";
-const BANDA_ACTIVA_INICIO = "group-aria-selected/fila:shadow-[inset_3px_0_0_var(--color-acento)]";
+const BANDA_ACTIVA = "group-aria-[current=true]/fila:bg-accent";
+const BANDA_ACTIVA_INICIO = "group-aria-[current=true]/fila:shadow-[inset_3px_0_0_var(--color-acento)]";
 // Tarjeta móvil: la misma banda `secondary` de 12 px de las filas, con la casilla (si hay) a la izquierda.
 const TARJETA_MOVIL = "flex items-start gap-3 rounded-xl bg-secondary p-3 text-control";
 
@@ -105,6 +105,7 @@ export function TablaDatos<T>({
   tarjetaMovilInteractiva = false,
   anchoMinimo,
   pie,
+  pieEtiqueta,
   filaActiva,
   onOrdenCambio,
   reinicioPagina,
@@ -137,7 +138,9 @@ export function TablaDatos<T>({
   anchoMinimo?: string;
   /** Fila de totales: el nodo de cada columna por su `id`. Solo se pintan las columnas que se muestran; en móvil, una tarjeta resumen al final. */
   pie?: Partial<Record<string, ReactNode>>;
-  /** `clave` de la fila resaltada (la que se ve en un panel o detalle): `aria-selected` y la banda de acento. */
+  /** Rótulo de la fila de totales («Total»): va en la primera celda de la tabla (salvo que `pie` ya traiga esa columna) y como título del resumen móvil. */
+  pieEtiqueta?: ReactNode;
+  /** `clave` de la fila resaltada (la que se ve en un panel o detalle): `aria-current="true"` y la banda de acento (en la tabla y en las tarjetas). */
   filaActiva?: string;
   /** Avisa cada orden que elige el usuario (p. ej. para exportar en el mismo orden). No se llama con `ordenInicial`. */
   onOrdenCambio?: (orden: OrdenTabla) => void;
@@ -159,6 +162,7 @@ export function TablaDatos<T>({
   className?: string;
 }) {
   const textos = { ...TEXTOS_SELECCION_ES, ...textosParciales };
+  const idResumen = useId();
   const [orden, setOrden] = useState<OrdenTabla>(ordenInicial ?? null);
   const [pagina, setPagina] = useState(1);
   // Volver a la página 1 cuando cambia `reinicioPagina` (la búsqueda, un filtro): si no, el usuario se queda en la
@@ -238,7 +242,7 @@ export function TablaDatos<T>({
                 key={id}
                 onClick={onFila ? () => onFila(f) : undefined}
                 data-state={seleccion?.seleccionados.includes(id) ? "selected" : undefined}
-                aria-selected={filaActiva === id ? true : undefined}
+                aria-current={filaActiva === id ? "true" : undefined}
                 className={cn("group", onFila && "cursor-pointer")}
               >
                 {seleccion ? (
@@ -268,7 +272,7 @@ export function TablaDatos<T>({
               {seleccion ? <TableCell className="w-10 pl-4" /> : null}
               {columnas.map((c, i) => (
                 <TableCell key={c.id} className={claseCelda(c, i)}>
-                  {pie?.[c.id]}
+                  {pie?.[c.id] ?? (i === 0 ? pieEtiqueta : null)}
                 </TableCell>
               ))}
             </TableRow>
@@ -278,6 +282,7 @@ export function TablaDatos<T>({
   );
 
   const tarjetas = tarjetaMovil ? (
+    <>
     <ul role="list" aria-label={titulo} className="flex flex-col gap-2 px-1 py-2 md:hidden">
       {visibles.map((f) => {
         const id = clave(f);
@@ -308,21 +313,24 @@ export function TablaDatos<T>({
           <TablaVacia icon={<TrayIcon className="size-6" />}>{vacio}</TablaVacia>
         </li>
       ) : null}
-      {conPie ? (
-        <li data-resumen className={cn(TARJETA_MOVIL, "font-medium")}>
-          <dl className="grid min-w-0 flex-1 grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-            {columnas
-              .filter((c) => pie?.[c.id] != null)
-              .map((c) => (
-                <div key={c.id} className="col-span-2 grid grid-cols-subgrid">
-                  <dt className="text-texto-terciario">{c.titulo}</dt>
-                  <dd className="text-right tabular-nums">{pie?.[c.id]}</dd>
-                </div>
-              ))}
-          </dl>
-        </li>
-      ) : null}
     </ul>
+    {conPie ? (
+      // El resumen no es una fila: va fuera de la lista (el lector de pantalla anuncia tantos elementos como filas).
+      <div role="group" aria-labelledby={idResumen} data-resumen className={cn(TARJETA_MOVIL, "mx-1 mb-2 flex-col gap-1 font-medium md:hidden")}>
+        <p id={idResumen}>{pieEtiqueta ?? titulo}</p>
+        <dl className="grid w-full grid-cols-[1fr_auto] gap-x-4 gap-y-1">
+          {columnas
+            .filter((c) => pie?.[c.id] != null)
+            .map((c) => (
+              <div key={c.id} className="col-span-2 grid grid-cols-subgrid">
+                <dt className="text-texto-terciario">{c.titulo}</dt>
+                <dd className="text-right tabular-nums">{pie?.[c.id]}</dd>
+              </div>
+            ))}
+        </dl>
+      </div>
+    ) : null}
+    </>
   ) : null;
 
   return (
