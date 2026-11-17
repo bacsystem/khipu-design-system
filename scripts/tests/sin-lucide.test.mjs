@@ -7,6 +7,9 @@ import { join } from "node:path";
 const RAIZ = new URL("../../", import.meta.url).pathname;
 const pkg = JSON.parse(readFileSync(join(RAIZ, "package.json"), "utf8"));
 
+// import x from "lucide-react", import "lucide-react", export … from, import("lucide-react") y subrutas (lucide-react/dynamic).
+const IMPORTA_LUCIDE = /(?:from\s+|import\s*\(\s*|import\s+)["']lucide-react(?:\/[^"']*)?["']/;
+
 function listar(dir) {
   return readdirSync(dir).flatMap((n) => {
     const ruta = join(dir, n);
@@ -21,6 +24,6 @@ test("lucide-react no está en peerDependencies ni en peerDependenciesMeta", () 
 
 test("ningún archivo publicado (src/components, src/lib) importa lucide-react", () => {
   for (const f of [...listar(join(RAIZ, "src/components")), ...listar(join(RAIZ, "src/lib"))]) {
-    assert.ok(!/from\s+["']lucide-react["']/.test(readFileSync(f, "utf8")), `${f} importa lucide-react`);
+    assert.ok(!IMPORTA_LUCIDE.test(readFileSync(f, "utf8")), `${f} importa lucide-react`);
   }
 });
