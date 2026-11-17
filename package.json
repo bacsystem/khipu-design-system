@@ -107,6 +107,7 @@
     "registry:build": "node scripts/build-registry.mjs",
     "build:paquete": "node scripts/build-paquete.mjs",
     "verify:paquete": "node scripts/build-paquete.mjs && node scripts/verificar-paquete.mjs",
+    "verify:next15": "npm i --no-save next@15.5.28 && npm run verify:paquete && npm test",
     "prepare": "node scripts/build-paquete.mjs"
   },
   "dependencies": {
@@ -137,6 +138,7 @@
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "semver": "^7.8.6",
     "shadcn": "^4.21.0",
     "tailwindcss": "^4",
     "typescript": "^5"
