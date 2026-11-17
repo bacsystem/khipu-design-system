@@ -42,7 +42,26 @@ export const PARES = [
   ["--sidebar-primary-foreground", "--sidebar-primary"],
   ["--sidebar-accent-foreground", "--sidebar-accent"],
   ["--codigo-foreground", "--codigo"],
+  // `valorConTono` de Metrica/Kpi pinta el valor y la ayuda en el color del tono sobre la tarjeta y, dentro de otra tarjeta, sobre `--secondary`.
+  ["--success-foreground", "--card"],
+  ["--success-foreground", "--secondary"],
+  ["--warning-foreground", "--card"],
+  ["--warning-foreground", "--secondary"],
+  ["--destructive-texto", "--secondary"],
 ];
+// El tono `acento` de una métrica usa `--acento-2-texto` en claro y `--acento-2` en oscuro (`dark:`).
+export const PARES_CLARO = [
+  ["--acento-2-texto", "--card"],
+  ["--acento-2-texto", "--secondary"],
+];
+export const PARES_OSCURO = [
+  ["--acento-2", "--card"],
+  ["--acento-2", "--secondary"],
+];
+// Series contiguas de una composición (apiladas, dona): distancia mínima OKLab ×100 entre sus bordes (`--chart-trazo-*`).
+// Con el hueco de 2 px entre segmentos hay frontera de todos modos; esto garantiza que se distingan por color.
+export const DELTA_E_MINIMO = 7.5;
+export const TRAZO_POR_INDICE = ["--chart-trazo-base", "--chart-trazo-destacado", "--chart-trazo-3", "--chart-trazo-4", "--chart-trazo-5"];
 // Indicadores no textuales (≥ 3:1): el anillo de foco y el borde de las marcas de gráfico (sus rellenos pastel no llegan).
 export const PARES_NO_TEXTO = [
   ["--ring", "--card"],
@@ -171,6 +190,32 @@ export function combinaciones(css) {
   return lista;
 }
 
+const lineal = (v) => ((v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+function oklab({ r, g, b }) {
+  const [R, G, B] = [lineal(r), lineal(g), lineal(b)];
+  const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+  const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+  const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+  return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s];
+}
+/** Distancia OKLab ×100 entre dos colores (ya sobre la tarjeta). */
+export function deltaE(a, b) {
+  const [A, B] = [oklab(a), oklab(b)];
+  return 100 * Math.hypot(A[0] - B[0], A[1] - B[1], A[2] - B[2]);
+}
+
+/** `ORDEN_COMPOSICION` de `lib/escala-grafico.ts` (el script es .mjs y no importa .ts). */
+export function leerOrdenComposicion(fuente) {
+  const m = fuente.match(/ORDEN_COMPOSICION\s*=\s*\[([\d,\s]+)\]/);
+  if (!m) throw new Error("No se encontró ORDEN_COMPOSICION en lib/escala-grafico.ts");
+  return m[1].split(",").map((n) => Number(n.trim()));
+}
+
+/** Pares de índices contiguos de una composición (sin cerrar el círculo: la primera y la última no se tocan). */
+export function paresContiguos(orden) {
+  return orden.slice(1).map((o, i) => [orden[i], o]);
+}
+
 function medir(combo, texto, fondo) {
   const f = fondoOpaco(fondo, combo.vars);
   return razon(sobre(resolverColor(texto, combo.vars), f), f);
@@ -180,8 +225,16 @@ function principal() {
   const css = readFileSync(join(ROOT, "src", "styles", "tokens.css"), "utf8");
   const errores = [];
   let pares = 0;
+  const orden = leerOrdenComposicion(readFileSync(join(ROOT, "src", "lib", "escala-grafico.ts"), "utf8"));
   for (const combo of combinaciones(css)) {
-    for (const [lista, minimo] of [[PARES, MINIMO], [PARES_NO_TEXTO, MINIMO_NO_TEXTO]]) {
+    const claro = combo.nombre.startsWith("claro");
+    for (const [i, j] of paresContiguos(orden)) {
+      pares++;
+      const tarjeta = fondoOpaco("--card", combo.vars);
+      const d = deltaE(sobre(resolverColor(TRAZO_POR_INDICE[i], combo.vars), tarjeta), sobre(resolverColor(TRAZO_POR_INDICE[j], combo.vars), tarjeta));
+      if (d < DELTA_E_MINIMO) errores.push(`${combo.nombre} series contiguas ${TRAZO_POR_INDICE[i]} / ${TRAZO_POR_INDICE[j]}: ΔE ${d.toFixed(1)} < ${DELTA_E_MINIMO}`);
+    }
+    for (const [lista, minimo] of [[PARES, MINIMO], [claro ? PARES_CLARO : PARES_OSCURO, MINIMO], [PARES_NO_TEXTO, MINIMO_NO_TEXTO]]) {
       for (const [texto, fondo] of lista) {
         pares++;
         try {

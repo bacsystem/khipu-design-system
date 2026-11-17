@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { TrazoAnimado } from "@/components/datos/trazo-animado";
-import { ChipVariacion, TarjetaMetrica, VisualDeMetrica, type TonoMetrica, type VisualMetrica } from "@/components/patrones/metricas";
+import { ChipVariacion, TarjetaMetrica, TEXTO_TONO, VisualDeMetrica, type PieMetrica, type TonoMetrica, type VisualMetrica } from "@/components/patrones/metricas";
 import type { IconoComponente } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +31,10 @@ export function Sparkline({ datos, ancho = 120, alto = 28, className }: { datos:
 export function Kpi({
   etiqueta,
   valor,
+  sufijo,
+  ayuda,
+  pie,
+  valorConTono,
   variacion,
   periodo = "vs. período anterior",
   invertir,
@@ -44,6 +48,14 @@ export function Kpi({
 }: {
   etiqueta: ReactNode;
   valor: ReactNode;
+  /** Unidad o total junto al valor («/ 136», «%»), en texto terciario. */
+  sufijo?: ReactNode;
+  /** Texto de apoyo bajo la tendencia. */
+  ayuda?: ReactNode;
+  /** Banda inferior: contenido libre o un par `{ etiqueta, valor }`. */
+  pie?: PieMetrica;
+  /** Pinta el valor y la `ayuda` con el color del `tono` (el `neutro` no cambia nada). */
+  valorConTono?: boolean;
   /** Porcentaje, p. ej. 12.5 o -3; omite para no mostrar tendencia. */
   variacion?: number;
   periodo?: ReactNode;
@@ -56,9 +68,13 @@ export function Kpi({
   acciones?: ReactNode;
   className?: string;
 }) {
+  const conTono = valorConTono && !destacada && tono !== undefined && tono !== "neutro";
   return (
-    <TarjetaMetrica etiqueta={etiqueta} icono={icono} tono={tono} destacada={destacada} acciones={acciones} className={className}>
-      <div className={cn("text-metrica tabular-nums", destacada ? "text-current" : "text-foreground")}>{valor}</div>
+    <TarjetaMetrica etiqueta={etiqueta} icono={icono} tono={tono} destacada={destacada} acciones={acciones} pie={pie} className={className}>
+      <div className={cn("flex min-w-0 flex-wrap items-baseline gap-x-1.5 text-metrica tabular-nums", destacada ? "text-current" : conTono ? TEXTO_TONO[tono] : "text-foreground")}>
+        {valor}
+        {sufijo ? <span className={cn("text-control font-normal", destacada ? "opacity-70" : "text-texto-terciario")}>{sufijo}</span> : null}
+      </div>
       {serie ? <Sparkline datos={serie} /> : visual ? <VisualDeMetrica visual={visual} tono={tono} destacada={destacada} /> : null}
       {variacion != null ? (
         <div className={cn("flex min-w-0 items-center gap-1.5 text-etiqueta", destacada ? "opacity-80" : "text-texto-terciario")}>
@@ -66,6 +82,7 @@ export function Kpi({
           <span className="truncate">{periodo}</span>
         </div>
       ) : null}
+      {ayuda ? <div className={cn("flex min-w-0 items-center gap-1.5 text-etiqueta", destacada ? "opacity-80" : conTono ? TEXTO_TONO[tono] : "text-texto-terciario")}>{ayuda}</div> : null}
     </TarjetaMetrica>
   );
 }
