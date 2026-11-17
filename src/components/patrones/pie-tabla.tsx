@@ -79,7 +79,11 @@ export type TextosPieTabla = {
   paginacion: string;
   primera: string;
   ultima: string;
+  /** Lo que lee el lector de pantalla en lugar de «3 / 24» (solo bajo `sm`); por defecto «Página 3 de 24». Opcional. */
+  paginaDeTotal?: (pagina: number, total: number) => string;
 };
+
+const PAGINA_DE_TOTAL_ES = (pagina: number, total: number) => `Página ${pagina} de ${total}`;
 
 const TEXTOS_PIE_ES: TextosPieTabla = {
   mostrando: "Mostrando",
@@ -170,8 +174,11 @@ export function PieTabla({
           <CaretLeftIcon weight="bold" className="size-3.5" /> {textos.anterior}
         </Salto>
         {/* Bajo sm no caben los números (ni con 24 páginas dentro de una tarjeta de 360 px): «3 / 24» y los saltos. */}
-        <span aria-current="page" className="mx-1 font-mono text-etiqueta font-medium text-foreground sm:hidden">
-          {pagina} / {ultimaPagina}
+        <span aria-live="polite" aria-current="page" className="mx-1 sm:hidden">
+          <span aria-hidden className="font-mono text-etiqueta font-medium text-foreground">
+            {pagina} / {ultimaPagina}
+          </span>
+          <span className="sr-only">{(textos.paginaDeTotal ?? PAGINA_DE_TOTAL_ES)(pagina, ultimaPagina)}</span>
         </span>
         <div className="mx-1 hidden items-center gap-0.5 sm:flex">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>

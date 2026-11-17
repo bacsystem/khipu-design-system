@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Children, isValidElement } from "react";
+import { isValidElement } from "react";
 import { cargarTsx } from "./cargar-tsx.mjs";
 
 const { opcionesPorPagina, porPaginaValido } = await cargarTsx("lib/paginacion");
@@ -89,12 +89,16 @@ test("porPaginaValido acepta las opciones dadas: un 25 de la URL sobrevive", () 
   assert.equal(porPaginaValido("20"), 20);
   assert.equal(porPaginaValido("7", [5, 10, 25, 50]), 10);
   assert.equal(porPaginaValido(null, [5, 25]), 5, "sin 10 entre las opciones, la primera");
+  assert.equal(porPaginaValido("0", [0, 5, 25]), 5, "0 no es un tamaño válido: cae a la primera opción válida");
+  assert.equal(porPaginaValido("2.5", [2.5, -1, 20]), 20, "ni decimales ni negativos cuentan");
+  assert.equal(porPaginaValido("x", [0, -3]), 10, "sin opciones válidas, 10");
 });
 
 test("PieTabla móvil: la nav hace wrap y los números se sustituyen por «pág. / total» bajo sm", () => {
   const html = pie({ extremos: true, ultimaPagina: 24 });
   assert.match(html, /<nav aria-label="Paginación" class="[^"]*\bflex-wrap\b/);
-  assert.match(html, /<span aria-current="page" class="[^"]*\bsm:hidden\b[^"]*">3 \/ 24<\/span>/);
+  assert.match(html, /<span aria-live="polite" aria-current="page" class="[^"]*\bsm:hidden\b[^"]*"><span aria-hidden="true"[^>]*>3 \/ 24<\/span><span class="sr-only">Página 3 de 24<\/span><\/span>/);
+  assert.match(pie({ ultimaPagina: 24, textos: { paginaDeTotal: (p, t) => `Page ${p} of ${t}` } }), /<span class="sr-only">Page 3 of 24<\/span>/);
   assert.match(html, /<div class="[^"]*\bhidden\b[^"]*\bsm:flex\b/);
   assert.equal([...html.matchAll(/aria-current="page"/g)].length, 2, "uno visible por tamaño; el otro es el número actual");
 });
