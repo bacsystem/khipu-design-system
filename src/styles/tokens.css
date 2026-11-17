@@ -256,7 +256,7 @@ html:root.dark[data-oscuro="tintado"] {
 }
 
 /*
- * Tipografía (preferencia del usuario). Cada fuente la carga la app en --fuente-<valor> (next/font, ver src/app/layout.tsx);
+ * Tipografía (preferencia del usuario). Cada fuente la carga la app en --fuente-<valor> (next/font/local, ver src/app/layout.tsx);
  * aquí solo se elige cuál va en --font-sans. Inter es la de la app (sin bloque). JetBrains Mono (--font-mono) no cambia.
  */
 html:root[data-fuente="jakarta"] {
