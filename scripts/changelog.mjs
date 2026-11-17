@@ -89,19 +89,34 @@ export function validarChangelog(changelog) {
   }
 }
 
+/** true si `package.json` solo difiere en `version` (lo que hace el PR de release). */
+export function soloCambiaVersion(base, cabeza) {
+  const sinVersion = (t) => {
+    const { version: _v, ...resto } = JSON.parse(t);
+    return JSON.stringify(resto);
+  };
+  return sinVersion(base) === sinVersion(cabeza);
+}
+
 /**
- * Regla del PR: si cambia algo de src/ debe añadir (estado A) un fragmento, salvo opt-out.
- * `cambios` = líneas de `git diff --name-status` ("A\tchangelog.d/x.md", "M\tsrc/..."); un rename "R100\told\tnew" cuenta por su destino.
+ * Regla del PR: si cambia algo que llega al consumidor debe añadir (estado A) un fragmento, salvo opt-out. Cuenta:
+ * cualquier cambio en src/ (también borrados), en cli/ (viaja en el paquete) y en package.json salvo que solo cambie `version`.
+ * `cambios` = líneas de `git diff --name-status` ("A\tchangelog.d/x.md", "M\tsrc/..."); un rename "R100\told\tnew" cuenta por ambas rutas.
  */
-export function necesitaFragmento(cambios, { sinChangelog = false } = {}) {
+export function necesitaFragmento(cambios, { sinChangelog = false, packageSoloVersion = false } = {}) {
   const entradas = cambios.map((l) => l.trim()).filter(Boolean).map((l) => {
     const [estado, ...rutas] = l.split("\t");
-    return { estado: estado[0], ruta: rutas.at(-1) };
+    return { estado: estado[0], rutas };
   });
-  const tocaSrc = entradas.some((e) => e.estado !== "D" && e.ruta.startsWith("src/"));
-  const anade = entradas.some((e) => "AR".includes(e.estado) && /^changelog\.d\/(?!README\.md$)[^/]+\.md$/i.test(e.ruta));
-  if (!tocaSrc || anade || sinChangelog) return { ok: true };
-  return { ok: false, motivo: "el PR cambia src/ pero no añade changelog.d/<slug>.md (o ponle la etiqueta 'sin-changelog' si no cambia nada visible para quien consume el kit)." };
+  const visible = (r) => r.startsWith("src/") || r.startsWith("cli/") || (r === "package.json" && !packageSoloVersion);
+  const tocaVisible = entradas.some((e) => e.rutas.some(visible));
+  const anade = entradas.some((e) => "AR".includes(e.estado) && /^changelog\.d\/(?!README\.md$)[^/]+\.md$/i.test(e.rutas.at(-1)));
+  if (!tocaVisible || anade || sinChangelog) return { ok: true };
+  return {
+    ok: false,
+    motivo:
+      "el PR cambia src/, cli/ o package.json (o borra algo de src/) pero no añade un changelog.d/<slug>.md nuevo (editar uno existente no cuenta: añade otro). Si no cambia nada visible para quien consume el kit, ponle la etiqueta 'sin-changelog'.",
+  };
 }
 
 function hoy() {
@@ -132,7 +147,9 @@ function ejecutar(argv) {
     const base = opcion("--base");
     if (!base) throw new Error("falta --base <ref>.");
     const salida = execFileSync("git", ["diff", "--name-status", `${base}...HEAD`], { cwd: ROOT, encoding: "utf8" });
-    const r = necesitaFragmento(salida.split("\n"), { sinChangelog: resto.includes("--sin-changelog") });
+    const git = (...args) => execFileSync("git", args, { cwd: ROOT, encoding: "utf8" });
+    const packageSoloVersion = soloCambiaVersion(git("show", `${base}:package.json`), readFileSync(join(ROOT, "package.json"), "utf8"));
+    const r = necesitaFragmento(salida.split("\n"), { sinChangelog: resto.includes("--sin-changelog"), packageSoloVersion });
     if (!r.ok) throw new Error(r.motivo);
     console.log("Changelog: OK.");
   } else {

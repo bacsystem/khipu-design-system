@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { ensamblar, insertarSeccion, necesitaFragmento, parsearFragmento, validarChangelog } from "../changelog.mjs";
+import { ensamblar, insertarSeccion, necesitaFragmento, parsearFragmento, soloCambiaVersion, validarChangelog } from "../changelog.mjs";
 
 const raiz = new URL("../../", import.meta.url).pathname;
 
@@ -62,8 +62,20 @@ test("necesitaFragmento: src/ sin fragmento falla; con fragmento nuevo, con opt-
   assert.equal(necesitaFragmento(["M\tREADME.md", "M\tscripts/x.mjs"]).ok, true);
   assert.equal(necesitaFragmento(["M\tsrc/a.ts", "M\tchangelog.d/existente.md"]).ok, false, "editar un fragmento ajeno no cuenta como añadir");
   assert.equal(necesitaFragmento(["M\tsrc/a.ts", "A\tchangelog.d/README.md"]).ok, false, "el README no es un fragmento");
-  assert.equal(necesitaFragmento(["D\tsrc/a.ts"]).ok, true, "solo borrar de src/ no pide nota");
+  assert.equal(necesitaFragmento(["D\tsrc/components/ui/kbd.tsx"]).ok, false, "borrar un componente público pide nota");
+  assert.equal(necesitaFragmento(["M\tcli/verificar.mjs"]).ok, false, "la CLI viaja en el paquete");
+  assert.equal(necesitaFragmento(["M\tpackage.json"]).ok, false, "exports/dependencias de package.json");
+  assert.equal(necesitaFragmento(["M\tpackage.json", "M\tpackage-lock.json"], { packageSoloVersion: true }).ok, true, "el PR de release solo sube la versión");
+  assert.equal(necesitaFragmento(["M\tpackage.json", "M\tsrc/a.ts"], { packageSoloVersion: true }).ok, false);
+  assert.equal(necesitaFragmento(["R100\tsrc/a.ts\tdocs/a.ts"]).ok, false, "mover algo fuera de src/ también quita un módulo");
   assert.equal(necesitaFragmento(["R100\tsrc/a.ts\tsrc/b.ts"]).ok, false);
+});
+
+test("soloCambiaVersion: ignora `version` y nada más", () => {
+  const base = '{"name":"k","version":"0.9.0","exports":{"./a":"x"}}';
+  assert.equal(soloCambiaVersion(base, '{"name":"k","version":"0.10.0","exports":{"./a":"x"}}'), true);
+  assert.equal(soloCambiaVersion(base, '{"name":"k","version":"0.9.0","exports":{}}'), false);
+  assert.equal(soloCambiaVersion(base, '{"name":"k","version":"0.10.0","exports":{"./a":"x"},"scripts":{}}'), false);
 });
 
 test("release de extremo a extremo en un repo temporal: arma la sección, borra los fragmentos y deja README", () => {
@@ -99,6 +111,32 @@ test("el release plan y changelog-section.sh aceptan lo que produce release (la 
     writeFileSync(join(dir, "CHANGELOG.md"), cl);
     const notas = execFileSync(join(raiz, ".github/scripts/changelog-section.sh"), ["0.10.0", join(dir, "CHANGELOG.md")], { encoding: "utf8" });
     assert.equal(notas, "### Added\n- novedad\n");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("release-plan.sh: con fragmentos sobrantes falla antes de crear nada; README.md no cuenta", () => {
+  const dir = mkdtempSync(join(tmpdir(), "khipu-cl-"));
+  try {
+    mkdirSync(join(dir, ".github/scripts"), { recursive: true });
+    mkdirSync(join(dir, "changelog.d"));
+    for (const n of ["release-plan.sh", "changelog-section.sh"]) cpSync(join(raiz, ".github/scripts", n), join(dir, ".github/scripts", n));
+    writeFileSync(join(dir, "package.json"), '{"version":"7.7.7"}');
+    writeFileSync(join(dir, "CHANGELOG.md"), "# C\n\n## [7.7.7] - 2026-12-01\n\n### Added\n- a\n");
+    writeFileSync(join(dir, "changelog.d/README.md"), "# no es un fragmento\n");
+    // "remoto" sin tags: un repo vacío como origin
+    const remoto = join(dir, "remoto.git");
+    execFileSync("git", ["init", "-q", "--bare", remoto]);
+    const plan = () => spawnSync("bash", [join(dir, ".github/scripts/release-plan.sh")], { cwd: dir, encoding: "utf8", env: { ...process.env, REMOTE: remoto, GITHUB_OUTPUT: "/dev/stdout", GITHUB_REPOSITORY: "o/r" } });
+    execFileSync("git", ["init", "-q"], { cwd: dir });
+    const ok = plan();
+    assert.equal(ok.status, 0, ok.stderr);
+    assert.match(ok.stdout, /needs_release=true/);
+    writeFileSync(join(dir, "changelog.d/tarde.md"), "### Added\n- b\n");
+    const mal = plan();
+    assert.equal(mal.status, 1);
+    assert.match(mal.stderr, /still has fragments \(changelog\.d\/tarde\.md/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

@@ -79,7 +79,7 @@ La alternativa a copiar archivos: depender del design system y recibir sus cambi
 npm install github:bacsystem/khipu-design-system#v0.5.0
 ```
 
-npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+ o 16, React 19, Tailwind v4** y los peers `@base-ui/react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos); `lucide-react` ya no es peer desde 0.6.0 (el paquete no lo importa; las props de icono aceptan cualquier componente, también los de Lucide si ya los usas). `motion` y `@phosphor-icons/react` sí vienen como dependencias del paquete. No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
+npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+ o 16, React 19, Tailwind v4** y los peers `@base-ui/react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos); `lucide-react` ya no es peer desde 0.6.0 (el paquete no lo importa; las props de icono aceptan cualquier componente, también los de Lucide si ya los usas). `motion` y `@phosphor-icons/react` sí vienen como dependencias del paquete. No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`. **pnpm 10 o posterior:** bloquea los scripts de ciclo de vida de las dependencias, también las de git, así que `prepare` no corre y faltarían `dist/` y `registry/registry.json`; apruébalo (`pnpm approve-builds`, o `onlyBuiltDependencies: ["khipu-design-system"]` en `pnpm-workspace.yaml`). Con pnpm 9 y npm corre solo.
 
 **CSS** — una sola línea en tu `globals.css`, después de Tailwind:
 
@@ -140,7 +140,7 @@ src/
 ├── components/diseno.tsx    DisenoProvider · useDiseno (+ disenos.ts, script-diseno.tsx) — ver docs/design-system.md «Diseños»
 ├── components/apariencia.tsx AparienciaProvider · useApariencia (paleta y tono oscuro) — ver docs/design-system.md «Apariencia»
 ├── components/apariencia-opciones.ts PALETAS · TONOS_OSCURO · claves de localStorage · código del script sin parpadeo
-└── lib/                     utilidades, recetas (`estilos`) y lógica sin UI (inventario abajo; la función de cada una, en docs/design-system.md)
+└── lib/                     utilidades, recetas (`estilos`) y lógica sin UI (inventario y notas por módulo, abajo)
 
 cli/khipu.mjs                CLI (list · add · verificar) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado (no está en git) por scripts/build-registry.mjs; lo crean `prepare` y `npm run registry:build`
@@ -164,6 +164,28 @@ Inventario generado desde `src/` (no se edita a mano: `npm run docs:build`; la C
 | `components/ui` | `avatar`, `badge`, `button`, `card`, `dialog`, `drawer`, `grupo-botones`, `hover-card`, `input`, `kbd`, `label`, `menu`, `pagination`, `popover`, `scroll-area`, `select`, `selector-por-pagina`, `separator`, `sheet`, `table`, `toolbar` |
 | `lib` | `calendario`, `cola-toast`, `columnas-visibles`, `decimal`, `escala-grafico`, `estilos`, `exportar`, `formato`, `iconos`, `movimiento`, `navegacion`, `ordenar`, `paginacion`, `rail`, `utils` |
 <!-- /generado:componentes -->
+
+#### Notas por módulo (escritas a mano, una línea por módulo)
+
+Lo que el inventario no dice: qué exporta cada módulo con nombre propio. Si añades un módulo con exports no obvios, suma tu línea aquí (cada una es una línea aparte para no chocar con las de otros PR).
+
+- `lib/estilos`: recetas de clases (`TARJETA`, `CAMPO`, `ACCION_PRINCIPAL`…).
+- `lib/formato`: fechas es/en y montos, zona `America/Lima`.
+- `lib/navegacion`: `esClickSimple`, `itemActivo`, `indiceActivoRuta`.
+- `lib/rail`: preferencia del rail del sidebar (`localStorage`).
+- `lib/iconos`: `IconoComponente` y los pesos de icono.
+- `lib/ordenar`: `ordenarFilas`.
+- `lib/exportar`: CSV e impresión.
+- `lib/escala-grafico`: marcas del eje Y de los gráficos.
+- `lib/decimal`: texto a número y número a texto de los campos decimales.
+- `nav/rail`: `BotonRail`.
+- `formularios/casilla`: `Casilla` e `Interruptor`.
+- `feedback/toast`: `toast` imperativo y `useToast()`.
+- `feedback/progreso`: lineal y circular.
+- `datos/tabla-datos`: selección múltiple y acciones masivas.
+- `datos/tabla-listado`: buscador, columnas visibles, CSV e impresión.
+- `datos/kpi`: `Kpi` y `Sparkline`.
+- `datos/grafico`: barras (también apiladas), líneas con área y guiones, dona y anillos.
 
 ## Cómo armar el shell
 

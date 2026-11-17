@@ -33,7 +33,7 @@ async function cargarRegistro() {
   if (existsSync(ruta)) return cargarJson(ruta);
   const script = join(REPO_ROOT, "scripts", "build-registry.mjs");
   if (existsSync(script)) return { items: (await import(pathToFileURL(script).href)).construirRegistro() };
-  console.error("No encuentro registry/registry.json. Genéralo con `npm run registry:build` (o reinstala el paquete: `prepare` lo crea).");
+  console.error("No encuentro registry/registry.json. Se crea al instalar el paquete (`prepare`): reinstálalo, y con pnpm 10+ aprueba antes el script de build de khipu-design-system (`pnpm approve-builds`). En un clon del repo: `npm run registry:build`.");
   process.exit(1);
 }
 let registro; // se carga al ejecutar list/add (verificar no lo necesita)

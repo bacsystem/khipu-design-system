@@ -17,7 +17,7 @@ Sí editas: el código, sus pruebas, la **prosa** de tu componente en `docs/desi
 
 ## Changelog: un fragmento por PR
 
-Si tu PR cambia algo de `src/`, añade `changelog.d/<slug>.md` (el slug, único, p. ej. el nombre de la rama). Es Markdown con una sección `### <Tipo>` por tipo y las viñetas tal como irán en el CHANGELOG:
+Si tu PR cambia algo de `src/` (también si borra), de `cli/` o de `package.json` (salvo solo `version`), añade `changelog.d/<slug>.md` (el slug, único, p. ej. el nombre de la rama). Es Markdown con una sección `### <Tipo>` por tipo y las viñetas tal como irán en el CHANGELOG:
 
 ```md
 ### Added
@@ -29,8 +29,8 @@ Si tu PR cambia algo de `src/`, añade `changelog.d/<slug>.md` (el slug, único,
 
 Tipos válidos: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security` (se ordenan así en el release). Una sección vacía, un tipo desconocido o texto antes del primer `###` hacen fallar `npm run changelog:check`. Los cambios incompatibles o que obligan a re-copiar archivos con la CLI van en `Changed` y empiezan con **negrita** (como en las versiones anteriores).
 
-- La CI (`.github/workflows/changelog.yml`) falla un PR que cambia `src/` sin añadir un fragmento. **Opt-out:** ponle la etiqueta `sin-changelog` al PR cuando no cambia nada visible para quien consume el kit (refactor interno, pruebas, la app de ejemplo).
-- Un PR que solo toca docs, scripts o CI no necesita fragmento.
+- La CI (`.github/workflows/changelog.yml`) falla un PR que cambia `src/`, `cli/` o `package.json` sin **añadir** un fragmento nuevo. Editar un fragmento que ya existe (de otro PR aún sin publicar) no cuenta: si corriges algo todavía no publicado, añade tu propio fragmento (otro `### Fixed`/`Changed` con tu slug) o usa `sin-changelog`. **Opt-out:** ponle la etiqueta `sin-changelog` al PR cuando no cambia nada visible para quien consume el kit (refactor interno, pruebas, la app de ejemplo).
+- Un PR que solo toca docs, `scripts/` o CI no necesita fragmento (si `scripts/` cambia lo que ve quien consume el kit, como `check:*` o `verificar`, añádelo igualmente).
 
 ## Publicar una versión (PR de release)
 
