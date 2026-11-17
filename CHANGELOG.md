@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-17
+
+### Added
+- **`Tabs` como tira sola**: sin `children` ni `paneles` el componente no monta ningún `Panel`. Antes montaba uno por pestaña, vacío, con `pt-4` (16 px de hueco bajo la tira) y con `aria-controls` hacia un panel sin contenido. Ahora la tira es solo `role="tablist"` + `role="tab"` con `aria-selected` (sin `aria-controls`), y el contenido lo pinta la app fuera, con `valor`/`onCambio` (controlado) o `defaultValor`. La galería lo muestra.
+- Las recetas de pestaña (`PESTANA_LINEA` de `Tabs estilo="linea"` y `SEGMENTO_BASE` de `lib/estilos` para `"segmentado"`) fijan el tamaño del icono: `[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`, la misma regla que `ui/button`. Un icono con su propio `size-*` lo conserva.
+
+### Changed
+- Compatible hacia atrás: con `children` o `paneles` el marcado es el mismo de 0.8.0 salvo la regla de iconos en la clase de cada pestaña. **Si usas la CLI (`khipu add`) vuelve a copiar `lib/estilos.ts` y `navegacion/tabs.tsx`.** Quien pasaba `className="size-4"` a los iconos de una pestaña puede quitarlo.
+
 ## [0.8.0] - 2026-11-17
 
 ### Added
