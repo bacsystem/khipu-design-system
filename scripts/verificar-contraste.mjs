@@ -38,6 +38,11 @@ export const PARES = [
   ["--success-foreground", "--success"],
   ["--warning-foreground", "--warning"],
   ["--info-foreground", "--info"],
+  // Chip sólido (`Chip solido`): el color del texto del tono hace de fondo y el tinte de texto.
+  ["--success", "--success-foreground"],
+  ["--warning", "--warning-foreground"],
+  ["--info", "--info-foreground"],
+  ["--background", "--foreground"],
   ["--sidebar-foreground", "--sidebar"],
   ["--sidebar-primary-foreground", "--sidebar-primary"],
   ["--sidebar-accent-foreground", "--sidebar-accent"],
@@ -65,6 +70,7 @@ export const TRAZO_POR_INDICE = ["--chart-trazo-base", "--chart-trazo-destacado"
 // Indicadores no textuales (≥ 3:1): el anillo de foco y el borde de las marcas de gráfico (sus rellenos pastel no llegan).
 export const PARES_NO_TEXTO = [
   ["--ring", "--card"],
+  ["--info-foreground", "--info"], // punto de la PillEstado info
   ["--chart-trazo-base", "--card"],
   ["--chart-trazo-destacado", "--card"],
   ["--chart-trazo-3", "--card"],
