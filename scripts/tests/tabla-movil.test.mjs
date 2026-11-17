@@ -109,6 +109,15 @@ test("pieEtiqueta va en la primera celda del <tfoot> si pie no trae esa columna"
   assert.match(pie, /S\/ 30\.00/);
 });
 
+test("la celda del rótulo del pie no hereda el className de la primera columna", () => {
+  const cols = [{ ...columnas[0], className: "font-mono" }, columnas[1]];
+  const out = html({ columnas: cols, pie: { total: "S/ 30.00" }, pieEtiqueta: "Total" });
+  const pie = out.slice(out.indexOf("<tfoot"), out.indexOf("</tfoot>"));
+  assert.match(pie, /<td[^>]*>Total<\/td>/);
+  assert.doesNotMatch(pie, /font-mono/);
+  assert.match(out.slice(0, out.indexOf("<tfoot")), /font-mono/); // el cuerpo sí lo conserva
+});
+
 test("pie con solo columnas ocultas no pinta <tfoot> ni resumen móvil", () => {
   const out = html({ tarjetaMovil: tarjeta, pie: { oculta: "X" }, pieEtiqueta: "Total" });
   assert.doesNotMatch(out, /<tfoot/);
@@ -222,6 +231,8 @@ test("TablaListado sin columnas ocultables no muestra «Columnas» ni una barra 
   const out = listadoHtml({ columnas: fijas, buscar: false, exportar: false });
   assert.doesNotMatch(out, /aria-label="Columnas"/);
   assert.doesNotMatch(out, /data-sin-imprimir/);
+  // También con el buscador por defecto: el menú no depende de la barra.
+  assert.doesNotMatch(listadoHtml({ columnas: fijas }), /aria-label="Columnas"/);
   // Con una ocultable, sí aparece.
   assert.match(listadoHtml({ columnas: [fijas[0], columnas[1]], buscar: false, exportar: false }), /aria-label="Columnas"/);
 });

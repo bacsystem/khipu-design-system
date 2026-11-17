@@ -271,7 +271,7 @@ export function TablaDatos<T>({
             <TableRow className="hover:bg-transparent">
               {seleccion ? <TableCell className="w-10 pl-4" /> : null}
               {columnas.map((c, i) => (
-                <TableCell key={c.id} className={claseCelda(c, i)}>
+                <TableCell key={c.id} className={claseCelda(i === 0 && pie?.[c.id] == null ? { ...c, className: undefined } : c, i)}>
                   {pie?.[c.id] ?? (i === 0 ? pieEtiqueta : null)}
                 </TableCell>
               ))}
