@@ -148,7 +148,7 @@ Regla de tonos para estado: **verde** = aceptado/activo, **ámbar** = provisiona
 
 ## 3. Tipografía
 
-- **Inter** (`--font-sans`) para toda la interfaz, con los rasgos `font-feature-settings: "cv11", "ss01", "ss03"` en `body`. **JetBrains Mono** (`--font-mono`, pesos 400/500/600) **solo** para correlativos (`F001-00000136`), ids, llaves y código. Fechas, montos, RUC y cantidades van en Inter con `tabular-nums`. Las dos se cargan con `next/font/google` en `<html>` (`src/app/layout.tsx`).
+- **Inter** (`--font-sans`) para toda la interfaz, con los rasgos `font-feature-settings: "cv11", "ss01", "ss03"` en `body`. **JetBrains Mono** (`--font-mono`, pesos 400/500/600) **solo** para correlativos (`F001-00000136`), ids, llaves y código. Fechas, montos, RUC y cantidades van en Inter con `tabular-nums`. Las dos se cargan con `next/font/local` en `<html>` (`src/app/layout.tsx`) desde `src/app/fonts` (woff2 `latin` con su licencia OFL), así que el build no descarga nada.
 - Tamaños con nombre en `@theme` (utilidades de Tailwind v4 que traen su interlineado, y las nuevas también su peso y tracking):
 
 | Utilidad | Tamaño / interlineado | Peso | Tracking | Uso |
@@ -639,7 +639,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 ```
 
-**Tipografía.** Inter es la fuente de la app (`--font-sans`). Las otras las carga la app con `next/font` en `--fuente-<valor>` y `preload: false` (solo se descargan si alguien las elige), y `html[data-fuente="<valor>"]` las pone en `--font-sans`. Los datos (correlativos, ids, código) siguen en JetBrains Mono. Inter se carga una sola vez: Turbopack rechaza dos llamadas a la misma fuente de `next/font/google`.
+**Tipografía.** Inter es la fuente de la app (`--font-sans`). Las otras las carga la app con `next/font/local` en `--fuente-<valor>` y `preload: false` (solo se descargan si alguien las elige), y `html[data-fuente="<valor>"]` las pone en `--font-sans`. Los datos (correlativos, ids, código) siguen en JetBrains Mono.
 
 **Agregar una paleta:** (1) un bloque `html:root[data-paleta="…"]` en `src/styles/tokens.css` que redefina solo `--acento`, `--acento-texto`, `--acento-2`, `--acento-2-texto` y `--acento-3`; (2) su entrada en `PALETAS` (la `muestra` con los mismos hex); (3) su nombre en `PALETAS` de `scripts/verificar-contraste.mjs`, para que `npm run check:contraste` la mida en claro y en los tres tonos oscuros.
 

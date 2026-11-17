@@ -38,7 +38,7 @@ export const TONOS_OSCURO: TonoOscuro[] = [
 ];
 
 /**
- * Fuentes de interfaz. Inter es la fuente de la app (`--font-sans`); las demás las carga la app con `next/font` en
+ * Fuentes de interfaz. Inter es la fuente de la app (`--font-sans`); las demás las carga la app con `next/font/local` en
  * `--fuente-<valor>` (ver src/app/layout.tsx) y `html[data-fuente="<valor>"]` la pone en `--font-sans`. Los datos siguen en JetBrains Mono (`--font-mono`).
  */
 export const FUENTES: Fuente[] = [
