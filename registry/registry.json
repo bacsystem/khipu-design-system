@@ -403,6 +403,20 @@
         "lib/utils"
       ]
     },
+    "components/formularios/entrada-decimal": {
+      "name": "entrada-decimal",
+      "type": "component",
+      "category": "formularios",
+      "files": [
+        "src/components/formularios/entrada-decimal.tsx"
+      ],
+      "dependencies": [],
+      "registryDependencies": [
+        "lib/decimal",
+        "lib/estilos",
+        "lib/utils"
+      ]
+    },
     "components/formularios/entrada-fecha": {
       "name": "entrada-fecha",
       "type": "component",
@@ -431,6 +445,7 @@
       ],
       "dependencies": [],
       "registryDependencies": [
+        "lib/decimal",
         "lib/estilos",
         "lib/formato",
         "lib/utils"
@@ -1606,6 +1621,16 @@
       "category": "lib",
       "files": [
         "src/lib/rail.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/decimal": {
+      "name": "decimal",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/decimal.ts"
       ],
       "dependencies": [],
       "registryDependencies": []

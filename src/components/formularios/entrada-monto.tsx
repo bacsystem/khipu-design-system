@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ajustarDecimal, limpiarTextoDecimal, parsearDecimal, textoDeDecimal } from "@/lib/decimal";
 import { CAMPO } from "@/lib/estilos";
 import { formatearNumero } from "@/lib/formato";
 import { cn } from "@/lib/utils";
@@ -9,7 +10,8 @@ const SIMBOLOS: Record<string, string> = { PEN: "S/", USD: "$", EUR: "€" };
 
 /**
  * Importe con moneda: prefijo con el símbolo, selector de moneda a la derecha y formato `1,234.50` al salir del campo.
- * `valor` es número (o null si está vacío); no admite negativos.
+ * `valor` es número (o null si está vacío); no admite negativos. Al teclear acepta `,` o `.` como decimal («12,5» = 12.5;
+ * «1.234,56» = 1234.56, reglas en `lib/decimal`) y redondea a 2 decimales. Para otras cantidades usa `EntradaDecimal`.
  */
 export function EntradaMonto({
   id,
@@ -45,14 +47,14 @@ export function EntradaMonto({
         value={mostrado}
         disabled={disabled}
         onFocus={() => {
-          setTexto(valor == null ? "" : String(valor));
+          setTexto(textoDeDecimal(valor));
           setEditando(true);
         }}
         onChange={(e) => {
-          const limpio = e.target.value.replace(/[^\d.]/g, "");
+          const limpio = limpiarTextoDecimal(e.target.value);
           setTexto(limpio);
-          const n = Number.parseFloat(limpio);
-          onCambio(Number.isFinite(n) ? Math.round(n * 100) / 100 : null);
+          const n = parsearDecimal(limpio, 2);
+          onCambio(n === null ? null : ajustarDecimal(n, 2));
         }}
         onBlur={() => setEditando(false)}
         className={cn(CAMPO, "pl-9 pr-20 text-right font-mono tabular-nums")}
