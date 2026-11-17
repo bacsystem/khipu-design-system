@@ -110,6 +110,30 @@ export function desplazamientoCentrado(contenedor: { izquierda: number; ancho: n
   return Math.max(0, posicionEnContenido - (contenedor.ancho - enlace.ancho) / 2);
 }
 
+/**
+ * Desplaza `contenedor` en horizontal hasta dejar `elemento` centrado, solo si el contenido desborda (sin `scrollIntoView`, que también movería la
+ * página en vertical). Es de DOM: llámala desde un efecto, nunca durante el render. Con «reducir movimiento» salta sin animar.
+ */
+export function centrarEnContenedor(contenedor: HTMLElement, elemento: HTMLElement): void {
+  if (contenedor.scrollWidth <= contenedor.clientWidth) return;
+  const c = contenedor.getBoundingClientRect();
+  const e = elemento.getBoundingClientRect();
+  const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  contenedor.scrollTo({
+    left: desplazamientoCentrado({ izquierda: c.left + contenedor.clientLeft, ancho: contenedor.clientWidth, scrollLeft: contenedor.scrollLeft }, { izquierda: e.left, ancho: e.width }),
+    behavior: reducido ? "auto" : "smooth",
+  });
+}
+
+/** Selector de la pestaña activa de `Tabs` (base-ui marca `aria-selected`). */
+export const SELECTOR_PESTANA_ACTIVA = '[role="tab"][aria-selected="true"]';
+
+/** Busca dentro de `contenedor` el elemento que cumple `selector` (la pestaña activa) y lo centra con `centrarEnContenedor`; sin él, no hace nada. */
+export function centrarActiva(contenedor: HTMLElement, selector: string): void {
+  const activa = contenedor.querySelector<HTMLElement>(selector);
+  if (activa) centrarEnContenedor(contenedor, activa);
+}
+
 // ── Notificaciones (`nav/centro-notificaciones`) ──────────────────────────────────────────────────────────────────
 
 /** Textos de `CentroNotificaciones`: pasa los que quieras traducir (`Partial`), el resto queda en castellano. */

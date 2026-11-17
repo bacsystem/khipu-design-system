@@ -45,12 +45,21 @@ export const ACCION_FLOTANTE = `inline-flex size-14 items-center justify-center 
 export const ACCION_SECUNDARIA = `inline-flex h-control items-center gap-1.5 rounded-full bg-card px-3.5 text-control font-medium whitespace-nowrap text-foreground ring-1 ring-border ${TRANSICION_CONTROL} hover:bg-secondary ${FOCO} ${PRESION} ${DESHABILITADO}`;
 // Select, buscador y refrescar de una barra de filtros: la misma altura que las acciones de arriba.
 export const CONTROL_FILTRO = "h-control rounded-full border border-border bg-card text-control font-medium text-foreground";
-// Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, o vistas que son enlaces): caja de h-control con segmentos de h-7.
-// `min-h-control` y no `h-control`: con muchas opciones la caja se parte en filas en vez de desbordarse, y con una sola fila mide igual.
-export const SEGMENTADO = "inline-flex min-h-control w-fit flex-wrap items-center gap-0.5 rounded-full bg-secondary p-[3px]";
-/** Segmento sin fondo de activo: para `Tabs`, que pinta el activo con un indicador que se desliza. */
+/**
+ * Fila que se desplaza en horizontal cuando su contenido no entra, sin barra a la vista (pestañas, segmentos): `Tabs` (línea y segmentado) y `TabsRuta`.
+ * `overscroll-x-contain` evita que el desplazamiento al llegar al borde arrastre la página; `scroll-px-1` deja un margen al llevar el foco a la pestaña
+ * de un extremo (sin él, el anillo de la última queda a ras del borde).
+ */
+export const DESPLAZABLE_X = "max-w-full overflow-x-auto overscroll-x-contain scroll-px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+// Control segmentado de una barra de filtros (Tabs `estilo="segmentado"`, `TabsRuta`, o vistas que son enlaces): una sola fila de 34 px (segmentos de h-7 + 3 px de
+// relleno arriba y abajo; `min-h-control` es el suelo, 32 px). Nunca se parte en filas: si los segmentos no entran, la caja se desplaza en horizontal (`DESPLAZABLE_X`).
+export const SEGMENTADO = `inline-flex min-h-control w-fit flex-nowrap items-center gap-0.5 rounded-full bg-secondary p-[3px] ${DESPLAZABLE_X}`;
+/**
+ * Segmento sin fondo de activo: para `Tabs`, que pinta el activo con un indicador que se desliza. El anillo de foco es **hacia dentro** (`ring-inset`):
+ * la caja segmentada de `Tabs` y `TabsRuta` se desplaza en horizontal (`overflow-x-auto`) y recorta también en vertical.
+ */
 export const SEGMENTO_BASE =
-  "relative inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground aria-[current=page]:text-foreground [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+  "relative inline-flex h-7 items-center gap-1.5 rounded-full px-3 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground aria-[current=page]:text-foreground [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
 // El segmento activo se marca con `data-active` (base-ui) o con `aria-current="page"` (un enlace a la vista actual).
 // En oscuro el activo usa `input` (blanco translúcido): `card` es más oscuro que `secondary` y el activo se hundiría.
 export const SEGMENTO = `${SEGMENTO_BASE} data-active:bg-card data-active:shadow-sm dark:data-active:bg-input aria-[current=page]:bg-card aria-[current=page]:shadow-sm dark:aria-[current=page]:bg-input`;
@@ -131,3 +140,21 @@ export const ANIMACION_POPUP =
 // Panel de sugerencias/opciones de un combobox de búsqueda (Combobox, Autocomplete).
 export const POPUP_LISTA =
   "max-h-72 w-(--anchor-width) min-w-56 overflow-y-auto rounded-xl bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-border outline-none";
+/**
+ * Tono del contador de una pestaña, con el vocabulario de estado del kit (`PillEstado`, `Chip`): `ok`, `aviso`, `error` (rojo), `info` (azul informativo),
+ * `acento` (el acento de la paleta del usuario) o `neutro` (por defecto: gris, y con el acento en la pestaña activa).
+ */
+export type TonoContadorTab = "ok" | "aviso" | "error" | "info" | "acento" | "neutro";
+const CONTADOR_TONO_ESTADO = {
+  ok: "bg-success text-success-foreground",
+  aviso: "bg-warning text-warning-foreground",
+  error: "bg-destructive-suave text-destructive-texto",
+  info: "bg-info text-info-foreground",
+  acento: "bg-accent text-accent-foreground",
+} as const;
+/**
+ * Clases de color del contador de una pestaña (`Tabs`, `TabsRuta`): el tono de estado pedido, o, sin tono / `neutro`, `neutroActivo` (cada componente
+ * indica cómo detecta su pestaña activa: `in-data-active:` en `Tabs`, `group-aria-[current=page]:` en `TabsRuta`). Se añade a `CONTADOR_PESTANA`.
+ */
+export const colorContadorPestana = (tono: TonoContadorTab | undefined, neutroActivo: string): string =>
+  tono === undefined || tono === "neutro" ? neutroActivo : CONTADOR_TONO_ESTADO[tono];

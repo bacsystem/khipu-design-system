@@ -260,11 +260,15 @@ test("H4: contador de texto con tono", () => {
     { href: "/b", etiqueta: "B", contador: "3 activos", tonoContador: "ok" },
     { href: "/c", etiqueta: "C", contador: 2, tonoContador: "aviso" },
     { href: "/d", etiqueta: "D", contador: 1, tonoContador: "info" },
+    { href: "/e", etiqueta: "E", contador: "Vencida", tonoContador: "error" },
+    { href: "/f", etiqueta: "F", contador: 9, tonoContador: "acento" },
   ] })));
   assert.match(salida, />SUNAT 13.1</);
   assert.match(salida, /bg-success[^"]*"[^>]*>3 activos/);
   assert.match(salida, /bg-warning[^"]*"[^>]*>2</);
-  assert.match(salida, /bg-accent[^"]*"[^>]*>1</);
+  assert.match(salida, /bg-info[^"]*"[^>]*>1</);
+  assert.match(salida, /bg-destructive-suave[^"]*"[^>]*>Vencida/);
+  assert.match(salida, /bg-accent[^"]*"[^>]*>9</);
 });
 
 test("H4: acciones por notificación (enlace y botón) fuera del enlace de la fila, y filtro por categoría con contadores", () => {
