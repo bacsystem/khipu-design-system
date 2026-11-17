@@ -36,18 +36,16 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run verify:paquete
-      - name: Registry is up to date
-        run: |
-          npm run registry:build
-          git diff --exit-code -- registry || {
-            echo "::error::registry/ is out of date: run 'npm run registry:build' and commit the result"
-            exit 1
-          }
-          untracked="$(git ls-files --others --exclude-standard -- registry)"
-          if [ -n "$untracked" ]; then
-            echo "::error::registry/ has untracked generated files: $untracked"
-            exit 1
-          fi
+      # registry/registry.json is generated, not committed (prepare / verify:paquete already built it above);
+      # it must exist and be non-empty or the CLI would ship without a registry.
+      - name: Registry is generated
+        run: node -e "const r=require('./registry/registry.json'); if(!Object.keys(r.items).length) process.exit(1); console.log(Object.keys(r.items).length+' items')"
+      # Only enforced on a release in progress (package.json version without a v<version> tag): normal PRs do not
+      # regenerate the component lists, the release PR does (CONTRIBUTING.md)
+      - name: Generated docs are up to date (releases only)
+        run: npm run docs:check
+      - name: Changelog fragments are valid
+        run: npm run changelog:check
       - name: Example app builds
         run: npm run build
 
