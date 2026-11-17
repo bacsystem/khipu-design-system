@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`PillEstado tono="info"`**: pill azul informativa (`bg-info text-info-foreground`, punto `bg-info-foreground`) con los tokens `--info*` que ya existían, para el estado que no es ni «ok» ni «borrador» (enviada, en revisión). Nuevo tipo `TonoPill` (`Tono | "info"`); `Tono` no cambia.
+- **`Chip tono` y `Chip solido`**: `tono` (`neutro` por defecto, el gris de siempre | `ok` | `aviso` | `error` | `info` | `acento`; tipo `TonoChip`) y `solido` (relleno pleno en vez de tenue). Sin props el chip es idéntico. `check:contraste` mide los pares nuevos (chip sólido invertido y punto de la pill info) en las 20 combinaciones.
+- **`PieTabla`/`SelectorPorPagina` `opciones`**: tamaños de página propios (por defecto 10, 20, 50); el valor actual siempre aparece marcado, insertado ordenado si no estaba. Helper `opcionesPorPagina(opciones, actual)` en `lib/paginacion`.
+- **`PieTabla extremos`**: botones «Primera página» y «Última página» (nombres traducibles con `textos.primera`/`textos.ultima`).
+
+### Changed
+- `PieTabla onPorPagina` pasa a ser opcional: **sin él ya no se pinta el selector de filas** (antes mostraba un control que no hacía nada). Quien lo pasa, no nota cambios.
+- `PieTabla` envuelve la paginación en `<nav aria-label>` (`textos.paginacion`, «Paginación»). Es el único cambio de marcado con los valores por defecto.
+- **Aviso de tipo:** `TextosPieTabla` (y `TextosTablaDatos`, que lo extiende) gana `paginacion`, `primera` y `ultima`, obligatorios en el tipo: quien tipa un objeto completo de textos debe añadirlos (quien pasa `Partial`, no). Con la CLI (`khipu add`), vuelve a copiar `pill-estado.tsx`, `pie-tabla.tsx`, `selector-por-pagina.tsx` y `lib/paginacion.ts`.
+
 ## [0.9.0] - 2026-11-17
 
 ### Added

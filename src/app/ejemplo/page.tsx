@@ -11,6 +11,7 @@ import { TablaVacia } from "@/components/patrones/pie-tabla";
 import { ENTRADA, TARJETA, pasoEntrada } from "@/lib/estilos";
 import { PESO_ICONO } from "@/lib/iconos";
 import { Galeria } from "./galeria";
+import { PiesEjemplo } from "./pies";
 import { TablaEjemplo } from "./tabla";
 
 export default function EjemploPage() {
@@ -76,12 +77,14 @@ export default function EjemploPage() {
       </div>
 
       <section className={`${ENTRADA} ${TARJETA}`} style={pasoEntrada(4)}>
-        <CabeceraSeccion icon={KeyIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · neutro · con icono" derecha={<Chip>4 tonos</Chip>} />
+        <CabeceraSeccion icon={KeyIcon} titulo="Pills y chips" subtitulo="tonos ok · aviso · error · info · neutro · con icono · chips tenues y sólidos" derecha={<Chip>5 tonos</Chip>} />
         <div className="flex flex-wrap items-center gap-2 px-4 py-3">
           <PillEstado tono="ok">Aceptado</PillEstado>
           <PillEstado tono="aviso">Con observaciones</PillEstado>
           <PillEstado tono="error">Rechazado</PillEstado>
-          <PillEstado tono="neutro">Enviado</PillEstado>
+          <PillEstado tono="info">Enviada</PillEstado>
+          <PillEstado tono="neutro">Borrador</PillEstado>
+          <PillEstado tono="info" icon={ClockIcon}>En revisión</PillEstado>
           <PillEstado tono="ok" icon={CheckCircleIcon}>Operativo</PillEstado>
           <PillEstado tono="aviso" icon={WarningIcon}>Degradado</PillEstado>
           <PillEstado tono="error" icon={XCircleIcon}>Caído</PillEstado>
@@ -89,7 +92,21 @@ export default function EjemploPage() {
           <ChipCodigo inactivo>B001</ChipCodigo>
           <Chip>id: 193f4b35</Chip>
         </div>
+        <div className="flex flex-wrap items-center gap-2 px-4 pb-3">
+          {(["neutro", "ok", "aviso", "error", "info", "acento"] as const).map((tono) => (
+            <Chip key={tono} tono={tono}>{tono}</Chip>
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center gap-2 px-4 pb-3">
+          {(["neutro", "ok", "aviso", "error", "info", "acento"] as const).map((tono) => (
+            <Chip key={tono} tono={tono} solido>{tono}</Chip>
+          ))}
+        </div>
       </section>
+
+      <div className={ENTRADA} style={pasoEntrada(5)}>
+        <PiesEjemplo />
+      </div>
 
       <div className={`${ENTRADA} grid grid-cols-1 items-start gap-4 lg:grid-cols-2`} style={pasoEntrada(5)}>
         <BloqueCodigo

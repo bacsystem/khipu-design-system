@@ -18,3 +18,12 @@ export function paginasVisibles(actual: number, ultima: number): Array<number | 
   }
   return resultado;
 }
+
+/**
+ * Tamaños de página que ofrece el selector: los de `opciones` (solo enteros > 0, sin repetir) más `actual`, ordenados de menor a mayor.
+ * El valor actual siempre está en la lista, aunque venga de fuera de ella (p. ej. de la URL), para que el selector lo marque.
+ */
+export function opcionesPorPagina(opciones: readonly number[], actual: number): number[] {
+  const validos = [...opciones, actual].filter((n) => Number.isInteger(n) && n > 0);
+  return [...new Set(validos)].sort((a, b) => a - b);
+}

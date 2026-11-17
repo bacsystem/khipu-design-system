@@ -1,10 +1,11 @@
 "use client";
 
-import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import { CaretDoubleLeftIcon, CaretDoubleRightIcon, CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SelectorPorPagina } from "@/components/ui/selector-por-pagina";
+import { PESO_ICONO_FUNCIONAL } from "@/lib/iconos";
 import { esClickSimple } from "@/lib/navegacion";
 import { paginasVisibles } from "@/lib/paginacion";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ function Salto({
   a,
   habilitado,
   desactivable = false,
+  "aria-label": etiqueta,
   className,
   onPagina,
   hrefPagina,
@@ -30,6 +32,8 @@ function Salto({
   habilitado: boolean;
   /** Anterior/Siguiente: el botón lleva los estilos de `disabled`. Los números de página siempre están habilitados. */
   desactivable?: boolean;
+  /** Nombre accesible cuando el salto es solo un icono. */
+  "aria-label"?: string;
   className: string;
   onPagina: (p: number) => void;
   hrefPagina?: (p: number) => string;
@@ -39,6 +43,7 @@ function Salto({
     return (
       <Link
         href={hrefPagina(a)}
+        aria-label={etiqueta}
         aria-disabled={!habilitado}
         tabIndex={habilitado ? undefined : -1}
         onClick={(e) => {
@@ -53,7 +58,7 @@ function Salto({
     );
   }
   return (
-    <button type="button" disabled={!habilitado} onClick={() => onPagina(a)} className={cn(className, desactivable && BOTON_PAGINA_DESHABILITADO)}>
+    <button type="button" aria-label={etiqueta} disabled={!habilitado} onClick={() => onPagina(a)} className={cn(className, desactivable && BOTON_PAGINA_DESHABILITADO)}>
       {children}
     </button>
   );
@@ -61,7 +66,8 @@ function Salto({
 
 /**
  * Textos del pie, para traducirlos (por defecto en castellano). La frase es «{mostrando} x–y {de} N {unidad}»: el orden es fijo
- * y los números llevan su estilo. `filas` y `filasPorPagina` son el rótulo y el nombre accesible del selector de filas.
+ * y los números llevan su estilo. `filas` y `filasPorPagina` son el rótulo y el nombre accesible del selector de filas;
+ * `paginacion` es el nombre de la `<nav>` de páginas y `primera`/`ultima` los de los botones de los extremos (`extremos`).
  */
 export type TextosPieTabla = {
   mostrando: string;
@@ -70,6 +76,9 @@ export type TextosPieTabla = {
   siguiente: string;
   filas: string;
   filasPorPagina: string;
+  paginacion: string;
+  primera: string;
+  ultima: string;
 };
 
 const TEXTOS_PIE_ES: TextosPieTabla = {
@@ -79,10 +88,16 @@ const TEXTOS_PIE_ES: TextosPieTabla = {
   siguiente: "Siguiente",
   filas: "Filas",
   filasPorPagina: "Filas por página",
+  paginacion: "Paginación",
+  primera: "Primera página",
+  ultima: "Última página",
 };
 
 /**
  * Pie de tabla estándar: "Mostrando x–y de N <unidad>", selector de filas, nota opcional y paginación numerada.
+ * El selector de filas solo aparece con `onPorPagina` (sin él, el tamaño de página lo fija quien usa el pie); `opciones` son sus tamaños
+ * (por defecto 10, 20 y 50) y `porPagina` se añade si no está. `extremos` suma los botones «Primera página» y «Última página».
+ * Las páginas van en una `<nav>` con nombre (`textos.paginacion`).
  * Sin `hrefPagina` las páginas son botones y el estado vive en el componente (`pagina`, `ultimaPagina`, `onPagina`).
  * Con `hrefPagina` son enlaces reales (estado en la URL, navegables con ⌘-clic o en otra pestaña); un clic simple
  * llama igual a `onPagina` para que el consumidor navegue en cliente.
@@ -94,6 +109,8 @@ export function PieTabla({
   unidad,
   porPagina,
   onPorPagina,
+  opciones,
+  extremos = false,
   pagina,
   ultimaPagina,
   onPagina,
@@ -106,7 +123,9 @@ export function PieTabla({
   total: number;
   unidad: string;
   porPagina: number;
-  onPorPagina: (n: number) => void;
+  onPorPagina?: (n: number) => void;
+  opciones?: readonly number[];
+  extremos?: boolean;
   pagina: number;
   ultimaPagina: number;
   onPagina: (p: number) => void;
@@ -128,8 +147,12 @@ export function PieTabla({
           </span>{" "}
           {textos.de} <span className="font-mono font-semibold text-foreground">{total}</span> {unidad}
         </span>
-        <span className="text-muted-foreground/40">·</span>
-        <SelectorPorPagina valor={porPagina} onCambio={onPorPagina} etiqueta={textos.filasPorPagina} textoFilas={textos.filas} />
+        {onPorPagina ? (
+          <>
+            <span className="text-muted-foreground/40">·</span>
+            <SelectorPorPagina valor={porPagina} onCambio={onPorPagina} opciones={opciones} etiqueta={textos.filasPorPagina} textoFilas={textos.filas} />
+          </>
+        ) : null}
         {nota ? (
           <>
             <span className="hidden text-muted-foreground/40 xl:inline">·</span>
@@ -137,7 +160,12 @@ export function PieTabla({
           </>
         ) : null}
       </div>
-      <div className="flex items-center gap-1">
+      <nav aria-label={textos.paginacion} className="flex items-center gap-1">
+        {extremos ? (
+          <Salto a={1} habilitado={hayAnterior} desactivable aria-label={textos.primera} className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
+            <CaretDoubleLeftIcon aria-hidden weight={PESO_ICONO_FUNCIONAL} className="size-3.5" />
+          </Salto>
+        ) : null}
         <Salto a={pagina - 1} habilitado={hayAnterior} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
           <CaretLeftIcon weight="bold" className="size-3.5" /> {textos.anterior}
         </Salto>
@@ -161,7 +189,12 @@ export function PieTabla({
         <Salto a={pagina + 1} habilitado={haySiguiente} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
           {textos.siguiente} <CaretRightIcon weight="bold" className="size-3.5" />
         </Salto>
-      </div>
+        {extremos ? (
+          <Salto a={ultimaPagina} habilitado={haySiguiente} desactivable aria-label={textos.ultima} className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
+            <CaretDoubleRightIcon aria-hidden weight={PESO_ICONO_FUNCIONAL} className="size-3.5" />
+          </Salto>
+        ) : null}
+      </nav>
     </div>
   );
 }
