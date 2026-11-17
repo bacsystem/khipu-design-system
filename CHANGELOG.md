@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`toast` imperativo** (`feedback/toast`): `toast.ok | aviso | error | info | promise | cerrar` se llama desde cualquier parte, sin hooks (manejadores, renderizadores de columna, funciones sueltas); mismas firmas que `useToast()`, que ahora devuelve ese mismo objeto. Va sobre un almacén del módulo (`createToastManager` de base-ui) al que se suscribe `ToastProvider`. Antes de que el proveedor se monte las llamadas esperan en una cola de 5 (`lib/cola-toast`, se descartan las más antiguas); en el servidor no hacen nada, para no filtrar avisos entre peticiones. `error` es `priority: "high"` (`role="alert"`, assertive) y el resto polite. El visor se centra bajo `md` y queda abajo a la derecha desde `md`, siempre sobre `--khipu-reserva-inferior`. Las llamadas devuelven el id del aviso (`cerrar(id?)`, sin id cierra todos).
+
+### Changed
+- **Si usas la CLI (`khipu add toast`)** se copia también `lib/cola-toast`. `useToast()` ya no exige estar dentro de un `ToastProvider` (sin él, los avisos esperan en la cola).
+
 ## [0.8.0] - 2026-11-17
 
 ### Added

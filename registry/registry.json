@@ -261,6 +261,7 @@
         "@phosphor-icons/react"
       ],
       "registryDependencies": [
+        "lib/cola-toast",
         "lib/estilos",
         "lib/utils"
       ]
@@ -1554,6 +1555,16 @@
       "category": "lib",
       "files": [
         "src/lib/rail.ts"
+      ],
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/cola-toast": {
+      "name": "cola-toast",
+      "type": "lib",
+      "category": "lib",
+      "files": [
+        "src/lib/cola-toast.ts"
       ],
       "dependencies": [],
       "registryDependencies": []
