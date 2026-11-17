@@ -635,6 +635,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 - **Teclado** (patrón de grilla de fechas de WAI-ARIA): al abrir, el foco va al día elegido o a hoy. Flechas por día o semana, RePág/AvPág por mes (con Shift, por año), Inicio/Fin al comienzo o fin de la semana, Enter o Espacio para elegir. Al elegir, el foco vuelve al disparador.
 - **Fechas sin zona horaria:** `lib/calendario.ts` arma todo en hora local al mediodía. `new Date("2026-09-01")` es UTC y en Lima mostraba el día anterior.
 
+### Pestañas (`navegacion/tabs`)
+
+`Tabs` tiene dos modos. Con `children` (función `render(id)`) o `paneles` monta un `Panel` por pestaña (solo el activo, con `pt-4`). **Sin ninguno de los dos es una tira sola**: no se monta ningún panel —ni su `pt-4`, así que no queda hueco bajo la tira— y las pestañas no llevan `aria-controls` (no hay panel al que apuntar); `role="tablist"`, `role="tab"` y `aria-selected` se mantienen. Úsala cuando el contenido lo pinta la app fuera del componente (estado propio, barras de herramientas, bloques hermanos): `<Tabs items={…} valor={v} onCambio={setV} />` y debajo `{v === "a" ? … : …}`. Con paneles el marcado no cambia. Los iconos dentro de una pestaña (`linea` y `segmentado`) miden `size-4` y no se encogen (`[&_svg:not([class*='size-'])]:size-4`, la misma regla que `ui/button`): no hace falta `className="size-4"` en cada icono.
+
+**Accesibilidad de la tira sola.** Sin `controla` las pestañas no declaran `aria-controls`. Si el contenido es una región de la app, dale `role="tabpanel"`, un `id` y `aria-labelledby` (o `aria-label`), y pasa ese `id` en `controla`: `<Tabs items={…} valor={v} onCambio={setV} controla="vista" />` + `<div role="tabpanel" id="vista" aria-label="Documentos">…</div>`. `controla` se ignora cuando hay `children` o `paneles`.
+
+**Cuál usar.** Si la tira solo filtra la misma lista (no cambia de contenido, solo de criterio), usa `GrupoBotones` (toggle group). Si las pestañas son rutas, usa `TabsRuta` (en desarrollo). `Tabs` es para contenido que cambia por pestaña.
+
 ### Tarjetas de métrica
 
 `Kpi` y `Metrica` comparten la anatomía de `TarjetaMetrica` (`patrones/metricas.tsx`), una tarjeta `TARJETA_ELEVABLE` por métrica:
