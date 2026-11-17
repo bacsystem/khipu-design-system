@@ -60,3 +60,10 @@ test("controla: en tira sola cada pestaña lleva aria-controls con ese id; sin �
   assert.doesNotMatch(con, /role="tabpanel"/);
   assert.doesNotMatch(pintar({}), /aria-controls/);
 });
+
+test("TabsPrimitive.Tab nunca recibe un aria-controls incondicional (pisaría el de base-ui cuando hay paneles)", () => {
+  const fuente = readFileSync(join(RAIZ, "src/components/navegacion/tabs.tsx"), "utf8");
+  const tab = fuente.match(/<TabsPrimitive\.Tab\b[\s\S]*?>/)[0];
+  assert.doesNotMatch(tab, /aria-controls=/);
+  assert.match(tab, /\.\.\.\(!conPaneles && controla \? \{ "aria-controls": controla \} : \{\}\)/);
+});

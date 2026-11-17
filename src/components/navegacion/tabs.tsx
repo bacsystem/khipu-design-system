@@ -60,7 +60,7 @@ export function Tabs<T extends string>({
     <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => onCambio?.(v as T)} className={className}>
       <TabsPrimitive.List className={cn("relative isolate", estilo === "linea" ? PESTANAS_LINEA : SEGMENTADO)}>
         {items.map((t) => (
-          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} aria-controls={conPaneles ? undefined : controla} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
+          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} {...(!conPaneles && controla ? { "aria-controls": controla } : {})} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
             {t.contador != null ? <span className="rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums in-data-active:bg-acento in-data-active:text-acento-texto">{t.contador}</span> : null}
           </TabsPrimitive.Tab>
