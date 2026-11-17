@@ -1,5 +1,6 @@
 import { ArrowDownRightIcon, ArrowUpRightIcon, MinusIcon } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
+import { FilaDesplazable } from "@/components/patrones/metricas-desplazable";
 import { FOCO, TARJETA_ELEVABLE } from "@/lib/estilos";
 import { PESO_ICONO, PESO_ICONO_ACTIVO, type IconoComponente } from "@/lib/iconos";
 import { cn } from "@/lib/utils";
@@ -26,7 +27,8 @@ const RELLENO_TONO: Record<TonoMetrica, string> = {
 
 /**
  * Pie de una tarjeta de métrica: contenido libre o un par `{ etiqueta, valor }` (etiqueta a la izquierda, valor a la derecha).
- * Va en una banda inferior con borde suave; la tarjeta de `TarjetaMetrica` la pega a sus bordes.
+ * Va en una banda inferior con borde suave, siempre al fondo de la tarjeta (`mt-auto`: en una fila de tarjetas estiradas queda
+ * alineada con las vecinas); su margen negativo sale de las mismas variables `--metrica-px`/`--metrica-pb` del relleno de `TarjetaMetrica`.
  */
 export type PieMetrica = ReactNode | { etiqueta: ReactNode; valor: ReactNode };
 
@@ -38,7 +40,7 @@ function PieDeMetrica({ children, destacada }: { children: PieMetrica; destacada
   return (
     <div
       className={cn(
-        "-mx-[15px] mt-1 -mb-[13px] flex min-w-0 items-baseline justify-between gap-2 border-t border-border/60 px-[15px] py-2 text-etiqueta",
+        "-mx-(--metrica-px) mt-auto -mb-(--metrica-pb) flex min-w-0 items-baseline justify-between gap-2 border-t border-border/60 px-(--metrica-px) py-2 text-etiqueta",
         destacada ? "border-current/15 opacity-80" : "text-texto-terciario",
       )}
     >
@@ -97,7 +99,7 @@ export function TarjetaMetrica({
     <div
       className={cn(
         TARJETA_ELEVABLE,
-        "flex min-w-0 flex-col gap-2 px-[15px] pt-3.5 pb-[13px]",
+        "flex min-w-0 flex-col gap-2 pt-3.5 pb-(--metrica-pb) px-(--metrica-px) [--metrica-pb:13px] [--metrica-px:15px]",
         // Dentro de otra tarjeta (galería, paneles) la métrica pasa a la superficie suave: blanco sobre blanco no se distingue.
         "in-[.bg-card]:bg-secondary in-[.bg-card]:shadow-none",
         destacada && "border-acento-borde bg-acento-superficie text-acento-superficie-texto in-[.bg-card]:bg-acento-superficie dark:bg-acento-superficie",
@@ -211,24 +213,19 @@ export function Metrica({
  * de apilarse; es una región con nombre (`etiqueta`, por defecto «Métricas») y recibe foco para poder desplazarla con el teclado.
  */
 export function FilaMetricas({ children, columnas = 4, desplazable = false, etiqueta = "Métricas" }: { children: ReactNode; columnas?: 2 | 3 | 4 | 5; desplazable?: boolean; etiqueta?: string }) {
-  return (
-    <section
-      {...(desplazable ? { role: "region", "aria-label": etiqueta, tabIndex: 0 } : {})}
-      className={cn(
-        "grid grid-cols-1 gap-3 sm:grid-cols-2",
-        desplazable &&
-          cn(
-            "max-md:flex max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:overscroll-x-contain max-md:pb-1 max-md:*:min-w-44 max-md:*:flex-1 max-md:*:snap-start",
-            "md:grid",
-            FOCO,
-          ),
-        columnas === 5 && "lg:grid-cols-5",
-        columnas === 4 && "lg:grid-cols-4",
-        columnas === 3 && "lg:grid-cols-3",
-        columnas === 2 && "lg:grid-cols-2",
-      )}
-    >
-      {children}
-    </section>
+  const clases = cn(
+    "grid grid-cols-1 gap-3 sm:grid-cols-2",
+    desplazable &&
+      cn(
+        "max-md:flex max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:overscroll-x-contain max-md:pb-1 max-md:*:min-w-44 max-md:*:flex-1 max-md:*:snap-start",
+        "md:grid",
+        FOCO,
+      ),
+    columnas === 5 && "lg:grid-cols-5",
+    columnas === 4 && "lg:grid-cols-4",
+    columnas === 3 && "lg:grid-cols-3",
+    columnas === 2 && "lg:grid-cols-2",
   );
+  if (desplazable) return <FilaDesplazable etiqueta={etiqueta} className={clases}>{children}</FilaDesplazable>;
+  return <section className={clases}>{children}</section>;
 }

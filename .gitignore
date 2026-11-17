@@ -19,3 +19,5 @@ next-env.d.ts
 # Estado y worktrees del ejecutor de planes (cys)
 .cys/
 .worktrees/
+AGENTS.md
+CLAUDE.md

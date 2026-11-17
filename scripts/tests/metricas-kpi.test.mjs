@@ -86,3 +86,34 @@ test("FilaMetricas desplazable: región con nombre, foco, snap y ancho mínimo d
 test("FilaMetricas desplazable sin etiqueta usa un nombre por defecto", () => {
   assert.match(renderToStaticMarkup(h(FilaMetricas, { desplazable: true }, h("i"))), /aria-label="Métricas"/);
 });
+
+// ── Revisión de la PR ───────────────────────────────────────────────────────
+const valorDe = (out) => out.match(/<div class="([^"]*text-metrica[^"]*)"/)[1];
+
+test("valorConTono con tono neutro explícito deja el valor en text-foreground", () => {
+  for (const out of [metrica({ tono: "neutro", valorConTono: true, ayuda: "x" }), kpi({ tono: "neutro", valorConTono: true, ayuda: "x" })]) {
+    assert.match(valorDe(out), /text-foreground/);
+    assert.doesNotMatch(valorDe(out), /text-muted-foreground/);
+  }
+});
+
+test("pie: la banda va al fondo de la tarjeta (mt-auto) y su margen sale de las variables de relleno de la tarjeta", () => {
+  const out = metrica({ ayuda: "x", pie: "p" });
+  assert.match(out, /<div[^>]*mt-auto[^>]*border-t/);
+  assert.match(out, /-mx-\(--metrica-px\)/);
+  assert.match(out, /px-\(--metrica-px\)[^"]*\[--metrica-px:15px\]/);
+  assert.doesNotMatch(out, /-mx-\[15px\]|px-\[15px\]/);
+});
+
+test("pie en una tarjeta destacada baja la opacidad; en una normal no", () => {
+  assert.match(metrica({ ayuda: "x", pie: "p", destacada: true }), /<div[^>]*border-t[^>]*opacity-80|<div[^>]*opacity-80[^>]*border-t/);
+  assert.doesNotMatch(metrica({ ayuda: "x", pie: "p" }), /<div[^>]*border-t[^>]*opacity-80/);
+});
+
+test("FilaMetricas desplazable: solo es parada de Tab mientras desborda (fuente del cliente)", async () => {
+  const { readFileSync } = await import("node:fs");
+  const fuente = readFileSync(new URL("../../src/components/patrones/metricas-desplazable.tsx", import.meta.url), "utf8");
+  assert.match(fuente, /tabIndex=\{desborda \? 0 : undefined\}/);
+  assert.match(fuente, /scrollWidth > el\.clientWidth/);
+  assert.match(fuente, /ResizeObserver/);
+});

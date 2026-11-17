@@ -128,3 +128,96 @@ test("dona: máximo 5 partes, centro opcional, total 0 y una sola parte no rompe
 test("dona: el movimiento respeta «reducir movimiento» (fuente)", () => {
   assert.match(fuente, /useReducedMotion/);
 });
+
+// ── Revisión de la PR: pruebas que discriminan ──────────────────────────────
+const { filasDeCategoria, agruparPartes, ORDEN_COMPOSICION } = await cargarTsx("lib/escala-grafico");
+const contraste = await import("../verificar-contraste.mjs");
+
+test("filasDeCategoria: con apiladas añade la fila del total (suma de positivos); sin ellas, no", () => {
+  const f = (apiladas) => filasDeCategoria([{ nombre: "A", valores: [3] }, { nombre: "B", valores: [4] }, { nombre: "C", valores: [-5] }], 0, (v) => `#${v}`, apiladas, "Suma");
+  assert.deepEqual(f(false).map((x) => x.nombre), ["A", "B", "C"]);
+  assert.deepEqual(f(true).at(-1), { nombre: "Suma", valor: "#7", total: true });
+  assert.equal(f(true).length, 4);
+});
+
+test("las apiladas usan filasDeCategoria en su tooltip (fuente)", () => {
+  assert.match(fuente, /filasDeCategoria\(series, hover, formato, apiladas, textoTotal\)/);
+});
+
+test("la escala sale del máximo real: líneas y barras, agrupadas y apiladas", () => {
+  const eje = (out) => [...out.matchAll(/text-anchor="end"[^>]*>([\d,.]+)</g)].map((m) => Number(m[1].replace(",", "")));
+  const alta = [{ nombre: "A", valores: [10, 20, 30, 40] }];
+  const sube = (props) => Math.max(...eje(renderToStaticMarkup(h(props.c, { categorias: ["a", "b", "c", "d"], series: props.series, ...props.extra }))));
+  assert.equal(sube({ c: GraficoLineas, series: alta }), 40);
+  assert.equal(sube({ c: GraficoBarras, series: alta }), 40);
+  assert.equal(sube({ c: GraficoLineas, series: [{ nombre: "A", valores: [900] }] }), 1000);
+  assert.equal(sube({ c: GraficoBarras, series: [{ nombre: "A", valores: [10, 0, 0, 0] }, { nombre: "B", valores: [10, 0, 0, 0] }], extra: { apiladas: true } }) >= 20, true);
+});
+
+test("área: no rellena las series discontinua", () => {
+  const out = lineas({ area: true, series: [dos[0], { nombre: "Meta", valores: [25, 25, 25], discontinua: true }] });
+  assert.equal([...out.matchAll(/data-area="/g)].length, 1);
+});
+
+test("apiladas: solo el segmento de arriba redondea y entre segmentos hay un hueco de 2 px", () => {
+  const out = barras({ apiladas: true, categorias: ["A"], series: [{ nombre: "S1", valores: [50] }, { nombre: "S2", valores: [50] }, { nombre: "S3", valores: [50] }] });
+  const ds = [...out.matchAll(/<path d="([^"]+)"/g)].map((m) => m[1]);
+  assert.equal(ds.length, 3);
+  assert.equal(ds.filter((d) => /a0,0 0 0 1 0,0/.test(d)).length, 2, "los de abajo son rectos");
+  assert.doesNotMatch(ds[2], /a0,0/);
+  const base = (d) => Number(d.match(/^M[\d.]+,([\d.]+)/)[1]);
+  const cima = (d) => base(d) - Number(d.match(/ v-([\d.]+)/)[1]);
+  assert.ok(cima(ds[0]) - base(ds[1]) >= 1.99, "hueco entre el 1.º y el 2.º");
+});
+
+test("apiladas: los colores siguen ORDEN_COMPOSICION y la leyenda coincide", () => {
+  const out = barras({ apiladas: true, categorias: ["A"], series: [1, 2, 3].map((n) => ({ nombre: `S${n}`, valores: [n] })) });
+  // 3.ª serie → índice 3 de la paleta (chart-4), no `acento-3`
+  assert.match(out, /fill="var\(--chart-4\)"/);
+  assert.doesNotMatch(out, /fill="var\(--acento-3\)"/);
+  assert.match(out, /background:var\(--chart-4\)/);
+});
+
+test("ORDEN_COMPOSICION no junta destacado (1) con acento-3 (2) y check:contraste lo exige", () => {
+  const contiguos = contraste.paresContiguos(ORDEN_COMPOSICION);
+  assert.ok(!contiguos.some(([a, b]) => [a, b].sort().join() === "1,2"));
+  const css = readFileSync(new URL("../../src/styles/tokens.css", import.meta.url), "utf8");
+  const peor = (orden) =>
+    Math.min(
+      ...contraste.combinaciones(css).flatMap((c) =>
+        contraste.paresContiguos(orden).map(([i, j]) => contraste.deltaE(rgb(contraste.resolverColor(contraste.TRAZO_POR_INDICE[i], c.vars)), rgb(contraste.resolverColor(contraste.TRAZO_POR_INDICE[j], c.vars)))),
+      ),
+    );
+  assert.ok(peor([0, 1, 2, 3, 4]) < contraste.DELTA_E_MINIMO, "el orden natural sí falla");
+  assert.ok(peor(ORDEN_COMPOSICION) >= contraste.DELTA_E_MINIMO);
+});
+function rgb(c) {
+  return { r: c.r, g: c.g, b: c.b, a: 1 };
+}
+
+test("dona: entre sectores hay hueco y no se pinta la pista de fondo", () => {
+  const out = dona();
+  assert.doesNotMatch(out, /stroke="var\(--secondary\)"/);
+  assert.match(dona({ partes: [{ nombre: "A", valor: 0 }] }), /stroke="var\(--secondary\)"/);
+});
+
+test("dona con más de 5 partes: agrupa el resto en «Otros» y el % es sobre el total completo", () => {
+  const siete = [40, 20, 15, 10, 8, 5, 2].map((valor, i) => ({ nombre: i === 0 ? "Efectivo" : `P${i}`, valor }));
+  const out = dona({ partes: siete });
+  assert.match(out, /Efectivo: 50 \(40\.0%\)|Efectivo: 40 \(40\.0%\)/);
+  assert.match(out, /Otros: 15 \(15\.0%\)/);
+  assert.equal([...out.matchAll(/data-parte="/g)].length, 5);
+  assert.doesNotMatch(out, /P5|P6/);
+  assert.match(dona({ partes: siete, textos: { otros: "Resto" } }), /Resto: 15 \(15\.0%\)/);
+  assert.deepEqual(agruparPartes(siete, 5, "x").at(-1), { nombre: "x", valor: 15 });
+});
+
+test("líneas y apiladas tienen un <desc> por defecto", () => {
+  assert.match(lineas(), /<desc[^>]*>Facturas: de 10 a 30, máximo 30; Boletas: de 5 a 10, máximo 10<\/desc>/);
+  assert.match(barras({ apiladas: true }), /<desc[^>]*>Abr: Facturas 10, Boletas 5; Total 15\. May:/);
+});
+
+test("la dona y el área aparecen con opacidad 0 inicial salvo con «reducir movimiento»", () => {
+  assert.match(dona(), /opacity:0[;"]/);
+  assert.match(lineas({ area: true }), /opacity:0[;"]/);
+});
