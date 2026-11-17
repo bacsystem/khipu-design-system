@@ -11,11 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.10.0] - 2026-11-17
 
 **Notas de actualización (0.9.0 → 0.10.0)**
-- **Tipos:** `TextosPieTabla` (y `TextosTablaDatos`, que lo extiende) gana `paginacion`, `primera` y `ultima`, y `TextosTablaListado` gana `fijo`, `restablecer` y `limpiar`: son obligatorios en el tipo, así que quien tipa un objeto completo de textos debe añadirlos (con `Partial` no hace falta).
+- **Tipos:** `TextosPieTabla` (y `TextosTablaDatos`, que lo extiende) gana `paginacion`, `primera` y `ultima`: son obligatorios en el tipo, así que quien tipa un objeto completo de textos debe añadirlos (con `Partial` no hace falta).
+- **Comportamiento:** `EntradaMonto` ya no quita las comas al teclear: «1,5» vale 1.5 (antes 15), «12,5» vale 12.5 (antes 125) y «1,234» vale 1234 (coma de miles). `EntradaDecimal decimales={0}` lee el punto de miles: «1.500» vale 1500 (antes 1.5). `PieTabla` sin `onPorPagina` ya no pinta el selector de filas.
 - **Tests:** los botones Anterior/Siguiente/extremos de `PieTabla` sin destino usan `aria-disabled` y no `disabled`: `toBeDisabled()` de jest-dom ya no coincide; usa `toHaveAttribute("aria-disabled", "true")`.
 - **Un solo `ToastProvider` por app** (ahora comparten el almacén del módulo; con dos, cada aviso sale dos veces).
 - **pnpm 10 o posterior:** bloquea el script `prepare` de las dependencias de git, así que faltarían `dist/` y `registry/registry.json`: aprueba la compilación (`pnpm approve-builds`). Con npm y pnpm 9 corre solo.
-- **Si usas la CLI (`khipu add`)** vuelve a copiar lo que cambió: `toast` (con `lib/cola-toast`), `pill-estado`, `pie-tabla`, `selector-por-pagina`, `lib/paginacion.ts`, `lib/estilos.ts`, `navegacion/tabs.tsx` y `lib/navegacion.ts`. El registro ya no está en git: `khipu-ds list`/`add` lo calcula en memoria si falta.
+- **Si usas la CLI (`khipu add`)** vuelve a copiar con `--force` los módulos que ya tenías y cambiaron: `feedback/toast`, `formularios/entrada-monto`, `datos/grafico`, `datos/kpi`, `patrones/metricas`, `patrones/pie-tabla`, `patrones/pill-estado`, `navegacion/tabs`, `ui/selector-por-pagina`, `apariencia-opciones`, `lib/escala-grafico`, `lib/estilos`, `lib/navegacion` y `lib/paginacion`; los módulos nuevos que arrastran (`lib/decimal`, `lib/cola-toast`, `patrones/metricas-desplazable`…) los copia sola. El registro ya no está en git: `khipu-ds list`/`add` lo calcula en memoria si falta.
 - **Cambios de apariencia sin cambio de API:** `Tabs estilo="segmentado"` ya no se parte en filas en móvil (se desplaza), `PieTabla` envuelve su paginación en `<nav>` y `Chip tono="acento" solido` en oscuro ya no es idéntico al tenue (detalle en «Changed»).
 
 ### Added
