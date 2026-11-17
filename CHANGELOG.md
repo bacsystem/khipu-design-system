@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **`EntradaMonto`: «12,5» daba 125.** El campo quitaba las comas al teclear (`replace(/[^\d.]/g, "")`). Ahora usa el parser de `EntradaDecimal`: `,` y `.` valen como decimal («12,5» = 12.5) y con los dos a la vez el último es el decimal y el otro agrupa miles («1.234,56» y «1,234.56» = 1234.56; «1.234.567,89» = 1234567.89). **Regla exacta de un separador suelto:** es decimal («12,5», «12,50», «0,125», «1,23»), salvo que sea una coma seguida de exactamente 3 dígitos, con una parte entera de 1–3 dígitos que no empieza por 0, en un campo de menos de 3 decimales (`EntradaMonto` siempre; `EntradaDecimal` con `decimales` 0–2): entonces es de miles («1,234» = 1234, «2,500» = 2500, «15,000» = 15000; un punto suelto sigue siendo decimal: «1.250» = 1.25), para que un importe que se ve en pantalla como `1,234` no se registre como 1.23. Con `decimales >= 3`, «1,234» = 1.234. Un mismo separador repetido solo agrupa miles. **Cambio de comportamiento:** quien tecleaba `1,5` obtenía 15 y ahora 1.5. La API no cambia.
 
+## [0.9.0] - 2026-11-17
+
+### Added
+- **`Tabs` como tira sola**: sin `children` ni `paneles` el componente no monta ningún `Panel`. Antes montaba uno por pestaña, vacío, con `pt-4` (16 px de hueco bajo la tira) y con `aria-controls` hacia un panel sin contenido. Ahora la tira es solo `role="tablist"` + `role="tab"` con `aria-selected` (sin `aria-controls`), y el contenido lo pinta la app fuera, con `valor`/`onCambio` (controlado) o `defaultValor`. Prop opcional `controla` (id de la región de contenido de la app, con `role="tabpanel"`): va como `aria-controls` en cada pestaña de la tira sola. La galería lo muestra.
+- Las recetas de pestaña (`PESTANA_LINEA` de `Tabs estilo="linea"` y `SEGMENTO_BASE` de `lib/estilos` para `"segmentado"`) fijan el tamaño del icono: `[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`, la misma regla que `ui/button`. Un icono con su propio `size-*` lo conserva.
+
+### Changed
+- **Los iconos de las pestañas ahora miden 16 px** (`size-4`) en `linea` y `segmentado`, y también en la receta exportada `SEGMENTO` (que incluye `SEGMENTO_BASE`). Para otro tamaño usa `size-*` en el icono (no `h-*`/`w-*`, que no desactivan la regla).
+- Compatible hacia atrás: con `children` o `paneles` el marcado es el mismo de 0.8.0 salvo la regla de iconos en la clase de cada pestaña. **Si usas la CLI (`khipu add`) vuelve a copiar `lib/estilos.ts` y `navegacion/tabs.tsx`.** Quien pasaba `className="size-4"` a los iconos de una pestaña puede quitarlo.
+
 ## [0.8.0] - 2026-11-17
 
 ### Added
