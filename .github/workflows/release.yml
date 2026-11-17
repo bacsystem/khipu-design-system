@@ -90,7 +90,8 @@ jobs:
             exit 0
           fi
           # Only the highest version is "Latest" (the API marks it latest by default otherwise)
-          if [ "$(.github/scripts/is-highest-version.sh "$VERSION")" = true ]; then
+          highest="$(.github/scripts/is-highest-version.sh "$VERSION")"  # aborts the step on failure
+          if [ "$highest" = true ]; then
             latest=--latest
           else
             latest=--latest=false
