@@ -53,3 +53,10 @@ test("las dos recetas de pestaña fijan el tamaño del icono, sin encoger", () =
     assert.match(receta, /\[&_svg:not\(\[class\*='size-'\]\)\]:size-4/);
   }
 });
+
+test("controla: en tira sola cada pestaña lleva aria-controls con ese id; sin él, ninguna", () => {
+  const con = pintar({ controla: "region-x" });
+  assert.equal((con.match(/aria-controls="region-x"/g) ?? []).length, 2);
+  assert.doesNotMatch(con, /role="tabpanel"/);
+  assert.doesNotMatch(pintar({}), /aria-controls/);
+});

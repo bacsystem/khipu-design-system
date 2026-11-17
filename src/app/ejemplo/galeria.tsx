@@ -484,12 +484,13 @@ export function Galeria() {
             estilo="segmentado"
             valor={bandeja}
             onCambio={setBandeja}
+            controla="galeria-bandeja"
             items={[
               { id: "borradores", etiqueta: <><PencilSimpleIcon aria-hidden /> Borradores</>, contador: 4 },
               { id: "enviados", etiqueta: <><PaperPlaneTiltIcon aria-hidden /> Enviados</> },
             ]}
           />
-          <p className="text-control text-muted-foreground">{bandeja === "borradores" ? "4 borradores sin enviar a SUNAT." : "Documentos ya enviados."}</p>
+          <p role="tabpanel" id="galeria-bandeja" aria-label="Bandeja" className="text-control text-muted-foreground">{bandeja === "borradores" ? "4 borradores sin enviar a SUNAT." : "Documentos ya enviados."}</p>
         </div>
         <Acordeon
           defaultAbiertos={["a"]}

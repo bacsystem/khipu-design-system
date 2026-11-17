@@ -31,7 +31,7 @@ const INDICADOR = {
  * Los paneles se pasan como `render(id)` (`children`) o, desde un Server Component —que no puede pasarle una función a un componente de cliente—, ya
  * armados en `paneles`, uno por id. En los dos casos solo se monta el panel activo.
  * Sin `children` ni `paneles` es una **tira sola**: no hay paneles (ni su `pt-4`) y las pestañas no llevan `aria-controls`; el contenido lo pinta la app
- * fuera del componente según `valor`/`onCambio`. Los iconos dentro de una pestaña miden `size-4` salvo que lleven su `size-*`.
+ * fuera del componente según `valor`/`onCambio`; si esa región tiene `id`, pásalo en `controla` para que cada pestaña lo declare en `aria-controls`. Los iconos dentro de una pestaña miden `size-4` salvo que lleven su `size-*`.
  */
 export function Tabs<T extends string>({
   items,
@@ -41,6 +41,7 @@ export function Tabs<T extends string>({
   estilo = "linea",
   children,
   paneles,
+  controla,
   className,
 }: {
   items: TabItem<T>[];
@@ -50,6 +51,8 @@ export function Tabs<T extends string>({
   estilo?: "linea" | "segmentado";
   children?: (id: T) => ReactNode;
   paneles?: Partial<Record<T, ReactNode>>;
+  /** Solo en tira sola: `id` de la región de contenido de la app (con `role="tabpanel"`); va como `aria-controls` en cada pestaña. */
+  controla?: string;
   className?: string;
 }) {
   const conPaneles = children != null || paneles != null;
@@ -57,7 +60,7 @@ export function Tabs<T extends string>({
     <TabsPrimitive.Root value={valor} defaultValue={defaultValor ?? items[0]?.id} onValueChange={(v) => onCambio?.(v as T)} className={className}>
       <TabsPrimitive.List className={cn("relative isolate", estilo === "linea" ? PESTANAS_LINEA : SEGMENTADO)}>
         {items.map((t) => (
-          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
+          <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} aria-controls={conPaneles ? undefined : controla} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
             {t.contador != null ? <span className="rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums in-data-active:bg-acento in-data-active:text-acento-texto">{t.contador}</span> : null}
           </TabsPrimitive.Tab>
