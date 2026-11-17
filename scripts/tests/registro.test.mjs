@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -54,4 +54,20 @@ test("los items salen del árbol: un componente o un lib nuevo entra sin tocar n
 test("la salida es determinista: no lleva fecha de generación", () => {
   assert.deepEqual(construirRegistro(), construirRegistro());
   assert.doesNotMatch(readFileSync(new URL("scripts/build-registry.mjs", raiz), "utf8"), /generatedAt|new Date\(/);
+});
+
+test("registry:build funciona en un clon limpio, donde registry/ no existe (no está en git)", () => {
+  const dir = mkdtempSync(join(tmpdir(), "khipu-reg-"));
+  try {
+    mkdirSync(join(dir, "scripts"));
+    mkdirSync(join(dir, "src/components/ui"), { recursive: true });
+    mkdirSync(join(dir, "src/lib"));
+    cpSync(new URL("scripts/build-registry.mjs", raiz), join(dir, "scripts/build-registry.mjs"));
+    writeFileSync(join(dir, "src/components/ui/a.tsx"), "export const A = 1;\n");
+    execFileSync("node", [join(dir, "scripts/build-registry.mjs")], { cwd: dir, stdio: "pipe" });
+    const generado = JSON.parse(readFileSync(join(dir, "registry/registry.json"), "utf8"));
+    assert.deepEqual(Object.keys(generado.items), ["components/ui/a"]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

@@ -6,7 +6,7 @@
 // `npm run registry:build`) a partir del árbol de src/. Los items salen de recorrer src/components/** y src/lib/*.ts,
 // así que añadir un componente no obliga a editar ninguna lista; la fuente de verdad son los archivos y sus imports.
 
-import { readFileSync, writeFileSync, readdirSync, realpathSync, statSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { join, relative, extname, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -90,6 +90,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
   // Sin fecha de generación: la salida depende solo del código, no del día.
   const registro = { items: construirRegistro() };
 
+  mkdirSync(join(ROOT, "registry"), { recursive: true }); // la carpeta no está en git (el archivo es generado)
   writeFileSync(join(ROOT, "registry", "registry.json"), JSON.stringify(registro, null, 2) + "\n");
   console.log(`registry/registry.json actualizado con ${Object.keys(registro.items).length} items.`);
 }
