@@ -1,0 +1,38 @@
+name: Changelog
+
+# A PR that changes src/ must add a fragment in changelog.d/ (see CONTRIBUTING.md). Opt-out: the
+# "sin-changelog" label. Kept apart from ci.yml so adding or removing a label does not re-run (and
+# cancel) the whole CI.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+concurrency:
+  group: changelog-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fragment:
+    name: fragment (changelog.d)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Require a changelog fragment when src/ changes
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          # Passed through env, never interpolated into the script
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          flag=""
+          case ",$LABELS," in *,sin-changelog,*) flag="--sin-changelog" ;; esac
+          node scripts/changelog.mjs pr-check --base "$BASE" $flag

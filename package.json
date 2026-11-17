@@ -105,10 +105,13 @@
     "test": "node --test \"scripts/tests/*.test.mjs\"",
     "typecheck": "tsc --noEmit",
     "registry:build": "node scripts/build-registry.mjs",
-    "build:paquete": "node scripts/build-paquete.mjs",
-    "verify:paquete": "node scripts/build-paquete.mjs && node scripts/verificar-paquete.mjs",
+    "build:paquete": "node scripts/build-paquete.mjs && node scripts/build-registry.mjs",
+    "docs:build": "node scripts/inventario.mjs",
+    "docs:check": "node scripts/inventario.mjs --check --si-release",
+    "changelog:check": "node scripts/changelog.mjs check",
+    "verify:paquete": "npm run build:paquete && node scripts/verificar-paquete.mjs",
     "verify:next15": "npm i --no-save next@15.5.28 && npm run verify:paquete && npm test",
-    "prepare": "node scripts/build-paquete.mjs"
+    "prepare": "node scripts/build-paquete.mjs && node scripts/build-registry.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

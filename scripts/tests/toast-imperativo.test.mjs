@@ -170,7 +170,16 @@ test("esServidor: sin window es servidor, con window es navegador, y es la detec
 });
 
 test("la documentación dice que `toast` es solo de cliente", () => {
-  for (const ruta of ["CHANGELOG.md", "docs/design-system.md", "src/components/feedback/toast.tsx"]) {
+  // La nota vive en changelog.d/toast-imperativo.md hasta el release y luego en CHANGELOG.md.
+  const nota = (() => {
+    try {
+      return leer("changelog.d/toast-imperativo.md");
+    } catch {
+      return leer("CHANGELOG.md");
+    }
+  })();
+  assert.match(nota, /Server Component/, "nota de changelog");
+  for (const ruta of ["docs/design-system.md", "src/components/feedback/toast.tsx"]) {
     assert.match(leer(ruta), /Server Component/, ruta);
   }
 });
