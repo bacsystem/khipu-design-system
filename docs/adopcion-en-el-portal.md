@@ -44,7 +44,7 @@ Lo que **no** diverge: la escala de alturas (todo control `h-9`, segmentos `h-7`
 ```jsonc
 "dependencies": {
   "khipu-design-system": "github:bacsystem/khipu-design-system#v0.3.1",
-  // se quedan: @base-ui/react, lucide-react, next, next-themes, react, react-dom (peers del paquete), cn (lo usa el código propio)
+  // se quedan: @base-ui/react, next, next-themes, react, react-dom (peers del paquete), cn (lo usa el código propio)
   // se pueden quitar cuando ya nadie los importe: class-variance-authority (solo lo usaban ui/badge y ui/button),
   // shadcn (solo se usaba por `shadcn/tailwind.css`, que ahora trae el paquete), tw-animate-css (lo trae el paquete)
 }

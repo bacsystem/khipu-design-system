@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-17
+
+### Added
+- Soporte de **Next.js 16**: el peer `next` pasa de `^15.5.0` a `^15.5.0 || ^16.0.0`. Los componentes del paquete no cambian y el `dist/` compilado es byte a byte el mismo que con Next 15 (solo usan `next/link` y `next/navigation`, sin APIs de petición asíncronas, `middleware`/`proxy`, `next/image` ni `next/font` en el código publicado), así que un consumidor en Next 15.5 no nota nada. Probado contra Next 15.5.25 (línea base) y 16.3.5 con React 19. **Con `cacheComponents` (Next 16),** `SidebarNav`, `TopBar` y `MobileNav` (`nav/*`) usan `usePathname` y hay que envolverlos (o a su padre) en `<Suspense>`; si no, `next build` falla en las rutas dinámicas. Sin `cacheComponents` no cambia nada.
+- Guarda del contrato de peers: `scripts/tests/peers-next.test.mjs` valida con `semver.satisfies` que `peerDependencies.next` acepta 15.5.0 y 16.0.0 (y rechaza 14 y 17), y `npm run verify:next15` instala `next@15.5.28` sin guardarlo y corre `verify:paquete` y `npm test`; es un paso previo a cada tag (README §Mantenerlo).
+
+### Removed
+- `lucide-react` deja de ser peerDependency (y su `peerDependenciesMeta` opcional): ningún archivo de `src/components` ni `src/lib` lo importa. `IconoComponente` sigue aceptando cualquier componente de icono (Phosphor, Lucide u otro), así que quien ya pasa iconos de Lucide no cambia nada; solo deja de recibir un aviso de peer si no lo tiene instalado. Sigue como devDependency (lo usa la prueba de tipos de `IconoComponente`).
+
+### Changed
+- Cadena de herramientas de la app de ejemplo (no afecta al paquete publicado): `next` y `eslint-config-next` 16.3.5 (devDependencies); `next dev` y `next build` sin `--turbopack` (Turbopack es el valor por defecto en Next 16); `eslint.config.mjs` usa la flat config nativa de `eslint-config-next` 16 (`defineConfig`) en vez de `FlatCompat`, y se elimina `@eslint/eslintrc`; `tsconfig.json` adopta `jsx: react-jsx` e incluye `.next/dev/types`, como pide Next 16.
+- Las reglas nuevas de `react-hooks` que trae `eslint-config-next` 16 (`refs`, `set-state-in-effect`, `immutability`, las del React Compiler) siguen en `error` en todo el repo salvo en 7 archivos, donde son `warn` (10 avisos): `apariencia`, `diseno`, `calendario`, `mobile-nav`, `theme-toggle`, `paleta` y `demo-avisos`. El comportamiento de esos efectos **no tiene pruebas** (`Calendario` se prueba con `renderToStaticMarkup`, que no ejecuta efectos; `mobile-nav`, `theme-toggle` y `paleta` con regex sobre el código fuente; `diseno` sin test), así que reescribirlos aquí cambiaría el componente sin red de seguridad. La migración empieza por escribir esas pruebas: #58.
+- Requisito de Node para desarrollar el repo: 20.9+ (Next 16).
+
 ## [0.5.23] - 2026-11-15
 
 ### Added
