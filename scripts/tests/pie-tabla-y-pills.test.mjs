@@ -2,9 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { Children, isValidElement } from "react";
 import { cargarTsx } from "./cargar-tsx.mjs";
 
-const { opcionesPorPagina } = await cargarTsx("lib/paginacion");
+const { opcionesPorPagina, porPaginaValido } = await cargarTsx("lib/paginacion");
 const { PillEstado, Chip } = await cargarTsx("components/patrones/pill-estado");
 const { PieTabla } = await cargarTsx("components/patrones/pie-tabla");
 const { SelectorPorPagina } = await cargarTsx("components/ui/selector-por-pagina");
@@ -77,7 +78,58 @@ test("PieTabla extremos: Primera/Última página con nombre accesible y deshabil
   assert.match(html, /<button type="button" aria-label="Primera página" class=/);
   assert.match(html, /<button type="button" aria-label="Última página" class=/);
   assert.ok(html.indexOf("Primera página") < html.indexOf("Anterior") && html.indexOf("Siguiente") < html.indexOf("Última página"));
-  assert.match(pie({ extremos: true, pagina: 1 }), /aria-label="Primera página" disabled=""/);
-  assert.match(pie({ extremos: true, pagina: 10 }), /aria-label="Última página" disabled=""/);
+  assert.match(pie({ extremos: true, pagina: 1 }), /aria-label="Primera página" aria-disabled="true"/);
+  assert.match(pie({ extremos: true, pagina: 10 }), /aria-label="Última página" aria-disabled="true"/);
   assert.match(pie({ extremos: true, textos: { primera: "First page", ultima: "Last page" } }), /aria-label="First page"[\s\S]*aria-label="Last page"/);
+});
+
+test("porPaginaValido acepta las opciones dadas: un 25 de la URL sobrevive", () => {
+  assert.equal(porPaginaValido("25", [5, 10, 25, 50]), 25);
+  assert.equal(porPaginaValido("25"), 10, "sin opciones, 25 no es válido (10, 20, 50)");
+  assert.equal(porPaginaValido("20"), 20);
+  assert.equal(porPaginaValido("7", [5, 10, 25, 50]), 10);
+  assert.equal(porPaginaValido(null, [5, 25]), 5, "sin 10 entre las opciones, la primera");
+});
+
+test("PieTabla móvil: la nav hace wrap y los números se sustituyen por «pág. / total» bajo sm", () => {
+  const html = pie({ extremos: true, ultimaPagina: 24 });
+  assert.match(html, /<nav aria-label="Paginación" class="[^"]*\bflex-wrap\b/);
+  assert.match(html, /<span aria-current="page" class="[^"]*\bsm:hidden\b[^"]*">3 \/ 24<\/span>/);
+  assert.match(html, /<div class="[^"]*\bhidden\b[^"]*\bsm:flex\b/);
+  assert.equal([...html.matchAll(/aria-current="page"/g)].length, 2, "uno visible por tamaño; el otro es el número actual");
+});
+
+// Recorre el árbol de elementos (sin renderizar los hijos de otros componentes) y devuelve los que cumplen `f`.
+function buscar(nodo, f, salida = []) {
+  if (Array.isArray(nodo)) nodo.forEach((n) => buscar(n, f, salida));
+  else if (isValidElement(nodo)) {
+    if (f(nodo)) salida.push(nodo);
+    buscar(nodo.props.children, f, salida);
+  }
+  return salida;
+}
+
+test("PieTabla: los saltos sin destino usan aria-disabled (conservan el foco) y no navegan", () => {
+  const html = pie({ extremos: true, pagina: 1 });
+  assert.doesNotMatch(html, /<button[^>]* disabled=""/, "ningún botón usa disabled");
+  assert.match(html, /aria-label="Primera página" aria-disabled="true"/);
+  assert.doesNotMatch(pie({ extremos: true, pagina: 3 }), /aria-disabled="/);
+  const llamadas = [];
+  const arbol = PieTabla({ ...base, extremos: true, pagina: 1, onPagina: (p) => llamadas.push(p) });
+  const saltos = buscar(arbol, (e) => typeof e.type === "function" && "habilitado" in e.props);
+  assert.ok(saltos.length >= 4);
+  for (const salto of saltos) {
+    const boton = salto.type(salto.props);
+    boton.props.onClick();
+  }
+  // Solo los habilitados (números y siguiente/última) navegan; Primera y Anterior, aria-disabled, no.
+  assert.deepEqual(llamadas.sort((a, b) => a - b), saltos.filter((s) => s.props.habilitado).map((s) => s.props.a).sort((a, b) => a - b));
+  assert.ok(saltos.some((s) => !s.props.habilitado), "hay saltos inertes que probar");
+});
+
+test("Chip acento sólido es distinto del tenue también en oscuro", () => {
+  const tenue = renderToStaticMarkup(createElement(Chip, { tono: "acento" }, "x"));
+  const solido = renderToStaticMarkup(createElement(Chip, { tono: "acento", solido: true }, "x"));
+  assert.match(solido, /dark:bg-acento dark:text-acento-texto/);
+  assert.doesNotMatch(tenue, /dark:/);
 });

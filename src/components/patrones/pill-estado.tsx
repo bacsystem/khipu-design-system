@@ -49,7 +49,8 @@ const CHIP_SOLIDO: Record<TonoChip, string> = {
   aviso: "bg-warning-foreground text-warning",
   info: "bg-info-foreground text-info",
   error: "bg-destructive text-destructive-foreground",
-  acento: "bg-acento-superficie text-acento-superficie-texto",
+  // En oscuro la superficie de acento es la misma tinta del chip tenue: el sólido usa el acento pleno (par --acento-texto/--acento, ya verificado).
+  acento: "bg-acento-superficie text-acento-superficie-texto dark:bg-acento dark:text-acento-texto",
   neutro: "bg-foreground text-background",
 };
 

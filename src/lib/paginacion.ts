@@ -1,10 +1,14 @@
 export const POR_PAGINA_DEFECTO = 10;
 export const OPCIONES_POR_PAGINA = [10, 20, 50] as const;
 
-/** Normaliza un valor (p. ej. de la URL) a una de las opciones permitidas. */
-export function porPaginaValido(valor: string | number | null | undefined): number {
+/**
+ * Normaliza un valor (p. ej. de la URL) a una de las opciones permitidas (por defecto 10, 20 y 50; pasa las de `PieTabla opciones` para que un 25 sobreviva).
+ * Si no es válido devuelve 10, o la primera opción cuando 10 no está entre ellas.
+ */
+export function porPaginaValido(valor: string | number | null | undefined, opciones: readonly number[] = OPCIONES_POR_PAGINA): number {
   const n = Number(valor);
-  return (OPCIONES_POR_PAGINA as readonly number[]).includes(n) ? n : POR_PAGINA_DEFECTO;
+  if (opciones.includes(n)) return n;
+  return opciones.includes(POR_PAGINA_DEFECTO) ? POR_PAGINA_DEFECTO : (opciones[0] ?? POR_PAGINA_DEFECTO);
 }
 
 /** Números de página a mostrar en el paginador: siempre las 2 primeras, las 2 últimas y las vecinas de la actual, con "…" entre huecos. */

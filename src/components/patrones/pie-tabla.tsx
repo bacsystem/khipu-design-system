@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
 
 const BOTON_PAGINA =
   "inline-flex h-control items-center gap-1 rounded-full border border-border bg-card px-2.5 text-etiqueta font-medium text-foreground/80 shadow-xs transition-colors hover:bg-muted";
-// Anterior/Siguiente sin página a la que ir: el botón usa `disabled`; el enlace, `aria-disabled` y esta clase (un <a> no tiene :disabled).
-const BOTON_PAGINA_DESHABILITADO = "disabled:pointer-events-none disabled:text-muted-foreground/60";
+// Anterior/Siguiente/extremos sin página a la que ir: el botón usa `aria-disabled` (sigue en el orden de tabulación, así el foco no cae al <body> al llegar al límite) y no hace nada; el enlace, `aria-disabled` y esta clase (un <a> no tiene :disabled).
+const BOTON_PAGINA_DESHABILITADO = "aria-disabled:pointer-events-none aria-disabled:text-muted-foreground/60";
 const BOTON_PAGINA_INACTIVO = "pointer-events-none text-muted-foreground/60";
 const NUMERO_PAGINA = "flex size-control items-center justify-center rounded-full font-mono text-etiqueta text-foreground/80 transition-colors hover:bg-secondary";
 
@@ -58,7 +58,7 @@ function Salto({
     );
   }
   return (
-    <button type="button" aria-label={etiqueta} disabled={!habilitado} onClick={() => onPagina(a)} className={cn(className, desactivable && BOTON_PAGINA_DESHABILITADO)}>
+    <button type="button" aria-label={etiqueta} aria-disabled={habilitado ? undefined : true} onClick={() => habilitado && onPagina(a)} className={cn(className, desactivable && BOTON_PAGINA_DESHABILITADO)}>
       {children}
     </button>
   );
@@ -97,7 +97,7 @@ const TEXTOS_PIE_ES: TextosPieTabla = {
  * Pie de tabla estándar: "Mostrando x–y de N <unidad>", selector de filas, nota opcional y paginación numerada.
  * El selector de filas solo aparece con `onPorPagina` (sin él, el tamaño de página lo fija quien usa el pie); `opciones` son sus tamaños
  * (por defecto 10, 20 y 50) y `porPagina` se añade si no está. `extremos` suma los botones «Primera página» y «Última página».
- * Las páginas van en una `<nav>` con nombre (`textos.paginacion`).
+ * Las páginas van en una `<nav>` con nombre (`textos.paginacion`); bajo `sm` los números se sustituyen por «pág. / total». Los saltos sin destino usan `aria-disabled`.
  * Sin `hrefPagina` las páginas son botones y el estado vive en el componente (`pagina`, `ultimaPagina`, `onPagina`).
  * Con `hrefPagina` son enlaces reales (estado en la URL, navegables con ⌘-clic o en otra pestaña); un clic simple
  * llama igual a `onPagina` para que el consumidor navegue en cliente.
@@ -139,7 +139,7 @@ export function PieTabla({
 
   return (
     <div className="flex flex-col items-center justify-between gap-3 bg-transparent px-4 py-2 text-control text-muted-foreground sm:flex-row">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-2">
         <span>
           {textos.mostrando}{" "}
           <span className="font-mono font-semibold text-foreground">
@@ -160,7 +160,7 @@ export function PieTabla({
           </>
         ) : null}
       </div>
-      <nav aria-label={textos.paginacion} className="flex items-center gap-1">
+      <nav aria-label={textos.paginacion} className="flex flex-wrap items-center justify-center gap-1">
         {extremos ? (
           <Salto a={1} habilitado={hayAnterior} desactivable aria-label={textos.primera} className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
             <CaretDoubleLeftIcon aria-hidden weight={PESO_ICONO_FUNCIONAL} className="size-3.5" />
@@ -169,7 +169,11 @@ export function PieTabla({
         <Salto a={pagina - 1} habilitado={hayAnterior} desactivable className={BOTON_PAGINA} onPagina={onPagina} hrefPagina={hrefPagina}>
           <CaretLeftIcon weight="bold" className="size-3.5" /> {textos.anterior}
         </Salto>
-        <div className="mx-1 flex items-center gap-0.5">
+        {/* Bajo sm no caben los números (ni con 24 páginas dentro de una tarjeta de 360 px): «3 / 24» y los saltos. */}
+        <span aria-current="page" className="mx-1 font-mono text-etiqueta font-medium text-foreground sm:hidden">
+          {pagina} / {ultimaPagina}
+        </span>
+        <div className="mx-1 hidden items-center gap-0.5 sm:flex">
           {paginasVisibles(pagina, ultimaPagina).map((p, i) =>
             p === "…" ? (
               <span key={`sep-${i}`} className="px-1 text-etiqueta text-muted-foreground/60">

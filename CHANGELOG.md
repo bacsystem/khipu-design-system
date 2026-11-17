@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `PieTabla onPorPagina` pasa a ser opcional: **sin él ya no se pinta el selector de filas** (antes mostraba un control que no hacía nada). Quien lo pasa, no nota cambios.
+- `PieTabla` en móvil: bajo `sm` los números de página se sustituyen por «pág. / total» y la fila hace wrap (antes la paginación se recortaba dentro de una tarjeta a 360–412 px). Anterior/Siguiente/extremos sin destino usan `aria-disabled` en lugar de `disabled` (el foco ya no cae al `<body>` en el límite).
+- `porPaginaValido(valor, opciones?)` acepta las opciones de `PieTabla` (por defecto 10, 20, 50: sin cambios).
+- `Chip tono="acento" solido` en oscuro usa `bg-acento text-acento-texto` (antes era idéntico al tenue).
 - `PieTabla` envuelve la paginación en `<nav aria-label>` (`textos.paginacion`, «Paginación»). Es el único cambio de marcado con los valores por defecto.
 - **Aviso de tipo:** `TextosPieTabla` (y `TextosTablaDatos`, que lo extiende) gana `paginacion`, `primera` y `ultima`, obligatorios en el tipo: quien tipa un objeto completo de textos debe añadirlos (quien pasa `Partial`, no). Con la CLI (`khipu add`), vuelve a copiar `pill-estado.tsx`, `pie-tabla.tsx`, `selector-por-pagina.tsx` y `lib/paginacion.ts`.
 
