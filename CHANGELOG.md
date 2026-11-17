@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-17
+
+### Added
+- Soporte de **Next.js 16**: el peer `next` pasa de `^15.5.0` a `^15.5.0 || ^16.0.0`. Los componentes del paquete no cambian y el `dist/` compilado es byte a byte el mismo que con Next 15 (solo usan `next/link` y `next/navigation`, sin APIs de petición asíncronas, `middleware`/`proxy`, `next/image` ni `next/font` en el código publicado), así que un consumidor en Next 15.5 no nota nada. Probado contra Next 15.5.25 (línea base) y 16.3.5 con React 19.
+
+### Changed
+- Cadena de herramientas de la app de ejemplo (no afecta al paquete publicado): `next` y `eslint-config-next` 16.3.5 (devDependencies); `next dev` y `next build` sin `--turbopack` (Turbopack es el valor por defecto en Next 16); `eslint.config.mjs` usa la flat config nativa de `eslint-config-next` 16 (`defineConfig`) en vez de `FlatCompat`, y se elimina `@eslint/eslintrc`; `tsconfig.json` adopta `jsx: react-jsx` e incluye `.next/dev/types`, como pide Next 16.
+- Las reglas nuevas de `react-hooks` que trae `eslint-config-next` 16 (`refs`, `set-state-in-effect`, `immutability`, las del React Compiler) quedan como `warn` y no como error: 10 avisos en `apariencia`, `diseno`, `calendario`, `mobile-nav`, `theme-toggle`, `paleta` y `demo-avisos`. Esos componentes funcionan y tienen pruebas; reescribirlos cambiaría su comportamiento, así que se migran aparte.
+- Requisito de Node para desarrollar el repo: 20.9+ (Next 16).
+
 ## [0.5.23] - 2026-11-15
 
 ### Added

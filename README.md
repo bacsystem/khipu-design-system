@@ -1,6 +1,6 @@
 # khipu design system
 
-Design system para aplicaciones de gestión: tokens (claro/oscuro), componentes base sobre [base-ui](https://base-ui.com), componentes de navegación (sidebar, top bar, selector de contexto, menú de usuario), patrones (métricas, pills, tablas, diálogos, código) y componentes de feedback, formularios, navegación y datos. Stack: **Next.js 15 · React 19 · Tailwind v4 · Motion · Phosphor**.
+Design system para aplicaciones de gestión: tokens (claro/oscuro), componentes base sobre [base-ui](https://base-ui.com), componentes de navegación (sidebar, top bar, selector de contexto, menú de usuario), patrones (métricas, pills, tablas, diálogos, código) y componentes de feedback, formularios, navegación y datos. Stack: **Next.js 15 y 16 · React 19 · Tailwind v4 · Motion · Phosphor**.
 
 Nació en el portal de facturación electrónica [khipu](https://github.com/bacsystem) y está desacoplado de él: rutas, textos, iconos y handlers entran por props.
 
@@ -52,7 +52,7 @@ La alternativa a copiar archivos: depender del design system y recibir sus cambi
 npm install github:bacsystem/khipu-design-system#v0.5.0
 ```
 
-npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+, React 19, Tailwind v4** y los peers `@base-ui/react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos); `lucide-react` es peer opcional desde 0.5.0, solo si pasas iconos de Lucide. `motion` y `@phosphor-icons/react` sí vienen como dependencias del paquete. No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
+npm clona el tag, instala sus devDependencies y corre `prepare`, que compila el paquete (`scripts/build-paquete.mjs` → `dist/`). Requisitos del proyecto consumidor: **Next.js 15.5+ o 16, React 19, Tailwind v4** y los peers `@base-ui/react` y `next-themes` (peerDependencies, no dependencias: una segunda copia de base-ui o de next-themes rompería sus contextos); `lucide-react` es peer opcional desde 0.5.0, solo si pasas iconos de Lucide. `motion` y `@phosphor-icons/react` sí vienen como dependencias del paquete. No hace falta `transpilePackages`: el paquete trae ESM ya compilado y `.d.ts`.
 
 **CSS** — una sola línea en tu `globals.css`, después de Tailwind:
 
