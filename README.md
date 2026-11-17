@@ -115,7 +115,7 @@ src/
 ├── components/ui/           avatar · badge · button · card · dialog · drawer · grupo-botones · hover-card · input · kbd · label · menu · pagination · popover · scroll-area · select · selector-por-pagina · separator · sheet · table · toolbar
 ├── components/nav/          shell · sidebar · sidebar-nav · rail (BotonRail) · barra-inferior · logo · selector-contexto · menu-usuario · theme-toggle · selector-diseno · selector-apariencia · top-bar · mobile-nav
 ├── components/patrones/     metricas · pill-estado · cabecera-seccion · cabecera-dialogo · aviso-responsivo · franja-cuenta-regresiva · pie-tabla · confirmacion-en-linea · bloque-codigo · boton-copiar · boton-async · tarjeta-destacada
-├── components/feedback/     toast (useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
+├── components/feedback/     toast (`toast` / useToast) · tooltip · alerta · banner · skeleton · estado-vacio · spinner · progreso (lineal/circular)
 ├── components/formularios/  campo · casilla (Casilla, Interruptor) · opciones · combobox · autocomplete · contrasena · deslizador · entrada-fecha · entrada-rango-fechas · entrada-monto · zona-archivos · buscador · stepper-numerico
 ├── components/navegacion/   tabs · pasos · panel-lateral · acordeon · menu-acciones · dialogo-confirmacion · paleta (⌘K)
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
@@ -179,7 +179,7 @@ Para que no parpadee, `ScriptDiseno` va en el `<head>` (copia la preferencia a `
 - **Top bar**: la miga es el `h1`; máximo dos acciones secundarias + una principal. La acción principal es casi negra (clara en oscuro); el color de la paleta vive en superficies.
 - **Iconos** Phosphor duotono sin fondo; relleno en el activo. El color dice el significado.
 - **Próximamente**: lo que aún no existe se muestra deshabilitado con `title="…: próximamente"`, nunca se oculta ni se simula.
-- **Feedback**: `useToast()` para confirmaciones globales; `Alerta` para avisos de página; `Aviso` dentro de diálogos; `ConfirmacionEnLinea` en filas; `DialogoConfirmacion` solo cuando afecta a varios registros.
+- **Feedback**: `toast.ok/aviso/error/info/promise` (importable y llamable desde cualquier función, no solo componentes; `useToast()` devuelve el mismo objeto) para confirmaciones globales; `Alerta` para avisos de página; `Aviso` dentro de diálogos; `ConfirmacionEnLinea` en filas; `DialogoConfirmacion` solo cuando afecta a varios registros.
 - **Gráficos**: máximo 5 series en orden fijo (`--chart-1..5`), un solo eje, leyenda solo con ≥ 2 series, texto en tokens de texto. Con una serie, las barras van en `--chart-base` y la destacada (`destacado`) en `--chart-destacado`, el acento de la paleta. En oscuro los pasos están validados para daltonismo y contraste.
 - **Un solo `display` por contenedor**; popups al ancho de su disparador; `min-w-0` en contenedores flex/grid.
 
