@@ -74,7 +74,7 @@ import { Button, buttonVariants } from "khipu-design-system/ui/button";
 import { Dialog, DialogContent } from "khipu-design-system/ui/dialog";
 import { Alerta } from "khipu-design-system/feedback/alerta";
 import { Campo } from "khipu-design-system/formularios/campo";
-import { Tabs } from "khipu-design-system/navegacion/tabs";
+import { Tabs } from "khipu-design-system/navegacion/tabs"; // con children/paneles monta paneles; sin ellos es una tira sola
 import { PieTabla } from "khipu-design-system/patrones/pie-tabla";
 import { TablaDatos } from "khipu-design-system/datos/tabla-datos";
 import { TablaListado } from "khipu-design-system/datos/tabla-listado"; // tarjetaMovil, anchoMinimo, pie, filaActiva, claveAlmacenamiento
