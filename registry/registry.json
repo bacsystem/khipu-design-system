@@ -1106,6 +1106,7 @@
         "components/ui/selector-por-pagina",
         "components/ui/table",
         "lib/estilos",
+        "lib/iconos",
         "lib/navegacion",
         "lib/paginacion",
         "lib/utils"
