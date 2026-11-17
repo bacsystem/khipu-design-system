@@ -293,6 +293,8 @@ test("H1: check:alturas rechaza size-N sobre una receta de control", async () =>
   mkdirSync(join(raiz, "scripts"));
   mkdirSync(join(raiz, "src/lib"), { recursive: true });
   cpSync(join(RAIZ, "scripts/verificar-alturas.mjs"), join(raiz, "scripts/verificar-alturas.mjs"));
+  mkdirSync(join(raiz, "cli"));
+  cpSync(join(RAIZ, "cli/reglas.mjs"), join(raiz, "cli/reglas.mjs"));
   writeFileSync(join(raiz, "src/lib/estilos.ts"), 'export const ACCION_X = "h-control";\n');
   writeFileSync(join(raiz, "src/a.tsx"), 'const c = cn(ACCION_PRINCIPAL, "size-14 rounded-full");\n');
   const r = spawnSync(process.execPath, [join(raiz, "scripts/verificar-alturas.mjs")], { encoding: "utf8" });
@@ -346,6 +348,8 @@ test("H7: check:alturas lee también las recetas con backticks (ACCION_*, BOTON_
     mkdirSync(join(raiz, "scripts"));
     mkdirSync(join(raiz, "src/lib"), { recursive: true });
     cpSync(join(RAIZ, "scripts/verificar-alturas.mjs"), join(raiz, "scripts/verificar-alturas.mjs"));
+    mkdirSync(join(raiz, "cli"));
+    cpSync(join(RAIZ, "cli/reglas.mjs"), join(raiz, "cli/reglas.mjs"));
     writeFileSync(join(raiz, "src/lib/estilos.ts"), estilos);
     return spawnSync(process.execPath, [join(raiz, "scripts/verificar-alturas.mjs")], { encoding: "utf8" });
   };

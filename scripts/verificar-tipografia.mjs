@@ -7,18 +7,15 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { TIPOGRAFIA } from "../cli/reglas.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const POR_DEFECTO = ["src/components", "src/app/ejemplo", "src/lib"];
 
 const RECETAS = "src/lib/estilos.ts";
 
-export const REGLAS = [
-  { patron: /(?<![\w-])text-\[\d+(?:\.\d+)?(?:px|rem|em)\]/, mensaje: "tamaño suelto: usa la escala con nombre (text-etiqueta … text-metrica)" },
-  { patron: /(?<![\w:-])text-(?:xs|sm|base|lg|xl|2xl)(?![\w-])/, mensaje: "tamaño de Tailwind: usa la escala con nombre" },
-  { patron: /(?<![\w-])uppercase(?![\w-])/, mensaje: "mayúsculas: solo en las recetas de lib/estilos.ts", salvoRecetas: true },
-  { patron: /(?<![\w-])tracking-(?:wide|wider|widest|\[0\.\d+em\])(?![\w-])/, mensaje: "tracking ancho: solo en las recetas de lib/estilos.ts", salvoRecetas: true },
-];
+// Las reglas viven en cli/reglas.mjs (las comparte la CLI para consumidores); aquí solo se les pone la excepción del kit.
+export const REGLAS = TIPOGRAFIA.map(({ patron, mensaje, salvoRecetas }) => ({ patron, mensaje, salvoRecetas }));
 
 /** Hallazgos `{ linea, mensaje }` de un texto, línea por línea. `ruta` (relativa a la raíz) habilita las excepciones. */
 export function revisarTexto(texto, ruta = "") {

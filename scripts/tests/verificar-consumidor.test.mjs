@@ -6,6 +6,8 @@ import { dirname, join } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { analizarTexto, comparar, agrupar } from "../../cli/verificar.mjs";
+import { revisarRecetas } from "../verificar-alturas.mjs";
+import { revisarTexto } from "../verificar-tipografia.mjs";
 
 const CLI = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "cli", "khipu.mjs");
 const raices = [];
@@ -23,6 +25,7 @@ function app(archivos) {
 }
 const correr = (raiz, ...args) => spawnSync(process.execPath, [CLI, "verificar", ...args], { cwd: raiz, encoding: "utf8" });
 const reglas = (texto, opciones) => analizarTexto(texto, opciones).map((h) => h.regla);
+const libres = (texto, opciones) => analizarTexto(texto, opciones).filter((h) => !h.exenta).map((h) => h.regla);
 
 const SUCIO = `export const A = () => (
   <div className="w-[340px] bg-[#fff] text-white bg-blue-500 z-10 shadow-xl rounded-sm duration-300" data-c="#0f766e" style={{ width: 10, color: "red" }}>x</div>
@@ -74,8 +77,8 @@ test("estilos: font-mono en montos solo con --monto", () => {
 
 test("tipografia y exenciones", () => {
   assert.deepEqual(reglas('"text-[11px] text-sm uppercase tracking-wider"', { grupos: ["tipografia"] }).sort(), ["tipografia/mayusculas", "tipografia/tamano-suelto", "tipografia/tamano-tailwind", "tipografia/tracking-ancho"]);
-  assert.deepEqual(reglas('"text-sm" // tipografia-ok'), []);
-  assert.deepEqual(reglas('"bg-white" // estilos-ok'), []);
+  assert.deepEqual(libres('"text-sm" // tipografia-ok'), []);
+  assert.deepEqual(libres('"bg-white" // estilos-ok'), []);
   assert.deepEqual(reglas('// no uses bg-white ni text-sm'), []);
   assert.deepEqual(reglas('"text-[11px]"', { grupos: ["estilos"] }), []); // lo cubre tipografia
 });
@@ -113,7 +116,7 @@ test("CLI: app limpia sale 0; ignora node_modules, tests, mocks y .next", () => 
   });
   const r = correr(raiz, "--dir", "src");
   assert.equal(r.status, 0, r.stderr);
-  assert.match(r.stdout, /Verificadas 1 archivos/);
+  assert.match(r.stdout, /Verificados 1 archivos/);
 });
 
 test("CLI: sin baseline falla con file:line; --incluir y --ignorar configuran", () => {
@@ -188,4 +191,171 @@ test("CLI: rápido en una app de ~400 archivos", () => {
 test("khipu-ds sin comando lista verificar en la ayuda", () => {
   const salida = execFileSync(process.execPath, [CLI], { encoding: "utf8" });
   assert.match(salida, /verificar/);
+});
+
+// ---------- revisión de la PR (H1–H11) ----------
+
+const leerJson = (raiz, ruta) => JSON.parse(readFileSync(join(raiz, ruta), "utf8"));
+
+test("H1: las exenciones solo valen como comentario, se cuentan y la baseline no las deja crecer", () => {
+  assert.deepEqual(libres('<i className="bg-white estilos-ok" />'), ["estilos/paleta"]); // en un string no vale
+  assert.deepEqual(libres('<i className="bg-white z-10" /> {/* estilos-ok */}'), []);
+  assert.deepEqual(libres('<i className="bg-white z-10" /> // estilos-ok: paleta'), ["estilos/z-index"]); // por regla
+  assert.deepEqual(libres('<i className="bg-white z-10" /> // estilos-ok: estilos/paleta, z-index'), []);
+  assert.deepEqual(libres('<i className="bg-white" /> // tipografia-ok'), ["estilos/paleta"]); // otro grupo no exime
+  assert.equal(analizarTexto('<i className="bg-white" /> // estilos-ok')[0].exenta, true);
+
+  const raiz = app({ "src/a.tsx": 'export const a = <i className="bg-white" />; // estilos-ok\n' });
+  const vacia = join(raiz, "b.json");
+  writeFileSync(vacia, JSON.stringify({ version: 1, violaciones: {} }));
+  const r = correr(raiz, "--dir", "src", "--baseline", "b.json");
+  assert.equal(r.status, 1); // con baseline vacía, la exención nueva falla
+  assert.match(r.stderr, /exenta/);
+  assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json", "--inicializar").status, 2);
+  writeFileSync(vacia, JSON.stringify({ version: 1, violaciones: { "src/a.tsx": { "estilos/paleta (exenta)": { "bg-white": 1 } } } }));
+  const ok = correr(raiz, "--dir", "src", "--baseline", "b.json");
+  assert.equal(ok.status, 0, ok.stderr);
+  assert.match(ok.stdout, /1 con exención/);
+  // sin baseline no hay dónde registrarla: se informa pero no falla
+  const sin = correr(raiz, "--dir", "src");
+  assert.equal(sin.status, 0);
+  assert.match(sin.stdout, /1 con exención/);
+});
+
+test("H2: --podar y --estricto solo miran los grupos, reglas y carpetas de la corrida", () => {
+  const raiz = app({ "src/a/x.tsx": 'export const a = <i className="bg-white text-sm" />;\n', "src/b/y.tsx": 'export const b = <i className="bg-white text-sm" />;\n' });
+  const base = (extra = {}) => ({
+    version: 1,
+    violaciones: {
+      "src/a/x.tsx": { "estilos/paleta": { "bg-white": 1 }, "tipografia/tamano-tailwind": { "text-sm": 1 }, "estilos/font-mono-monto": { "font-mono": 2 } },
+      "src/b/y.tsx": { "estilos/paleta": { "bg-white": 1 }, "tipografia/tamano-tailwind": { "text-sm": 1 } },
+      ...extra,
+    },
+  });
+  writeFileSync(join(raiz, "b.json"), JSON.stringify(base()));
+  // otros grupos y font-mono-monto (sin --monto) no son «sobrantes»
+  assert.equal(correr(raiz, "tipografia", "--dir", "src", "--baseline", "b.json", "--estricto").status, 0);
+  assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json", "--estricto").status, 0);
+  // otra carpeta tampoco
+  assert.equal(correr(raiz, "--dir", "src/a", "--baseline", "b.json", "--estricto").status, 0);
+  // podar con alcance parcial conserva lo demás
+  const antes = readFileSync(join(raiz, "b.json"), "utf8");
+  assert.equal(correr(raiz, "tipografia", "--dir", "src/a", "--baseline", "b.json", "--podar").status, 0);
+  assert.deepEqual(leerJson(raiz, "b.json"), JSON.parse(antes));
+  // y sí quita lo que ya no está dentro del alcance visto: arreglo text-sm en a/x.tsx
+  writeFileSync(join(raiz, "src/a/x.tsx"), 'export const a = <i className="bg-white" />;\n');
+  assert.equal(correr(raiz, "tipografia", "--dir", "src/a", "--baseline", "b.json", "--podar").status, 0);
+  const podada = leerJson(raiz, "b.json").violaciones;
+  assert.equal(podada["src/a/x.tsx"]["tipografia/tamano-tailwind"], undefined);
+  assert.deepEqual(podada["src/a/x.tsx"]["estilos/paleta"], { "bg-white": 1 });
+  assert.deepEqual(podada["src/a/x.tsx"]["estilos/font-mono-monto"], { "font-mono": 2 });
+  assert.deepEqual(podada["src/b/y.tsx"]["tipografia/tamano-tailwind"], { "text-sm": 1 });
+  // un archivo borrado dentro de --dir sí cuenta como arreglado
+  writeFileSync(join(raiz, "b.json"), JSON.stringify(base({ "src/a/borrado.tsx": { "estilos/paleta": { "bg-white": 1 } } })));
+  assert.equal(correr(raiz, "estilos", "--dir", "src/a", "--baseline", "b.json", "--estricto").status, 1);
+  // con --monto la regla font-mono-monto vuelve a estar activa
+  writeFileSync(join(raiz, "b.json"), JSON.stringify(base()));
+  assert.equal(correr(raiz, "estilos", "--dir", "src/a", "--baseline", "b.json", "--monto", "x", "--estricto").status, 1);
+});
+
+test("H3: la CLI y los scripts del kit usan las mismas reglas", () => {
+  const fixture = [
+    'a "text-[11px] uppercase tracking-wider"',
+    'b "text-3xl md:text-lg hover:text-sm"',
+    'c "text-control tracking-tight" x.toUpperCase()',
+    'd "text-4xl"',
+  ].join("\n");
+  const kit = new Set(revisarTexto(fixture).map((h) => `${h.linea}|${h.mensaje}`));
+  const cli = new Set(analizarTexto(fixture, { grupos: ["tipografia"] }).map((h) => `${h.linea}|${h.mensaje}`));
+  assert.deepEqual([...cli].sort(), [...kit].sort());
+  assert.ok(kit.size >= 5);
+  const recetas = ['x(cn(CAMPO, "h-9"))', 'y(cn(BOTON_PRIMARIO, "size-14 rounded"))', 'z(cn(CAMPO, "h-auto h-control h-(--alto)"))', 'w(cn(ACCION_X, "[&_svg]:size-4"))'].join("\n");
+  const kitAlturas = revisarRecetas(recetas).map((h) => h.linea);
+  const cliAlturas = [...new Set(analizarTexto(recetas, { grupos: ["alturas"] }).filter((h) => h.regla === "alturas/receta").map((h) => h.linea))];
+  assert.deepEqual(cliAlturas, kitAlturas);
+  assert.deepEqual(kitAlturas, [1, 2, 3]);
+});
+
+test("H4: la sintaxis v4 prefijo-(--var) se trata como prefijo-[var(--var)]", () => {
+  const r = analizarTexto('<i style={{ "--w": "340px", "--z": 60 }} className="w-(--w) z-(--z) bg-(--brand)" />').map((h) => h.regla);
+  assert.equal(r.filter((x) => x === "estilos/valor-arbitrario").length, 3);
+  assert.deepEqual(reglas('<i className="w-(--anchor-width) h-(length:--available-height)" />'), []);
+  assert.deepEqual(reglas('<i className="w-[var(--w)]" />'), ["estilos/valor-arbitrario"]);
+});
+
+test("H6: la baseline cuenta por coincidencia y las reglas discriminan", () => {
+  const raiz = app({ "src/a.tsx": 'export const a = <i className="text-sm" />;\n' });
+  assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json", "--inicializar").status, 0);
+  writeFileSync(join(raiz, "src/a.tsx"), 'export const a = <i className="text-base" />;\n'); // misma cantidad, otra coincidencia
+  const r = correr(raiz, "--dir", "src", "--baseline", "b.json");
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /text-base/);
+  assert.deepEqual(reglas('<a href="#add">Pedido #123</a>'), []);
+  assert.deepEqual(reglas('<i className="text-3xl" />'), ["tipografia/tamano-tailwind"]);
+  assert.deepEqual(libres('<i className="bg-white text-sm" /> // tipografia-ok'), ["estilos/paleta"]);
+});
+
+test("H7: menos falsos positivos", () => {
+  assert.deepEqual(reglas("<p>Pedido #123</p>"), []);
+  assert.deepEqual(reglas('<a href="#add">x</a><b id="#abcdef" />'), []);
+  assert.deepEqual(reglas('<i className="[&_[stroke=\'#ccc\']]:stroke-border [&_[stroke=\'#cccccc\']]:x" />'), []);
+  assert.deepEqual(reglas('<Card shadow /> const shadow = 1; const rounded = 2;'), []);
+  assert.deepEqual(reglas('<Button className="[&_svg]:size-4 md:[&_svg]:size-5">x</Button>', { grupos: ["alturas"] }), []);
+  assert.deepEqual(reglas("{/* text-sm bg-white */}\n{/* otra\n z-10 */}"), []);
+  assert.deepEqual(reglas('<i className="rounded shadow" />'), ["estilos/sombra", "estilos/radio"]);
+  assert.deepEqual(reglas('<Bar fill="#0f6" color={"#ab12"} />'), ["estilos/color-literal", "estilos/color-literal"]);
+});
+
+test("H7: menos falsos negativos", () => {
+  assert.deepEqual(reglas('"md:text-lg hover:text-sm"', { grupos: ["tipografia"] }), ["tipografia/tamano-tailwind", "tipografia/tamano-tailwind"]);
+  for (const clase of ["leading-[1.7]", "grid-cols-[1fr_2fr]", "font-[500]", "opacity-[.35]", "scale-[1.02]", "[animation-duration:1.6s]"]) {
+    assert.deepEqual(reglas(`<i className="${clase}" />`), ["estilos/valor-arbitrario"], clase);
+  }
+  assert.deepEqual(reglas('<i className="[&_svg]:size-4 [--x:1] data-[state=open]:flex" />'), []);
+  assert.deepEqual(reglas("const k: Record<string, number> = {}; arr[a:b]"), []);
+  assert.deepEqual(reglas("<i style={estilos} /> <j style={style} /> <k style={props.style} />"), ["estilos/style-inline"]);
+});
+
+test("H8: font-mono-monto por elemento, una por aparición", () => {
+  const monto = /formatCurrency\(/;
+  const dos = '<p><span className="font-mono">{r.sku}</span> <b>{formatCurrency(x)}</b></p>';
+  assert.deepEqual(reglas(dos, { monto }), []); // el monto está en otro elemento
+  assert.deepEqual(reglas('<span className="font-mono">{formatCurrency(x)}</span> <i className="font-mono">{formatCurrency(y)}</i>', { monto }), ["estilos/font-mono-monto", "estilos/font-mono-monto"]);
+  const multi = analizarTexto('<span\n  className="font-mono"\n>\n  {formatCurrency(x)}\n</span>', { monto });
+  assert.equal(multi.length, 1);
+  assert.equal(multi[0].linea, 2);
+  assert.deepEqual(reglas('<Input className="font-mono" value={formatCurrency(x)} />', { monto }), ["estilos/font-mono-monto"]);
+  assert.deepEqual(reglas('<StatCard value={formatCurrency(x)} />', { monto }), []); // límite documentado: monto pasado por prop
+});
+
+test("H9: las rutas de la baseline son relativas a su archivo; --mover renombra", () => {
+  const raiz = app({ "apps/web/src/a.tsx": 'export const a = <i className="bg-white" />;\n' });
+  assert.equal(correr(join(raiz, "apps/web"), "--dir", "src", "--baseline", "ds.json", "--inicializar").status, 0);
+  assert.deepEqual(Object.keys(leerJson(raiz, "apps/web/ds.json").violaciones), ["src/a.tsx"]);
+  const desdeRaiz = correr(raiz, "--dir", "apps/web/src", "--baseline", "apps/web/ds.json");
+  assert.equal(desdeRaiz.status, 0, desdeRaiz.stderr);
+  // renombrar el archivo: --mover (rutas desde donde se corre)
+  writeFileSync(join(raiz, "apps/web/src/b.tsx"), readFileSync(join(raiz, "apps/web/src/a.tsx")));
+  rmSync(join(raiz, "apps/web/src/a.tsx"));
+  assert.equal(correr(raiz, "--dir", "apps/web/src", "--baseline", "apps/web/ds.json").status, 1);
+  assert.equal(correr(raiz, "--baseline", "apps/web/ds.json", "--mover", "apps/web/src/a.tsx", "apps/web/src/b.tsx").status, 0);
+  assert.equal(correr(raiz, "--dir", "apps/web/src", "--baseline", "apps/web/ds.json", "--estricto").status, 0);
+  assert.equal(correr(raiz, "--baseline", "apps/web/ds.json", "--mover", "x.tsx", "y.tsx").status, 2);
+});
+
+test("H10: robustez y mensajes", () => {
+  const raiz = app({ "src/a.tsx": "export const a = 1;\n" });
+  for (const malo of ['{"version":1,"violaciones":null}', '{"version":1,"violaciones":[]}', '{"version":1,"violaciones":{"a":{"r":{"m":"x"}}}}', "[]"]) {
+    writeFileSync(join(raiz, "b.json"), malo);
+    assert.equal(correr(raiz, "--dir", "src", "--baseline", "b.json").status, 2, malo);
+  }
+  const ayuda = correr(raiz, "--help");
+  assert.equal(ayuda.status, 0);
+  assert.match(ayuda.stdout, /--base\b/);
+  const r = correr(raiz, "--dir", "src");
+  assert.match(r.stdout, /Verificados 1 archivos/);
+  mkdirSync(join(raiz, "src/a"));
+  writeFileSync(join(raiz, "b.json"), JSON.stringify({ version: 1, violaciones: { "src/a.tsx": { "estilos/paleta": { "bg-white": 3 } } } }));
+  assert.match(correr(raiz, "--dir", "src", "--baseline", "b.json", "--podar").stdout, /3 violaciones quitadas/);
+  assert.equal(correr(raiz, "--dir", "./estilos").status, 2); // una carpeta llamada como un grupo se pasa como ./estilos
 });

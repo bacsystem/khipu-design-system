@@ -8,7 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **`khipu-ds verificar`** (`cli/verificar.mjs`): guardas de diseño para apps consumidoras. Grupos `tipografia` (escala con nombre, mayúsculas, tracking), `alturas` (`h-N`/`size-N` sobre recetas y controles), `estilos` (nuevo: valores arbitrarios `[...]`, colores hex/rgb/hsl/oklch, paleta de Tailwind y `text-white/black`, `z-*`, sombras y radios fuera de la escala, `duration-*`, `style={{}}` visual y `font-mono` en montos con `--monto <regex>`) e `iconos` (otras librerías distintas de Phosphor). Opciones `--dir`, `--baseline` (deuda por archivo + regla + coincidencia que solo puede bajar; `--inicializar`, `--podar`, `--estricto`), `--ignorar`/`--incluir` (por defecto ignora `node_modules`, `.next`, tests y mocks) y exención por línea `<grupo>-ok`. Sale con `1` y `archivo:línea` si hay violaciones nuevas. Ver README §Verificar tu app.
+- **`khipu-ds verificar`** (`cli/verificar.mjs`): guardas de diseño para apps consumidoras. Grupos `tipografia` (escala con nombre, mayúsculas, tracking), `alturas` (`h-N`/`size-N` sobre recetas y controles), `estilos` (nuevo: valores arbitrarios `[...]`, colores hex/rgb/hsl/oklch, paleta de Tailwind y `text-white/black`, `z-*`, sombras y radios fuera de la escala, `duration-*`, `style={{}}` visual y `font-mono` en montos con `--monto <regex>`) e `iconos` (otras librerías distintas de Phosphor). Opciones `--dir`, `--baseline`/`--base` (deuda por archivo + regla + coincidencia que solo puede bajar, con rutas relativas al archivo de baseline; `--inicializar`, `--podar`, `--estricto`, `--mover`; poda y modo estricto solo sobre lo que la corrida vio), `--ignorar`/`--incluir` (por defecto ignora `node_modules`, `.next`, tests y mocks) y exención por comentario `// <grupo>-ok[: regla]`, contada y guardada en la baseline. Sale con `1` y `archivo:línea` si hay violaciones nuevas. Ver README §Verificar tu app.
+- `cli/reglas.mjs`: las reglas de tipografía y de alturas viven en un solo sitio y las comparten la CLI y `check:tipografia`/`check:alturas` del kit.
+
+### Changed
+- `check:tipografia` ahora también rechaza `text-3xl`/`text-4xl` y los tamaños con variante (`md:text-lg`), y `check:alturas` rechaza `h-(--x)`/`size-(--x)`; `[&_svg]:size-4` (el icono, no el control) sigue permitido.
 
 ## [0.8.0] - 2026-11-17
 
