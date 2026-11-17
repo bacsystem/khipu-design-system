@@ -113,6 +113,7 @@ export function Galeria() {
   const [paleta, setPaleta] = useState(false);
   const [descuentoPct, setDescuentoPct] = useState<number | null>(12.5);
   const [piezas, setPiezas] = useState<number | null>(3);
+  const [cantidadNum, setCantidadNum] = useState(5);
   const [monto, setMonto] = useState<number | null>(2360);
   const [moneda, setMoneda] = useState("PEN");
   const [fecha, setFecha] = useState("2026-09-15");
@@ -330,6 +331,9 @@ export function Galeria() {
           </Campo>
           <Campo id="g-piezas" etiqueta="Piezas" ayuda="Solo enteros (decimales={0})">
             <EntradaDecimal id="g-piezas" valor={piezas} onCambio={setPiezas} decimales={0} min={0} alinear="izquierda" />
+          </Campo>
+          <Campo id="g-cant-num" etiqueta="Cantidad (estado number)" ayuda="onCambio={(v) => set(v ?? 0)}: borrar y teclear 7 deja 7">
+            <EntradaDecimal id="g-cant-num" valor={cantidadNum} onCambio={(v) => setCantidadNum(v ?? 0)} decimales={0} />
           </Campo>
           <Campo id="g-obs" etiqueta="Observaciones" opcional>
             <AreaTexto id="g-obs" placeholder="Notas internas…" />

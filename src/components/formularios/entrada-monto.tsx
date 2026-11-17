@@ -53,7 +53,7 @@ export function EntradaMonto({
         onChange={(e) => {
           const limpio = limpiarTextoDecimal(e.target.value);
           setTexto(limpio);
-          const n = parsearDecimal(limpio);
+          const n = parsearDecimal(limpio, 2);
           onCambio(n === null ? null : ajustarDecimal(n, 2));
         }}
         onBlur={() => setEditando(false)}
