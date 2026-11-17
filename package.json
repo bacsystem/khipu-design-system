@@ -118,17 +118,11 @@
   },
   "peerDependencies": {
     "@base-ui/react": "^1.8.0",
-    "lucide-react": "^1.45.0",
     "next": "^15.5.0 || ^16.0.0",
     "next-themes": "^0.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwindcss": "^4"
-  },
-  "peerDependenciesMeta": {
-    "lucide-react": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@base-ui/react": "^1.8.0",
