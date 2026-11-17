@@ -2,14 +2,13 @@
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import type { ReactNode } from "react";
-import { SEGMENTADO, SEGMENTO_BASE } from "@/lib/estilos";
+import { CONTADOR_PESTANA, PESTANA_LINEA_BASE, SEGMENTADO, SEGMENTO_BASE } from "@/lib/estilos";
 import { cn } from "@/lib/utils";
 
 export type TabItem<T extends string> = { id: T; etiqueta: ReactNode; contador?: number; disabled?: boolean };
 
-// h-10 fijo (no padding vertical) para que el contador no altere la altura de la fila.
-const PESTANA_LINEA =
-  "inline-flex h-10 items-center gap-1.5 px-1 text-control font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--duracion-rapida) ease-salida outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-active:text-foreground [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+// La base (h-10 fijo, foco hacia dentro) es la receta compartida con `TabsRuta`; aquí solo se añade el estado activo de base-ui.
+const PESTANA_LINEA = `${PESTANA_LINEA_BASE} data-active:text-foreground`;
 
 // base-ui posiciona el indicador con --active-tab-left/top/width/height; la transición CSS lo desliza entre pestañas.
 // `-z-10` dentro de una lista `isolate`: queda sobre el fondo de la lista y debajo del texto de las pestañas.
@@ -62,7 +61,7 @@ export function Tabs<T extends string>({
         {items.map((t) => (
           <TabsPrimitive.Tab key={t.id} value={t.id} disabled={t.disabled} {...(!conPaneles && controla ? { "aria-controls": controla } : {})} className={estilo === "linea" ? PESTANA_LINEA : SEGMENTO_BASE}>
             {t.etiqueta}
-            {t.contador != null ? <span className="rounded-full bg-secondary px-1.5 py-px text-etiqueta font-semibold text-muted-foreground tabular-nums in-data-active:bg-acento in-data-active:text-acento-texto">{t.contador}</span> : null}
+            {t.contador != null ? <span className={cn(CONTADOR_PESTANA, "in-data-active:bg-acento in-data-active:text-acento-texto")}>{t.contador}</span> : null}
           </TabsPrimitive.Tab>
         ))}
         <TabsPrimitive.Indicator className={INDICADOR[estilo]} />
