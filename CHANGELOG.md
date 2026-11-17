@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`khipu-ds verificar`** (`cli/verificar.mjs`): guardas de diseño para apps consumidoras. Grupos `tipografia` (escala con nombre, mayúsculas, tracking), `alturas` (`h-N`/`size-N` sobre recetas y controles), `estilos` (nuevo: valores arbitrarios `[...]`, colores hex/rgb/hsl/oklch, paleta de Tailwind y `text-white/black`, `z-*`, sombras y radios fuera de la escala, `duration-*`, `style={{}}` visual y `font-mono` en montos con `--monto <regex>`) e `iconos` (otras librerías distintas de Phosphor). Opciones `--dir`, `--baseline` (deuda por archivo + regla + coincidencia que solo puede bajar; `--inicializar`, `--podar`, `--estricto`), `--ignorar`/`--incluir` (por defecto ignora `node_modules`, `.next`, tests y mocks) y exención por línea `<grupo>-ok`. Sale con `1` y `archivo:línea` si hay violaciones nuevas. Ver README §Verificar tu app.
+
 ## [0.8.0] - 2026-11-17
 
 ### Added

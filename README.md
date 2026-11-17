@@ -44,6 +44,29 @@ Por defecto no sobrescribe archivos que ya existan en tu proyecto (usa `--force`
 
 El registro que usa la CLI (`registry/registry.json`) se genera con `npm run registry:build` a partir de los imports reales de cada componente — se regenera solo, nunca se edita a mano.
 
+### Verificar tu app: `khipu-ds verificar`
+
+Guardas de diseño para la app **consumidora** (la CLI viaja con el paquete: `npx khipu-ds verificar …`, o `node cli/khipu.mjs verificar …` desde un clon). Sale con `1` y `archivo:línea` si hay violaciones nuevas, y con `2` si los argumentos son inválidos.
+
+```bash
+khipu-ds verificar tipografia alturas estilos iconos --dir src --baseline ds-baseline.json
+khipu-ds verificar --dir src --baseline ds-baseline.json --inicializar   # una vez: congela la deuda actual
+khipu-ds verificar --dir src --baseline ds-baseline.json --podar         # tras arreglar: la baseline baja
+```
+
+| Grupo | Reglas |
+|---|---|
+| `tipografia` | `tamano-suelto` (`text-[13px]`), `tamano-tailwind` (`text-sm`…), `mayusculas`, `tracking-ancho` |
+| `alturas` | `h-N`/`size-N` (salvo `h-auto`/`h-control`) en `cn(RECETA, "…")` y en `className` de `Button`/`Boton`/`Input`/`Entrada`/`SelectTrigger`/`SelectCampo`/`Toggle`/`Buscador` |
+| `estilos` | `valor-arbitrario` (`prefijo-[…]` de color, tamaño, espaciado, radio, sombra, z, duración; incluye nombres CSS como `bg-[red]`; se admiten las variables que inyectan base-ui/radix, `w-[var(--anchor-width)]`), `color-literal` (hex, `rgb/hsl/hwb/lab/lch/oklab/oklch(`), `paleta` (`bg-blue-500`, `text-white`, `bg-black/50`…), `z-index` (`z-*`), `sombra` (fuera de `xs/sm/md/lg/tarjeta/elevada`), `radio` (fuera de `md/lg/xl/full/none`), `duracion` (`duration-N`), `style-inline` (`style={{}}` con alguna propiedad que no sea `--variable`), `font-mono-monto` |
+| `iconos` | `paquete`: importar de `lucide-react`, heroicons, react-icons, tabler… (opt-in: sin grupos se corren `tipografia`, `alturas` y `estilos`) |
+
+- **Qué se revisa:** `.ts/.tsx/.js/.jsx/.mjs/.cjs` bajo `--dir` (por defecto `src`). Se ignoran `node_modules`, `.next`, `dist`, `build`, `coverage`, `__tests__`, `__mocks__`, `mocks`, `tests`, `test`, `e2e`, `*.test.*`, `*.spec.*`, `*.d.ts` y `*.stories.*`; `--ignorar a b` añade nombres (admite `*`) y `--incluir mocks` revisa algo ignorado. Las líneas de comentario no cuentan, y una línea con `<grupo>-ok` (`// estilos-ok`) queda exenta de ese grupo. Un ejemplo para ~400 archivos tarda menos de un segundo.
+- **`font-mono` en montos:** el kit no puede saber qué es un monto, así que `font-mono-monto` solo corre con `--monto <regex>` y marca `font-mono` en las líneas que casan (p. ej. `--monto 'formatCurrency\(|S/'`). Opera por línea: en JSX de una sola línea larga puede dar falsos positivos (usa `estilos-ok`). Sin `--monto` está fuera de alcance.
+- **`contraste`** (`npm run check:contraste`) verifica los tokens del propio kit, no el código de una app, y no forma parte de `verificar`.
+- **Baseline (`--baseline <json>`):** `{ "version": 1, "violaciones": { "<archivo>": { "<grupo/regla>": { "<coincidencia>": <cantidad> } } } }`, con rutas relativas a donde corres el comando. Cuenta por archivo + regla + coincidencia (no por línea), así que mover código no rompe nada. Falla si una cantidad **sube** o aparece una clave nueva; las entradas que ya no se alcanzan solo avisan, salvo con `--estricto`, que también falla. `--podar` la reescribe sin ellas (nunca añade nada); `--inicializar` la crea y se niega si ya existe, para que solo pueda bajar.
+- **Integración típica:** `"lint:ds": "khipu-ds verificar tipografia alturas estilos iconos --dir src --baseline ds-baseline.json"`.
+
 ## Instalarlo como paquete (desde 0.3.0)
 
 La alternativa a copiar archivos: depender del design system y recibir sus cambios subiendo de versión. No está publicado en npm (`"private": true`, a propósito: publicar lo decide el dueño del repo), así que se instala **desde GitHub, fijado a un tag**:
@@ -113,7 +136,7 @@ src/
 ├── components/datos/        tabla-datos (selección múltiple + acciones masivas) · tabla-listado (buscador, columnas, CSV, impresión) · timeline · lista-datos · kpi (Kpi, Sparkline) · grafico (barras, líneas)
 └── lib/                     utils (cn) · estilos (recetas) · formato (fechas es/en y montos, zona America/Lima) · paginacion · navegacion (esClickSimple, itemActivo) · rail (preferencia del rail) · movimiento · iconos (IconoComponente, pesos) · calendario · ordenar (ordenarFilas) · exportar (CSV, impresión) · escala-grafico (marcas del eje Y)
 
-cli/khipu.mjs                CLI (list · add) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
+cli/khipu.mjs                CLI (list · add · verificar) para copiar componentes a otro proyecto — ver §Usarlo en tu proyecto
 registry/registry.json       generado por scripts/build-registry.mjs, no se edita a mano
 ```
 
