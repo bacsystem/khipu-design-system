@@ -1,2 +1,0 @@
-### Changed
-- `registry/registry.json` ya no está en git: lo genera `prepare` (al instalar el paquete, `npm ci` o `npx github:…`) y `npm run registry:build`, y su contenido sale de recorrer `src/components/**` y `src/lib/*.ts`. La CLI (`khipu-ds list`/`add`) lo calcula en memoria si falta en un clon sin instalar; el archivo ya no lleva `generatedAt`. Con **pnpm 10 o posterior** hay que aprobar el script `prepare` de las dependencias de git (`pnpm approve-builds`) o faltarán `dist/` y el registro.
